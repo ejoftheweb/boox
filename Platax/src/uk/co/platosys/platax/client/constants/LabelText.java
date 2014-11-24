@@ -25,7 +25,7 @@ public class LabelText {
 	public static final String ENTERPRISE_LEGAL_NAME_INFO = "its full legal name";
 	public static final String IS_STARTUP = "Startup?";
 	public static final String IS_STARTUP_INFO="Is this business a start-up?";
-	public static final String START_DATE="Start Date";
+	public static final String START_DATE="Accounting Reference Date";
 	public static final String START_DATE_INFO="Date of incorporation/start of trading";
 	public static final String ENTERPRISE_REGISTER="Click here to register your business!";
 	public static final String ENTERPRISE_TYPE="Capital structure";
