@@ -1,0 +1,85 @@
+package uk.co.platosys.platax.client.forms;
+
+import java.util.Iterator;
+
+import java.util.Set;
+import java.util.TreeMap;
+
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
+import uk.co.platosys.platax.client.constants.ButtonText;
+import uk.co.platosys.platax.client.constants.LabelText;
+import uk.co.platosys.platax.client.widgets.CheckPanel;
+import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
+import uk.co.platosys.platax.client.widgets.buttons.CancelButton;
+import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
+import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
+import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
+import uk.co.platosys.platax.client.widgets.labels.FormSubHeaderLabel;
+import uk.co.platosys.platax.shared.boox.GWTSelectable;
+
+/**
+ *  AbstractForm extends PTab; in Platax forms are always PTabs (unless they're popups).
+ *  
+ *  This means that multiple forms are kept open until completed.
+ *  
+ * @author edward
+ *
+ */
+public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.PTab {
+	protected FlexTable table=new FlexTable();
+	protected FormPanel formPanel=new FormPanel();
+	protected VerticalPanel form=new VerticalPanel();
+	public static PlataxTabPanel parent;
+	
+	protected final FormHeaderLabel topLabel = new FormHeaderLabel();//"About your enterprise");
+    protected final FormSubHeaderLabel subHeader = new FormSubHeaderLabel();//"Please fill in as much as you can"
+    
+	public AbstractForm() {
+		super();
+		form.setWidth("100%");
+		form.add(topLabel);
+		form.add(subHeader);
+		formPanel.add(form);
+		this.add(formPanel);
+		setTabHeaderText("BlankForm");
+	}
+    public AbstractForm(String title){
+    	super();
+		form.setWidth("100%");
+		form.add(topLabel);
+		form.add(subHeader);
+		formPanel.add(form);
+		this.add(formPanel);
+		setTabHeaderText(title);
+    }
+	public void close(){
+		parent.remove(this);
+	}
+	public void fillList(ListBox listBox, TreeMap<String, GWTSelectable> content){
+		listBox.addItem("please select..", "");
+		Set<String> keyset =content.keySet();
+		Iterator<String> sit = keyset .iterator();
+		while (sit.hasNext()){
+			String key = sit.next();
+			listBox.addItem(content.get(key).getDescription(), key);
+		}
+	}
+	
+	public void fillCheckPanel(CheckPanel panel, TreeMap<String, GWTSelectable> content){
+		for (String key: content.keySet()){
+			GWTSelectable module = content.get(key);
+			String desc=module.getDescription();
+			String name=module.getName();
+			panel.addItem(name, desc);
+		}
+	}
+	final Button nextButton=new Button(ButtonText.NEXT);
+	final FieldInfoLabel nextInfoLabel=new FieldInfoLabel("");
+	final FieldLabel nextLabel=new FieldLabel(LabelText.MORE);
+	CancelButton cancelButton = new CancelButton();
+}

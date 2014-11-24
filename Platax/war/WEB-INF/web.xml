@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+              http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5"
+         xmlns="http://java.sun.com/xml/ns/javaee">
+
+  <!-- Servlets -->
+  
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>Platax.html</welcome-file>
+  </welcome-file-list>
+  
+  <servlet>
+    <servlet-name>LoginServiceImpl</servlet-name>
+    <servlet-class>uk.co.platosys.platax.server.services.LoginServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LoginServiceImpl</servlet-name>
+    <url-pattern>/platax/loginService</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>UserServiceImpl</servlet-name>
+    <servlet-class>uk.co.platosys.platax.server.services.UserServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UserServiceImpl</servlet-name>
+    <url-pattern>/platax/userService</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>EnterpriseServiceImpl</servlet-name>
+    <servlet-class>uk.co.platosys.platax.server.services.EnterpriseServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EnterpriseServiceImpl</servlet-name>
+    <url-pattern>/platax/enterpriseService</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ConfirmationServlet</servlet-name>
+    <servlet-class>uk.co.platosys.xuser.ConfirmationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ConfirmationServlet</servlet-name>
+    <url-pattern>/platax/ConfirmationServlet</url-pattern>
+  </servlet-mapping>
+</web-app>

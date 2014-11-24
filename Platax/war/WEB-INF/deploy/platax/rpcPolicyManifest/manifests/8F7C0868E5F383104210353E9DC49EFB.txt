@@ -1,0 +1,2 @@
+serviceClass: uk.co.platosys.platax.client.services.LoginService
+path: 4B6E44386398210D0FCF7ED6CD479A65.gwt.rpc
