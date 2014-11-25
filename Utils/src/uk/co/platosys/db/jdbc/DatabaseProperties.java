@@ -71,44 +71,51 @@ public class DatabaseProperties {
     private List<String>names=new ArrayList<String>();
     /** Creates a new instance of DatabaseProperties */
     public DatabaseProperties() {
-    	
-      try {
-          File configDir = new File(UNIX_CONFIG_READ_DIR);
-          File configFile = new File(configDir, CONFIG_FILE);
-          SAXBuilder builder = new org.jdom2.input.SAXBuilder();
-          Document configDoc = builder.build(configFile);
-          Element rootElement = configDoc.getRootElement();
-          List databases = rootElement.getChildren("database");
-          Iterator it = databases.iterator();
-          while(it.hasNext()){
-              Element database = (Element) it.next();
-              String name = database.getAttributeValue("name");
-             
-              String databaseDriver = database.getChildText("databaseDriver");
-              String databaseUrl = database.getChildText("databaseUrl");
-              String databaseUser = database.getChildText("databaseUser");
-              String databasePassword = database.getChildText("databasePassword");
-              DatabaseCredentials databaseCredentials = new DatabaseCredentials(
-                      name,
-                      databaseDriver,
-                      databaseUrl,
-                      databaseUser,
-                      databasePassword
-                      ); 
-              String status = database.getAttributeValue("status");
-              if (status.equals("master")){
-            	masterCredentials=databaseCredentials; 
-            	logger.log(databaseCredentials.getName() + " is the master database");
+    	loadProperties();
+    }	
+      private void loadProperties(){
+    	  try {
+              File configDir = new File(UNIX_CONFIG_READ_DIR);
+              File configFile = new File(configDir, CONFIG_FILE);
+              SAXBuilder builder = new org.jdom2.input.SAXBuilder();
+              Document configDoc = builder.build(configFile);
+              Element rootElement = configDoc.getRootElement();
+              List<Element> databases = rootElement.getChildren("database");
+              String status="";
+              for(Element database: databases){
+                 String name = database.getAttributeValue("name");
+                 logger.log("DBProps reading elmt for db "+name);
+                 String databaseDriver = database.getChildText("databaseDriver");
+                 String databaseUrl = database.getChildText("databaseUrl");
+                 String databaseUser = database.getChildText("databaseUser");
+                 String databasePassword = database.getChildText("databasePassword");
+                 DatabaseCredentials databaseCredentials = new DatabaseCredentials(
+                          name,
+                          databaseDriver,
+                          databaseUrl,
+                          databaseUser,
+                          databasePassword
+                          ); 
+                  if (database.getAttributeValue("status")!=null){
+                	status = database.getAttributeValue("status");
+                	  if (status.equals("master")){
+                		  masterCredentials=databaseCredentials; 
+                		  logger.log(databaseCredentials.getName() + " is the master database");
+                	  }else{
+                		  logger.log(databaseCredentials.getName() + " has status "+status);
+                	  }
+                  }
+                  credentials.add(databaseCredentials);
+                  names.add(name);
+                  logger.log("DatabaseProperties has loaded details for "+status+ " database "+name);
               }
-              credentials.add(databaseCredentials);
-              names.add(name);
-              logger.log("DatabaseProperties has loaded details for "+status+ " database "+name);
+          }catch(Exception e){
+              logger.log("Problem loading database properties", e);
           }
-      }catch(Exception e){
-          logger.log("Problem loading database properties", e);
+        
       }
-    }   
     protected List<DatabaseCredentials> getDatabases(){
+    	loadProperties();
         return credentials;
     }
     public List<String> getDatabaseNames(){
