@@ -38,6 +38,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -113,8 +115,10 @@ public class AddEnterpriseForm extends AbstractForm {
 				subHeader.setText(LabelText.NEW_ENTERPRISE_PAGE_SUB_HEAD);
 				nameBox.setEnabled(true);
 				legalNameBox.setEnabled(false);
+				orgTypeList.addItem(StringText.PLEASE_SELECT, StringText.NULL);
+				roleList.addItem(StringText.PLEASE_SELECT, StringText.NULL);
 				submitButton.setEnabled(false);
-				startDateBox.setVisible(false);
+				startDateBox.setVisible(true);
 				
 				//Segment callback
 				final AsyncCallback<ArrayList<GWTSegment>> segmentCallback = new AsyncCallback<ArrayList<GWTSegment>>(){
@@ -130,6 +134,7 @@ public class AddEnterpriseForm extends AbstractForm {
 					}
 					@Override
 					public void onSuccess(ArrayList<GWTSegment> result) {
+						if(result==null){Window.alert("Server error-null result for segment call");}
 						segments=result;
 						for (GWTSegment segment:segments){
 							if(segment.getName().equals(CAPITAL_SEGMENT_NAME)){
@@ -153,6 +158,8 @@ public class AddEnterpriseForm extends AbstractForm {
 					}
 					@Override
 					public void onSuccess(ArrayList<GWTRole> result) {
+						if(result==null){Window.alert("Server error-null result for roles call");}
+						
 						for(GWTRole role:result){
 							roleList.addItem(role.getName(), role.getLocalisedName());
 						}
@@ -160,7 +167,10 @@ public class AddEnterpriseForm extends AbstractForm {
 				};
 				//page1-2 callback
 				final AsyncCallback<GWTEnterprise> callback1 = new AsyncCallback<GWTEnterprise>(){
+					
 					public void onSuccess(GWTEnterprise result){
+						if(result==null){Window.alert("Server error-null result for submit1 call");}
+						
 						setTabHeaderText(result.getName());
 						layoutPage2();
 						
@@ -180,6 +190,8 @@ public class AddEnterpriseForm extends AbstractForm {
 				//registration-finished callback
 				final AsyncCallback<GWTEnterprise> finishedCallback = new AsyncCallback<GWTEnterprise>(){
 					public void onSuccess(GWTEnterprise result){
+						if(result==null){Window.alert("Server error-null result for submit2 call");}
+						
 						platax.removeTab(AddEnterpriseForm.this);
 						platax.addTab(new EnterpriseTab(platax, result));
 						platax.addTab(new AddEnterpriseForm(platax));
@@ -272,7 +284,7 @@ public class AddEnterpriseForm extends AbstractForm {
 			
 			table.setWidget(7,0, submitLabel );
 			table.setWidget(7,1, submitButton);
-			table.setWidget(7,1, new CancelButton());
+			table.setWidget(7,2, new CancelButton());
 			
 			form.add(table);
 			//vpanel.add(form);
@@ -317,7 +329,13 @@ public class AddEnterpriseForm extends AbstractForm {
 					}else{
 						Window.alert(StringText.IS_NOT_STARTUP_CONFIRM);
 					}
-					startDateBox.setVisible(true);
+					//startDateBox.setVisible(true);
+				}
+			});
+			startDateBox.addValueChangeHandler(new ValueChangeHandler<Date>(){
+				@Override
+				public void onValueChange(ValueChangeEvent<Date> event){
+					
 				}
 			});
 			termsCheckBox.addClickHandler(new ClickHandler(){
@@ -353,7 +371,7 @@ public class AddEnterpriseForm extends AbstractForm {
 				List<GWTModule> modules = content.getModules();
 				for(GWTModule module:modules){
 					if (module.getSegment().equals(content.getName())){
-						list.addItem(module.getName(), module.getDescription());
+						list.addItem( module.getDescription(), module.getName());
 					}
 				}
 			}

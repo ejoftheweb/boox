@@ -449,6 +449,7 @@ static Logger logger = Logger.getLogger("platax");
     	GWTModule gModule = new GWTModule();
     	gModule.setName(module.getName());
     	gModule.setDescription(module.getDescription());
+    	gModule.setSegment(module.getSegment());
     	return gModule;
     }
 

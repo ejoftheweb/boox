@@ -36,7 +36,7 @@ public class UserTab extends AbstractForm {
 	final Platax platax = pplatax;
     final PlataxTabPanel ptp = platax.getPtp();
 	final FlexTable loggedinTable = new FlexTable();
-	final Button logoutButton = new Button(ButtonText.LOGOUT);	
+	//final Button logoutButton = new Button(ButtonText.LOGOUT);	
 	
 	final Label lastLoginLabel = new Label(LabelText.LAST_LOGIN);
 	final Label lastLoginFromLabel = new Label (LabelText.FROM);
@@ -74,7 +74,7 @@ public class UserTab extends AbstractForm {
 		loggedinTable.setWidget(0,3, lastLoginFrom);
 		loggedinTable.setWidget(1,0, lastLogoutLabel);
 		loggedinTable.setWidget(1,1, lastLogout);
-		loggedinTable.setWidget(2,0, logoutButton);
+		//loggedinTable.setWidget(2,0, logoutButton);
 			lastLogin.setText(user.getLastLogin());
 			lastLoginFrom.setText(user.getLastLoginfrom());
 			lastLogout.setText(user.getLastLogout());
@@ -128,15 +128,6 @@ public class UserTab extends AbstractForm {
 		
 		
 	
-		//
-		//Add click handlers to login and logout buttons
-		logoutButton.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent event){
-				if (Window.confirm("Logout?")){
-				 loginService.logout(logoutcallback);
-				}
-			}
-		});
 		
 		
 		

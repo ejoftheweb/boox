@@ -5,6 +5,7 @@ import java.util.Iterator;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.Styles;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -14,8 +15,10 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -30,7 +33,9 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * It consists of two basic components: 
  * the tabItem which is a FlowPanel consisting of a label and an icon that goes in the tab top; and
- * the page which is a VerticalPanel which goes in the page part of the tab. 
+ * the panel which is a DockLayoutPanel which goes in the page part of the tab. 
+ * the panel is split into two parts: the page, which contains the business part of the app; and the shareCol, 
+ * which contains the sharing information about the page - who gets to see it. 
  * 
  * These are set in subclasses.
  * 
@@ -45,19 +50,18 @@ public abstract class PTab implements IsWidget, HasWidgets, HasCloseHandlers<PTa
  private FlowPanel tabItem;
  private InlineLabel tabItemTitle;
  private Image image;
- private VerticalPanel page;
- private VerticalPanel shareCol;
- private FlowPanel panel;
+ private FlowPanel page;
+ private FlowPanel shareCol;
+ private DockLayoutPanel panel;
  private int index=-2; //the index of this PTab in its parent. 
  public PTab(){
 	 tabItem = new FlowPanel();
-	 page=new VerticalPanel();
-	 panel=new FlowPanel();
-	 page.setWidth("85%");
-	 shareCol=new VerticalPanel();
-	 shareCol.setWidth("14%");
-	 panel.add(page);
-	 panel.add(shareCol);
+	 page=new FlowPanel();
+	 panel=new DockLayoutPanel(Unit.PCT);
+	 shareCol=new FlowPanel();
+	
+	 panel.addWest(page, 90);
+	 panel.addEast(shareCol, 9.9);
 	 page.setStyleName(Styles.PTAB_CONTENT_STYLE);
 	 shareCol.setStyleName(Styles.PTAB_SHARE_STYLE);
 	 shareCol.add(new Label(LabelText.SHARE));

@@ -6,13 +6,11 @@ import java.util.List;
 import uk.co.platosys.platax.client.forms.AbstractForm;
 import uk.co.platosys.platax.client.forms.LoginForm;
 import uk.co.platosys.platax.client.forms.UserTab;
-import uk.co.platosys.platax.client.components.EnterpriseBox;
 import uk.co.platosys.platax.client.components.MessagePanel;
 import uk.co.platosys.platax.client.components.BrandingBox;
 import uk.co.platosys.platax.client.components.StatusBox;
 import uk.co.platosys.platax.client.components.TaskPanel;
 import uk.co.platosys.platax.client.forms.RegisterUser;
-import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
 import uk.co.platosys.platax.client.widgets.PTab;
 import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.shared.PXUser;
@@ -20,25 +18,25 @@ import uk.co.platosys.platax.shared.PXUser;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+//import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.gwt.user.client.ui.StackLayoutPanel;
-import com.google.gwt.user.client.ui.TabLayoutPanel;
+
 
 
 public class Platax implements EntryPoint {
 	//declare components
 	DockLayoutPanel dlp = new DockLayoutPanel(Unit.PCT);
-	HorizontalPanel topPanel = new HorizontalPanel();
+	DockLayoutPanel topPanel = new DockLayoutPanel(Unit.PCT);
 	//LoginBox loginBox = new LoginBox();
 	BrandingBox brandingBox=new BrandingBox();
-	StatusBox statusBox=new StatusBox();
+	StatusBox statusBox=new StatusBox(this);
 	TaskPanel taskPanel = new TaskPanel();
 	MessagePanel messagePanel = new MessagePanel();
 	PlataxTabPanel tabPanel = new PlataxTabPanel(5, Unit.PCT);
-	HorizontalPanel footPanel=new HorizontalPanel();
+	FlowPanel footPanel=new FlowPanel();
 	PXUser pxUser=null;
 	
 	
@@ -53,11 +51,9 @@ public class Platax implements EntryPoint {
 	public void onModuleLoad() {
 		//create panels and components
 		//Top Panel
-		topPanel.setSize("100%","10%");
-		topPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_JUSTIFY);
-		topPanel.add(brandingBox);
+		topPanel.addWest(brandingBox, 74 );
 		
-		topPanel.add(statusBox);//, DockLayoutPanel.Direction.WEST, 300, null);
+		topPanel.addEast(statusBox, 25);//, DockLayoutPanel.Direction.WEST, 300, null);
 		
 		dlp.addNorth(topPanel, 10);
 		//footPanel
@@ -109,6 +105,7 @@ public class Platax implements EntryPoint {
 
 	public void setUser(PXUser result) {
 		pxUser=result;
+		statusBox.login(result.getUsername());
 		tabPanel.addTab(new UserTab(this, result),0);
 	}
 

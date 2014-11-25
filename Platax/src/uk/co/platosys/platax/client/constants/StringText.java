@@ -7,6 +7,9 @@ public class StringText {
 	public static final String BILL="Bill";
 	public static final String LOGIN="Login";
 	public static final String SIGNUP="Sign Up";
+	public static final String REALLY_LOGOUT="Really logout?";
+	public static final String PLEASE_SELECT="--Please Select--";
+	public static final String NULL="";
 	public static final String SIGNUP_HEADER="Please complete this form to sign up for PLATAX";
 	public static final String SIGNUP_SUBTEXT="A basic account is absolutely free!";
 	public static final String LOGIN_OR_SIGNUP="Please login or sign up to continue";

@@ -9,6 +9,18 @@ public class LabelText {
 	public static final String EMAIL="Email";
 	public static final String BAD_EMAIL="Sorry, that doesn't seem to be a valid email address. Please try again";
 	
+	//Status labels
+	public static final String NOT_LOGGED_IN="Not Logged In";
+	public static final String LOGGED_IN_AS="Logged In As:";
+	public static final String LOGOUT="Logout";
+	public static final String ANONYMOUS="Anonymous";
+	
+	//Message Centre labels
+	public static final String MESSAGE_CENTRE="Message Centre";
+	public static final String SYSTEM_MESSAGES="System Messages";
+	public static final String USER_MESSAGES="User Messages";
+	public static final String STAFF_MESSAGES="Staff Messages";
+	
 	//Labels common to Ptabs:
 	public static final String SHARE="Share";
 	
