@@ -91,7 +91,7 @@ public class Boox {
    
     public static String APPLICATION_NAME="boox";
     public static String DEFAULT_CURRENCY="XBX";
-    protected static String APPLICATION_DATABASE="boox";//
+    protected static String APPLICATION_DATABASE="platax";//OK this is a kluj for now
     public static Namespace NAMESPACE=Namespace.getNamespace("http://www.platosys.co.uk/boox");
     private static Namespace ns = NAMESPACE;
 

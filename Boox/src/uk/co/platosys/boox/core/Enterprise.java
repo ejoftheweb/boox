@@ -196,7 +196,7 @@ public class Enterprise extends Body {
     		try {
     			logger.log("Boox calling dbProps to create db "+databaseName+ " in masterDB "+Boox.APPLICATION_DATABASE);
 			
-    			String dbN=dbProps.createDatabase(Boox.APPLICATION_DATABASE, name);//which it does ok
+    			String dbN=dbProps.createDatabase(Boox.APPLICATION_DATABASE, databaseName);//which it does ok
 				if (!dbN.equals(databaseName)){
 					throw new PlatosysDBException("Boox error creating enterprise database: "+dbN+":"+databaseName);
 				}
@@ -230,7 +230,7 @@ public class Enterprise extends Body {
         //this table is in the enterprise's private database; it is a listing of key-value pairs of data about the enterprise.
         try{
          if(!(JDBCTable.tableExists(databaseName, Enterprise.TABLENAME))){
-        	    logger.log("creating enterprise table in db"+databaseName);
+        	    logger.log("creating enterprise table in db "+databaseName);
                 enterpriseTable = JDBCTable.createTable(databaseName, Enterprise.TABLENAME, Enterprise.KEY_COLNAME, JDBCTable.TEXT_COLUMN);
                 enterpriseTable.addColumn(Enterprise.VALUE_COLNAME, JDBCTable.TEXT_COLUMN);
          }else{
