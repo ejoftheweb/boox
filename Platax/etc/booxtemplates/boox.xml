@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is the manifest file for a boox installation. It is referenced by the application
+to and lists the modules available.
+
+Each module consists of an XML file having a root element "boox" in the platosys namespace, with two
+child elements: Ledgers and Tasks.
+
+The <Ledgers> element is a mapping of the accounts/ledgers hierarchy appropriate to the module and consists
+of <Ledger> and <Account> elements in an appropriate hierarchy, the first child must be the general ledger.
+
+The <Tasks> element lists the accounting/book-keeping/compliance tasks associated with the module.
+
+This file lists the available modules and consists of <segment> and <module> elements.  Module names must be unique.
+Module files must be stored in a folder for each segment and each segment folder must be in the modules root folder
+which contains this file. The segment folder name must be the segment name.
+The segment attribute "selection" determines whether single or multiple selection is allowed. 
+
+ -->
+ <boox xmlns="http://www.platosys.co.uk/boox">
+     <!-- Segment definitions -->
+     <segment name="capital" selection="single"/>
+     <segment name="vat" selection="single"/>
+     <segment name="operations" selection="multiple"/>
+     <segment name="overhead" selection="multiple"/>
+     <segment name="sector" selection="multiple"/>
+     <!-- modules in the capital segment -->
+	 <module name="shares" description="For-profit Company" segment="capital" selection="single" file="shares.xml"/>
+	 <module name="guarantee" description="Not-for-profit Company" segment="capital" selection="single" file="guarantee.xml"/>
+	 <module name="partnership" description="Partnership" segment="capital"  selection="single" file="partnership.xml"/>
+	 <module name="trust" description="Trust" segment="capital"  selection="single" file="trust.xml"/>
+	 <module name="sole" description="Sole Trader" segment="capital"  selection="single" file="sole.xml"/>
+	 
+	 <!-- the vat module  -->
+	 <module name="vat" description="VAT-registered?" segment="vat"   selection="single" file="vat.xml"/>
+	 <!-- modules in the operations segment  -->
+	 <module name="cashup" description="Retail Cash Sales?" segment="operations"  selection="multiple" file="cashup.xml"/>
+	 <module name="card" description="Retail Debit/credit Card Sales?" segment="operations" selection="multiple" file="cards.xml"/>
+	 <module name="pettycash" description="Petty Cash?" segment="operations" selection="multiple" file="pettycash.xml"/>
+	 <module name="bank" description="Bank Account?" segment="operations" selection="multiple" file="bank.xml"/>
+	  
+	 <!-- modules in the overhead segment  -->
+	 <module name="rent" description="Leasehold Premises?" segment="overhead" selection="multiple" file="lease.xml"/>
+	 <module name="vehicles" description="Business vehicles?" segment="overhead" selection="multiple" file="vehicles.xml"/>
+	 <!-- modules in the sector segment -->
+	  <module name="building" description="Building and allied trades" segment="sector" selection="multiple" file="building.xml"/>
+	   <module name="consult" description="Consultancy" segment="sector" selection="multiple" file="consult.xml"/>
+	   <module name="factory" description="Manufacturing" segment="sector" selection="multiple" file="factory.xml"/>
+	   <module name="property" description="Property for rent" segment="sector" selection="multiple" file="property.xml"/>
+	   <module name="retail" description="Retail trade" segment="sector" selection="multiple" file="retail.xml"/>
+	   <module name="catering" description="Catering and hospitality" segment="sector" selection="multiple" file="catering.xml"/>
+	   <module name="service" description="Professional Services" segment="sector" selection="multiple" file="service.xml"/>
+	  
+	 
+ </boox>

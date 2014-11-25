@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : lease.xml 
+    Created on : 25 nov 14
+    Author     : edward
+    Description:
+        This is a module for enterprises that have leasehold property
+        TODO: TASKS section
+         
+-->
+
+<root xmlns = "http://www.platosys.co.uk/boox">
+<Ledgers> 
+    <!-- XBX is the system name for the default currency. -->
+    <Ledger name="XBX">
+        <!-- the Income ledger records all income received by the business, whether sales or interest earned 
+        <Ledger name="Income" isPrivate="false">
+           <Ledger name="Sold" isPrivate="false">
+              <Account name="Sales" fullName="Goods sold" description="General Sales Account"/>
+           </Ledger>
+           <Ledger name="InterestEarned" isPrivate="false"/>    
+       </Ledger>-->
+      
+      <!--  the Expenditure ledger records outgoings -->
+      <Ledger name="Expenditure" isPrivate="false">
+         
+          <Ledger name="Variable" isPrivate="false">
+          		
+
+ 				<!-- Expenses covers other variable costs that are neither purchases nor labour -->	 
+ 				<Ledger name="Expenses" isPrivate="false">
+ 				    <!-- Typically some energy costs are fixed (heating to keep the place warm enough to work; standing charges), while others
+ 				    - process heat - are variable. -->
+ 				    <Ledger name="Energy" isPrivate="false">
+ 				        
+ 				        <Account name="Electricity" fullName="Electricity" description="Electricity variable costs"/>
+ 				    </Ledger>
+ 				</Ledger>        
+          </Ledger>
+          <!-- Fixed costs you have to pay regardless of your trade -->
+          <Ledger name="Fixed" isPrivate="false">
+                <Ledger name="Occupancy" isPrivate="false">
+                    <Account name="rent" fullName="rent" description="rent"/>
+                    <Account name="rates" fullName="rates" description="rates"/>
+                    <Account name="insurance" fullName="insurance" description="premises insurance"/>
+                    <Account name="service" fullName="service" description="Service Charge"/>
+                </Ledger>
+          		<Ledger name="Utilities" isPrivate="false">
+          		    <Ledger name="Waste" isPrivate="false">
+          		        <Account name="Waste" fullName="Waste" description="Waste disposal charges"/>
+          		    </Ledger>
+          		    <Ledger name="Comms" isPrivate="false">
+ 				    	<Account name="Phone" fullName="Phone" description="Fixed-Line phones"/>
+ 				    	<Account name="Internet" fullName="internet" description="Internet charges"/>    
+ 				    </Ledger>
+ 				    <Ledger name="Water" isPrivate="false">
+	 				    <Account name="Water" fullName="water" description="Water Charges"/>
+	 				    <Account name="Sewerage" fullName="sewerage" description="Sewerage Charges"/>
+ 				    </Ledger>
+ 				    <!-- Typically some energy costs are fixed (heating to keep the place warm enough to work; standing charges), while others
+ 				    - process heat - are variable. -->
+ 				    <Ledger name="Energy" isPrivate="false">
+ 				        <Account name="Gas" fullName="Gas" description="Gas fixed costs"/>
+ 				        <Account name="Electricity" fullName="Electricity" description="Electricity fixed costs"/>
+ 				    </Ledger>
+ 				</Ledger>
+      	  </Ledger>
+     </Ledger>
+    
+     <!-- the Fixed ledger records the long-term assets and liabilities of the business -->      
+     <Ledger name="Fixed" isPrivate="false">
+        <Ledger name="Liabilities" isPrivate="false">
+            <!-- Capital is money put into the business that you don't expect to pay back -->
+            <Ledger name="Capital" isPrivate="false"/>
+            <!-- Loans are  expected to be repaid -->
+            <Ledger name="Loans"  isPrivate="false"/>
+        </Ledger>
+        <Ledger name="Assets" isPrivate="false">
+        	<Ledger name="Land" isPrivate="false"/> 
+        	<Ledger name="Plant" isPrivate="false">
+        	    <!-- 
+        	    <Ledger name="MotorVehicles" isPrivate="false"/>
+        	    -->
+        	</Ledger>
+    	</Ledger>
+    </Ledger>
+    <!-- the Current ledger records the short-term assets and liabilities. Its balance is a good indicator of the business's solvency -->	
+    <Ledger name="Current" isPrivate="false">
+    	<Ledger name="Assets" isPrivate="false">
+        	<Ledger name="Cash" isPrivate="false">
+        	    <!-- 
+            	<Account name="PettyCash" fullName="Petty Cash" description="Petty Cash Account"/>
+            	<Account name="BankCurrent" fullName="Bank Current Account" description="Bank Current Account"/>
+            	<Account name="BankDeposit" fullName="Bank Deposit Account" description="Bank Deposit Account"/>
+            	-->
+        	</Ledger>
+        	<Ledger name="AccountsReceivable" isPrivate="false">
+        		<Ledger name="Customers" isPrivate="false"/>
+        	</Ledger>
+        	<!-- Stock is known as inventory in American -->
+        	<Ledger name="Stock" isPrivate="false">
+        		<Ledger name="Products" isPrivate="false"/>
+        		<Ledger name="Materials" isPrivate="false"/>
+        	</Ledger>
+    	</Ledger>
+    
+        <Ledger name="Liabilities" isPrivate="false">
+        	<Ledger name="Tax" isPrivate="false">
+        	    <!-- 
+            	<Ledger name="VAT" isPrivate="false">
+                	<Ledger name="OutputVat" isPrivate="false">
+                		<Account name="VATOutputZero" fullName="ZeroRate" description="ZeroRate"/>
+                		<Account name="VATOutputLower" fullName="LowerRate" description="LowerRate"/>
+                		<Account name="VATOutputStandard" fullName="StandardRate" description="StandardRate"/>
+                		<Account name="VATOutputHigher" fullName="HigerRate" description="HigherRate"/>
+                	</Ledger>
+                	<Ledger name="InputVat" isPrivate="false">
+                		<Account name="VATInputZero" fullName="ZeroRate" description="ZeroRate"/>
+                		<Account name="VATInputLower" fullName="LowerRate" description="LowerRate"/>
+                		<Account name="VATInputStandard" fullName="StandardRate" description="StandardRate"/>
+                		<Account name="VATInputHigher" fullName="HigerRate" description="HigherRate"/>
+                	</Ledger>
+            	</Ledger>
+            	-->
+            	<!-- 
+            	<Ledger name="PAYENIC" fullName="PAYE and NIC" description="Employment-related taxes">
+            		<Account name="PAYE" fullName="PAYE" description="PAYE Income Tax for employees"/>
+            		<Account name="NIC" fullName="National Insurance" description="National Insurance Contributions"/>
+        		</Ledger>
+        		-->
+        	</Ledger><!-- tax -->
+       		<Ledger name="AccountsPayable" isPrivate="false">
+        		<Ledger name="Suppliers" isPrivate="false">
+        		    <!-- We will have to put the supplier accounts for landlord, etc, here! A Task will do it -->
+        		</Ledger>
+        	</Ledger><!-- AP -->
+    	</Ledger><!-- Liabilities -->
+    </Ledger><!-- current -->
+    </Ledger><!-- XBX -->
+</Ledgers>
+<Tasks>
+    <!-- We need to specify the one-off tasks setting up the landlord, LA, insurance, utilities supplier accounts  -->
+    <!--  and repeating tasks to ensure that meters are read and bills are paid on time -->
+</Tasks>
+</root>

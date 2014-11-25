@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="application.name">platax</entry>
+<entry key="database.name">boox</entry>
+<entry key="database.driver">org.postgresql.Driver</entry>
+<entry key="database.url">jdbc:postgresql://localhost:5432/boox</entry>
+<entry key="link.reset.password">resetPassword</entry>
+<entry key="email.developer">edward.barrow@platosys.co.uk</entry>
+<entry key="email.installation">platosys</entry>
+<entry key="mail.host">relay.plus.net</entry>
+<entry key="installation.host">corner</entry>
+<entry key="cc.support">support@platosys.co.uk</entry>
+<entry key="administrator.email">admin@platosys.co.uk</entry>
+</properties>

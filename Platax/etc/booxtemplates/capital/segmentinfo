@@ -1,0 +1,8 @@
+This folder contains xml files with the accounts structure for the capital segment. 
+There should be one file for each module in the segment and the filename is the same as the 
+module name. The files are all listed in the boox.xml manifest file in the templates root folder.
+
+The capital segment is concerned with ownership of the enterprise, whether it is a company limited 
+by shares, by guarantee, or is a partnership, a trust, or a sole trader.
+
+It is a single-selection segment - an enterprise can have one, and only one, of these structures.

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : databases.xml
+    Created on : 15 June 2011, 20:10
+    Author     : edward
+    Description:
+       config document for platosysDB systems
+-->
+<databases>
+  <database name="platax" status="master">
+    <databaseDriver>org.postgresql.Driver</databaseDriver>
+    <databaseUrl>jdbc:postgresql://localhost:5432/platax</databaseUrl>
+    <databaseUser>platax</databaseUser>
+    <databasePassword>rosemary</databasePassword>
+  </database>
+  <database name="xusers" status="sole">
+    <databaseDriver>org.postgresql.Driver</databaseDriver>
+    <databaseUrl>jdbc:postgresql://localhost:5432/xusers</databaseUrl>
+    <databaseUser>platax</databaseUser>
+    <databasePassword>rosemary</databasePassword>
+  </database>
+  <database name="qc7fdb8d3c6ecce6" status="slave">
+    <databaseDriver>org.postgresql.Driver</databaseDriver>
+    <databaseUrl>jdbc:postgresql://localhost:5432/qc7fdb8d3c6ecce6</databaseUrl>
+    <databaseUser>platax</databaseUser>
+    <databasePassword>rosemary</databasePassword>
+  </database>
+</databases>

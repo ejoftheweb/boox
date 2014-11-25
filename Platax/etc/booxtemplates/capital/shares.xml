@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : shares.xml 
+    Created on : 25 nov 14
+    Author     : edward
+    Description:
+        This is the module file for a company limited by shares
+        
+        NB not complete
+        
+        NB tasks to be done
+        
+         
+-->
+
+<root xmlns = "http://www.platosys.co.uk/boox">
+<Ledgers> 
+    <!-- XBX is the system name for the default currency. -->
+    <Ledger name="XBX">
+        <!-- the Income ledger records all income received by the business, whether sales or interest earned -->
+        
+      
+      <!--  the Expenditure ledger records outgoings -->
+      <Ledger name="Expenditure" isPrivate="false">
+          
+          <!-- Fixed costs you have to pay regardless of your trade -->
+          <Ledger name="Fixed" isPrivate="false">
+          		<Ledger name="Interest" isPrivate="false">
+          		    <Account name="Bond Interest" fullName="Bond Interest paid" description="Bond Interest paid"/>
+          		</Ledger>
+      	  </Ledger>
+     </Ledger>
+    
+     <!-- the Fixed ledger records the long-term assets and liabilities of the business -->      
+     <Ledger name="Fixed" isPrivate="false">
+        <Ledger name="Liabilities" isPrivate="false">
+            <!-- Capital is money put into the business that you don't expect to pay back -->
+            <Ledger name="Capital" isPrivate="false">
+                <Ledger name="Shares" isPrivate="false">
+                    <Ledger name="Ordinary" isPrivate="false">
+                        <Account name="Premium" description="Share Premium Account"/>
+                    </Ledger>
+                    <Ledger name="Preference" isPrivate="false">
+                        
+                    </Ledger>
+                </Ledger>
+                <Account name="P&L" fullName="Profit and Loss Account" description="Profit and Loss Account"/>
+            </Ledger>
+            <!-- Loans are  expected to be repaid -->
+            <Ledger name="Loans"  isPrivate="false">
+                <Ledger name="Directors" isPrivate="false"/>
+                <Ledger name="Bonds" isPrivate="false"/>
+            </Ledger>
+        </Ledger>
+        
+    </Ledger>
+    <!-- the Current ledger records the short-term assets and liabilities. Its balance is a good indicator of the business's solvency -->	
+    
+    </Ledger><!-- XBX -->
+</Ledgers>
+</root>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="xuser.database">xusers</entry>
+<entry key="xuser.installation">platax</entry>
+<entry key="application.name">platax</entry>
+<entry key="xuser.confirmation.servlet">http://127.0.0.1:8888/platax/ConfirmationServlet</entry>
+<entry key="xuser.reset.password">http://127.0.0.1:8888/platax/ResetPassword</entry>
+<entry key="system.from.email">noreply.xusers@platosys.co.uk</entry>
+
+<entry key="email.developer">edward.barrow@platosys.co.uk</entry>
+<entry key="email.installation">platosys</entry>
+<entry key="mail.host">relay.plus.net</entry>
+<entry key="installation.host">corner</entry>
+<entry key="cc.support">support@platosys.co.uk</entry>
+<entry key="administrator.email">admin@platosys.co.uk</entry>
+</properties>

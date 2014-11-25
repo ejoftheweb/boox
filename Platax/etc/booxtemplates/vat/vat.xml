@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : accounts.xml 
+    Created on : 25 nov 14
+    Author     : edward
+    Description:
+        This is the basic framework for a boox accounting setup.
+        Other modules need to follow this framework and module writers
+        should use this as a template, commenting out any elements not changed.
+        
+         
+-->
+
+<root xmlns = "http://www.platosys.co.uk/boox">
+<Ledgers> 
+    <!-- XBX is the system name for the default currency. -->
+    <Ledger name="XBX">
+        
+    <!-- the Current ledger records the short-term assets and liabilities. Its balance is a good indicator of the business's solvency--> 	
+    <Ledger name="Current" isPrivate="false">
+    	
+    
+        <Ledger name="Liabilities" isPrivate="false">
+        	<Ledger name="Tax" isPrivate="false">
+        	    
+            	<Ledger name="VAT" isPrivate="false">
+                	<Ledger name="OutputVat" isPrivate="false">
+                		<Account name="VATOutputZero" fullName="ZeroRate" description="ZeroRate"/>
+                		<Account name="VATOutputLower" fullName="LowerRate" description="LowerRate"/>
+                		<Account name="VATOutputStandard" fullName="StandardRate" description="StandardRate"/>
+                		<Account name="VATOutputHigher" fullName="HigerRate" description="HigherRate"/>
+                	</Ledger>
+                	<Ledger name="InputVat" isPrivate="false">
+                		<Account name="VATInputZero" fullName="ZeroRate" description="ZeroRate"/>
+                		<Account name="VATInputLower" fullName="LowerRate" description="LowerRate"/>
+                		<Account name="VATInputStandard" fullName="StandardRate" description="StandardRate"/>
+                		<Account name="VATInputHigher" fullName="HigerRate" description="HigherRate"/>
+                	</Ledger>
+            	</Ledger>
+            	
+        	</Ledger><!-- tax -->
+       	
+    	</Ledger><!-- Liabilities -->
+    </Ledger><!-- current -->
+    </Ledger><!-- XBX -->
+</Ledgers>
+</root>

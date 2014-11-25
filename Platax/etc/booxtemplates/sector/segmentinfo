@@ -1,0 +1,8 @@
+This folder contains xml files with the accounts structure for the sector segment. 
+There should be one file for each module in the segment and the filename is the same as the 
+module name. The files are all listed in the boox.xml manifest file in the templates root folder.
+
+The sector segment contains modules for different business sectors - e.g catering and hospitality, 
+building trades, property development, residential letting, consultancy, professional services etc.
+
+It is a mulit-selection segment - an enterprise can use zero or more of these modules.

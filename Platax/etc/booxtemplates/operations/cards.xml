@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : accounts.xml.xml
+    Created on : 02 September 2008, 09:13
+    Author     : edward
+    Description:
+        This module sets up the ledgers and accounts you need to handle card transactions.
+-->
+
+<root xmlns = "http://www.platosys.co.uk/boox">
+ <Ledgers>
+    <Ledger name="XBX">
+       
+     
+    
+      <Ledger name="Expenditure" isPrivate="false">
+         <Ledger name="Finance" isPrivate="false">
+          	<Ledger name="CardProcessing" isPrivate="false">
+          		<Account name="TerminalRental" fullName="Card Terminal Rental" description="Card Terminal Rental"/>
+          		<Account name="HandlingCharges" fullName="Card Handling Charges" description="Card Handling Charges"/>
+          	</Ledger>
+          </Ledger>
+      </Ledger>
+    
+   
+    <Ledger name="Current" isPrivate="false">
+    <Ledger name="Assets" isPrivate="false">
+        
+        <Ledger name="Debtors" isPrivate="false">
+            <Ledger name="ServiceCos">
+            	<Ledger name="CardCos" isPrivate="false"/> 
+            </Ledger>
+        	<Ledger name="Customers" isPrivate="false"/>
+        </Ledger>
+     
+    </Ledger>
+    
+    <Ledger name="Liabilities" isPrivate="false">
+        
+        <Ledger name="Creditors" isPrivate="false">
+        	<Ledger name="Suppliers" isPrivate="false">
+        	  <Ledger name="ServiceCos">
+            	<Ledger name="CardCos" isPrivate="false"/> 
+            </Ledger>
+        	</Ledger>
+        </Ledger>
+    </Ledger>
+    </Ledger>
+    </Ledger>
+    
+    </Ledgers>
+    <Tasks>
+    </Tasks>
+</root>

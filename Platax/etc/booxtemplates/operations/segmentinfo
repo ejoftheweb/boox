@@ -1,0 +1,8 @@
+This folder contains xml files with the accounts structure for the operations segment. 
+There should be one file for each module in the segment and the filename is the same as the 
+module name. The files are all listed in the boox.xml manifest file in the templates root folder.
+
+The operations segment is concerned with how the business operates, e.g. handles cash, payments, etc. If 
+it takes card payments, for example, it should load the cards module. 
+
+It is a mulit-selection segment - an enterprise can use zero or more of these modules.

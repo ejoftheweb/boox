@@ -1,0 +1,9 @@
+This folder contains xml files with the accounts structure for the overhead segment. 
+There should be one file for each module in the segment and the filename is the same as the 
+module name. The files are all listed in the boox.xml manifest file in the templates root folder.
+
+The overhead segment is concerned with the business overheads such as premises and vehicles. If it rents
+leasehold premises it should select this module which will set up tasks and accounts for rent, business rates,
+utilities, buildings insurance etc.
+
+It is a mulit-selection segment - an enterprise can use zero or more of these modules.

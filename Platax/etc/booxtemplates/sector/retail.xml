@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : accounts.xml 
+    Created on : 25 nov 14
+    Author     : edward
+    Description:
+        This is the basic framework for a boox accounting setup.
+        Other modules need to follow this framework and module writers
+        should use this as a template, commenting out any elements not changed.
+        
+         
+-->
+
+<root xmlns = "http://www.platosys.co.uk/boox">
+<Ledgers> 
+    <!-- XBX is the system name for the default currency. -->
+    <Ledger name="XBX">
+        <!-- the Income ledger records all income received by the business, whether sales or interest earned -->
+        <Ledger name="Income" isPrivate="false">
+           <Ledger name="Sold" isPrivate="false">
+              <Account name="Sales" fullName="Goods sold" description="General Sales Account"/>
+           </Ledger>
+           <Ledger name="InterestEarned" isPrivate="false"/>    
+       </Ledger>
+      
+      <!--  the Expenditure ledger records outgoings -->
+      <Ledger name="Expenditure" isPrivate="false">
+          <!-- variable costs go up and down with the state of the business -->
+          <Ledger name="Variable" isPrivate="false">
+          		<!-- Purchases are things bought with the intention that they should be resold -->
+          		<Ledger name="Purchases" isPrivate="false"/>
+          		<!-- Labour can be both a fixed and a variable cost. This variable cost is for e.g. casual wages -->
+          		<Ledger name="Labour" isPrivate="false"/>
+ 				<!-- Expenses covers other variable costs that are neither purchases nor labour -->	         
+          </Ledger>
+          <!-- Fixed costs you have to pay regardless of your trade -->
+          <Ledger name="Fixed" isPrivate="false">
+          		<!-- Fixed labour costs (e.g. staff salaries) go here -->
+          		<Ledger name="Labour" isPrivate="false"/>
+         	 		<!-- 
+          			<Ledger name="Salaries" isPrivate="false"/>
+          			-->
+      	  </Ledger>
+     </Ledger>
+    
+     <!-- the Fixed ledger records the long-term assets and liabilities of the business -->      
+     <Ledger name="Fixed" isPrivate="false">
+        <Ledger name="Liabilities" isPrivate="false">
+            <!-- Capital is money put into the business that you don't expect to pay back -->
+            <Ledger name="Capital" isPrivate="false"/>
+            <!-- Loans are  expected to be repaid -->
+            <Ledger name="Loans"  isPrivate="false"/>
+        </Ledger>
+        <Ledger name="Assets" isPrivate="false">
+        	<Ledger name="Land" isPrivate="false"/> 
+        	<Ledger name="Plant" isPrivate="false">
+        	    <!-- 
+        	    <Ledger name="MotorVehicles" isPrivate="false"/>
+        	    -->
+        	</Ledger>
+    	</Ledger>
+    </Ledger>
+    <!-- the Current ledger records the short-term assets and liabilities. Its balance is a good indicator of the business's solvency -->	
+    <Ledger name="Current" isPrivate="false">
+    	<Ledger name="Assets" isPrivate="false">
+        	<Ledger name="Cash" isPrivate="false">
+        	    <!-- 
+            	<Account name="PettyCash" fullName="Petty Cash" description="Petty Cash Account"/>
+            	<Account name="BankCurrent" fullName="Bank Current Account" description="Bank Current Account"/>
+            	<Account name="BankDeposit" fullName="Bank Deposit Account" description="Bank Deposit Account"/>
+            	-->
+        	</Ledger>
+        	<Ledger name="AccountsReceivable" isPrivate="false">
+        		<Ledger name="Customers" isPrivate="false"/>
+        	</Ledger>
+        	<!-- Stock is known as inventory in American -->
+        	<Ledger name="Stock" isPrivate="false">
+        		<Ledger name="Products" isPrivate="false"/>
+        		<Ledger name="Materials" isPrivate="false"/>
+        	</Ledger>
+    	</Ledger>
+    
+        <Ledger name="Liabilities" isPrivate="false">
+        	<Ledger name="Tax" isPrivate="false">
+        	    <!-- 
+            	<Ledger name="VAT" isPrivate="false">
+                	<Ledger name="OutputVat" isPrivate="false">
+                		<Account name="VATOutputZero" fullName="ZeroRate" description="ZeroRate"/>
+                		<Account name="VATOutputLower" fullName="LowerRate" description="LowerRate"/>
+                		<Account name="VATOutputStandard" fullName="StandardRate" description="StandardRate"/>
+                		<Account name="VATOutputHigher" fullName="HigerRate" description="HigherRate"/>
+                	</Ledger>
+                	<Ledger name="InputVat" isPrivate="false">
+                		<Account name="VATInputZero" fullName="ZeroRate" description="ZeroRate"/>
+                		<Account name="VATInputLower" fullName="LowerRate" description="LowerRate"/>
+                		<Account name="VATInputStandard" fullName="StandardRate" description="StandardRate"/>
+                		<Account name="VATInputHigher" fullName="HigerRate" description="HigherRate"/>
+                	</Ledger>
+            	</Ledger>
+            	-->
+            	<!-- 
+            	<Ledger name="PAYENIC" fullName="PAYE and NIC" description="Employment-related taxes">
+            		<Account name="PAYE" fullName="PAYE" description="PAYE Income Tax for employees"/>
+            		<Account name="NIC" fullName="National Insurance" description="National Insurance Contributions"/>
+        		</Ledger>
+        		-->
+        	</Ledger><!-- tax -->
+       		<Ledger name="AccountsPayable" isPrivate="false">
+        		<Ledger name="Suppliers" isPrivate="false"/>
+        	</Ledger><!-- AP -->
+    	</Ledger><!-- Liabilities -->
+    </Ledger><!-- current -->
+    </Ledger><!-- XBX -->
+</Ledgers>
+</root>
