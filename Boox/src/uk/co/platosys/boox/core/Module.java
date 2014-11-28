@@ -23,9 +23,13 @@ import uk.co.platosys.boox.core.exceptions.BooxException;
 *  Then, for the "sector" segment there would be industry-based modules, e.g. for catering, or for construction. These are non-exclusive since an
 *  enterprise could operate in several sectors.
 *  
-*  A module consists of an XML file with two elements under its root element: Ledgers and Tasks. Ledgers sets up the hierarchical accounting structure
+*  A module consists of an XML file with three elements under its root element: Ledgers, Tasks and Menu. Ledgers sets up the hierarchical accounting structure
 *  of Ledgers and Accounts, together with a default set of permissions.
 *  Tasks sets up the associated tasks that need to be done to keep the books up-to-date. 
+*  Menu provides module-specific menu entries for use by the front-end application.
+*  
+*  Note that Boox doesn't need to know anything about the menu. It's just that menu entries are usually module-specific.
+*  so the module file is the sensible place to put this information. 
 *  */
 
 public class Module {

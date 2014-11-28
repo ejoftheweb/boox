@@ -762,7 +762,7 @@ public class Boox {
                 debugLogger.log("error reading currency attribute for ledger "+name, e);
             }
             Ledger newLedger = Ledger.createLedger(enterprise, name, ledger, currency, clerk, isprivate);
-            debugLogger.log(5, "Created ledger:"+newLedger.getName()+" , owner "+newLedger.getOwner().getName()+", parent "+newLedger.getParent(enterprise).getName());
+            debugLogger.log( "BX_CL Created ledger:"+newLedger.getName()+" , owner "+newLedger.getOwner().getName()+", fullname "+newLedger.getFullName());
             createLedgersAndAccounts(enterprise, clerk, ledgerElement, newLedger);
         }
    }

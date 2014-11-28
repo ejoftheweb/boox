@@ -314,13 +314,22 @@ public  class Clerk {
     }
     
     public boolean hasPermission(Enterprise enterprise, Ledger ledger, Permission permission){
+        logger.log("Clerk-HP checking for permission "+permission.getName()+ " on ledger "+ledger.getFullName());
+        //Permission checking Algorithm:
+        //First, check to see if the permission is there on the ledger directly.
+        //if not, check each parent recursively for an equivalent cascading permission.
         
         try{
+        	//first check for a direct permission
+        	logger.log("Clerk-HP checking for direct permission "+permission.getName()+ " on ledger "+ledger.getFullName());
             if(hasPermission(enterprise, ledger, permission, false)){
                   return true;
             }else{
 
                 while(ledger.hasParent(enterprise)){
+                	//Recursively checking for cascading permission on parents
+                	logger.log("Clerk-HP recursively checking for cascading permission "+permission.getName()+ " on ledger "+ledger.getFullName());
+                    
                     if(hasPermission(enterprise, ledger.getParent(enterprise),permission,  true)){
                         return true;
                     }
@@ -337,45 +346,47 @@ public  class Clerk {
     }
 
      private boolean hasPermission(Enterprise enterprise, Ledger ledger, Permission permission,  boolean cascades){
-        logger.log("CHP checking for "+name+" permission "+permission.getName()+" on ledger "+ledger.getName()+" in enterprise "+enterprise.getName());
+    	 String casc; if (cascades){casc="cascading";}else{casc="direct";}//debug code
+        logger.log("CHPx checking for "+name+" "+casc+" permission "+permission.getName()+" on ledger "+ledger.getFullName());
         Connection connection;
         String databaseName = enterprise.getDatabaseName();
         try{
             connection=ConnectionSource.getConnection(databaseName);
             Statement statement = connection.createStatement();
            
-            String sqlstring =("SELECT * FROM "+Permission.TABLENAME+" WHERE("+Permission.LEDGER_COLNAME+" = '"+ledger.getName()+"')");
+            String sqlstring =("SELECT * FROM "+Permission.TABLENAME+" WHERE("+Permission.LEDGER_COLNAME+" = '"+ledger.getFullName()+"')");
           //  logger.log(sqlstring);
             ResultSet rs = statement.executeQuery(sqlstring);
             while(rs.next()){
-               Iterator<String> nit = names.iterator();
-               while(nit.hasNext()){
-                   String aname = nit.next();
+               for(String aname:names){
                    if (rs.getString(Permission.CLERK_COLNAME).equals(aname)){
                        if(cascades){
                             if((rs.getBoolean(permission.getName()))&&(rs.getBoolean(Permission.CASCADES_COLNAME))){
             //                	logger.log(" TRUE CASCADES checking for "+name+" permission "+permission.getName()+" on ledger "+ledger.getName()+" in enterprise "+enterprise.getName());
-                                
+                            	 logger.log("CHPx Clerk "+name+" has cascade permission "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
+                                 
                             	return true;
                             }else if((rs.getBoolean(Permission.ALL_COLNAME)&&(rs.getBoolean(Permission.CASCADES_COLNAME)))){
               //              	logger.log("TOUT CASCADES  for "+name+" permission "+permission.getName()+" on ledger "+ledger.getName()+" in enterprise "+enterprise.getName());
+                            	logger.log("CHPx Clerk "+name+" has all permissions inc "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
                                 
                                 return true;
                             }
                         }else{
                             if(rs.getBoolean(permission.getName())){
                 //            	logger.log("TRUE checking for "+name+" permission "+permission.getName()+" on ledger "+ledger.getName()+" in enterprise "+enterprise.getName());
+                            	logger.log("CHPx Clerk "+name+" has direct permission "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
                                 
                                 return true;
                             }else if(rs.getBoolean(Permission.ALL_COLNAME)){
                   //          	logger.log("TRUE -ALL checking for "+name+" permission "+permission.getName()+" on ledger "+ledger.getName()+" in enterprise "+enterprise.getName());
+                            	logger.log("CHPx Clerk "+name+" has all permissions inc "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
                                 
                                 return true;
                             }
                         }
-                   }
-
-               }
+                   }//
+                }//done cycling names
              }
             //logger.log("FALSE: "+name+" permission "+permission.getName()+" on ledger "+ledger.getName()+" in enterprise "+enterprise.getName());
               return false;

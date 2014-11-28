@@ -85,6 +85,7 @@ public class Enterprise extends Body {
        if (this.databaseName==null){throw new BooxException("enterprise ID"+enterpriseID+" seems to have no dbname");}
         
      }catch(Exception x){
+    	 logger.log("E(EID) error reading details ", x);
      	throw new BooxException("could not read enterprise details from mster database", x);
      }
     }
@@ -142,15 +143,15 @@ public class Enterprise extends Body {
    
 /**
      * This method returns an Enterprise with an authenticated Supervisor.
-     * @param name
+     * @param enterpriseID
      * @param databaseName
      * @param supervisorName
      * @param supervisorPassword
      * @return
      * @throws CredentialsException 
      */
-    public static Enterprise getEnterprise (String name,  String supervisorName, String supervisorPassword) throws CredentialsException, BooxException{
-       Enterprise enterprise=new Enterprise(name);
+    public static Enterprise getEnterprise (String enterpriseID,  String supervisorName, String supervisorPassword) throws CredentialsException, BooxException{
+       Enterprise enterprise=new Enterprise(enterpriseID);
       // enterprise.setJournal(Boox.loadJournal(enterprise));
        enterprise.setSupervisor(Boox.createSupervisor(enterprise, supervisorName, supervisorPassword));
        return enterprise;
@@ -160,8 +161,8 @@ public class Enterprise extends Body {
      * @param name
      * @return
      */
-    public static Enterprise getEnterprise(String name) throws BooxException{
-       Enterprise enterprise=new Enterprise(name);
+    public static Enterprise getEnterprise(String enterpriseID) throws BooxException{
+       Enterprise enterprise=new Enterprise(enterpriseID);
       // enterprise.setJournal(Boox.loadJournal(enterprise));
        return enterprise;
     }
@@ -255,5 +256,36 @@ public class Enterprise extends Body {
         	return null;
         }
         
+    }
+    /**
+     * Checks to see if the name has already been used. 
+     * Some applications may need unique system-wide enterprise nicknames, so we 
+     * need this method to check that they are so. 
+     * Note however that this isn't a necessary constraint for boox, as enterprises are 
+     * always referred to by their unique system ID.
+     *  
+     * @param name
+     * @return
+     * @throws BooxException 
+     */
+    public static boolean isNameOK(String name) throws BooxException{
+    	try{  
+        	//ENTERPRISES_TABLENAME JDBCTable is created in the master database:
+        	
+        	if(!(JDBCTable.tableExists(Boox.APPLICATION_DATABASE, Boox.ENTERPRISES_TABLENAME))){
+        		//making a kludgy jump here - if there's no enterprises table, then the name must be OK
+        		return true;
+        	}else{
+        		JDBCTable enterprisesTable=new JDBCTable(Boox.APPLICATION_DATABASE, Boox.ENTERPRISES_TABLENAME, Boox.EID_COLNAME);
+        		if(enterprisesTable.rowExists(NAME_COLNAME, name)){
+        			return false;
+        		}else{
+        			return true;
+        		}
+        	}
+              
+        }catch(PlatosysDBException pdbe){
+        	throw new BooxException("BX-E isNameOK error checking name" +name, pdbe);
+        }
     }
 }

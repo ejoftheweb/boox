@@ -19,7 +19,7 @@ import uk.co.platosys.db.jdbc.JDBCTable;
  * @author edward
  */
 public class Permission {
-	public static final String TABLENAME="permissions";
+	public static final String TABLENAME="bx_permissions";
     private String permissionName;
     protected boolean cascading=false;
     static String CLERK_COLNAME="clerk";

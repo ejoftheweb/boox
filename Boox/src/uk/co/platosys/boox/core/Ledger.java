@@ -205,7 +205,6 @@ public final class Ledger implements Budgetable, Auditable {
            }
         }
         return accountNames;
-       
     }
     /**
      * Note that this returns only the accounts held directly in this ledger
@@ -277,39 +276,30 @@ public final class Ledger implements Budgetable, Auditable {
 
        Money balance= new Money(getCurrency(), BigDecimal.ZERO);
        try{
-       List<Account> accounts = getAccounts(enterprise, clerk);
-        Iterator<Account> akit = accounts.iterator();
-        while(akit.hasNext()){
-            Account account=(Account) akit.next();
-            logger.log(5, "account "+account.getName()+ " currency is "+ account.getCurrency().getTLA());
-            Money accBal=account.getBalance();
-            logger.log(5, "debiting ledger "+name+"in "+getCurrency().getTLA()+" with account: "+account.getName()+" in "+accBal.getCurrency().getTLA());
-           balance.debit(accBal);
-        }
+	       List<Account> accounts = getAccounts(enterprise, clerk);
+	       for (Account account: accounts){
+	            logger.log(5, "account "+account.getName()+ " currency is "+ account.getCurrency().getTLA());
+	            Money accBal=account.getBalance();
+	            logger.log(5, "debiting ledger "+name+"in "+getCurrency().getTLA()+" with account: "+account.getName()+" in "+accBal.getCurrency().getTLA());
+	            balance.debit(accBal);
+	       }
        }catch(Exception e){
            logger.log("Ledger-gLB: getting account balances",e);
        }
 
        try{
-       List <String> ledgerNames=getLedgerNames();
-        Iterator<String> skit=ledgerNames.iterator();
-       
-        
-        skit=ledgerNames.iterator();
-
-        while(skit.hasNext()){
-            String ledgerName=(String)skit.next();
-            Ledger ledger=null;
-            try {
-                ledger=new Ledger(enterprise, ledgerName);
-            }catch(Exception bex){
-                logger.log("Unexpected Boox Exception in getLedgerBalance", bex);
-            }
-            Money lbalance=ledger.getLedgerBalance(enterprise, clerk);
-            //logger.log(5, "debiting ledger "+name+" with ledger: "+ledger.getName());
-
-            balance.debit(lbalance);
-        }
+	       List <String> ledgerNames=getLedgerNames();
+	       for(String ledgerName:ledgerNames){
+	            Ledger ledger=null;
+	            try {
+	                ledger=new Ledger(enterprise, ledgerName);
+	            }catch(Exception bex){
+	                logger.log("Unexpected Boox Exception in getLedgerBalance", bex);
+	            }
+	            Money lbalance=ledger.getLedgerBalance(enterprise, clerk);
+	            //logger.log(5, "debiting ledger "+name+" with ledger: "+ledger.getName());
+	            balance.debit(lbalance);
+	        }
        }catch(Exception e){
            logger.log("Ledger-gLB: getting subledger balances",e);
        }
@@ -426,21 +416,35 @@ public final class Ledger implements Budgetable, Auditable {
      * 
      * @return this ledger's parent ledger, or this if this is the general(root) ledger.
      * @throws BooxException if the parent name is somehow missing from the list of ledger names.
+     *    //
+     * currently broken and returns null because we no longer have the constructor that 
+     * works on the single name due to them no longer being unique. The name constructor works on the 
+     * fullname. Fixed; parentName is now parent fullname.
+     * 
+     * Deprecated because we probably don't need it due to using fullnames
+     * 
+     * UnDeprecated because we need it for permissions checking //all can go
+     * 
+     * 
      */
+    
     public Ledger getParent(Enterprise enterprise) throws BooxException{
         if (this.hasParent(enterprise)){
-        	return new Ledger(enterprise, parentName, false);
+        	return new Ledger(enterprise, parentName);
         }else{
         	return this;
         }
     }
     /**
+     * Every Ledger, bar the root Ledger, has a parent. This method
+     * simply checks to see if it's the root ledger.
      * 
-     * @return
+     * @return false if it's the root ledger; true otherwise.
      */
  
     public boolean hasParent(Enterprise enterprise){
-       if (this.getName().equals(ROOT_LEDGER_NAME)){
+    	if(this.fullName==null){return false;}//the name should never be null.
+       if (this.getFullName().equals(ROOT_LEDGER_NAME)){
             return false;
         }else{
             return true;
@@ -555,7 +559,7 @@ public final class Ledger implements Budgetable, Auditable {
             String parentName="none";
             String fullName=name;
             if (parent!=null){
-                parentName=parent.getName();
+                parentName=parent.getFullName();
                 fullName=parent.getFullName()+DELIMITER+name;
             }
             String SQLString = ("SELECT * FROM "+TABLENAME+" WHERE ("+NAME_COLNAME+" = \'"+name+"\')");

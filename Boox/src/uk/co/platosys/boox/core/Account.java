@@ -42,6 +42,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
+import javax.naming.OperationNotSupportedException;
 
 import uk.co.platosys.boox.core.exceptions.BooxException;
 import uk.co.platosys.boox.core.exceptions.PermissionsException;
@@ -60,7 +61,15 @@ import uk.co.platosys.util.ShortHash;
  * An Account, therefore, is a list of transactions, which may be either Credit or Debit transactions. 
  * An Account has a Balance, which is the sum of credits and debits with credits treated as negative. 
  * 
- * Transactions are listed in an Account with 
+ * Transactions are listed with a TransactionID, unique with system scope. The account listing
+ * also identifies the contra account - the account on which the other side of the transaction is recorded.
+ * There is also space for recording the clerk who posted the transaction, the date/time of posting, and
+ * a free-form note explaining it. 
+ * 
+ * With appropriate access to the underlying database, accounts can be read directly. Access should therefore
+ * be restricted because this approach bypasses the Boox permissions system.
+ * <h2>Account metadata: the Chart<h2>
+ * Account metadata is all recorded in the Chart table (the Chart of Accounts). 
  * 
  * <h2>Account Naming Conventions</h2>
  *  Accounts have three names.
@@ -72,7 +81,16 @@ import uk.co.platosys.util.ShortHash;
  *  
  *  Thus: General:CurrentLiabilities:Tax is a ledger, while General:CurrentLiabilities#Tax would be an account. 
  * 
+ * <h2>Changing Ledgers<h2>
+ * Ledger transactions are not recorded in the database and ledgers do not therefore keep a live record of their balance;
+ *  a call to Ledger.getBalance()  makes the ledger calculate its balance from scratch.
+ * It is therefore possible to move an account from on ledger to another without affecting the overall
+ * balance of the system; it is merely a matter of changing the metadata about that account in the Chart
+ * table. It will, however, change the account fullName. 
+ * The likely usecase for changing ledgers is adding more enterprise-specific detail to the accounting structure
+ * than is provided in the initial modules, which, although sector-specific, are inherently generic. 
  * 
+ * Ledger changing is not yet implemented (Nov2014)
  * 
  * 
  * 
@@ -208,7 +226,7 @@ public class Account implements Budgetable,  Auditable {
    
     /**
      * Returns a Money object representing the current balance of this account
-     * @return The balancee
+     * @return The balance
      */
      public Money getBalance(Enterprise enterprise, Clerk clerk) throws PermissionsException{
         if(clerk.canRead(enterprise, ledger)){
@@ -369,7 +387,19 @@ public class Account implements Budgetable,  Auditable {
        
         
     }
-  
+    /**
+     * As of Nov2014, this is not yet supported and a call will automatically throw an ONSE.
+     * 
+     * @param ledger
+     * @param clerk
+     * @return
+     * @throws PermissionsException
+     * @throws OperationNotSupportedException
+     */
+    public boolean setLedger(Ledger ledger, Clerk clerk)throws PermissionsException, OperationNotSupportedException{
+    	//TODO implement Account.setLedger()
+    	throw new OperationNotSupportedException();
+    }
     public String getName(){
         return name;
     }
