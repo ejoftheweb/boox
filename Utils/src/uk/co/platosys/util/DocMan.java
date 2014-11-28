@@ -17,6 +17,8 @@ import org.jdom2.output.XMLOutputter;
  * To read an xml file do DocMan.build(filename);
  * To write an xml file do DocMan.write(filename, document-to-write);
  * 
+ * It's a bit skanky and will choke on not-well-formed documents so always best to validate them beforehand.
+ * 
  * @author edward
  */
 public class DocMan {
