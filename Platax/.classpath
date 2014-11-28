@@ -16,5 +16,10 @@
 	<classpathentry kind="lib" path="/home/edward/java/jar/ecs-1.4.2.jar"/>
 	<classpathentry kind="lib" path="/home/edward/java/jar/javax.servlet-api-3.0.1.jar"/>
 	<classpathentry kind="lib" path="/home/edward/java/jar/postgresql-9.3-1102.jdbc41.jar"/>
+	<classpathentry kind="lib" path="/opt/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.6.0/gwt-2.6.0/gwt-user.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/opt/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.6.0/gwt-2.6.0/doc/javadoc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

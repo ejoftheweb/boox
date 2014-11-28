@@ -1,11 +1,13 @@
 package uk.co.platosys.platax.client.widgets.html;
+import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineHTML;
-public abstract class AnchorHTML extends InlineHTML {
-	protected PlataxTabPanel context;
-	public AnchorHTML(String text, PlataxTabPanel context) {
+public  class AnchorHTML extends Anchor {
+	protected Platax context;
+	public AnchorHTML(String text, Platax context) {
 		super(text);
 		this.context=context;
 	}

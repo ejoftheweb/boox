@@ -113,4 +113,17 @@
     </Ledger><!-- current -->
     </Ledger><!-- XBX -->
 </Ledgers>
+<Tasks>
+    <!-- The Tasks element contains definitions of tasks associated with the module -->
+</Tasks>
+<Menu>
+    <!-- The Menu element contains definitions of the module's menu items -->
+    <MenuItem name="capital" localisedName="Capital">
+        <MenuItem name="equity" localisedName="Equity">
+            <MenuItem name="issue" localisedName="Issue Shares" command="shareIssue"/>
+        </MenuItem>
+        <MenuItem name="bonds" localisedName="Bonds">
+        </MenuItem>    
+    </MenuItem>
+</Menu>
 </root>

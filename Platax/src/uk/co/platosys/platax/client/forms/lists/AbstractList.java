@@ -4,6 +4,7 @@ import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 
+import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.forms.AbstractForm;
 import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 
@@ -17,8 +18,8 @@ public final int SELECTION_OVERDUE=16;
 SimplePager pager= new SimplePager();
 
 //this abstract method must handle paging over longer lists.
-	public AbstractList(PlataxTabPanel parent, String header, int list_selection_type) {
-		super( header);
+	public AbstractList(Platax platax, String header, int list_selection_type) {
+		super( platax);
 		//form.add(table);
 		
 	}

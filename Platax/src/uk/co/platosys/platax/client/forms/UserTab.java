@@ -24,7 +24,7 @@ import com.google.gwt.user.client.Window;
 
 public class UserTab extends AbstractForm {
 	public UserTab(Platax pplatax, PXUser user) {
-		super();
+		super(pplatax);
     
     //pTab info fields
 	setTabHeaderText(user.getUsername());
@@ -113,7 +113,7 @@ public class UserTab extends AbstractForm {
 
 			@Override
 			public void onClick(ClickEvent event) {
-					platax.addTab(new AddEnterpriseForm(platax));
+					platax.addTab(new AddEnterpriseForm(platax), true);
 					/*
 					int etabindex = ptp.getWidgetIndex(etab);
 					ptp.selectTab(etabindex);*/

@@ -535,6 +535,17 @@ static Logger logger = Logger.getLogger("platax");
 		return gRoles;
 	}
 
+	@Override
+	public Boolean isNameOK(String name) {
+		try {
+			Boolean nameOK = new Boolean (Enterprise.isNameOK(name));
+			return nameOK;
+		}catch(Exception x){
+			logger.log("ESI-isNameOK error: ", x);
+			return null;
+		}
+	}
+
 
 	
 	

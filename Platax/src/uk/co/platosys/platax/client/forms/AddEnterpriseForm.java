@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
+import uk.co.platosys.platax.client.constants.DateFormats;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.MessageText;
 import uk.co.platosys.platax.client.constants.StringText;
@@ -19,6 +20,7 @@ import uk.co.platosys.platax.client.widgets.AddressWidget;
 import uk.co.platosys.platax.client.widgets.CheckList;
 import uk.co.platosys.platax.client.widgets.CheckPanel;
 import uk.co.platosys.platax.client.widgets.HMVListBox;
+import uk.co.platosys.platax.client.widgets.PDateBox;
 import uk.co.platosys.platax.client.widgets.buttons.CancelButton;
 import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
 import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
@@ -62,7 +64,6 @@ import com.google.gwt.user.datepicker.client.DatePicker;
  * @author edward
  *
  */
-//TODO abstract strings to constants for i18n
 //TODO manage the delegation from another user...
 
 public class AddEnterpriseForm extends AbstractForm {
@@ -90,7 +91,7 @@ public class AddEnterpriseForm extends AbstractForm {
 				final FieldLabel isStartupLabel=new FieldLabel(LabelText.IS_STARTUP);
 				final FieldInfoLabel isStartupInfoLabel = new FieldInfoLabel(LabelText.IS_STARTUP_INFO);
 				//Reference date picker
-				final DatePicker startDateBox = new DatePicker();
+				final DateBox startDateBox = new PDateBox();
 				final FieldLabel startDateLabel = new FieldLabel(LabelText.START_DATE);
 				final FieldInfoLabel startDateInfoLabel = new FieldInfoLabel(LabelText.START_DATE_INFO);
 				//Agree terms?
@@ -98,27 +99,45 @@ public class AddEnterpriseForm extends AbstractForm {
 				final FieldLabel termsLabel=new FieldLabel(LabelText.TERMS);
 				final FieldInfoLabel termsInfoLabel = new FieldInfoLabel(LabelText.TERMS_INFO);
 				//submit button
-				final Button submitButton=new Button(ButtonText.CONFIRM);
+				final Button submitButton=new Button(ButtonText.NEXT);
 				final FieldLabel submitInfoLabel=new FieldLabel("");
 				final FieldInfoLabel submitLabel=new FieldInfoLabel(LabelText.ENTERPRISE_REGISTER);
 				//////
 				final EnterpriseServiceAsync enterpriseService = (EnterpriseServiceAsync) GWT.create(EnterpriseService.class);
                 ArrayList<GWTSegment> segments;
                 ArrayList<GWTModule> modules;
-			
-			public AddEnterpriseForm(Platax platax){
-				super(StringText.ADD_NEW);
-				init(platax);
-			}
-			private void init(final Platax platax){
-				topLabel.setText(LabelText.NEW_ENTERPRISE_PAGE_HEAD);
-				subHeader.setText(LabelText.NEW_ENTERPRISE_PAGE_SUB_HEAD);
-				nameBox.setEnabled(true);
-				legalNameBox.setEnabled(false);
-				orgTypeList.addItem(StringText.PLEASE_SELECT, StringText.NULL);
-				roleList.addItem(StringText.PLEASE_SELECT, StringText.NULL);
-				submitButton.setEnabled(false);
-				startDateBox.setVisible(true);
+                Platax platax;
+                //Callbacks:
+                final AsyncCallback<Boolean> namecheckCallback = new AsyncCallback<Boolean>(){
+					@Override
+					public void onFailure(Throwable caught) {
+						StackTraceElement[] st = caught.getStackTrace();
+						   String error = "getting segments failed\n";
+						   error = error+caught.getClass().getName()+"\n";
+						   for (int i=0; i<st.length; i++){
+							   error = error + st[i].toString()+ "\n";
+						   }
+							Window.alert(error);
+					}
+					@Override
+					public void onSuccess(Boolean result) {
+						if(result==null){Window.alert("Server error-null result for namecheck call");}
+						if (result.booleanValue()){
+							nameInfoLabel.setText(LabelText.NAME_OK);
+							setTabHeaderText(nameBox.getValue());
+							nameInfoLabel.setAlarmed(false);
+							legalNameBox.setEnabled(true);
+							legalNameBox.setFocus(true);
+						}else{
+							nameInfoLabel.setText(LabelText.NAME_NOT_OK);
+							nameInfoLabel.setAlarmed(true);
+							nameBox.setEnabled(true);
+							nameBox.setValue(null);
+							nameBox.setFocus(true);
+						}
+						 
+					}
+				};
 				
 				//Segment callback
 				final AsyncCallback<ArrayList<GWTSegment>> segmentCallback = new AsyncCallback<ArrayList<GWTSegment>>(){
@@ -170,10 +189,10 @@ public class AddEnterpriseForm extends AbstractForm {
 					
 					public void onSuccess(GWTEnterprise result){
 						if(result==null){Window.alert("Server error-null result for submit1 call");}
-						
-						setTabHeaderText(result.getName());
-						layoutPage2();
-						
+						if(!(incrementCounter())){
+							Window.alert("page counter error");
+						}
+						layoutPage2(result);
 					}
 					public void onFailure(Throwable cause){
 					   StackTraceElement[] st = cause.getStackTrace();
@@ -194,7 +213,7 @@ public class AddEnterpriseForm extends AbstractForm {
 						
 						platax.removeTab(AddEnterpriseForm.this);
 						platax.addTab(new EnterpriseTab(platax, result));
-						platax.addTab(new AddEnterpriseForm(platax));
+						//platax.addTab(new AddEnterpriseForm(platax));
 					}
 					public void onFailure(Throwable cause){
 					   StackTraceElement[] st = cause.getStackTrace();
@@ -207,6 +226,23 @@ public class AddEnterpriseForm extends AbstractForm {
 					
 					}
 				};	
+			
+			public AddEnterpriseForm(Platax platax){
+				super(platax, StringText.ADD_NEW, 2);
+				init(platax);
+			}
+			private void init(Platax platax){
+				platax=platax;
+				topLabel.setText(LabelText.NEW_ENTERPRISE_PAGE_HEAD);
+				subHeader.setText(LabelText.NEW_ENTERPRISE_PAGE_SUB_HEAD);
+				nameBox.setEnabled(true);
+				legalNameBox.setEnabled(false);
+				orgTypeList.addItem(StringText.PLEASE_SELECT, StringText.NULL);
+				roleList.addItem(StringText.PLEASE_SELECT, StringText.NULL);
+				submitButton.setEnabled(false);
+				startDateBox.setVisible(true);
+				//namecheck callback
+				
 			enterpriseService.getSegments(segmentCallback);
 			enterpriseService.getRoles(roleCallback);
 			//Layout Page
@@ -245,48 +281,14 @@ public class AddEnterpriseForm extends AbstractForm {
 				Window.alert("waiting for segments/smarter solution");
 			}*/
 			//a row and a listbox for each segment
-			/*
-			for (GWTSegment segment:segments){
-				rowno++;
-				table.setWidget(rowno, 0, new Label(segment.getName()));
-				while (modules==null){
-					Window.alert("waiting for modules");
-				}
-				
-				if (segment.isMultiSelect()){
-					CheckList cp = new CheckList();
-					table.setWidget(rowno, 1, cp);
-				    cp.addItems(segment.getModules());;
-				    table. setWidget(rowno,2, new Label(segment.getInstructions()));
-				
-				}else{
-					HMVListBox segmods = new HMVListBox();
-					table.setWidget(rowno, 1, segmods);
-				    fillList(segmods, segment);
-				    table. setWidget(rowno,2, new Label(segment.getInstructions()));
-				}
-				segment.setRowIndex(rowno);
-				//Window.alert(Integer.toString(rowno));
-				 * 
-				 */
-			///code for click handler on page 2!
-			/*ArrayList<String> modulenames=new ArrayList<String>();
-			for(GWTSegment segment:segments){
-				if (segment.isMultiSelect()){
-					CheckList cp = (CheckList) table.getWidget(segment.getRowIndex(), 1);
-					modulenames.addAll(cp.getValues());
-				}else{
-					HMVListBox box = (HMVListBox) table.getWidget(segment.getRowIndex(), 1);
-					modulenames.addAll(box.getValues());
-				}
-			}*/
+			
 			
 			
 			table.setWidget(7,0, submitLabel );
 			table.setWidget(7,1, submitButton);
 			table.setWidget(7,2, new CancelButton());
 			
-			form.add(table);
+			//form.add(table);
 			//vpanel.add(form);
 			//this.add(vpanel);
 			//Add handlers
@@ -295,8 +297,10 @@ public class AddEnterpriseForm extends AbstractForm {
 			nameBox.addChangeHandler(new ChangeHandler(){
 				@Override
 				public void onChange(ChangeEvent event) {
-					legalNameBox.setEnabled(true);
-					legalNameBox.setFocus(true);
+					enterpriseService.isNameOK(nameBox.getValue(), namecheckCallback);
+					//legalNameBox.setEnabled(true);
+					//legalNameBox.setFocus(true);
+					
 				}
 			});
 			
@@ -332,12 +336,12 @@ public class AddEnterpriseForm extends AbstractForm {
 					//startDateBox.setVisible(true);
 				}
 			});
-			startDateBox.addValueChangeHandler(new ValueChangeHandler<Date>(){
+			/*startDateBox.addValueChangeHandler(new ValueChangeHandler<Date>(){
 				@Override
 				public void onValueChange(ValueChangeEvent<Date> event){
 					
 				}
-			});
+			});*/
 			termsCheckBox.addClickHandler(new ClickHandler(){
 				@Override
 				public void onClick(ClickEvent event) {
@@ -375,8 +379,56 @@ public class AddEnterpriseForm extends AbstractForm {
 					}
 				}
 			}
-			private void layoutPage2(){
-				topLabel.setText(LabelText.NEW_ENTERPRISE_SECTOR_HEAD);
-				topLabel.setText(LabelText.NEW_ENTERPRISE_SECTOR_SUB_HEAD);
+			private void layoutPage2(final GWTEnterprise ent){
+				topLabel.setText(LabelText.NEW_ENTERPRISE_PAGE2_HEAD+" "+ent.getName());
+				subHeader.setText(LabelText.NEW_ENTERPRISE_PAGE2_SUB_HEAD);
+				int rowno=0;
+				Window.alert(Integer.toString(segments.size()));
+				for (GWTSegment segment:segments){
+					
+					table.setWidget(rowno, 0, new FieldLabel(segment.getName()));
+									
+					if (segment.isMultiSelect()){
+						CheckList cp = new CheckList();
+						table.setWidget(rowno, 1, cp);
+					    cp.addItems(segment.getModules());;
+					    table. setWidget(rowno,2, new FieldInfoLabel(segment.getInstructions()));
+					
+					}else{
+						HMVListBox segmods = new HMVListBox();
+						table.setWidget(rowno, 1, segmods);
+					    fillList(segmods, segment);
+					    table. setWidget(rowno,2, new FieldInfoLabel(segment.getInstructions()));
+					}
+					segment.setRowIndex(rowno);
+					rowno++;
+				}
+				//The submit row:
+			    table.setWidget(rowno, 0, new FieldLabel(ButtonText.CONFIRM));
+			    final Button confirmButton = new Button(ButtonText.CONFIRM);
+				table.setWidget(rowno, 1, confirmButton);
+				confirmButton.addClickHandler(new ClickHandler(){
+					@Override
+					public void onClick(ClickEvent event) {
+						ArrayList<String> modulenames=new ArrayList<String>();
+						for(GWTSegment segment:segments){
+							if (segment.isMultiSelect()){
+								CheckList cp = (CheckList) table.getWidget(segment.getRowIndex(), 1);
+								modulenames.addAll(cp.getValues());
+							}else{
+								HMVListBox box = (HMVListBox) table.getWidget(segment.getRowIndex(), 1);
+								modulenames.addAll(box.getValues());
+							}
+						}
+						String confirm=StringText.MODULES_CONFIRM;
+						for(String modulename:modulenames){
+							confirm=confirm+modulename+"\n";
+						}
+						if(Window.confirm(confirm)){
+							enterpriseService.addEnterpriseModules(ent.getSysname(), modulenames, finishedCallback);
+						}
+					}
+				});
+				form.add(table);
 			}
 }

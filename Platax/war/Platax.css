@@ -1,6 +1,34 @@
 /** Add css rules here for your application. */
 
-
+.px_ptab_share {
+	background: #99dd99;
+}
+.px_ptab_content {
+	background: #ccffcc;
+}
+.px_field_label {
+	text-align: right;
+	font-weight: bold;
+}
+.px_field_info_label {
+	text-align: left;
+	font-style: oblique;
+	background: #ccffcc;
+}
+.px_field_info_label_alarmed {
+	text-align: left;
+	font-style: oblique;
+	font-weight: bold;
+	background: #ffaaaa;
+}
+.px_form_header {
+	font-size: 125%;
+	font-weight: bold;
+}
+.px_form_subheader {
+	font-size: 110%;
+	font-style:oblique;
+}
 /** Example rules used by the template application (remove for your app) */
 h1 {
   font-size: 2em;

@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class RegisterUser extends AbstractForm {
 	public RegisterUser(final Platax platax){
-		super();
+		super(platax);
 		//PTab/AF fields
 		setTabHeaderText(StringText.SIGNUP);
 		topLabel.setText(StringText.SIGNUP_HEADER);

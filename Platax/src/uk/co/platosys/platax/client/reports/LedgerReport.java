@@ -23,7 +23,7 @@ public class LedgerReport extends AbstractForm {
 	private LedgerServiceAsync rlsa = GWT.create(LedgerService.class);
 	private FlexTable table;
 	public LedgerReport(Platax platax, String  enterpriseID, String ledgerName){
-		super( ledgerName);
+		super( platax, ledgerName);
 		 
 		table = new FlexTable();
 		table.setText(0,1, ledgerName);

@@ -6,14 +6,11 @@ package uk.co.platosys.platax.server.core;
 
 
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 
 import uk.co.platosys.boox.core.Clerk;
@@ -29,9 +26,7 @@ import uk.co.platosys.db.jdbc.JDBCTable;
 import uk.co.platosys.platax.server.services.EnterpriseServiceImpl;
 import uk.co.platosys.platax.shared.Constants;
 import uk.co.platosys.platax.shared.PXUser;
-import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.exceptions.PlataxException;
-import uk.co.platosys.util.HashPass;
 import uk.co.platosys.util.Logger;
 import uk.co.platosys.xuser.Xuser;
 import uk.co.platosys.xuser.XuserCredentialsException;
@@ -51,7 +46,12 @@ import uk.co.platosys.xuser.XuserExistsException;
 public class PlataxUser extends Xuser {
 	public static final String GUEST_STATUS="guest";
 	public static final String MEMBER_STATUS="member";
-	
+	public static final String PX_CLERKS_TABLENAME="px_clerks";
+	public static final String PX_XUSERID_COLNAME="xuserid";
+	public static final String PX_EID_COLNAME="enterprise_id";
+	public static final String PX_CLERKNAME_COLNAME="clerkname";
+	public static final String PX_PWD_COLNAME="pwd";
+	public static final String PX_STATUS_COLNAME="status";
 	private PXUser pxuser;
 	private Map<String, Enterprise> enterprises = new HashMap<String, Enterprise>();
 	private Map<String, Invoice> invoices = new HashMap<String, Invoice>();
@@ -67,18 +67,17 @@ public class PlataxUser extends Xuser {
 		logger.log(4, "created pxuser with xuserid "+getXuserID());
 		//populate the enterprise array!
 		try{
+			//the clerkstable is a system-wide table of users and enterprises;
 			JDBCTable clerkstable;
-			if (!JDBCTable.tableExists(Constants.DATABASE_NAME, "clerks")){
+			if (!JDBCTable.tableExists(Constants.DATABASE_NAME, PX_CLERKS_TABLENAME)){
 				clerkstable=createClerksTable();
 			}else{
-				clerkstable = new JDBCTable(Constants.DATABASE_NAME, "clerks");
+				clerkstable = new JDBCTable(Constants.DATABASE_NAME, PX_CLERKS_TABLENAME);
 			}
 			
-			List<Row> rows = clerkstable.getRows("xuserid", getXuserID());
-			Iterator<Row> rit = rows.iterator();
-			while(rit.hasNext()){
-				Row row = rit.next();
-				String enterpriseID = row.getString("enterprise");
+			List<Row> rows = clerkstable.getRows(PX_XUSERID_COLNAME, getXuserID());
+			for (Row row:rows){
+				String enterpriseID = row.getString(PX_EID_COLNAME);
 				logger.log("PXconstructor: finding enterprise with id "+enterpriseID);
 				Enterprise enterprise = Enterprise.getEnterprise(enterpriseID);
 				logger.log("PXconstructor: adding enterprise "+enterprise.getName());
@@ -137,22 +136,22 @@ public class PlataxUser extends Xuser {
     	 * TODO: close it!
     	 */
     	JDBCTable clerkstable=null;
-    	if(!JDBCTable.tableExists(Constants.DATABASE_NAME, "clerks")){
+    	if(!JDBCTable.tableExists(Constants.DATABASE_NAME, PX_CLERKS_TABLENAME)){
     		throw new PlataxException("No clerks JDBCTable found in system database");
     	}else{
     		try{
-				clerkstable=new JDBCTable(Constants.DATABASE_NAME, "clerks");
+				clerkstable=new JDBCTable(Constants.DATABASE_NAME,PX_CLERKS_TABLENAME);
 			}catch (PlatosysDBException e) {
 				logger.log(" gC: problem intialising clerks JDBCTable", e);
 				throw new PlataxException(e);
 			}
 			 
 			try {
-				String[] cols= {"enterprise", "xuserid"};
+				String[] cols= {PX_EID_COLNAME, PX_XUSERID_COLNAME};
 				String[] vals= {enterprise.getEnterpriseID(), getXuserID()};
 				Row row = clerkstable.getRow(cols, vals);
-				String clerkname = row.getString("clerkname");
-				String pwd=row.getString("pwd");
+				String clerkname = row.getString(PX_CLERKNAME_COLNAME);
+				String pwd=row.getString(PX_PWD_COLNAME);
 				return new Clerk(enterprise, clerkname, pwd);
 			} catch (RowNotFoundException e) {
 				logger.log("row not found in clerks JDBCTable", e);
@@ -182,16 +181,16 @@ public class PlataxUser extends Xuser {
     	 * note that the passwords are stored here in the clear, which isn't smart. 
     	 * TODO try and figure out a smarter way of doing it.
     	 */
-    	if(!JDBCTable.tableExists(Constants.DATABASE_NAME, "clerks")){
+    	if(!JDBCTable.tableExists(Constants.DATABASE_NAME, PX_CLERKS_TABLENAME)){
     		clerkstable=createClerksTable();
     	}else{
     		try{
-				clerkstable=new JDBCTable(Constants.DATABASE_NAME, "clerks");
+				clerkstable=new JDBCTable(Constants.DATABASE_NAME, PX_CLERKS_TABLENAME);
 			}catch (PlatosysDBException e) {
 				logger.log("problem intialising clerks JDBCTable", e);
 			}
     	}
-		String[] cols= {"enterprise", "xuserid", "clerkname","pwd"};
+		String[] cols= {PX_EID_COLNAME, PX_XUSERID_COLNAME, PX_CLERKNAME_COLNAME,PX_PWD_COLNAME};
 		String[] vals= {enterprise.getEnterpriseID(), getXuserID(), clerk.getName(), password};
 		try {
 			clerkstable.addRow(cols, vals);
@@ -253,11 +252,11 @@ public class PlataxUser extends Xuser {
     	logger.log(2, "no clerkstable, creating it");
     	JDBCTable clerkstable;
 		try{
-			clerkstable=JDBCTable.createTable(Constants.DATABASE_NAME, "clerks", "enterprise",JDBCTable.TEXT_COLUMN, false);
-			clerkstable.addColumn("xuserid", JDBCTable.TEXT_COLUMN);
-			clerkstable.addColumn("clerkname", JDBCTable.TEXT_COLUMN);
-			clerkstable.addColumn("pwd",JDBCTable.TEXT_COLUMN);
-			clerkstable.addColumn("status", JDBCTable.TEXT_COLUMN);
+			clerkstable=JDBCTable.createTable(Constants.DATABASE_NAME, PX_CLERKS_TABLENAME,PX_EID_COLNAME,JDBCTable.TEXT_COLUMN, false);
+			clerkstable.addColumn(PX_XUSERID_COLNAME, JDBCTable.TEXT_COLUMN);
+			clerkstable.addColumn(PX_CLERKNAME_COLNAME, JDBCTable.TEXT_COLUMN);
+			clerkstable.addColumn(PX_PWD_COLNAME,JDBCTable.TEXT_COLUMN);
+			clerkstable.addColumn(PX_STATUS_COLNAME, JDBCTable.TEXT_COLUMN);
 			return clerkstable;
 		}catch(Exception x){
 			logger.log("problem creating clerks JDBCTable", x);

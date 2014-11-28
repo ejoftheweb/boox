@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
 
 public class CustomerHTML extends AnchorHTML {
 
-	public CustomerHTML(final GWTCustomer customer, final PlataxTabPanel context) {
+	public CustomerHTML(final GWTCustomer customer, final Platax context) {
 	    super(customer.getName(), context);
 		setStyleName("px_customer_link");
 		addClickHandler(new ClickHandler(){

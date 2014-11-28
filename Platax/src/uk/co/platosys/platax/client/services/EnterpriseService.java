@@ -32,5 +32,7 @@ public interface EnterpriseService extends RemoteService {
    public ArrayList<GWTSegment> getSegments();
    public ArrayList<GWTRole> getRoles();
    public Message getMessage(String key);
+   
+   public Boolean isNameOK(String name);
   
 }

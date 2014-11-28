@@ -95,12 +95,15 @@ public class Platax implements EntryPoint {
 
 
 
-	public void addTab(AbstractForm itab) {
+	public void addTab(PTab itab) {
 		tabPanel.addTab(itab);
 		
 	}
 
-
+    public void addTab(PTab itab, boolean select){
+    	tabPanel.addTab(itab);
+    	
+    }
 
 
 	public void setUser(PXUser result) {

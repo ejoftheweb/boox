@@ -25,10 +25,12 @@ public class LabelText {
 	public static final String SHARE="Share";
 	
 	//Labels used on the  Enterprise pages
-	public static final String NEW_ENTERPRISE_PAGE_HEAD="Register a new business";
+	public static final String NAME_OK="OK";
+	public static final String NAME_NOT_OK="Sorry, that name isn't available. Please choose another";
+	public static final String NEW_ENTERPRISE_PAGE_HEAD="Enroll a new business on PLATAX";
 	public static final String NEW_ENTERPRISE_PAGE_SUB_HEAD="Please enter your business details";
-	public static final String NEW_ENTERPRISE_SECTOR_HEAD="Tell us more about your business";
-	public static final String NEW_ENTERPRISE_SECTOR_SUB_HEAD="Please select your business's sectors";
+	public static final String NEW_ENTERPRISE_PAGE2_HEAD="Tell us more about ";
+	public static final String NEW_ENTERPRISE_PAGE2_SUB_HEAD="Please select your business's sectors and operations";
 	
 	public static final String NEW_ENTERPRISE="New Business";
 	public static final String ENTERPRISE_NAME = "Enterprise Name";
@@ -39,7 +41,7 @@ public class LabelText {
 	public static final String IS_STARTUP_INFO="Is this business a start-up?";
 	public static final String START_DATE="Accounting Reference Date";
 	public static final String START_DATE_INFO="Date of incorporation/start of trading";
-	public static final String ENTERPRISE_REGISTER="Click here to register your business!";
+	public static final String ENTERPRISE_REGISTER="Click here to enroll your business!";
 	public static final String ENTERPRISE_TYPE="Capital structure";
 	public static final String ENTERPRISE_TYPE_INFO="Select the type of your organisation";
 	public static final String ENTERPRISE_SECTOR="Sector";

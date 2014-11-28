@@ -11,6 +11,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.user.client.ui.Label;
 
+import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.DateFormats;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.services.InvoiceService;
@@ -28,7 +29,7 @@ import uk.co.platosys.platax.shared.boox.GWTInvoiceList;
 public class InvoiceList extends AbstractList {
 	 final InvoiceServiceAsync invoiceService = (InvoiceServiceAsync) GWT.create(InvoiceService.class);
 		
-	public InvoiceList(PlataxTabPanel parent, GWTEnterprise gwtEnterprise, int list_selection_type) {
+	public InvoiceList(Platax parent, GWTEnterprise gwtEnterprise, int list_selection_type) {
 		super(parent, gwtEnterprise.getName()+":Invoices", list_selection_type);
 		 topLabel.setText("List of Invoices");
 		 subHeader.setText("blah blah");
@@ -55,9 +56,9 @@ public class InvoiceList extends AbstractList {
 		 while(gwit.hasNext()){
 			 GWTInvoice gwinvoice = gwit.next();
 			 table.setWidget(row, 0, new InvoiceRefHTML(gwinvoice));
-			 table.setWidget(row, 1, new CustomerHTML(gwinvoice.getCustomer(), parent));
-			 table.setWidget(row, 2, new Label(DateTimeFormat.getFormat(DateFormats.SHORT_DATE_FORMAT).format(gwinvoice.getValueDate())));
-			 table.setWidget(row, 3, new Label(DateTimeFormat.getFormat(DateFormats.SHORT_DATE_FORMAT).format(gwinvoice.getDueDate())));
+			 //table.setWidget(row, 1, new CustomerHTML(gwinvoice.getCustomer(), parent));
+			 table.setWidget(row, 2, new Label(DateFormats.SHORT_DATE_FORMAT.format(gwinvoice.getValueDate())));
+			 table.setWidget(row, 3, new Label(DateFormats.SHORT_DATE_FORMAT.format(gwinvoice.getDueDate())));
 			 table.setWidget(row, 4, new Label(gwinvoice.getStatus()));
 			 table.setWidget(row, 5, new MoneyLabel(gwinvoice.getNet()));
 			 table.setWidget(row, 6, new MoneyLabel(gwinvoice.getTax()));

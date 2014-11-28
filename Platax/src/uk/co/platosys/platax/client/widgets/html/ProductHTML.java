@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
 
 public class ProductHTML extends AnchorHTML {
 
-	public ProductHTML(final GWTItem item, final PlataxTabPanel context) {
+	public ProductHTML(final GWTItem item, final Platax context) {
 	    super(item.getName(), context);
 		setStyleName("px_product_link");
 		addClickHandler(new ClickHandler(){

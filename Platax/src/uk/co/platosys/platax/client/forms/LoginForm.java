@@ -36,7 +36,7 @@ public class LoginForm extends AbstractForm {
 	final LoginServiceAsync loginService = (LoginServiceAsync) GWT.create(LoginService.class);
 
 	public LoginForm(Platax pplatax) {
-		super();
+		super(pplatax);
 		//DEV-CODE only//
 		emailTextBox.setText("edward@copyweb.co.uk");
 		passwordTextBox.setText("P&nNfZ36");

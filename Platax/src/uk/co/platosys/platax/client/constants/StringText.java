@@ -19,10 +19,11 @@ public class StringText {
 	public static final String WAIT_FOR_SIGNUP="Your request is being processed - please wait";
 	public static final String CHECK_EMAIL="Please check your email for further instructions";
 	public static final String USER_EXISTS="A user with that email already exists. \n Do you want to reset your password?";
-	public static final String REGISTER_MODULES="The following modules will be registered:";
+	public static final String REGISTER_MODULES="The following modules will be added:\n";
 	
 	public static final String IS_STARTUP_CONFIRM="As a startup,\n the start date you enter next should be \n the date of incorporation \n or when the business started";
 	public static final String IS_NOT_STARTUP_CONFIRM="As an existing business, \n the start date you enter next should be \n the start of your accounting period";
 	public static final String TERMS_CONFIRM="You have confirmed that you accept our terms and conditions";
 	public static final String TERMS_NOT_CONFIRM="You must accept the terms and conditions";
+	public static final String MODULES_CONFIRM=REGISTER_MODULES;
 }

@@ -1,13 +1,14 @@
 package uk.co.platosys.platax.client.forms;
 
 
+import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 
 public class CustomerForm extends AbstractForm {
 
-	public CustomerForm(PlataxTabPanel parent, GWTCustomer gwtCustomer) {
-		super( gwtCustomer.getName());
+	public CustomerForm(Platax platax, GWTCustomer gwtCustomer) {
+		super( platax, gwtCustomer.getName());
 		// TODO Auto-generated constructor stub
 	} 
 	/*

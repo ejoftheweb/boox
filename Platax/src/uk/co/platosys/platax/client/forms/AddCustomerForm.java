@@ -6,13 +6,14 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
+import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 
 public class AddCustomerForm extends AbstractForm  {
 
-	public AddCustomerForm(GWTEnterprise enterprise) {
-		super(enterprise.getName());
+	public AddCustomerForm(Platax platax, GWTEnterprise enterprise) {
+		super(platax, enterprise.getName());
 		Label customerNameLabel = new Label(LabelText.CUSTOMER);
 		TextBox customerNameBox = new TextBox();
 		Label customerInfoLabel = new Label(LabelText.CUSTOMER_NAME);

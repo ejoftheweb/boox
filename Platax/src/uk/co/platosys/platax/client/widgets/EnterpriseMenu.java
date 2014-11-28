@@ -3,18 +3,25 @@ package uk.co.platosys.platax.client.widgets;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.UIObject;
+
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.MenuText;
 import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
 import uk.co.platosys.platax.client.forms.lists.*;
 import uk.co.platosys.platax.shared.boox.*;
 
+/**
+ * this long class defines the menu items for the menu bar on the enterprise tab.
+ * @author edward
+ *
+ */
 public class EnterpriseMenu extends MenuBar {
-	//the menu displays items differently highlighted according to urgency of the task
+	//the menu displays items differently highlighted according to the urgency of the task
 	static final String OK_STATUS="Ok";
 	static final String PRIORITY_STATUS="Priority";
 	static final String DUE_STATUS="Due";
@@ -22,21 +29,58 @@ public class EnterpriseMenu extends MenuBar {
 	static final String DISABLED_STATUS="Disabled";
 	
 	final GWTEnterprise gwtEnterprise;
+	//We define a String variable to refer programmatically to each menu item. There are lots!
 	static final String CAPITAL_MENU="capitalMenu"; 
+		static final String EQUITY_MENU="equityMenu";
+		static final String BONDS_MENU="bondsMenu";
+	static final String INCOME_MENU="incomeMenu";
+		static final String INVOICE_MENU="invoiceMenu";
+			static final String ALL_INVOICES="allInvoices";
+			static final String PENDING_INVOICES="pendingInvoices";
+			static final String PAID_INVOICES="paidInvoices";
+			static final String OVERDUE_INVOICES="overdueInvoices";
+			static final String NEW_INVOICE="newInvoice";
+		static final String CUSTOMER_MENU="customersMenu";
+			static final String ALL_CUSTOMERS="allCustomers";
+			static final String NEW_CUSTOMER="newcustomer";
+		static final String PRODUCTS_MENU="productsMenu";
+			static final String ALL_PRODUCTS="allProducts";
+			static final String NEW_PRODUCT="newProduct";
+	static final String SPENDING_MENU="spendingMenu";
+	static final String BANKING_MENU="bankingMenu";
+	static final String ASSETS_MENU="assetsMenu";
+	static final String STAFF_MENU="staffMenu";
+	static final String BUDGET_MENU="budgetMenu";
+	static final String HELP_MENU="helpMenu";
+	
+	
+	//the hashmap lets is get to each item by its String key
     Map<String, UIObject> menuItems=new HashMap<String, UIObject>();	
 
 	public EnterpriseMenu(final GWTEnterprise enterprise, final Platax platax){
 		super();
 		this.gwtEnterprise=enterprise;
-		MenuBar capitalMenu = new MenuBar(true);
-		menuItems.put(CAPITAL_MENU, capitalMenu);
-		MenuBar incomeMenu = new MenuBar(true);
-		MenuBar spendingMenu = new MenuBar(true);
-		MenuBar bankingMenu = new MenuBar(true);
-		MenuBar assetsMenu = new MenuBar(true);
-		MenuBar staffMenu = new MenuBar(true);
-		MenuBar budgetMenu = new MenuBar(true);
-		MenuBar helpMenu = new MenuBar(true);
+		//this little lot defines menu items. Break with all good coding style guides for readability.
+		MenuBar capitalMenu = new MenuBar(true); menuItems.put(CAPITAL_MENU, capitalMenu);
+			MenuItem equityMenu = new MenuItem(MenuText.EQUITY_LABEL);capitalMenu.addItem(equityMenu);menuItems.put(EQUITY_MENU, equityMenu);
+			MenuItem bondsMenu = new MenuItem(MenuText.BONDS_LABEL);capitalMenu.addItem(bondsMenu);menuItems.put(BONDS_MENU, bondsMenu);
+		MenuBar incomeMenu = new MenuBar(true);	menuItems.put(INCOME_MENU, incomeMenu);
+			MenuBar invoiceMenu = new MenuBar(true);incomeMenu.addItem(MenuText.INVOICES_LABEL, invoiceMenu);menuItems.put(INVOICE_MENU, invoiceMenu);
+				MenuItem allInvoices = new MenuItem(MenuText.ALL_LABEL);invoiceMenu.addItem(allInvoices);menuItems.put(ALL_INVOICES, allInvoices);
+				MenuItem pendingInvoices=new MenuItem(MenuText.PENDING_LABEL);invoiceMenu.addItem(pendingInvoices);menuItems.put(PENDING_INVOICES, pendingInvoices);
+				MenuItem paidInvoices=new MenuItem(MenuText.PAID_LABEL);invoiceMenu.addItem(paidInvoices);menuItems.put(PAID_INVOICES, paidInvoices);
+				MenuItem overdueInvoices=new MenuItem(MenuText.OVERDUE_LABEL);invoiceMenu.addItem(overdueInvoices);menuItems.put(OVERDUE_INVOICES, overdueInvoices);
+				MenuItem newInvoice=new MenuItem(MenuText.ADD_NEW_LABEL);invoiceMenu.addItem(newInvoice);menuItems.put(NEW_INVOICE, newInvoice);
+			MenuBar customerMenu = new MenuBar(true);incomeMenu.addItem(MenuText.CUSTOMERS_LABEL,customerMenu);menuItems.put(CUSTOMER_MENU,customerMenu);
+			MenuBar productsMenu = new MenuBar(true);incomeMenu.addItem(MenuText.PRODUCTS_LABEL,productsMenu);menuItems.put(PRODUCTS_MENU, productsMenu);
+		MenuBar spendingMenu = new MenuBar(true); menuItems.put(SPENDING_MENU,spendingMenu);
+		MenuBar bankingMenu = new MenuBar(true); menuItems.put(BANKING_MENU, bankingMenu);
+		MenuBar assetsMenu = new MenuBar(true);  menuItems.put(ASSETS_MENU,assetsMenu);
+		MenuBar staffMenu = new MenuBar(true);  menuItems.put(STAFF_MENU, staffMenu);
+		MenuBar budgetMenu = new MenuBar(true);  menuItems.put(BUDGET_MENU, budgetMenu);
+		MenuBar helpMenu = new MenuBar(true); menuItems.put(HELP_MENU, helpMenu);
+		
+		//so here w
 		this.addItem(MenuText.CAPITAL_MENU_NAME, capitalMenu);
 		this.addItem(MenuText.INCOME_MENU_NAME, incomeMenu);
 		this.addItem(MenuText.SPENDING_MENU_NAME, spendingMenu);
@@ -46,75 +90,75 @@ public class EnterpriseMenu extends MenuBar {
 		this.addItem(MenuText.BUDGET_MENU_NAME, budgetMenu);
 		this.addItem(MenuText.HELP_MENU_NAME, helpMenu);
 		
-		
-		MenuItem equityMenu = new MenuItem(MenuText.EQUITY_LABEL, new Command(){
+		//now we add the commands
+		equityMenu.setScheduledCommand(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
-				// TODO Auto-generated method stub
+				
 			}
 		});
-		capitalMenu.addItem(equityMenu);	
-		MenuItem bondsMenu = new MenuItem(MenuText.BONDS_LABEL, new Command(){
+		bondsMenu.setScheduledCommand(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
 				//TODO add command to show loans
 			}
 		});
-		capitalMenu.addItem(bondsMenu);
 		
-		MenuItem balanceMenu = new MenuItem(MenuText.BALANCE_LABEL, new Command(){
+		
+		/*balanceMenu.setScheduledCommand(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
 				//TODO add command to show balance sheet
 			}
-		});
+		});*/
 		///IncomeMenu and its submenus///
 		//Items on the Income Menu
-		MenuBar invoiceMenu = new MenuBar(true);
-		MenuBar customerMenu = new MenuBar(true);
-		MenuBar productsMenu = new MenuBar(true);
-		incomeMenu.addItem(MenuText.INVOICES_LABEL, invoiceMenu);
+		
 		incomeMenu.addItem(MenuText.CASH_LABEL, new Command(){
 			@Override
 			public void execute() {
 				// TODO Open Cash Sales Page Command
 			}
 		});
-		incomeMenu.addItem(MenuText.CUSTOMERS_LABEL, customerMenu);
-		incomeMenu.addItem(MenuText.PRODUCTS_LABEL, productsMenu);
 		//Items on the Invoice Menu (submenu of the income menu)
-		invoiceMenu.addItem(MenuText.ALL_LABEL, new Command(){
+		allInvoices.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			
 			@Override
 			public void execute() {
-		  		InvoiceList itab = new InvoiceList(platax.getPtp(), enterprise, GWTInvoice.SELECTION_ALL);	
+				// TODO Auto-generated method stub
+				
+		  		InvoiceList itab = new InvoiceList(platax, enterprise, GWTInvoice.SELECTION_ALL);	
 				platax.addTab(itab);
 				
 			}
 		});
-		invoiceMenu.addItem(MenuText.PENDING_LABEL, new Command(){
+		pendingInvoices.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			
 			@Override
 			public void execute() {
-				InvoiceList itab = new InvoiceList(platax.getPtp(), enterprise, GWTInvoice.SELECTION_PENDING);	
+				InvoiceList itab = new InvoiceList(platax, enterprise, GWTInvoice.SELECTION_PENDING);	
 				platax.addTab(itab);
 			}
 		});
-		invoiceMenu.addItem(MenuText.PAID_LABEL, new Command(){
+		paidInvoices.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			
 			@Override
 			public void execute() {
-				InvoiceList itab = new InvoiceList(platax.getPtp(), enterprise, GWTInvoice.SELECTION_PAID);	
+				InvoiceList itab = new InvoiceList(platax, enterprise, GWTInvoice.SELECTION_PAID);	
 				platax.addTab(itab);
 			}
 		});
-		invoiceMenu.addItem(MenuText.OVERDUE_LABEL,  new Command(){
-			@Override
+		overdueInvoices.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			
 			public void execute() {
-				InvoiceList itab = new InvoiceList(platax.getPtp(), enterprise, GWTInvoice.SELECTION_OVERDUE);	
+				InvoiceList itab = new InvoiceList(platax, enterprise, GWTInvoice.SELECTION_OVERDUE);	
 				platax.addTab(itab);
 			}
 		});
-		invoiceMenu.addItem(MenuText.ADD_NEW_LABEL, new Command(){
+		newInvoice.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			
 			@Override
-			public void execute() {
+				public void execute() {
 		  		InvoiceForm itab = new InvoiceForm(platax, enterprise);	
 				platax.addTab(itab);
 				
@@ -125,7 +169,7 @@ public class EnterpriseMenu extends MenuBar {
 		customerMenu.addItem(MenuText.ALL_LABEL,  new Command(){
 			@Override
 			public void execute() {
-				CustomerList ctab = new CustomerList(platax.getPtp(), enterprise, 0);
+				CustomerList ctab = new CustomerList(platax, enterprise, 0);
 				platax.addTab(ctab);
 			}
 		});
@@ -140,7 +184,7 @@ public class EnterpriseMenu extends MenuBar {
 		productsMenu.addItem(MenuText.ALL_LABEL, new Command(){
 			@Override
 			public void execute() {
-				ProductList ctab = new ProductList(platax.getPtp(), enterprise, 0);
+				ProductList ctab = new ProductList(platax, enterprise, 0);
 				platax.addTab(ctab);
 			}
 		});

@@ -46,7 +46,7 @@ public class EnterpriseTab extends AbstractForm {
 			//Declare Variables
 			
 			public EnterpriseTab(Platax platax, GWTEnterprise enterprise){
-				super(enterprise.getName());
+				super(platax, enterprise.getName());
 				reset(platax, enterprise);
 			}
 			
@@ -64,40 +64,12 @@ public class EnterpriseTab extends AbstractForm {
 			//Layout Page
 			this.setTabHeaderText(name);
 			topLabel.setText(legalName);
-			form.add(topLabel);
 			
-			HorizontalPanel hpanel = new HorizontalPanel();
-			//The action buttons:
-			final Button invoiceButton = new Button(ButtonText.INVOICE);
-			final Button billButton= new Button(ButtonText.BILL);
-			final Button bankButton = new Button(ButtonText.BANK);
-			final Button wageButton = new Button(ButtonText.WAGES);
-			final Button exitButton = new Button(ButtonText.EXIT);
-			hpanel.add(invoiceButton);
-			hpanel.add(billButton);
-			hpanel.add(bankButton);
-			hpanel.add(wageButton);
-			hpanel.add(exitButton);
-			form.add(hpanel);
+			
 		    EnterpriseMenu eMenu = new EnterpriseMenu(enterprise, platax);
 		    form.add(eMenu);
 			//handlers:
-			invoiceButton.addClickHandler(new ClickHandler(){
-				@Override
-				public void onClick(ClickEvent event) {
-					InvoiceForm itab = new InvoiceForm(platax, enterprise);	
-					platax.addTab(itab);
-					int etabindex = ptp.getWidgetIndex(itab);
-					ptp.selectTab(etabindex);
-				}
-			});
-			exitButton.addClickHandler(new ClickHandler(){
-				@Override
-				public void onClick(ClickEvent event) {
-					int etabindex = ptp.getWidgetIndex(EnterpriseTab.this);
-					ptp.remove(etabindex);
-				}
-			});
+			
 			//The key ratios table
 			if(enterprise!=null){
 				table.setWidget(1,1, new Label(LabelText.KEY_RATIOS_HEADER));

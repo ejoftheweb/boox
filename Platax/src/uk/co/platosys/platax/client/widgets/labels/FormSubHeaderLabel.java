@@ -1,5 +1,7 @@
 package uk.co.platosys.platax.client.widgets.labels;
 
+import uk.co.platosys.platax.client.constants.Styles;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.shared.DirectionEstimator;
 import com.google.gwt.user.client.ui.Label;
@@ -7,12 +9,12 @@ import com.google.gwt.user.client.ui.Label;
 public class FormSubHeaderLabel extends Label {
 
 	public FormSubHeaderLabel() {
-		// TODO Auto-generated constructor stub
+		setStyleName(Styles.FORM_SUB_HEADER);
 	}
 
 	public FormSubHeaderLabel(String text) {
 		super(text);
-		// TODO Auto-generated constructor stub
+		setStyleName(Styles.FORM_SUB_HEADER);
 	}
 
 	public FormSubHeaderLabel(Element element) {

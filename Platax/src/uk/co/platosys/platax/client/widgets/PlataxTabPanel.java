@@ -55,6 +55,20 @@ public class PlataxTabPanel extends TabLayoutPanel {
 		add(page,tabItem);
 		pTab.setParent(this);
 	}
+	 /** adds a tab at the end.
+	  * selects it if true
+	 * @param pTab
+	 */
+	public void addTab(PTab pTab, boolean select){
+		Widget page = pTab.getPage();
+		Widget tabItem = pTab.getTabItem();
+	
+		add(page,tabItem);
+		if(select){
+			selectTab(page);
+		}
+		pTab.setParent(this);
+	}
 	/**
 	 * adds a tab at a specified index.
 	 * @param pTab

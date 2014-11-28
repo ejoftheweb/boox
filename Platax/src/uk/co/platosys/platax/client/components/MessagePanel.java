@@ -1,6 +1,7 @@
 package uk.co.platosys.platax.client.components;
 
 import uk.co.platosys.platax.client.constants.LabelText;
+import uk.co.platosys.platax.client.widgets.MessageWidget;
 import uk.co.platosys.platax.client.widgets.labels.MessagePanelHeaderLabel;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -21,5 +22,7 @@ public MessagePanelHeaderLabel topHead= new MessagePanelHeaderLabel(LabelText.ME
 		add(messageStack);
 		
 	}
-
+    public void addMessageWidget(MessageWidget mw){
+    	//messageStack.add();
+    }
 }

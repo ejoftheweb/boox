@@ -1,5 +1,7 @@
 package uk.co.platosys.platax.client.widgets.labels;
 
+import uk.co.platosys.platax.client.constants.Styles;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.shared.DirectionEstimator;
 import com.google.gwt.user.client.ui.Label;
@@ -12,7 +14,7 @@ public class FieldLabel extends Label {
 
 	public FieldLabel(String text) {
 		super(text);
-		setStyleName("px_field_label");
+		setStyleName(Styles.FIELD_LABEL);
 		
 	}
 

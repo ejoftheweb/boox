@@ -10,6 +10,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.user.client.ui.Label;
 
+import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.DateFormats;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.services.CustomerService;
@@ -27,8 +28,8 @@ import uk.co.platosys.platax.shared.boox.GWTInvoiceList;
 
 public class CustomerList extends AbstractList {
 	 final CustomerServiceAsync customerService = (CustomerServiceAsync) GWT.create(CustomerService.class);
-	 PlataxTabPanel parent;
-	public CustomerList(PlataxTabPanel parent, GWTEnterprise enterprise, int list_selection_type) {
+	 Platax parent;
+	public CustomerList(Platax parent, GWTEnterprise enterprise, int list_selection_type) {
 		super(parent, enterprise.getName()+":Customers", list_selection_type);
 		this.parent=parent;
 		 topLabel.setText("List of Customers");
@@ -67,7 +68,7 @@ public class CustomerList extends AbstractList {
 			 //note that the column numbering is 2 greater than the headers
 			 
 			// table.setWidget(row, 0, new InvoiceRefHTML(gwinvoice));
-			 table.setWidget(row, 1, new CustomerHTML(customer, parent));
+			 //table.setWidget(row, 1, new CustomerHTML(customer, parent));
 			table.setWidget(row, 2, new MoneyLabel(customer.getBalance()));
 			 table.setWidget(row, 3, new MoneyLabel(customer.getOverdueBalance()));
 			table.setWidget(row, 4, new MoneyLabel(customer.getDisputedBalance()));

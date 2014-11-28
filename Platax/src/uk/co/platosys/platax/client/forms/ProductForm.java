@@ -1,6 +1,7 @@
 package uk.co.platosys.platax.client.forms;
 
 
+import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.shared.boox.GWTItem;
 
@@ -11,8 +12,8 @@ public class ProductForm extends AbstractForm {
 
 	
 
-	public ProductForm(PlataxTabPanel context, GWTItem item) {
-		super(item.getName());
+	public ProductForm(Platax platax, GWTItem item) {
+		super(platax, item.getName());
 		 	
 		//callback methods
 		

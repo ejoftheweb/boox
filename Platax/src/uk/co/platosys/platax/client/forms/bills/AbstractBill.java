@@ -73,7 +73,7 @@ TextBox billNumberBox = new TextBox();
 TextBox refNumberBox= new TextBox();
 	
 public AbstractBill(Platax parent, String header) {
-		super( header);
+		super( parent, header);
 		//hpanel.add( new Label(LabelText.CUSTOMER));
 				headPanel.add(formHeadLabel);
 				headPanel.add(billNumberLabel);

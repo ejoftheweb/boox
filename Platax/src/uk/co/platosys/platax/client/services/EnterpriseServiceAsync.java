@@ -27,5 +27,5 @@ public interface EnterpriseServiceAsync {
 	//public void addBankDetails(String sysname, GWTBankDetails details, AsyncCallback<GWTEnterprise> callback);
 	public void getSegments(AsyncCallback<ArrayList<GWTSegment>> callback);
 	void getMessage(String key, AsyncCallback<Message> callback);
- 
+    public void isNameOK(String name, AsyncCallback<Boolean> callback);
 }

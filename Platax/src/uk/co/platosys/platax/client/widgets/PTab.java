@@ -2,8 +2,10 @@ package uk.co.platosys.platax.client.widgets;
 
 import java.util.Iterator;
 
+import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.Styles;
+import uk.co.platosys.platax.client.widgets.html.AnchorHTML;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -14,6 +16,7 @@ import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -43,18 +46,20 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 
-public abstract class PTab implements IsWidget, HasWidgets, HasCloseHandlers<PTab>{
+public abstract class PTab implements IsWidget, HasWidgets {
  private String header="";
  private String content="";
  private PlataxTabPanel parent;
  private FlowPanel tabItem;
- private InlineLabel tabItemTitle;
+ private InlineLabel tabItemTitle= new InlineLabel();
+ private InlineLabel counter=new InlineLabel();
+ private Anchor closeTag=new Anchor("X");
  private Image image;
  private FlowPanel page;
  private FlowPanel shareCol;
  private DockLayoutPanel panel;
  private int index=-2; //the index of this PTab in its parent. 
- public PTab(){
+ public PTab(final Platax platax){
 	 tabItem = new FlowPanel();
 	 page=new FlowPanel();
 	 panel=new DockLayoutPanel(Unit.PCT);
@@ -65,12 +70,19 @@ public abstract class PTab implements IsWidget, HasWidgets, HasCloseHandlers<PTa
 	 page.setStyleName(Styles.PTAB_CONTENT_STYLE);
 	 shareCol.setStyleName(Styles.PTAB_SHARE_STYLE);
 	 shareCol.add(new Label(LabelText.SHARE));
-     tabItemTitle = new InlineLabel();
      tabItemTitle.setText("Blank pTab");
      tabItem.add(tabItemTitle);
-     //image = new Image("../icons/close_tab.png");
-     //tabItem.add(image);
-     addHandlers();
+     tabItem.add(counter);
+     tabItem.add(closeTag);
+     closeTag.addClickHandler(new ClickHandler(){
+
+		@Override
+		public void onClick(ClickEvent event) {
+			platax.removeTab(PTab.this);
+			
+		}
+    	 
+     });
 }
 
  public void add(Widget widget){
@@ -115,30 +127,7 @@ public int setTabHeaderText(String header) {
 public int getIndex(){
 	return index;
 }
-@Override
-public  HandlerRegistration addCloseHandler(CloseHandler<PTab> handler) {
-    return addHandler(handler, CloseEvent.getType());
-}
 
-private HandlerRegistration addHandler(CloseHandler<PTab> handler,
-		Type<CloseHandler<?>> type) {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-private void addHandlers() {
-    /*image.addClickHandler(new ClickHandler() {
-        @Override
-        public void onClick(ClickEvent event) {
-            CloseEvent.fire(PTab.this, PTab.this);
-        }
-    }); */
- 
-}
-public void fireEvent(GwtEvent<?> event){
-	//todo add the code here
-	 
-}
 public Widget asWidget(){return page;}
 //if you want these methods to do anything, override them in the subclass.
 public void clear(){}
@@ -146,4 +135,8 @@ public void add(IsWidget widget){}
 
 public Iterator<Widget> iterator(){return null;}
 public boolean remove(Widget widget){return false;}
+
+public InlineLabel getCounter(){
+	return counter;
+}
 }

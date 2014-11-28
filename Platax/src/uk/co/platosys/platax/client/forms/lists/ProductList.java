@@ -13,6 +13,8 @@ import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.view.client.ListDataProvider;
  
 
+
+import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.services.CustomerService;
 import uk.co.platosys.platax.client.services.CustomerServiceAsync;
@@ -39,9 +41,9 @@ public class ProductList extends AbstractList {
 	
 	
 	final ProductServiceAsync productService = (ProductServiceAsync) GWT.create(ProductService.class);
-	 PlataxTabPanel parent;
+	 Platax parent;
 	
-	public ProductList(PlataxTabPanel parent, GWTEnterprise enterprise, int list_selection_type) {
+	public ProductList(Platax parent, GWTEnterprise enterprise, int list_selection_type) {
 		super(parent, enterprise.getName()+":Products", list_selection_type);
 		this.parent=parent;
 		 topLabel.setText("List of Products");

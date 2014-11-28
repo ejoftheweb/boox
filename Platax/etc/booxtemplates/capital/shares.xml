@@ -45,7 +45,7 @@
                         
                     </Ledger>
                 </Ledger>
-                <Account name="P&L" fullName="Profit and Loss Account" description="Profit and Loss Account"/>
+                <Account name="PnL" fullName="Profit and Loss Account" description="Profit and Loss Account"/>
             </Ledger>
             <!-- Loans are  expected to be repaid -->
             <Ledger name="Loans"  isPrivate="false">
