@@ -31,10 +31,12 @@ import java.util.Calendar;
  * string that's also easily, if not necessarily comfortably, human-readable. So we don't use alternative calendars - Gregorian only - or time
  * zones - UTC or local only. (this depends on the underlying time source,
  * which *should* be set to UTC+-locale-specific offset, but may be set to local time).
- * 
+ *   
  * Example: On 4th July 2005 at 3.15pm exactly, 
  * System.out.println(new ISODate().dateString())
- * will print 2005-04-07; 
+ * will print 2005-04-07;
+ * 
+ * The class also has a load of other utility methods for getting dates day/week/month/year ago. 
  * 
  */
 public class ISODate extends Date implements Serializable{
@@ -45,6 +47,7 @@ public class ISODate extends Date implements Serializable{
 	SimpleDateFormat simpleDateFormat;
 	//Logger logger = new Logger("platosys", false);
         public static final long ONE_DAY=(24*60*60*1000);
+        public static final long DAY_AGO=-ONE_DAY;
         public static final long WEEK_AGO=-(7*ONE_DAY);
         public static final long MONTH_AGO=-(30*ONE_DAY);
         public static final long YEAR_AGO=-(365*ONE_DAY);
@@ -191,6 +194,9 @@ public class ISODate extends Date implements Serializable{
    @Override
    public String toString(){
        return dateTimeMs();
+   }
+   public static ISODate getDayAgo(){
+	   return new ISODate(new ISODate().getTime()+DAY_AGO);
    }
  public static ISODate getWeekAgo(){
      return new ISODate(new ISODate().getTime()+WEEK_AGO);

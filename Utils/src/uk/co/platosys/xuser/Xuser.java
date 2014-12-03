@@ -1,5 +1,7 @@
 package uk.co.platosys.xuser;
 
+import java.io.File;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.mail.EmailException;
@@ -15,11 +17,18 @@ import uk.co.platosys.util.Logger;
 import uk.co.platosys.util.RandomString;
 import uk.co.platosys.util.URLcleaner;
 import uk.co.platosys.xmail.Xmail;
+import uk.co.platosys.xmail.XmailException;
 
 /**
  * Xuser models a user.
  * Xuser provides a user-management mechanism for a web-app 
  * Xuser can be extended.
+ * 
+ * The best way of using Xuser is to extend this class. It is not declared abstract; you can instantiate an Xuser, but for 
+ * most webapps, extending it to provide app-specific features you need makes more sense. 
+ * 
+ * An Xuser is authenticated at login and is then attached to the user session. On logout, or when the session is invalidated, 
+ * the xuser disappears.
  * 
  *
  * TODO: Login history
@@ -45,14 +54,15 @@ public class Xuser {
   public static final String REGISTERED_COLNAME="registered";//usersTable.addColumn("registered",JDBCTable.DATE_COLUMN);
   public static final String CONFIRMED_COLNAME="confirmed";//usersTable.addColumn("confirmed", JDBCTable.DATE_COLUMN);
   public static final String USERNAME_COLNAME="username";//usersTable.addColumn("username",JDBCTable.TEXT_COLUMN);
+  public static final String FULLNAME_COLNAME="fullname";
   public static final String LASTLOGIN_COLNAME="lastlogin";//usersTable.addColumn("lastlogin", JDBCTable.TIMESTAMP_COLUMN);
   public static final String LASTLOGINFROM_COLNAME="lastloginfrom";//usersTable.addColumn("lastloginfrom", JDBCTable.TEXT_COLUMN);
   public static final String LASTLOGOUT_COLNAME="lastlogout";//usersTable.addColumn("lastlogout",JDBCTable.TIMESTAMP_COLUMN);
   public static final String XCONTACTID_COLNAME="xcontactid";//usersTable.addColumn("xcontactid",JDBCTable.TEXT_COLUMN);
   static final String [] ALL_COLNAMES ={XUSERID_COLNAME, EMAIL_COLNAME, PASSWORD_COLNAME, REG_KEY_COLNAME, REGISTERED_COLNAME, CONFIRMED_COLNAME, 
-	  USERNAME_COLNAME, LASTLOGIN_COLNAME, LASTLOGINFROM_COLNAME,LASTLOGOUT_COLNAME, XCONTACTID_COLNAME};
+	  USERNAME_COLNAME, FULLNAME_COLNAME, LASTLOGIN_COLNAME, LASTLOGINFROM_COLNAME,LASTLOGOUT_COLNAME, XCONTACTID_COLNAME};
   static final String [] ADD_COLNAMES ={EMAIL_COLNAME, PASSWORD_COLNAME, REG_KEY_COLNAME, REGISTERED_COLNAME, CONFIRMED_COLNAME, 
-	  USERNAME_COLNAME, LASTLOGIN_COLNAME, LASTLOGINFROM_COLNAME,LASTLOGOUT_COLNAME, XCONTACTID_COLNAME};
+	  USERNAME_COLNAME,FULLNAME_COLNAME, LASTLOGIN_COLNAME, LASTLOGINFROM_COLNAME,LASTLOGOUT_COLNAME, XCONTACTID_COLNAME};
   
   private boolean isAuthenticated=false;
    private static boolean emailIsUsername=XuserConstants.EMAIL_IS_USERNAME;
@@ -274,7 +284,7 @@ public class Xuser {
 	 * @throws XuserException
 	 * @throws XuserExistsException
 	 */
-	public static String register (String username, String email, char [] password) throws XuserException, XuserExistsException {
+	public static String register ( String email, String username, String fullname, char [] password) throws XuserException, XuserExistsException {
 		if (emailIsUsername && !username.equals(email)){
 			throw new XuserException("invalid constructor, only need one identifier");
 		}	
@@ -294,8 +304,8 @@ public class Xuser {
 			String xuserID=RandomString.getRandomKey();
 			String regKey=RandomString.getRandomKey();
 			String hashedPass=HashPass.hash(password);
-		    String[] columns={XUSERID_COLNAME,EMAIL_COLNAME,PASSWORD_COLNAME, REG_KEY_COLNAME, USERNAME_COLNAME};
-			String[] values={xuserID, email, hashedPass, regKey, username};
+		    String[] columns={XUSERID_COLNAME,EMAIL_COLNAME,PASSWORD_COLNAME, REG_KEY_COLNAME, USERNAME_COLNAME, FULLNAME_COLNAME};
+			String[] values={xuserID, email, hashedPass, regKey, username, fullname};
 			try {
 				xusersTable.addRow(columns, values);
 			
@@ -303,8 +313,8 @@ public class Xuser {
 			} catch (PlatosysDBException e) {
 				throw new XuserException("could not add xuser row to xusers JDBCTable",e);
 			}
-			logger.log("Xuser"+username+" entered in table, sending email");
-			registerEmailXuser(email, regKey);
+			logger.log("Xuser "+username+" entered in table, sending email");
+			registerEmailXuser(fullname, email, regKey);
 			return regKey;
 		}
 	}
@@ -314,7 +324,7 @@ public class Xuser {
      * @param regKey
      * @return
      */
-	public static String confirmXuser (String email, String regKey) throws XuserCredentialsException, XuserException{
+	public static String confirmXuser ( String email, String regKey) throws XuserCredentialsException, XuserException{
 		String xuserid = getXuserID(email);
 		String key = null;
 		key = getParameter(xuserid, REG_KEY_COLNAME);
@@ -329,7 +339,7 @@ public class Xuser {
 				throw new XuserException("problem registering confirmation code", e);
 			}
 			try {
-				confirmEmailXuser(email);
+				confirmEmailXuser( email);
 			}catch (XuserException xe){
 				logger.log("problemn with confirmation email", xe);
 				throw xe;
@@ -346,9 +356,15 @@ public class Xuser {
 	 * @param regkey
 	 * @throws XuserException
 	 */
-	private static boolean registerEmailXuser(String email, String regkey) throws XuserException {
+	private static boolean registerEmailXuser(String name, String email, String regkey) throws XuserException {
 		logger.log("Xuser starting email sending method emailing to "+email);
-		Xmail xmail = new Xmail();
+		Xmail xmail;
+		try {
+			xmail = Xmail.build(new File(XuserConstants.REGISTRATION_MAIL_FILE), true);
+		} catch (XmailException e1) {
+			logger.log("XuserREX- problem build xmail", e1);
+			throw new XuserException("Problem building xmail", e1);
+		}
 		String regurl=XuserConstants.CONFIRMATION_SERVLET_URL+"?"+"email="+email+"&regkey="+regkey;
 		regurl=URLcleaner.safeURL(regurl);
 		logger.log("registration url = "+regurl);
@@ -356,11 +372,11 @@ public class Xuser {
 			xmail.addTo(email);
 			xmail.setFrom(XuserConstants.SYSTEM_FROM_EMAIL);
 			//TODO: move this email text to a config file.
-			String msg ="Thank you for registering at "+XuserConstants.INSTALLATION_NAME+"\n";
-			msg=msg+"To confirm your registration, please click on the link which follows \n";
-			msg=msg+regurl;
-			logger.log("messge is: "+msg);
-			xmail.setMsg(msg);
+			xmail.prepend("Thank you for registering at "+XuserConstants.INSTALLATION_NAME);
+			xmail.append("To confirm your registration and agree these terms, please click on this link: \n");
+			xmail.append(regurl);
+			xmail.replaceHolders("name", name);
+			xmail.replaceHolders("email", email);
 		}catch(EmailException x){
 			logger.log("Email exception",x);
 			throw new XuserException("creating registration email failed", x);
@@ -399,15 +415,19 @@ public class Xuser {
 		}
 	}
 	public static void confirmEmailXuser(String email) throws XuserException {
-		Xmail xmail = new Xmail();
+		Xmail xmail;
+		try{
+			xmail = Xmail.build(new File(XuserConstants.CONFIRMATION_MAIL_FILE), true);
+		}catch(XmailException xme){
+			throw new XuserException("", xme);
+		}
 		//String regurl=XuserConstants.CONFIRMATION_SERVLET_URL+"?"+"email="+email+"&regkey="+regkey;
 		try {
 			xmail.addTo(email);
 			xmail.setFrom(XuserConstants.SYSTEM_FROM_EMAIL);
-			//TODO move this text to a config file
-			String msg ="Thank you for registering at "+XuserConstants.INSTALLATION_NAME+"\n";
-			msg=msg+"You should now be able to log in using "+email+"\n and the password you gave when you registered\n";
-			xmail.setMsg(msg);
+			xmail.prepend("Thank you for registering at "+XuserConstants.INSTALLATION_NAME);
+			
+			xmail.append("You should now be able to log in using "+email+"\n and the password you gave when you registered\n");
 			xmail.send();
 			
 		} catch (EmailException e) {
@@ -464,6 +484,7 @@ public class Xuser {
 			usersTable.addColumn(REGISTERED_COLNAME,JDBCTable.DATE_COLUMN);
 			usersTable.addColumn(CONFIRMED_COLNAME, JDBCTable.DATE_COLUMN);
 			usersTable.addColumn(USERNAME_COLNAME,JDBCTable.TEXT_COLUMN);
+			usersTable.addColumn(FULLNAME_COLNAME, JDBCTable.TEXT_COLUMN);
 			usersTable.addColumn(LASTLOGIN_COLNAME, JDBCTable.TIMESTAMP_COLUMN);
 			usersTable.addColumn(LASTLOGINFROM_COLNAME, JDBCTable.TEXT_COLUMN);
 			usersTable.addColumn(LASTLOGOUT_COLNAME,JDBCTable.TIMESTAMP_COLUMN);

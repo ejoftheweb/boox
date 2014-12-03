@@ -15,4 +15,6 @@ protected static boolean EMAIL_IS_USERNAME=false;
  protected static String RESET_PASSWORD_LINK=readProperty("xusers", "reset.password");
  protected static String SYSTEM_FROM_EMAIL=readProperty("xusers", "system.from.email");
  protected static String PASSWORD_SERVLET_URL=readProperty("xusers", "xuser.password.servlet");
+ protected static String CONFIRMATION_MAIL_FILE=readProperty("xusers", "xuser.confirmation.mail.file");
+ protected static String REGISTRATION_MAIL_FILE=readProperty("xusers", "xuser.registration.mail.file");
 }
