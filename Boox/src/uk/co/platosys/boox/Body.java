@@ -11,6 +11,13 @@ import uk.co.platosys.xuser.Xbizinfo;*/
 public abstract class Body {
 	public static final String NAME="Name";
 	public static final String LEGAL_NAME="Legal Name";
+	public static final String BODY_ID="Body_ID";
+	
+	private String name;
+	private String legalName;
+	private String id;
+	private String databaseName="none";
+	private boolean isTrade;
 	//private Map<String, Xaddress> addresses=new HashMap<String, Xaddress>();
 	//private Xbizinfo xbizinfo;
 	private Map<String, String> info = new HashMap<String,String>();
@@ -26,8 +33,42 @@ public abstract class Body {
     	return info.get(key);
     }
 	public Body() {
-		// TODO Auto-generated constructor stub
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getLegalName() {
+		return legalName;
+	}
+	protected void setLegalName(String legalName) {
+		this.legalName = legalName;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public boolean isTrade() {
+		return isTrade;
+	}
+	public void setTrade(boolean isTrade) {
+		this.isTrade = isTrade;
+	}
+	public String getDatabaseName() {
+		return databaseName;
+	}
+	public void setDatabaseName(String databaseName) {
+		this.databaseName = databaseName;
+	}
+	
+	
+	
+	
+	
 	/*public void addXaddress(String key, Xaddress address){
 		addresses.put(key,address); 
 	}

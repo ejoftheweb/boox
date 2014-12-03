@@ -26,7 +26,15 @@ import uk.co.platosys.db.jdbc.JDBCSerialTable;
 import uk.co.platosys.db.jdbc.JDBCTable;
 import uk.co.platosys.util.Logger;
 import uk.co.platosys.util.ShortHash;
-
+/**
+ * Customer represents a customer, obvs. We distinguish between trade and private customers.
+ * Trade customers' details are added to the Directory, which is an installation-wide directory
+ * of business-information. 
+ * 
+ * 
+ * @author edward
+ *
+ */
 
 public class Customer extends CounterParty{
 	public static final String TABLE_NAME="bx_customers";
@@ -50,6 +58,7 @@ public class Customer extends CounterParty{
 	private Enterprise enterprise;
 	private long customerID;
 	private String name;
+	private String legalName;
 	private String sysname;
 	private String ledgerName;
 	private String accountName;
@@ -66,18 +75,17 @@ public class Customer extends CounterParty{
 	private Customer(Enterprise enterprise, Clerk clerk, long customerID){
 		logger.log("Customer-init: "+customerID);
 		 try {
+			
 			JDBCSerialTable customersTable=JDBCSerialTable.openTable(enterprise.getDatabaseName(), TABLE_NAME, ID_COLNAME);
 			JDBCRow row = customersTable.getRow(customerID);
 			this.enterprise=enterprise;
 			this.customerID=customerID;
 			this.name=row.getString(NAME_COLNAME);
-			putInfo(Body.NAME, name);
 			this.sysname=row.getString(SYSNAME_COLNAME);
 			this.ledger=Ledger.getLedger(enterprise, row.getString(LEDGER_COLNAME));
 			this.account=Account.getAccount(enterprise, clerk, row.getString(ACCOUNT_COLNAME));
 			this.terms=Terms.getTerms(enterprise, row.getString(TERMS_COLNAME));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			logger.log("Customer-init/id: exception thrown", e);
 		}
 	}
@@ -169,8 +177,9 @@ public class Customer extends CounterParty{
 	 * @throws BooxException 
 	 * @throws PermissionsException 
 	 */
-  public static Customer createCustomer(Enterprise enterprise,  Clerk clerk, Ledger customersLedger,  String customerName, boolean isPrivate) throws PlatosysDBException, PermissionsException, BooxException {
+  public static Customer createCustomer(Enterprise enterprise,  Clerk clerk, Ledger customersLedger,  String customerName, boolean isTrade) throws PlatosysDBException, PermissionsException, BooxException{
 	  JDBCSerialTable customersTable=null;
+	  
 	  if(!JDBCTable.tableExists(enterprise.getDatabaseName(), TABLE_NAME)){
 		  logger.log("CustomerCC: creating customersTable");
 		  try {
@@ -188,7 +197,6 @@ public class Customer extends CounterParty{
 			customersTable.addColumn(TODO_COLNAME, Table.BOOLEAN_COLUMN);
 			customersTable.addColumn(ACCOUNTS_CONTACT_COLNAME, Table.TEXT_COLUMN);
 		} catch (PlatosysDBException e) {
-			
 			logger.log("CustomerCC: exception thrown creating customers table", e);
 			throw new PlatosysDBException ("problem creating customer", e);
 		}
@@ -279,5 +287,6 @@ public Terms getTerms() {
 public void setTerms(Terms terms) {
 	this.terms = terms;
 }
+
   
 }

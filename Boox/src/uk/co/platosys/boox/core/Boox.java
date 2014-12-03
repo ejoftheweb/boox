@@ -91,7 +91,7 @@ public class Boox {
    
     public static String APPLICATION_NAME="boox";
     public static String DEFAULT_CURRENCY="XBX";
-    protected static String APPLICATION_DATABASE="platax";//OK this is a kluj for now
+    public static String APPLICATION_DATABASE="platax";//OK this is a kluj for now
     public static Namespace NAMESPACE=Namespace.getNamespace("http://www.platosys.co.uk/boox");
     private static Namespace ns = NAMESPACE;
 
@@ -100,11 +100,6 @@ public class Boox {
     static Logger logger=debugLogger;
     public static String GUEST_NAME="visitor";
     //some text constants
-    static final String ENTERPRISES_TABLENAME="bx_enterprises";
-    static final String EID_COLNAME="enterpriseID";
-    static final String ENAME_COLNAME="name";
-    static final String ELEGALNAME_COLNAME="legal_name";
-    static final String EDATABASENAME_COLNAME="database_name";
     static final String LEDGERS_ELEMENT_NAME = "Ledgers";
     static final String LEDGER_ELEMENT_NAME="Ledger";
     static final String TASKS_ELEMENT_NAME="Tasks";

@@ -47,11 +47,7 @@ import uk.co.platosys.util.ShortHash;
  * @author edward
  */
 public class Enterprise extends Body {
-	static final String ID_COLNAME="enterpriseID";
-	static final String NAME_COLNAME="name";
-	static final String LEGALNAME_COLNAME="legal_name";
-	static final String DATABASENAME_COLNAME="database_name";
-	static final String TABLENAME = "bx_enterprise";
+	protected static final String TABLENAME="bx_enterprise";
 	static final String KEY_COLNAME="key";
 	static final String VALUE_COLNAME="value";
     private String name;
@@ -68,17 +64,22 @@ public class Enterprise extends Body {
     private String enterpriseID;
     
     
-    
-    public Enterprise(String enterpriseID) throws BooxException{
-       this.enterpriseID=enterpriseID;
+    /**
+     * Instantiates an Enterprise object given its enterpriseID
+     * 
+     * @param enterpriseID
+     * @throws BooxException
+     */
+    protected Enterprise(String enterpriseID) throws BooxException{
+      setId(enterpriseID);
+      setTrade(true);
        try{
-       JDBCTable enterprisesTable=new JDBCTable(Boox.APPLICATION_DATABASE, Boox.ENTERPRISES_TABLENAME, Boox.EID_COLNAME);
-     
-       this.name= enterprisesTable.readString(enterpriseID, Boox.ENAME_COLNAME);
+       
+       setName(Directory.getName(enterpriseID));
        putInfo(Body.NAME, name);
-       this.legalName=enterprisesTable.readString(enterpriseID, Boox.ELEGALNAME_COLNAME);
+       setLegalName(Directory.getLegalName(enterpriseID));
        putInfo(Body.LEGAL_NAME, legalName);
-       this.databaseName=enterprisesTable.readString(enterpriseID, Boox.EDATABASENAME_COLNAME);
+       setDatabaseName(Directory.getDatabaseName(enterpriseID));
        this.generalLedger=Ledger.getLedger(this, Ledger.ROOT_LEDGER_NAME);
        if (this.name==null){throw new BooxException("enterprise ID"+enterpriseID+" seems to have no name");}
        if (this.legalName==null){throw new BooxException("enterprise ID"+enterpriseID+" seems to have no legalName");}
@@ -186,7 +187,6 @@ public class Enterprise extends Body {
     	//need to 
     	 logger.log(2, "creating enterprise "+name);
     	
-    	 JDBCTable enterprisesTable;
     	 String enterpriseID = ShortHash.hash(name+legalName);
     	if (databaseName==null){
     		//so we need to create a new database for this enterprise
@@ -206,30 +206,10 @@ public class Enterprise extends Body {
 				throw new BooxException("could not create new database for enteprise "+name, e);
 			}
     	}
-        try{  
-        	//ENTERPRISES_TABLENAME JDBCTable is created in the master database:
-        	
-        	if(!(JDBCTable.tableExists(Boox.APPLICATION_DATABASE, Boox.ENTERPRISES_TABLENAME))){
-        		enterprisesTable = JDBCTable.createTable(Boox.APPLICATION_DATABASE, Boox.ENTERPRISES_TABLENAME, Boox.EID_COLNAME, JDBCTable.TEXT_COLUMN);
-        		enterprisesTable.addColumn(Boox.ENAME_COLNAME, JDBCTable.TEXT_COLUMN);
-        		enterprisesTable.addColumn(Boox.ELEGALNAME_COLNAME, JDBCTable.TEXT_COLUMN);
-        		enterprisesTable.addColumn(Boox.EDATABASENAME_COLNAME, JDBCTable.TEXT_COLUMN);
-        	}else{
-        		enterprisesTable=new JDBCTable(Boox.APPLICATION_DATABASE, Boox.ENTERPRISES_TABLENAME, Boox.EID_COLNAME);
-        	}
-              enterprisesTable.amend(enterpriseID, Boox.ENAME_COLNAME, name);
-              enterprisesTable.amend(enterpriseID, Boox.ELEGALNAME_COLNAME,legalName);
-              enterprisesTable.amend(enterpriseID, Boox.EDATABASENAME_COLNAME, databaseName);
-        }catch(PlatosysDBException pdbe){
-        	throw new BooxException("could not register enterprise details on master database for enterprise "+name, pdbe);
-        }
+        
       
         JDBCTable enterpriseTable=null;
-         //"enterprise"[singular] JDBCTable is created in the slave database.
-        //Note that JDBCTable will create it in the master database if it can't initialise the 
-        //slave database - this will cause problems.
-        //this table is in the enterprise's private database; it is a listing of key-value pairs of data about the enterprise.
-        try{
+         try{
          if(!(JDBCTable.tableExists(databaseName, Enterprise.TABLENAME))){
         	    logger.log("creating enterprise table in db "+databaseName);
                 enterpriseTable = JDBCTable.createTable(databaseName, Enterprise.TABLENAME, Enterprise.KEY_COLNAME, JDBCTable.TEXT_COLUMN);
@@ -250,42 +230,18 @@ public class Enterprise extends Body {
         if (enterprise!=null){
         	logger.log("Enterprise created enterprise:"+enterprise.getName());
         	Boox.createNewJournal(enterprise);
-        return enterprise;
+        	try {
+				Directory.addBody(enterprise);
+			} catch (PlatosysDBException e) {
+				throw new BooxException("problem adding enterprise to directory", e);
+			}
+        	return enterprise;
         }else{
         	logger.log(1, "ECE-null enterprise returned from EgetE(ID)");
         	return null;
         }
         
     }
-    /**
-     * Checks to see if the name has already been used. 
-     * Some applications may need unique system-wide enterprise nicknames, so we 
-     * need this method to check that they are so. 
-     * Note however that this isn't a necessary constraint for boox, as enterprises are 
-     * always referred to by their unique system ID.
-     *  
-     * @param name
-     * @return
-     * @throws BooxException 
-     */
-    public static boolean isNameOK(String name) throws BooxException{
-    	try{  
-        	//ENTERPRISES_TABLENAME JDBCTable is created in the master database:
-        	
-        	if(!(JDBCTable.tableExists(Boox.APPLICATION_DATABASE, Boox.ENTERPRISES_TABLENAME))){
-        		//making a kludgy jump here - if there's no enterprises table, then the name must be OK
-        		return true;
-        	}else{
-        		JDBCTable enterprisesTable=new JDBCTable(Boox.APPLICATION_DATABASE, Boox.ENTERPRISES_TABLENAME, Boox.EID_COLNAME);
-        		if(enterprisesTable.rowExists(NAME_COLNAME, name)){
-        			return false;
-        		}else{
-        			return true;
-        		}
-        	}
-              
-        }catch(PlatosysDBException pdbe){
-        	throw new BooxException("BX-E isNameOK error checking name" +name, pdbe);
-        }
-    }
+    
+    
 }
