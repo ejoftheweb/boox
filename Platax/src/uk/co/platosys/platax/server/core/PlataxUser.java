@@ -59,7 +59,16 @@ public class PlataxUser extends Xuser {
 	
 	private PlataxUser(){}
 	
-	
+	/**
+	 * This constructor is used to instantiate an authenticated user object at logon. 
+	 * The user is attached to the servlet session and can be accessed
+	 * by other objects.  
+	 * @param name
+	 * @param password
+	 * @param request
+	 * @throws XuserCredentialsException
+	 * @throws XuserException
+	 */
 	private PlataxUser(String name, char[] password, HttpServletRequest request) throws XuserCredentialsException, XuserException{
 		super(name, password, request);
 		//logger.log(4, "pxuser superclass constructor called");
@@ -106,6 +115,16 @@ public class PlataxUser extends Xuser {
 			}
 		}
 	}
+	/**
+	 * This method is called by the logon service to instantiate the authenticated user and 
+	 * attach it to the session.
+	 * @param name
+	 * @param password
+	 * @param request
+	 * @return
+	 * @throws PlataxException
+	 * @throws XuserCredentialsException
+	 */
     public static PlataxUser getPlataxUser(String name, char[] password, HttpServletRequest request) throws PlataxException, XuserCredentialsException{
            try {
         	   logger.log("creating new PlataxUser "+name);
@@ -169,6 +188,9 @@ public class PlataxUser extends Xuser {
     	}
     }
     /**
+     * An instantiated user can access many different enterprises, in a role particular
+     * to each one. Access to Boox enterprises is by way of the Clerk object associated with
+     * a user.
      * 
      * @param enterprise
      * @param clerk
@@ -227,10 +249,21 @@ public class PlataxUser extends Xuser {
     	
     	return pxuser;
     }
-    public static String register(String email, String username, char[] pword, boolean investor)throws XuserException, XuserExistsException{
+    /**
+     * This method does the user registration. It calls the register method in Xuser, the superclass.
+     * 
+     * @param email
+     * @param username
+     * @param pword
+     * @param investor
+     * @return
+     * @throws XuserException
+     * @throws XuserExistsException
+     */
+    public static String register(String email, String username, String name, char[] pword, boolean investor)throws XuserException, XuserExistsException{
 		logger.log(1, "registering user "+email+" "+username);
 		try{
-			String regkey = register(email, username, pword);//calls method in superclass Xuser.
+			String regkey = register( email, username,name, pword);//calls method in superclass Xuser.
 			
 		if (investor){
 			//TODO some more stuff about being an investor
@@ -263,6 +296,14 @@ public class PlataxUser extends Xuser {
 			return null;
 		}
     }
+    /**
+     * Enterprise objects associated with a PlataxUser are stored in a HashMap indexed by
+     * the enterprise name. This method returns an Enterprise object given its name.
+     * 
+     * @param enterpriseName
+     * @return
+     * @throws PlataxException
+     */
     public Enterprise getEnterprise(String enterpriseName) throws PlataxException {
     	if (enterprises.get(enterpriseName)!=null){
     		return (enterprises.get(enterpriseName));
@@ -270,6 +311,7 @@ public class PlataxUser extends Xuser {
     		throw new PlataxException("plataxUser: enterprise "+enterpriseName+ " is not found here");
     	}
     }
+    
     public Invoice getInvoice(String sin) throws PlataxException {
     	if (invoices.get(sin)!=null){
     		return (invoices.get(sin));

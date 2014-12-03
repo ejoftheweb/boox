@@ -53,4 +53,7 @@ public class FieldVerifier {
 	public static boolean isValidPrice(String price){
 		return isValid(price, PRICE_REGEX);
 	}
+	public static boolean isValidName(String string){
+		return true;
+	}
 }

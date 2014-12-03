@@ -8,6 +8,8 @@ import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.services.UserService;
 import uk.co.platosys.platax.client.services.UserServiceAsync;
+import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
+import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.Constants;
 import uk.co.platosys.platax.shared.FieldVerifier;
 
@@ -29,6 +31,7 @@ import com.google.gwt.user.client.ui.TextBox;
 public class RegisterUser extends AbstractForm {
 	public RegisterUser(final Platax platax){
 		super(platax);
+		setCloseConfirm(false);
 		//PTab/AF fields
 		setTabHeaderText(StringText.SIGNUP);
 		topLabel.setText(StringText.SIGNUP_HEADER);
@@ -38,39 +41,49 @@ public class RegisterUser extends AbstractForm {
 		//final Label topLabel = new Label("Please enter your details to register as a PLATAX user");
 		final Button submitButton=new Button("Submit");
 		submitButton.setEnabled(false);
-		final Label submitInfoLabel=new Label("");
-		final Label submitLabel=new Label("submit");
+		final FieldInfoLabel submitInfoLabel=new FieldInfoLabel("");
+		final FieldLabel submitLabel=new FieldLabel("submit");
 		
 		
 		//email box
 		final TextBox emailBox = new TextBox();
-		final Label emailLabel= new Label("email");
-		final Label emailInfoLabel=new Label(LabelText.EMAIL);
+		final FieldLabel emailLabel= new FieldLabel(LabelText.EMAIL);
+		final FieldInfoLabel emailInfoLabel=new FieldInfoLabel(LabelText.EMAIL_INFO);
 		emailBox.setEnabled(true);
-		
 		//username box
 		final TextBox usernameBox = new TextBox();
-		final Label usernameLabel= new Label("nickname");
-		final Label usernameInfoLabel=new Label(LabelText.USERNAME);
+		final FieldLabel usernameLabel= new FieldLabel(LabelText.USERNAME);
+		final FieldInfoLabel usernameInfoLabel=new FieldInfoLabel(LabelText.USERNAME_INFO);
 		usernameBox.setEnabled(false);
+		//given name box
+		final TextBox givennameBox = new TextBox();
+		final FieldLabel givennameLabel= new FieldLabel(LabelText.GIVENNAME);
+		final FieldInfoLabel givennameInfoLabel=new FieldInfoLabel(LabelText.GIVENNAME_INFO);
+		givennameBox.setEnabled(false);
+		
+		//family name box
+		final TextBox familynameBox = new TextBox();
+		final FieldLabel familynameLabel= new FieldLabel(LabelText.FAMILYNAME);
+		final FieldInfoLabel familynameInfoLabel=new FieldInfoLabel(LabelText.FAMILYNAME_INFO);
+		familynameBox.setEnabled(false);
+		
 		
 		//password box
 		final PasswordTextBox passwordBox = new PasswordTextBox();
-		final Label passwordLabel= new Label("password");
-		final Label passwordInfoLabel=new Label(LabelText.SECURE_PASSWORD);
+		final FieldLabel passwordLabel= new FieldLabel(LabelText.PASSWORD);
+		final FieldInfoLabel passwordInfoLabel=new FieldInfoLabel(LabelText.SECURE_PASSWORD);
 		passwordBox.setEnabled(false);
 		
 		final PasswordTextBox confirmBox = new PasswordTextBox();
-		final Label confirmLabel= new Label("confirm");
-		final Label confirmInfoLabel=new Label(LabelText.CONFIRM_PASSWORD);
+		final FieldLabel confirmLabel= new FieldLabel("confirm");
+		final FieldInfoLabel confirmInfoLabel=new FieldInfoLabel(LabelText.CONFIRM_PASSWORD);
 		confirmBox.setEnabled(false);
 		
 		final CheckBox investorBox = new CheckBox("investor");
 		
-		final Label investorInfoLabel = new Label(LabelText.INVESTOR);
+		final FieldInfoLabel investorInfoLabel = new FieldInfoLabel(LabelText.INVESTOR);
 		
-		final CheckBox termsBox=new CheckBox("terms");
-		final Label termsInfoLabel = new Label(LabelText.TERMS);
+		
 		
 		final UserServiceAsync userService = (UserServiceAsync) GWT.create(UserService.class);
 		final AsyncCallback<String> callback = new AsyncCallback<String>(){
@@ -102,24 +115,35 @@ public class RegisterUser extends AbstractForm {
 		//this.setHeader("Register");
 		//vpanel.add(topLabel);
 		table.setWidget(0,0, emailLabel);
-		table.setWidget(1,0, usernameLabel);
-		table.setWidget(2,0, passwordLabel);
-		table.setWidget(3,0, confirmLabel);
 		table.setWidget(0,1, emailBox);
-		table.setWidget(1,1, usernameBox);
-		table.setWidget(2,1, passwordBox);
-		table.setWidget(3,1, confirmBox);
 		table.setWidget(0,2, emailInfoLabel);
+		
+		table.setWidget(1,0, usernameLabel);
+		table.setWidget(1,1, usernameBox);
 		table.setWidget(1,2, usernameInfoLabel);
-		table.setWidget(2,2, passwordInfoLabel);
-		table.setWidget(3,2, confirmInfoLabel);
-		table.setWidget(4,1, investorBox);
-		table.setWidget(4,2, investorInfoLabel);
-		table.setWidget(5,1, termsBox);
-		table.setWidget(5,2, termsInfoLabel);
-		table.setWidget(6,0, submitLabel);
-		table.setWidget(6,1, submitButton);
-		table.setWidget(6,2, submitInfoLabel);
+		
+		table.setWidget(2,2, givennameInfoLabel);
+		table.setWidget(2,0, givennameLabel);
+		table.setWidget(2,1, givennameBox);
+		
+		table.setWidget(3,0, familynameLabel);
+		table.setWidget(3,1, familynameBox);
+		table.setWidget(3,2, familynameInfoLabel);
+		
+		table.setWidget(4,0, passwordLabel);
+		table.setWidget(4,1, passwordBox);
+		table.setWidget(4,2, passwordInfoLabel);
+		
+		table.setWidget(5,0, confirmLabel);
+		table.setWidget(5,1, confirmBox);
+		table.setWidget(5,2, confirmInfoLabel);
+		
+		table.setWidget(6,1, investorBox);
+		table.setWidget(6,2, investorInfoLabel);
+		
+		table.setWidget(7,0, submitLabel);
+		table.setWidget(7,1, submitButton);
+		table.setWidget(7,2, submitInfoLabel);
 		form.add(table);
 		//vpanel.add(form);
 		//this.add(vpanel);
@@ -132,6 +156,8 @@ public class RegisterUser extends AbstractForm {
 				     emailBox.setFocus(false);
 				     usernameBox.setFocus(true);
 				     emailInfoLabel.setText(LabelText.OK);
+				     RegisterUser.this.setCloseConfirm(true);
+				     RegisterUser.this.setCloseConfirmMessage(StringText.CLOSE_CONFIRM_LOSE_CHANGES);
 				}else{
 					emailBox.setValue("");
 					emailBox.setFocus(true);
@@ -144,9 +170,9 @@ public class RegisterUser extends AbstractForm {
 			public void onChange(ChangeEvent event){
 				String username = usernameBox.getValue();
 				if (FieldVerifier.isValidUsername(username)){
-				    passwordBox.setEnabled(true);
+				    givennameBox.setEnabled(true);
 				    usernameBox.setFocus(false);
-					passwordBox.setFocus(true);
+					givennameBox.setFocus(true);
 				    usernameInfoLabel.setText(LabelText.OK);
 				}else{
 					usernameBox.setValue("");
@@ -156,6 +182,39 @@ public class RegisterUser extends AbstractForm {
 				
 			}
 		});
+		givennameBox.addChangeHandler(new ChangeHandler(){
+			public void onChange(ChangeEvent event){
+				String givenname = givennameBox.getValue();
+				if (FieldVerifier.isValidName(givenname)){
+				    familynameBox.setEnabled(true);
+				    givennameBox.setFocus(false);
+					familynameBox.setFocus(true);
+				    givennameInfoLabel.setText(LabelText.OK);
+				}else{
+					givennameBox.setValue("");
+					givennameBox.setFocus(true);
+					givennameInfoLabel.setText(LabelText.BAD_NAME);
+				}
+				
+			}
+		});
+		familynameBox.addChangeHandler(new ChangeHandler(){
+			public void onChange(ChangeEvent event){
+				String familyname = familynameBox.getValue();
+				if (FieldVerifier.isValidName(familyname)){
+				    passwordBox.setEnabled(true);
+				    familynameBox.setFocus(false);
+					passwordBox.setFocus(true);
+				    familynameInfoLabel.setText(LabelText.OK);
+				}else{
+					familynameBox.setValue("");
+					familynameBox.setFocus(true);
+					familynameInfoLabel.setText(LabelText.BAD_NAME);
+				}
+				
+			}
+		});
+		
 		passwordBox.addChangeHandler(new ChangeHandler(){
 			public void onChange(ChangeEvent event){
 				String password = passwordBox.getValue();
@@ -178,7 +237,7 @@ public class RegisterUser extends AbstractForm {
 				if (FieldVerifier.confirms(passwordBox.getValue(), confirm)){
 					submitButton.setEnabled(true);
 					confirmBox.setFocus(false);
-				    termsBox.setFocus(true);
+				    submitButton.setFocus(true);
 				    confirmInfoLabel.setText(LabelText.OK);
 				    
 				}else{
@@ -194,26 +253,16 @@ public class RegisterUser extends AbstractForm {
 				
 			}
 		});
-		termsBox.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent event){
-				if (termsBox.getValue()){
-					submitInfoLabel.setText("Click \"submit\" to register");
-					submitButton.setEnabled(true);
-				}else{
-					submitButton.setEnabled(false);
-				}
-				
-			}
-		});
+		
 		submitButton.addClickHandler(new ClickHandler(){
 			public void onClick (ClickEvent click){
 				String email = emailBox.getValue();
 				String username = usernameBox.getValue();
+				String name=givennameBox.getValue()+" "+familynameBox.getValue();
 				String password = passwordBox.getValue();
 				String confirm = confirmBox.getValue();
 				boolean investor = investorBox.getValue();
-				boolean accept=termsBox.getValue();
-				userService.registerUser(email, username, password, confirm, accept, investor, callback);
+				userService.registerUser(email, username, name, password, confirm, true, investor, callback);
 				topLabel.setText(StringText.THANKYOU);
 				subHeader.setText(StringText.WAIT_FOR_SIGNUP);
 				form.remove(table);

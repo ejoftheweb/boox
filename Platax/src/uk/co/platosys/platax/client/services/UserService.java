@@ -8,6 +8,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("userService")
 public interface UserService extends RemoteService {
 	
-	public String registerUser(String email, String username, String password, String confirm, boolean accept, boolean investor);
+	public String registerUser(String email, String username, String name, String password, String confirm, boolean accept, boolean investor);
 	
 }

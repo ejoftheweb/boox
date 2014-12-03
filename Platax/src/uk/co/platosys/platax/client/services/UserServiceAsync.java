@@ -4,7 +4,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface UserServiceAsync {
 
-	void registerUser(String email, String username, String password,
+	void registerUser(String email, String username, String name, String password,
 			String confirm,boolean accept, boolean investor, AsyncCallback<String> callback);
 
 }

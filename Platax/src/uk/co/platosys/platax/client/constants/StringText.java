@@ -8,6 +8,7 @@ public class StringText {
 	public static final String LOGIN="Login";
 	public static final String SIGNUP="Sign Up";
 	public static final String REALLY_LOGOUT="Really logout?";
+	public static final String REALLY_CLOSE_TAB="Really close this tab?";
 	public static final String PLEASE_SELECT="--Please Select--";
 	public static final String NULL="";
 	public static final String SIGNUP_HEADER="Please complete this form to sign up for PLATAX";
@@ -26,4 +27,7 @@ public class StringText {
 	public static final String TERMS_CONFIRM="You have confirmed that you accept our terms and conditions";
 	public static final String TERMS_NOT_CONFIRM="You must accept the terms and conditions";
 	public static final String MODULES_CONFIRM=REGISTER_MODULES;
+	
+	public static final String ADD_ENTERPRISE_CLOSE_CONFIRM="Really Close this tab? \n you will lose any changes";
+	public static final String CLOSE_CONFIRM_LOSE_CHANGES="Really Close this tab? \n you will lose any changes";
 }

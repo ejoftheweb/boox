@@ -4,6 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -17,6 +19,8 @@ import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.forms.bills.AbstractBill;
 import uk.co.platosys.platax.client.services.CustomerService;
 import uk.co.platosys.platax.client.services.CustomerServiceAsync;
+import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
+import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
@@ -26,12 +30,12 @@ public class AddCustomerPopupForm extends AbstractPopupForm  {
 	public AddCustomerPopupForm(final AbstractBill parent, final GWTEnterprise enterprise) {
 		super(LabelText.ADD_CUSTOMER_HEADER);
 		final CustomerServiceAsync addCustomerService = (CustomerServiceAsync) GWT.create(CustomerService.class);
-		Label customerNameLabel = new Label(LabelText.CUSTOMER);
-		Label isPrivateLabel=new Label(LabelText.IS_PRIVATE);
+		FieldLabel customerNameLabel = new FieldLabel(LabelText.CUSTOMER);
+		FieldLabel isPrivateLabel=new FieldLabel(LabelText.IS_PRIVATE);
 		final TextBox customerNameBox = new TextBox();
 		final CheckBox isPrivateCheckBox = new CheckBox();
-		Label customerInfoLabel = new Label(LabelText.CUSTOMER_NAME);
-		Label isPrivateInfoLabel = new Label(LabelText.IS_PRIVATE_INFO);
+		FieldInfoLabel customerInfoLabel = new FieldInfoLabel(LabelText.CUSTOMER_NAME);
+		FieldInfoLabel isPrivateInfoLabel = new FieldInfoLabel(LabelText.IS_PRIVATE_INFO);
 		Label doMoreLaterLabel = new Label(LabelText.DOMORELATER);
 		table.getFlexCellFormatter().setColSpan(0, 0, 3);
 		table.setWidget(0,0,header);
@@ -45,6 +49,33 @@ public class AddCustomerPopupForm extends AbstractPopupForm  {
 		table.setWidget(3,0, doMoreLaterLabel);
 		Button button = new Button("submit");
 		table.setWidget(4,2, button);
+		final AsyncCallback<GWTCustomer> checkCallback=new AsyncCallback<GWTCustomer>(){
+
+			@Override
+			public void onFailure(Throwable cause) {
+				// TODO Auto-generated method stub
+				//Debugging code
+				StackTraceElement[] st = cause.getStackTrace();
+			   String error = "checkCustomer failed\n";
+			   error = error+cause.getClass().getName()+"\n";
+			   for (int i=0; i<st.length; i++){
+				   error = error + st[i].toString()+ "\n";
+			   }
+				Window.alert(error);
+			}
+
+			@Override
+			public void onSuccess(GWTCustomer result) {
+				header.setText(LabelText.DO_YOU_MEAN);
+				table.getFlexCellFormatter().setColSpan(1,0,3);
+				table.setWidget(1,0, new Label(result.getLegalName()));
+				table.setWidget(2,0, new Button("Yes"));
+				table.setWidget(2,1, new Button("No"));
+				table.setWidget(3,0, new Label(""));
+				table.setWidget(4,2, new Label(""));
+			}
+			
+		};
 		final AsyncCallback<GWTCustomer> callback = new AsyncCallback<GWTCustomer>(){
 			public void onSuccess(GWTCustomer result){
 				parent.getContactListBox().addItem(result.getName(), result.getSysname());
@@ -70,6 +101,15 @@ public class AddCustomerPopupForm extends AbstractPopupForm  {
 				//logger.log(Level.ALL, "submit button clicked");
 				//parent.refreshData();
 				AddCustomerPopupForm.this.hide();
+			}
+			
+		});
+		customerNameBox.addChangeHandler(new ChangeHandler(){
+
+			@Override
+			public void onChange(ChangeEvent event) {
+				addCustomerService.checkName(customerNameBox.getValue(), checkCallback);
+				
 			}
 			
 		});

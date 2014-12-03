@@ -1,5 +1,7 @@
 package uk.co.platosys.platax.client.widgets.labels;
 
+import uk.co.platosys.platax.client.constants.Styles;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.shared.DirectionEstimator;
 import com.google.gwt.user.client.ui.Label;
@@ -8,12 +10,12 @@ public class PopupHeaderLabel extends Label {
 
 	public PopupHeaderLabel() {
 		super();
-		setStyleName("px_popup_header");
+		setStyleName(Styles.POPUP_HEADER);
 	}
 
 	public PopupHeaderLabel(String text) {
 		super(text);
-		setStyleName("px_popup_header");
+		setStyleName(Styles.POPUP_HEADER);
 		
 	}
 

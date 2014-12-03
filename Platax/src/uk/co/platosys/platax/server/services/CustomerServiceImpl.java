@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import uk.co.platosys.boox.core.Clerk;
+import uk.co.platosys.boox.core.Directory;
 import uk.co.platosys.boox.core.Enterprise;
 import uk.co.platosys.boox.core.Ledger;
 import uk.co.platosys.boox.core.exceptions.BooxException;
@@ -112,6 +113,23 @@ static Logger logger = Logger.getLogger("platax");
 		return gwcusts;
 		}catch(Exception x){
 			logger.log("CSI problem getting the customer list", x);
+			return null;
+		}
+	}
+
+	@Override
+	public GWTCustomer checkName(String customerName) {
+		try {
+			if(Directory.bodyExists(customerName)){
+				String sysname = Directory.getSysnameFromName(customerName);
+				GWTCustomer gCustomer = new GWTCustomer(customerName, sysname);
+				gCustomer.setLegalName(Directory.getLegalName(sysname));
+				return gCustomer;
+			}else{
+				return null;
+			}
+		} catch (Exception e) {
+			logger.log("error", e);
 			return null;
 		}
 	}

@@ -6,10 +6,12 @@ import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.services.LoginService;
 import uk.co.platosys.platax.client.services.LoginServiceAsync;
+import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.exceptions.LoginException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -25,13 +27,14 @@ public class LoginForm extends AbstractForm {
 	//declare variables
 	//final Label topLabel = new Label(StringText.LOGIN_OR_SIGNUP);
 	
-	final Label emailLabel = new Label(LabelText.EMAIL);
+	final FieldLabel emailLabel = new FieldLabel(LabelText.EMAIL);
 	final TextBox emailTextBox = new TextBox();
 	final FlexTable table = new FlexTable();
-	final Label passwordLabel=new Label(LabelText.PASSWORD);
+	final FieldLabel passwordLabel=new FieldLabel(LabelText.PASSWORD);
 	final TextBox passwordTextBox= new PasswordTextBox();
 	final CheckBox chckbxNewCheckBox = new CheckBox(LabelText.REMEMBER_ME);
 	final Button loginButton = new Button(StringText.LOGIN);
+	final Anchor registerAnchor=new Anchor(StringText.SIGNUP);
 	
 	final LoginServiceAsync loginService = (LoginServiceAsync) GWT.create(LoginService.class);
 
@@ -44,7 +47,16 @@ public class LoginForm extends AbstractForm {
 		topLabel.setText(StringText.LOGIN);
 		subHeader.setText(StringText.LOGIN_OR_SIGNUP);
 		setTabHeaderText(StringText.LOGIN);
+		setCloseEnabled(false);
 		final Platax platax = pplatax;	
+		registerAnchor.addClickHandler(new ClickHandler(){
+			 
+			@Override
+			public void onClick(ClickEvent event) {
+				platax.addTab(new RegisterUser(platax));
+				
+			}
+	    });
 		//callback methods
 		final AsyncCallback<PXUser> logincallback = new AsyncCallback<PXUser>(){
 			public void onSuccess(PXUser result){
@@ -111,13 +123,11 @@ public class LoginForm extends AbstractForm {
 		table.setWidget(2, 1, chckbxNewCheckBox);
 		table.setWidget(3, 1, loginButton);
 		form.add(table);
+		form.add(registerAnchor);
 		
-		
+	    
+	}
 	
-	
-		
-		
-	}	
 	}
 
 

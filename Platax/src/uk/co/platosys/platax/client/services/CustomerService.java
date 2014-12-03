@@ -13,5 +13,6 @@ public interface CustomerService extends RemoteService {
 	public GWTCustomer addCustomer(String enterpriseName, String name, String customerID);
 	public GWTCustomer addCustomer(String enterpriseName, String name, boolean isPrivate) throws PlataxException;
 	public GWTCustomer editCustomer(GWTCustomer customer);
+	public GWTCustomer checkName(String customerName);
 	public ArrayList<GWTCustomer> listCustomers(String enterpriseID, int selection );
 }

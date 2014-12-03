@@ -6,6 +6,7 @@ import java.util.List;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
+import uk.co.platosys.platax.client.constants.Styles;
 import uk.co.platosys.platax.client.services.LoginService;
 import uk.co.platosys.platax.client.services.LoginServiceAsync;
 import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
@@ -25,7 +26,9 @@ import com.google.gwt.user.client.Window;
 public class UserTab extends AbstractForm {
 	public UserTab(Platax pplatax, PXUser user) {
 		super(pplatax);
-    
+    setCloseEnabled(false);
+    setStyleName(Styles.PTAB_CONTENT_STYLE);
+    setHeadStyleName(Styles.PTABH_STYLE);
     //pTab info fields
 	setTabHeaderText(user.getUsername());
     topLabel.setText(LabelText.USER_HI + user.getUsername());

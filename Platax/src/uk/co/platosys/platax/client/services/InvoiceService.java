@@ -20,5 +20,5 @@ public interface InvoiceService extends RemoteService {
    public GWTLineItem postLine(GWTLineItem line);
    public GWTLineItem voidLine(GWTLineItem line);
    public GWTInvoice raiseInvoice(GWTInvoice invoice);
-   public GWTInvoiceList listInvoices(String enterpriseID, int selection);
+   public ArrayList<GWTInvoice> listInvoices(String enterpriseID, int selection);
 }

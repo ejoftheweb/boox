@@ -24,6 +24,7 @@ import uk.co.platosys.boox.core.Module;
 import uk.co.platosys.boox.core.Segment;
 import uk.co.platosys.boox.core.exceptions.BooxException;
 import uk.co.platosys.boox.core.exceptions.PermissionsException;
+import uk.co.platosys.boox.core.Directory;
 import uk.co.platosys.boox.money.Money;
 import uk.co.platosys.boox.trade.Customer;
 import uk.co.platosys.platax.client.services.EnterpriseService;
@@ -538,7 +539,7 @@ static Logger logger = Logger.getLogger("platax");
 	@Override
 	public Boolean isNameOK(String name) {
 		try {
-			Boolean nameOK = new Boolean (Enterprise.isNameOK(name));
+			Boolean nameOK = new Boolean (Directory.isNameOK(name, true));
 			return nameOK;
 		}catch(Exception x){
 			logger.log("ESI-isNameOK error: ", x);

@@ -7,7 +7,9 @@ public class LabelText {
 	public static final String OK="OK";
 	public static final String MORE="more...";
 	public static final String EMAIL="Email";
+	public static final String EMAIL_INFO="Your email address";
 	public static final String BAD_EMAIL="Sorry, that doesn't seem to be a valid email address. Please try again";
+	public static final String DO_YOU_MEAN="Do you mean...";
 	
 	//Status labels
 	public static final String NOT_LOGGED_IN="Not Logged In";
@@ -74,7 +76,12 @@ public class LabelText {
 	
 	
 	//labels used on the signup page
-	public static final String USERNAME="a username you'll use on the system";
+	public static final String USERNAME="Username";
+	public static final String USERNAME_INFO="a username you'll use on the system";
+	public static final String GIVENNAME="Given name";
+	public static final String GIVENNAME_INFO="Your real given name (we don't publish it)";
+	public static final String FAMILYNAME="Family name";
+	public static final String FAMILYNAME_INFO="Your real family name (we don't publish it)";
 	public static final String SECURE_PASSWORD="a secure password of your choosing";
 	public static final String CONFIRM_PASSWORD="please retype it to confirm";
 	public static final String INVESTOR_INFO="please tick if you want to invest in enterprises";
@@ -83,6 +90,7 @@ public class LabelText {
 	public static final String TERMS_INFO="check to confirm you have read and accept our terms and conditions";
 	
 	public static final String BAD_USERNAME="Sorry, usernames must be only letters, with no spaces";
+	public static final String BAD_NAME="Bad Name";
 	public static final String POOR_PASSWORD="Sorry, that password isn't strong enough.";
 	public static final String MATCHLESS_PASSWORD="Sorry, your passwords don't match";
 	public static final String MATCHLESS_CONFIRM="Please enter both again";

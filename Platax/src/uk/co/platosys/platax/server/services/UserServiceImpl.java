@@ -20,7 +20,7 @@ Logger logger = Logger.getLogger("platax");
 	
 
 	@Override
-	public String registerUser(String email, String username, String password,
+	public String registerUser(String email, String username, String name, String password,
 			String confirm, boolean accept, boolean investor) {
 		logger.log("RUSI registration request received");
 		String result="";
@@ -48,7 +48,7 @@ Logger logger = Logger.getLogger("platax");
 		    char[] pword = password.toCharArray();
 			try{
 				logger.log("RUSI - inputs checked, now calling PU.register");
-				PlataxUser.register(username,email, pword, investor);
+				PlataxUser.register(email, username, name, pword, investor);
 				return Constants.OK;
 			}catch (XuserException e) {
 				logger.log("error",e);

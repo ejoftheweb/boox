@@ -17,6 +17,7 @@ import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
+import uk.co.platosys.platax.client.constants.Styles;
 import uk.co.platosys.platax.client.forms.popups.AddCustomerPopupForm;
 import uk.co.platosys.platax.client.forms.popups.AddProductPopupForm;
 import uk.co.platosys.platax.client.services.CustomerService;
@@ -48,15 +49,19 @@ public class InvoiceForm extends AbstractBill {
 	
 	public InvoiceForm(Platax parent, final GWTEnterprise gwtEnterprise) {
 		super(parent, gwtEnterprise.getName()+":"+StringText.INVOICE);
+		setStyleName(Styles.PTAB_INVOICE);
+		setHeadStyleName(Styles.PTABH_INVOICE);
+		
 		this.gwtEnterprise=gwtEnterprise;
 		this.enterpriseName=gwtEnterprise.getName();
 		this.enterpriseID=gwtEnterprise.getEnterpriseID();
 		this.setTabHeaderText(gwtEnterprise.getName()+":"+ LabelText.INVOICE);
-		
+		//
+		formHeadLabel.setText(LabelText.INVOICE);
 		//hpanel.add( new Label(LabelText.CUSTOMER));
-		headPanel.add(new FormHeaderLabel(LabelText.INVOICE));
+		/*headPanel.add(new FormHeaderLabel(LabelText.INVOICE));
 		headPanel.add( new Label(LabelText.DATE));
-		headPanel.add( dateBox);
+		headPanel.add( dateBox);*/
 		//form.add(hpanel0);
 		
 		//hpanel.add( new Label(LabelText.CUSTOMER));

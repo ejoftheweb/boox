@@ -12,6 +12,7 @@ import uk.co.platosys.platax.client.constants.DateFormats;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.MessageText;
 import uk.co.platosys.platax.client.constants.StringText;
+import uk.co.platosys.platax.client.constants.Styles;
 import uk.co.platosys.platax.client.services.EnterpriseService;
 import uk.co.platosys.platax.client.services.EnterpriseServiceAsync;
 import uk.co.platosys.platax.client.services.UserService;
@@ -68,7 +69,7 @@ import com.google.gwt.user.datepicker.client.DatePicker;
 
 public class AddEnterpriseForm extends AbstractForm {
 				static final String CAPITAL_SEGMENT_NAME="capital";
-			//Declare Variables
+			    //Declare Variables
 				//Information for the first page.
 				//Company Name
 				final TextBox nameBox = new TextBox();
@@ -107,7 +108,7 @@ public class AddEnterpriseForm extends AbstractForm {
                 ArrayList<GWTSegment> segments;
                 ArrayList<GWTModule> modules;
                 Platax platax;
-                //Callbacks:
+                /////Callbacks:
                 final AsyncCallback<Boolean> namecheckCallback = new AsyncCallback<Boolean>(){
 					@Override
 					public void onFailure(Throwable caught) {
@@ -125,6 +126,8 @@ public class AddEnterpriseForm extends AbstractForm {
 						if (result.booleanValue()){
 							nameInfoLabel.setText(LabelText.NAME_OK);
 							setTabHeaderText(nameBox.getValue());
+							AddEnterpriseForm.this.setCloseConfirm(true);
+							AddEnterpriseForm.this.setCloseConfirmMessage(StringText.CLOSE_CONFIRM_LOSE_CHANGES);
 							nameInfoLabel.setAlarmed(false);
 							legalNameBox.setEnabled(true);
 							legalNameBox.setFocus(true);
@@ -135,7 +138,6 @@ public class AddEnterpriseForm extends AbstractForm {
 							nameBox.setValue(null);
 							nameBox.setFocus(true);
 						}
-						 
 					}
 				};
 				
@@ -229,9 +231,13 @@ public class AddEnterpriseForm extends AbstractForm {
 			
 			public AddEnterpriseForm(Platax platax){
 				super(platax, StringText.ADD_NEW, 2);
+				setStyleName(Styles.PTAB_ENTERPRISE);
+				setHeadStyleName(Styles.PTABH_ENTERPRISE);
 				init(platax);
 			}
+			
 			private void init(Platax platax){
+				setCloseConfirm(false);
 				platax=platax;
 				topLabel.setText(LabelText.NEW_ENTERPRISE_PAGE_HEAD);
 				subHeader.setText(LabelText.NEW_ENTERPRISE_PAGE_SUB_HEAD);

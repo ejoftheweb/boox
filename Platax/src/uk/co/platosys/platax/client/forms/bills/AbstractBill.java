@@ -4,7 +4,9 @@ import java.util.Date;
 
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
+import uk.co.platosys.platax.client.constants.DateFormats;
 import uk.co.platosys.platax.client.constants.LabelText;
+import uk.co.platosys.platax.client.constants.Styles;
 import uk.co.platosys.platax.client.forms.AbstractForm;
 import uk.co.platosys.platax.client.widgets.ContactListBox;
 import uk.co.platosys.platax.client.widgets.ItemListBox;
@@ -29,6 +31,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.datepicker.client.DateBox;
+import com.google.gwt.user.datepicker.client.DateBox.Format;
 
 public abstract class AbstractBill extends AbstractForm {
 
@@ -67,19 +70,23 @@ MoneyTotalLabel billTax = new MoneyTotalLabel();
 MoneyGrandTotalLabel billGross = new MoneyGrandTotalLabel();
 FormHeaderLabel formHeadLabel=new FormHeaderLabel();
 ScrollPanel tablePanel = new ScrollPanel();
-InlineLabel billNumberLabel=new InlineLabel();
-InlineLabel refNumberLabel=new InlineLabel();
+InlineLabel billNumberLabel=new InlineLabel("No:");
+InlineLabel refNumberLabel=new InlineLabel("No");
 TextBox billNumberBox = new TextBox();
 TextBox refNumberBox= new TextBox();
 	
 public AbstractBill(Platax parent, String header) {
 		super( parent, header);
 		//hpanel.add( new Label(LabelText.CUSTOMER));
-				headPanel.add(formHeadLabel);
+			headPanel.add(formHeadLabel);
 				headPanel.add(billNumberLabel);
 				headPanel.add(billNumberBox);
 				headPanel.add( new InlineLabel(LabelText.DATE));
 				headPanel.add( dateBox);
+				dateBox.setValue(new Date());
+				dateBox.setFormat((Format) DateFormats.MED_DATE_FORMAT);
+				headPanel.setStyleName(Styles.BILL_HEAD_PANEL);
+				cpartyPanel.setStyleName(Styles.BILL_CPARTY_PANEL);
 		form.add(headPanel);
 		form.add(cpartyPanel);
 		form.add(lineEntryPanel);

@@ -19,10 +19,4 @@
     <databaseUser>platax</databaseUser>
     <databasePassword>rosemary</databasePassword>
   </database>
-  <database name="qc7fdb8d3c6ecce6" status="slave">
-    <databaseDriver>org.postgresql.Driver</databaseDriver>
-    <databaseUrl>jdbc:postgresql://localhost:5432/qc7fdb8d3c6ecce6</databaseUrl>
-    <databaseUser>platax</databaseUser>
-    <databasePassword>rosemary</databasePassword>
-  </database>
-</databases>
+ </databases>

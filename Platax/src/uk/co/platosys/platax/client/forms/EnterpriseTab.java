@@ -6,6 +6,7 @@ import java.util.List;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
+import uk.co.platosys.platax.client.constants.Styles;
 import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
 import uk.co.platosys.platax.client.services.EnterpriseService;
 import uk.co.platosys.platax.client.services.EnterpriseServiceAsync;
@@ -47,6 +48,8 @@ public class EnterpriseTab extends AbstractForm {
 			
 			public EnterpriseTab(Platax platax, GWTEnterprise enterprise){
 				super(platax, enterprise.getName());
+				setStyleName(Styles.PTAB_ENTERPRISE);
+				setHeadStyleName(Styles.PTABH_ENTERPRISE);
 				reset(platax, enterprise);
 			}
 			

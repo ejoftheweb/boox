@@ -4,7 +4,11 @@
 	background: #99dd99;
 }
 .px_ptab_content {
-	background: #ccffcc;
+	background: #ffffcc;
+}
+.px_ptab_head {
+	padding: 2px;
+	background: #ffdd66;
 }
 .px_field_label {
 	text-align: right;
@@ -13,7 +17,7 @@
 .px_field_info_label {
 	text-align: left;
 	font-style: oblique;
-	background: #ccffcc;
+	
 }
 .px_field_info_label_alarmed {
 	text-align: left;
@@ -28,6 +32,49 @@
 .px_form_subheader {
 	font-size: 110%;
 	font-style:oblique;
+}
+.px_ptab_closetag_enabled{
+	color: red;
+	font-weight: bold;
+	padding-left: 1em;
+}
+.px_ptab_closetag_disabled{
+	color:#fcc;
+	font-weight: lighter;
+	padding-left: 1em;
+}
+.px_ptab_enterprise {
+	background: #ccddff;
+}
+.px_ptab_invoice {
+	background: #ccffdd;
+}
+.px_ptab_bill {
+	background: #ffccdd;
+}
+.px_ptab_head_enterprise {
+	padding: 2px;
+	background: #99aacc;
+}
+.px_ptab_head_invoice {
+	padding: 2px;
+	background: #99ccaa;
+}
+.px_ptab_head_bill {
+	padding: 2px;
+	background: #cc99aa;
+}
+
+.px_bill_head{
+	border-bottom: 1px solid black;
+}
+.px_bill_cparty{
+	border-bottom: 1px solid black;
+}
+.px_popup_header {
+	font-weight: bolder;
+	text-align: center;
+	font-size: 105%;
 }
 /** Example rules used by the template application (remove for your app) */
 h1 {

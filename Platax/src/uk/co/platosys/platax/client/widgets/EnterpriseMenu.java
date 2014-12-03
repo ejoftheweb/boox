@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.UIObject;
@@ -159,6 +160,7 @@ public class EnterpriseMenu extends MenuBar {
 			
 			@Override
 				public void execute() {
+				//Window.alert("new invoice menu item selected");
 		  		InvoiceForm itab = new InvoiceForm(platax, enterprise);	
 				platax.addTab(itab);
 				

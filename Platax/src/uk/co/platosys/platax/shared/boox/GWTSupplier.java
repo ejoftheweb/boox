@@ -20,6 +20,8 @@ public void setSysname(String sysname) {
 	this.sysname = sysname;
 }
 
+public GWTSupplier(){}
+
 public GWTSupplier(String name, String contactID){
 	this.name=name;
 	this.contactID=contactID;

@@ -5,6 +5,9 @@
 <entry key="xuser.installation">platax</entry>
 <entry key="application.name">platax</entry>
 <entry key="xuser.confirmation.servlet">http://127.0.0.1:8888/platax/ConfirmationServlet</entry>
+<entry key="xuser.confirmation.mail.file">/etc/platosys/mail/confirmation.xml</entry>
+<entry key="xuser.registration.mail.file">/etc/platosys/mail/registration.xml</entry>
+
 <entry key="xuser.reset.password">http://127.0.0.1:8888/platax/ResetPassword</entry>
 <entry key="system.from.email">noreply.xusers@platosys.co.uk</entry>
 

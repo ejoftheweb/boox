@@ -17,6 +17,7 @@ import uk.co.platosys.platax.shared.PXUser;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -116,6 +117,7 @@ public class Platax implements EntryPoint {
 
 
 	public void removeTab(PTab tab) {
+		
 		tabPanel.remove(tab);
 		
 	}

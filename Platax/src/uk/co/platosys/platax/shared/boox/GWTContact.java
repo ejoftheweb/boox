@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 public class GWTContact implements Serializable, IsSerializable{
 protected String name;
 protected String sysname;
+protected String legalName;
 public GWTContact(){}
 
 public GWTContact(String name, String sysname){
@@ -25,6 +26,14 @@ public void setSysname(String sysname) {
 }
 public String getSysname() {
 	return sysname;
+}
+
+public String getLegalName() {
+	return legalName;
+}
+
+public void setLegalName(String legalName) {
+	this.legalName = legalName;
 }
 
 

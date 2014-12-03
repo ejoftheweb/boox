@@ -1,5 +1,7 @@
 package uk.co.platosys.platax.client.forms.popups;
 
+import uk.co.platosys.platax.client.widgets.labels.PopupHeaderLabel;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -11,7 +13,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 
 public class AbstractPopupForm extends PopupPanel{
 	FlexTable table = new FlexTable();
-	Label header = new Label();
+	PopupHeaderLabel header = new PopupHeaderLabel();
 	Button closeButton = new Button();
 	public PopupPanel.PositionCallback poscall =(new PopupPanel.PositionCallback() {
         public void setPosition(int offsetWidth, int offsetHeight) {

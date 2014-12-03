@@ -7,7 +7,9 @@ import java.util.List;
 
 
 
+
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
@@ -42,7 +44,7 @@ public class PlataxTabPanel extends TabLayoutPanel {
 		}
 	
 	public void remove(PTab pTab) {
-		remove(getWidgetIndex(pTab));
+		remove(pTab.getPage());
 	}
 	/**
 	 * adds a tab at the end.
@@ -53,6 +55,7 @@ public class PlataxTabPanel extends TabLayoutPanel {
 		Widget tabItem = pTab.getTabItem();
 	
 		add(page,tabItem);
+		selectTab(page);
 		pTab.setParent(this);
 	}
 	 /** adds a tab at the end.

@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
+import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.constants.Styles;
 import uk.co.platosys.platax.client.widgets.html.AnchorHTML;
 
@@ -16,6 +17,7 @@ import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -54,7 +56,9 @@ public abstract class PTab implements IsWidget, HasWidgets {
  private InlineLabel tabItemTitle= new InlineLabel();
  private InlineLabel counter=new InlineLabel();
  private Anchor closeTag=new Anchor("X");
- private Image image;
+ private boolean closeEnabled=true;
+ private boolean closeConfirm=true;
+ private String closeConfirmMessage=StringText.REALLY_CLOSE_TAB;
  private FlowPanel page;
  private FlowPanel shareCol;
  private DockLayoutPanel panel;
@@ -69,6 +73,7 @@ public abstract class PTab implements IsWidget, HasWidgets {
 	 panel.addEast(shareCol, 9.9);
 	 page.setStyleName(Styles.PTAB_CONTENT_STYLE);
 	 shareCol.setStyleName(Styles.PTAB_SHARE_STYLE);
+	 closeTag.setStyleName(Styles.PTAB_CLOSE_TAG);
 	 shareCol.add(new Label(LabelText.SHARE));
      tabItemTitle.setText("Blank pTab");
      tabItem.add(tabItemTitle);
@@ -78,9 +83,15 @@ public abstract class PTab implements IsWidget, HasWidgets {
 
 		@Override
 		public void onClick(ClickEvent event) {
-			platax.removeTab(PTab.this);
-			
-		}
+			if(closeEnabled){
+			if(!(closeConfirm)){
+				platax.removeTab(PTab.this);
+			}else{
+				if(Window.confirm(closeConfirmMessage)){
+					platax.removeTab(PTab.this);
+				}
+			}
+		}}
     	 
      });
 }
@@ -98,6 +109,43 @@ public abstract class PTab implements IsWidget, HasWidgets {
  }
  public Widget getPage(){
 	 return panel;
+ }
+/**
+ * enables or disables closing the tab from the close icon.
+ * 
+ * As a matter of good design, in general closing should be enabled only when there is provision for reopening 
+ * a tab of the same type. 
+ * 
+ * The default behaviour however is for tabs to be close-enabled.
+ * 
+ * @param closeEnabled
+ */
+ 
+ public void setCloseEnabled(boolean closeEnabled){
+	 this.closeEnabled=closeEnabled;
+	 closeTag.setEnabled(closeEnabled);
+	 if(closeEnabled){
+		  closeTag.setStyleName(Styles.PTAB_CLOSE_TAG);
+	 }else{
+		 closeTag.setStyleName(Styles.PTAB_CLOSE_TAG_DISABLED);
+	 }
+ }
+ /**
+  * sets the closeConfirm parameter. If true, a Window.confirm dialog
+  * intercepts the tab closing.
+  * 
+  * @param closeConfirm
+  */
+ public void setCloseConfirm(boolean closeConfirm){
+	 this.closeConfirm=closeConfirm;
+ }
+ /**
+  * Sets the message displayed in the close-confirm dialog.
+  * 
+  * @param closeConfirmMessage
+  */
+ public void setCloseConfirmMessage(String closeConfirmMessage){
+	 this.closeConfirmMessage=closeConfirmMessage;
  }
  /**
   * Sets the parent. The PTab must already have been added to the parent tab panel.
@@ -138,5 +186,11 @@ public boolean remove(Widget widget){return false;}
 
 public InlineLabel getCounter(){
 	return counter;
+}
+public void setStyleName( String styleName){
+	page.setStyleName(styleName);
+}
+public void setHeadStyleName(String styleName){
+	tabItem.setStyleName(styleName);
 }
 }
