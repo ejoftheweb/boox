@@ -25,7 +25,10 @@ import uk.co.platosys.platax.shared.boox.GWTMoney;
 import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -51,6 +54,7 @@ String enterpriseID=null;
 QuantityBox qtyBox=new QuantityBox();
 FlowPanel headPanel=new FlowPanel();
 FlowPanel cpartyPanel=new FlowPanel();
+final SimplePanel cpartyNamePanel=new SimplePanel();
 FlowPanel lineEntryPanel=new FlowPanel();
 FlowPanel submitButtonPanel=new FlowPanel();
 
@@ -72,8 +76,8 @@ FormHeaderLabel formHeadLabel=new FormHeaderLabel();
 ScrollPanel tablePanel = new ScrollPanel();
 InlineLabel billNumberLabel=new InlineLabel("No:");
 InlineLabel refNumberLabel=new InlineLabel("No");
-TextBox billNumberBox = new TextBox();
-TextBox refNumberBox= new TextBox();
+final TextBox billNumberBox = new TextBox();
+final TextBox refNumberBox= new TextBox();
 	
 public AbstractBill(Platax parent, String header) {
 		super( parent, header);
@@ -84,9 +88,12 @@ public AbstractBill(Platax parent, String header) {
 				headPanel.add( new InlineLabel(LabelText.DATE));
 				headPanel.add( dateBox);
 				dateBox.setValue(new Date());
-				dateBox.setFormat((Format) DateFormats.MED_DATE_FORMAT);
+				dateBox.setFormat((new DateBox.DefaultFormat( DateFormats.MED_DATE_FORMAT)));
 				headPanel.setStyleName(Styles.BILL_HEAD_PANEL);
 				cpartyPanel.setStyleName(Styles.BILL_CPARTY_PANEL);
+				cpartyPanel.add(cpartyNamePanel);
+				cpartyNamePanel.setWidget(new Label("HalloHalloHallo"));
+
 		form.add(headPanel);
 		form.add(cpartyPanel);
 		form.add(lineEntryPanel);

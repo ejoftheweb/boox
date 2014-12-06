@@ -31,8 +31,8 @@ public class InvoiceList extends AbstractList {
 		
 	public InvoiceList(Platax parent, GWTEnterprise gwtEnterprise, int list_selection_type) {
 		super(parent, gwtEnterprise.getName()+":Invoices", list_selection_type);
-		 topLabel.setText("List of Invoices");
-		 subHeader.setText("blah blah");
+		setTitle("List of Invoices");
+		 setSubTitle("blah blah");
 		 invoiceService.listInvoices(gwtEnterprise.getEnterpriseID(), list_selection_type, invoiceListCallBack);
 		 
 		 //table headers:
@@ -86,5 +86,11 @@ public class InvoiceList extends AbstractList {
 			Window.alert(error);
 		}
 	};
+
+	@Override
+	public void refresh() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

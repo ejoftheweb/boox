@@ -39,6 +39,33 @@
     <url-pattern>/platax/enterpriseService</url-pattern>
   </servlet-mapping>
   
+   <servlet>
+    <servlet-name>CustomerServiceImpl</servlet-name>
+    <servlet-class>uk.co.platosys.platax.server.services.CustomerServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CustomerServiceImpl</servlet-name>
+    <url-pattern>/platax/customerService</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>ProductServiceImpl</servlet-name>
+    <servlet-class>uk.co.platosys.platax.server.services.ProductServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProductServiceImpl</servlet-name>
+    <url-pattern>/platax/productService</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>InvoiceServiceImpl</servlet-name>
+    <servlet-class>uk.co.platosys.platax.server.services.InvoiceServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>InvoiceServiceImpl</servlet-name>
+    <url-pattern>/platax/invoiceService</url-pattern>
+  </servlet-mapping>
+  
   <servlet>
     <servlet-name>ConfirmationServlet</servlet-name>
     <servlet-class>uk.co.platosys.xuser.ConfirmationServlet</servlet-class>

@@ -45,16 +45,14 @@ import uk.co.platosys.util.Logger;
  * The purpose of this class is to avoid having to write (and debug) carefully escaped sql strings whenever writing or reading from a sql database.
  * However it doesn't get close to matching the full flexibility of sql; I think I ought to learn Spring.
  *
- * At the moment it handles very simple sql tables, with a text primary key (which will thus identify a table row).
+ * It supports a very limited range of data types: for primary keys, string and long.
  *  
- * Support for integer primary keys and sequences  may be added later.
- *
  * It also only handles text, numeric, integer, date and timestamp types for the data columns.
  * 
  * It's meant for reading and writing atomic values to and from one table in the database, referenced by rowKey/columnName 
  *
- * It's probably pretty slow, but the use of the pooling ConnectionSource should reduce the connection/authentication overhead.
- *
+ * It depends on a connection pooling mechanism to keep it acceptably performant. 
+ * 
  * some examples:
  * - to add a timestamp column: table.addColumn("timestamp", Table.TIMESTAMP_COLUMN);
  * - amend an item in a row: table.amend(rowKey, columnName, newValue); (if it can't find the row, a new one is added).
@@ -67,6 +65,7 @@ public interface Table {
     public static final String TEXT_COLUMN="text";
     public static final String BOOLEAN_COLUMN="boolean";
     public static final String NUMERIC_COLUMN="numeric";
+    public static final String DECIMAL_COLUMN="decimal"; //use this for currency values.
     public static final String INTEGER_COLUMN="integer";
     public static final String DATE_COLUMN="date";
     public static final String TIMESTAMP_COLUMN="timestamp";
@@ -99,7 +98,9 @@ public interface Table {
     public boolean addRow(String columnName, String columnValue);
   
     public boolean addRow(String[] columns, String[] values)throws PlatosysDBException;
-    public Row getRow(String primaryKeyTest)throws RowNotFoundException ;
+    public Row getRow(String primaryKeyTest)throws RowNotFoundException, PlatosysDBException ;
+    public Row getRow(long primaryKeyTest)throws RowNotFoundException, PlatosysDBException ;
+    
     /**
      * Selects a row on something other than the table's primary key. Returns only the first matching 
      * row found, so can only safely be used on columns with a UNIQUE constraint, but it doesn't test for this.
@@ -134,7 +135,7 @@ public interface Table {
          * @return
          */
 
-          public List<Row> getRows();
+    public List<Row> getRows();
             /**
          * Returns the entire Table as a List of Rows
          * @return

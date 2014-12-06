@@ -37,7 +37,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+
 import org.postgresql.util.PSQLException;
+
 import uk.co.platosys.util.ISODate;
 import uk.co.platosys.util.Logger;
 import uk.co.platosys.db.Row;
@@ -73,12 +75,15 @@ public class JDBCTable implements Table {
     public static final String BOOLEAN_COLUMN="boolean";
     public static final String NUMERIC_COLUMN="numeric";
     public static final String INTEGER_COLUMN="integer";
-    public static final String DATE_COLUMN="date";
+    public static final String DATE_COLUMN="timestamp";
     public static final String TIMESTAMP_COLUMN="timestamp";
+    public static final String DECIMAL_COLUMN="decimal";
     public static final String DEFAULT_DATABASE="musite";//HOBBLEDY_HOOP should not be here!
     protected String databaseName=DEFAULT_DATABASE;
     String tableName;
     String primaryKeyColumnName;
+	private String primaryKeyColumnType;
+	
    protected static Logger logger = Logger.getLogger("dbplat");
    /**
     * protected no-args constructor for subclasses in the same package
@@ -89,28 +94,38 @@ public class JDBCTable implements Table {
      *
      */
    
-    public static JDBCTable createTable(String databaseName, String tableName, String primaryKeyColumnName, String primaryKeyColumnType) throws PlatosysDBException {
-        //this.databaseName=databaseName;  
+    public static JDBCTable createTable(
+    		String databaseName,
+    		String tableName, 
+    		String primaryKeyColumnName, 
+    		String primaryKeyColumnType) 
+    throws PlatosysDBException {
         Connection connection=null;
             connection=ConnectionSource.getConnection(databaseName);
             try{
                 Statement statement=connection.createStatement();
                 statement.execute("CREATE TABLE "+tableName+" ("+primaryKeyColumnName+ " "+primaryKeyColumnType+" PRIMARY KEY)");
                 connection.close();
-                return new JDBCTable(databaseName, tableName, primaryKeyColumnName);
+                return new JDBCTable(databaseName, tableName, primaryKeyColumnName, primaryKeyColumnType);
             }catch(Exception ex){
-                logger.log("problem creating table "+tableName+"  in db "+databaseName);
+                logger.log("problem creating table "+tableName+"  in db "+databaseName, ex);
                 try{connection.close();}catch(Exception p){}
                return null; 
             }
     }
+    
     /**
      *Creates a table in databaseName, with the name tableName, and  column named columnName of type columnType, which will be
      * a primary key column (i.e. UNIQUE and NOT NULL) if primaryKey is true.
      *
      */
-    public static JDBCTable createTable(String databaseName, String tableName, String columnName, String columnType, boolean primaryKey) throws PlatosysDBException {
-        //this.databaseName=databaseName;
+    public static JDBCTable createTable(
+    		String databaseName, 
+    		String tableName, 
+    		String columnName, 
+    		String columnType, 
+    		boolean primaryKey)
+    throws PlatosysDBException {
         Connection connection=null;
             connection=ConnectionSource.getConnection(databaseName);
             try{
@@ -129,11 +144,19 @@ public class JDBCTable implements Table {
 
                return null;
             }
-    }
+         }
+    
     /**
-     * Creates a table in databaseName, with the name tableName, and a foreign key column named foreignKeyColumnName, referencing the primary key column of the table foreignKeyTableName.
+     * Creates a table in databaseName, with the name tableName, and a foreign key column named foreignKeyColumnName, 
+     * referencing the primary key column of the table foreignKeyTableName. The column names must be the same.
+     * 
      */
-           public static JDBCTable createForeignKeyTable(String databaseName, String tableName, String foreignKeyColumnName, String foreignKeyTableName ) throws PlatosysDBException {
+           public static JDBCTable createForeignKeyTable(
+        		   String databaseName, 
+        		   String tableName, 
+        		   String foreignKeyColumnName, 
+        		   String foreignKeyTableName ) 
+        	throws PlatosysDBException {
            Connection connection=null;
             connection=ConnectionSource.getConnection(databaseName);
             String SQLString="";
@@ -159,8 +182,14 @@ public class JDBCTable implements Table {
      * Creates a table in databaseName, with the name tableName, and a foreign key column named foreignKeyColumnName, referencing the column of the table foreignKeyTableName named foreignTableColumn.
      * Use this method to create a table that needs to reference a column other than a primary key column. 
     */
-           public static JDBCTable createForeignKeyTable(String databaseName, String tableName, String foreignKeyColumnName, String foreignKeyTableName, String foreignTableColumnName ) throws PlatosysDBException {
-           Connection connection=null;
+           public static JDBCTable createForeignKeyTable(
+        		   String databaseName, 
+        		   String tableName, 
+        		   String foreignKeyColumnName, 
+        		   String foreignKeyTableName, 
+        		   String foreignTableColumnName)
+           throws PlatosysDBException {
+            Connection connection=null;
             connection=ConnectionSource.getConnection(databaseName);
             try{
                 Statement statement=connection.createStatement();
@@ -176,24 +205,50 @@ public class JDBCTable implements Table {
 
                return null; 
             }
-    }
-           public static String getTypeName(int keyType){
+        }
+          /**
+           * Converts from integer to String type references
+           * @param keyType
+           * @return
+         * @throws TypeNotSupportedException 
+           */
+           public static String getTypeName(int keyType) throws TypeNotSupportedException{
                switch (keyType){
-                   case  Types.INTEGER: return "integer";
-                   case  Types.VARCHAR: return "text";
-                   case  Types.DATE: return "date";
-                   case  Types.NUMERIC: return "numeric";
-                   case  Types.BIGINT: return "bigint";
-                   case  Types.DOUBLE: return "double";
-                   case  Types.TIMESTAMP: return "timestamp";
-                   case Types.BOOLEAN: return "boolean";
-                   default: return null;
+                   case  Types.INTEGER: return INTEGER_COLUMN;
+                   case  Types.VARCHAR: return TEXT_COLUMN;
+                   case  Types.DATE: return DATE_COLUMN;
+                   case  Types.NUMERIC: return NUMERIC_COLUMN;
+                   case  Types.TIMESTAMP: return TIMESTAMP_COLUMN;
+                   case  Types.BOOLEAN: return BOOLEAN_COLUMN;
+                   case  Types.DECIMAL: return DECIMAL_COLUMN;
+                   
+                   default: return Integer.toString(keyType);
+                	   //throw new TypeNotSupportedException(Integer.toString(keyType));
                }
            }
+           /**
+            * Converts from String to integer type references
+            * @param keyType
+            * @return
+            */
+            public static int getType (String typeName) throws TypeNotSupportedException {
+                switch (typeName){
+                    case  INTEGER_COLUMN: return Types.INTEGER;
+                    case  TEXT_COLUMN: return Types.VARCHAR;
+                    //case  DATE_COLUMN: return Types.TIMESTAMP;
+                    case  NUMERIC_COLUMN: return Types.NUMERIC;
+                    case  TIMESTAMP_COLUMN: return Types.TIMESTAMP;
+                    case  BOOLEAN_COLUMN: return Types.BOOLEAN;
+                    case DECIMAL_COLUMN: return Types.DECIMAL;
+                    default: throw new TypeNotSupportedException(typeName);
+                }
+            }
     
     /** 
-     * Creates a new instance of JDBCTable
-     * Note that the primary key should be a Text column
+     * Creates a new instance of JDBCTable. The object references the table, and will check that 
+     * it exists, but nothing of it is held in memory. You must call one of its access methods to read
+     * or write to it.
+     * The primary key must be a Text column.  It will throw an exception if it isn't.
      * @param tableName the name of the table to be referenced
      * @param primaryKeyColumnName the column name of the primary key column
      */
@@ -201,18 +256,69 @@ public class JDBCTable implements Table {
         this.databaseName=databaseName;
         this.tableName=tableName;
         this.primaryKeyColumnName=primaryKeyColumnName;
-        Connection connection=ConnectionSource.getConnection(databaseName);
-        try{
-            Statement statement=connection.createStatement();
-            ResultSet rs=statement.executeQuery("SELECT * FROM "+tableName);//this is potentially very hungry!
-            connection.close();
-        }catch(Exception e){
-            logger.log(2,"TABLE-init: table "+tableName+" does not exist");
-            try{connection.close();}catch(Exception p){}
-
-            throw new PlatosysDBException("table "+tableName+" does not exist", e);
-                    
+        this.primaryKeyColumnType=TEXT_COLUMN;
+        if(!checkCols(databaseName, tableName, primaryKeyColumnName, primaryKeyColumnType)){
+        	throw new PlatosysDBException("JDBCTable "+tableName+" is incorrectly configured");
         }
+    }
+    
+    /** 
+     * Creates a new instance of JDBCTable.The object references the table, and will check that 
+     * it exists, but nothing of it is held in memory. You must call one of its access methods to read
+     * or write to it.
+     * 
+     * @param tableName the name of the table to be referenced
+     * @param primaryKeyColumnName the column name of the primary key column
+     * @param primaryKeyColumnType the type of the primary key column
+     * @throws PlatosysDBException if the table doesn't exist, if the 
+     */
+    public JDBCTable(String databaseName, String tableName, String primaryKeyColumnName, String primaryKeyColumnType) throws PlatosysDBException  {
+        this.databaseName=databaseName;
+        this.tableName=tableName;
+        this.primaryKeyColumnName=primaryKeyColumnName;
+        this.primaryKeyColumnType=primaryKeyColumnType;
+        if(!checkCols(databaseName, tableName, primaryKeyColumnName, primaryKeyColumnType)){
+        	throw new PlatosysDBException("JDBCTable "+tableName+" is incorrectly configured");
+        }
+    }
+    private boolean checkCols (String databaseName, String tableName, String primaryKeyColumnName, String primaryKeyColumnType) throws PlatosysDBException {
+    	 Connection connection=ConnectionSource.getConnection(databaseName);
+    	 primaryKeyColumnName=primaryKeyColumnName.toLowerCase();
+         try{
+         	Statement statement=connection.createStatement();
+             ResultSet rs=statement.executeQuery("SELECT * FROM "+tableName);//this is potentially very hungry!
+             ResultSetMetaData rsmd = rs.getMetaData();
+             boolean colfound=false;
+             int cols=rsmd.getColumnCount();
+             for(int i=1; i<cols+1; i++){
+            	 String colname=rsmd.getColumnName(i);
+            	if (colname.equals(primaryKeyColumnName)){
+             		colfound=true;
+             		int coltype = rsmd.getColumnType(i);
+             		String coltypeName = getTypeName(coltype);
+             		logger.log("coltype: "+coltype+",name:"+coltypeName);
+             		logger.log("declaredColType:"+getType(primaryKeyColumnType)+", name:"+primaryKeyColumnType);
+             		if(rsmd.getColumnType(i)!=getType(primaryKeyColumnType)){
+             			connection.close();
+             			throw new PlatosysDBException("Primary Key Col "+primaryKeyColumnName+" in "+tableName+" is wrong type");
+             		}else{
+             			break;
+             		}
+             	}
+             }
+             if(!colfound){
+            	 connection.close();
+            	 throw new PlatosysDBException("column not found in table");
+              }else{
+            	  connection.close();
+            	  return true;
+              }
+            
+         }catch(Exception e){
+             logger.log(2,"TABLE checkCols "+tableName+" error ");
+             try{connection.close();}catch(Exception p){}
+             throw new PlatosysDBException("table "+tableName+" error", e);
+         }
     }
    /** 
      * Creates a new instance of JDBCTable with no primary key
@@ -319,6 +425,32 @@ public class JDBCTable implements Table {
             return false;
         }
     }
+    
+    /**
+     * JDBCTable refers to rows by the primary key.
+     * @param primaryKeyTest the value of the primary key to be tested for
+     * @return true if the row is found
+     */
+    public boolean rowExists(int primaryKeyTest){
+        Connection connection=null;
+        try{
+            connection=ConnectionSource.getConnection(databaseName);
+            Statement statement=connection.createStatement();
+            ResultSet resultSet=statement.executeQuery("SELECT "+primaryKeyColumnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+ " = "+primaryKeyTest);
+            if(resultSet.next()){
+                connection.close();
+                return true;
+            }else{
+                connection.close();
+                return false;
+            }
+        }catch(Exception e){
+            //Logger.log("JDBCTable.rowExists(): error", e);
+            try{connection.close();}catch(Exception cex){}
+            return false;
+        }
+    }
+    
     /**
      * Works only for String values!
      * @param columnName 
@@ -356,7 +488,6 @@ public class JDBCTable implements Table {
             throw new PlatosysDBException ("columns and values arrays don't match");
         }
         Connection connection=null;
-        List<JDBCRow> rows = new Vector();
         try{
             connection=ConnectionSource.getConnection(databaseName);
             Statement statement=connection.createStatement();
@@ -445,12 +576,45 @@ public class JDBCTable implements Table {
             return false;
         }
     }
-    public JDBCRow getRow(String primaryKeyTest)throws RowNotFoundException {
+    public JDBCRow getRow(String primaryKeyTest)throws RowNotFoundException, PlatosysDBException {
+    	if (!(primaryKeyColumnType.equals(TEXT_COLUMN))){
+    		throw new PlatosysDBException(" primary key is not a text column");
+    	}
        Connection connection=null;
         try{
             connection=ConnectionSource.getConnection(databaseName);
             Statement statement=connection.createStatement();
             ResultSet resultSet=statement.executeQuery("SELECT * FROM "+tableName+ " WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(resultSet.next()){
+               //logger.log(5, "JDBCTable found row for "+primaryKeyTest);
+               JDBCRow row = new JDBCRow(primaryKeyTest, resultSet);
+               connection.close();
+               return row;
+            }else{
+                connection.close();
+                throw new RowNotFoundException("JDBCRow "+primaryKeyTest+" not found in table "+tableName);
+            }
+        }
+        catch(RowNotFoundException rnfe){
+            try{connection.close();}catch(Exception p){}
+               
+            throw rnfe;
+        }
+        catch(Exception e){
+            try{connection.close();}catch(Exception cex){}
+            return null;
+        }    
+    }
+    
+    public JDBCRow getRow(long primaryKeyTest)throws RowNotFoundException, PlatosysDBException {
+    	if (!(primaryKeyColumnType.equals(INTEGER_COLUMN))){
+    		throw new PlatosysDBException(" primary key is not an integer");
+    	}
+       Connection connection=null;
+        try{
+            connection=ConnectionSource.getConnection(databaseName);
+            Statement statement=connection.createStatement();
+            ResultSet resultSet=statement.executeQuery("SELECT * FROM "+tableName+ " WHERE "+primaryKeyColumnName+" = "+primaryKeyTest);
             if(resultSet.next()){
                //logger.log(5, "JDBCTable found row for "+primaryKeyTest);
                JDBCRow row = new JDBCRow(primaryKeyTest, resultSet);
@@ -623,6 +787,32 @@ public class JDBCTable implements Table {
             try{connection.close();}catch(Exception p){}
 
             return null;
+        }
+    }
+    /**
+     * Returns a List of Rows  as a result from a sql query
+     * @param sqlWhere
+     * @return
+     */
+    public List<Row> query(String sqlQuery)throws PlatosysDBException{
+        Connection connection=null;
+        List<Row> rows = new ArrayList<Row>();
+        try{
+            connection=ConnectionSource.getConnection(databaseName);
+            Statement statement=connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sqlQuery);
+            while(resultSet.next()){
+                rows.add(new JDBCRow (resultSet));
+            }
+            connection.close();
+            return rows;
+        }catch(Exception e){
+            logger.log("JDBCTable query(sql) had a problem with sql string: \n"+sqlQuery, e);
+            
+            try{connection.close();}catch(Exception p){}
+            throw new PlatosysDBException("SQL query problem", e);
+            
+
         }
     }
         /**
@@ -1061,13 +1251,13 @@ public class JDBCTable implements Table {
              ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
              if(resultSet.next()){
                  try {
-                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = "+value+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
+                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = \'"+value+"\' WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
                  }catch(Exception e){
                      throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" -is the type correct?", e);
                  }
              }else{
                  try {
-                     statement.execute("INSERT INTO "+tableName+ "("+primaryKeyColumnName+","+columnName+") VALUES ("+Long.toString(primaryKeyTest)+","+value+")");
+                     statement.execute("INSERT INTO "+tableName+ "("+primaryKeyColumnName+","+columnName+") VALUES ("+Long.toString(primaryKeyTest)+",\'"+value+"\')");
                  }catch(Exception e){
                      throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" -is the type correct?", e);
                  }
@@ -1946,5 +2136,20 @@ public class JDBCTable implements Table {
 		}
 		
 	}
-
+	
+	/**
+	 * static wrapper for the constructor to allow better implementations with round tuits. 
+	 * (e.g. pooling object references.... asif whenever)
+	 * @param dbName
+	 * @param tbName
+	 * @return
+	 * @throws PlatosysDBException
+	 */
+	public static JDBCTable getTable(String dbName,String tbName, String pkName, String pkType)throws PlatosysDBException { 
+		if (JDBCTable.tableExists(dbName, tbName)){
+			return new JDBCTable(dbName, tbName, pkName, pkType);//we should really check that this column exists and is a primary key.
+		}else{
+			throw new PlatosysDBException("table "+tbName+" does not exist in db "+dbName);
+		}
+	}	
 }

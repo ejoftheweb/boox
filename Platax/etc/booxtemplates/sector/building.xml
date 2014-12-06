@@ -16,6 +16,8 @@
 <Ledgers> 
     <!-- XBX is the system name for the default currency. -->
     <Ledger name="XBX">
+        <!-- the balance on the Operations ledger is an approximate proxy for profit -->
+        <Ledger name="Operations" isPrivate="false">
         <!-- the Income ledger records all income received by the business, whether sales or interest earned -->
         <Ledger name="Income" isPrivate="false">
            <Ledger name="Sold" isPrivate="false">
@@ -43,6 +45,7 @@
           			-->
       	  </Ledger>
      </Ledger>
+    </Ledger>
     
      <!-- the Fixed ledger records the long-term assets and liabilities of the business -->      
      <Ledger name="Fixed" isPrivate="false">

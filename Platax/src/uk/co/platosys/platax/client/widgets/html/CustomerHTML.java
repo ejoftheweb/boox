@@ -10,7 +10,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 
-public class CustomerHTML extends AnchorHTML {
+public class CustomerHTML{}/* extends AnchorHTML {
 
 	public CustomerHTML(final GWTCustomer customer, final Platax context) {
 	    super(customer.getName(), context);
@@ -27,4 +27,4 @@ public class CustomerHTML extends AnchorHTML {
 		 
 	}
 
-}
+}*/

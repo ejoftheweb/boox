@@ -12,7 +12,8 @@
  <Ledgers>
     <Ledger name="XBX">
        
-     
+     <!-- the balance on the Operations ledger is an approximate proxy for profit -->
+        <Ledger name="Operations" isPrivate="false">
     
       <Ledger name="Expenditure" isPrivate="false">
          <Ledger name="Finance" isPrivate="false">
@@ -22,7 +23,7 @@
           	</Ledger>
           </Ledger>
       </Ledger>
-    
+    </Ledger>
    
     <Ledger name="Current" isPrivate="false">
     <Ledger name="Assets" isPrivate="false">

@@ -536,9 +536,9 @@ try {
 	}
 }
 
-private Account getInvoiceAccount(Enterprise enterprise, Customer customer, Clerk clerk, String sysname)throws BooxException, PermissionsException{
-	   if(Account.exists(enterprise.getDatabaseName(), sysname)){
-		   return Account.getAccount(enterprise, clerk, sysname);
+private Account getInvoiceAccount(Enterprise enterprise, Customer customer, Clerk clerk, String sysname)throws BooxException, PermissionsException, PlatosysDBException{
+	   if(Account.exists(enterprise, sysname)){
+		   return Account.getAccount(enterprise,  sysname, clerk);
 	   }else{
 	   String fullname = customer.getName()+new ISODate().toString();
 	   		Account account=null;    
@@ -552,8 +552,8 @@ private Account getInvoiceAccount(Enterprise enterprise, Customer customer, Cler
        }
 }
 private Account getInvoiceAccount(Enterprise enterprise, Clerk clerk, String sysname)throws BooxException, PermissionsException{
-	    if(Account.exists(enterprise.getDatabaseName(), sysname)){
-		   return Account.getAccount(enterprise, clerk, sysname);
+	    if(Account.exists(enterprise, sysname)){
+		   return Account.getAccount(enterprise, sysname, clerk);
 	   }else{
 		   throw new BooxException("Invoice "+sysname+" doesn't seem to have an account");
     }

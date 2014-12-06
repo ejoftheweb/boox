@@ -1,0 +1,2 @@
+serviceClass: uk.co.platosys.platax.client.services.EnterpriseService
+path: 06F0ED320D6C203C82FE54E7858F9D39.gwt.rpc

@@ -197,7 +197,7 @@ public class TaxedTransaction {
                     clerk,
                     getTaxMoney(),
                     Account.getAccount(enterprise,creditAccountName, clerk, Permission.CREDIT),
-                    Account.getAccount(enterprise,taxAccountName, inputTaxLedger, clerk, Permission.DEBIT),
+                    Account.getAccount(enterprise,taxAccountName,  clerk, Permission.DEBIT),
                     note
                     );
         }else{
@@ -214,7 +214,7 @@ public class TaxedTransaction {
             		enterprise,
                     clerk,
                     getTaxMoney(),
-                    Account.getAccount(enterprise,taxAccountName,outputTaxLedger, clerk, Permission.CREDIT),
+                    Account.getAccount(enterprise,taxAccountName, clerk, Permission.CREDIT),
                     Account.getAccount(enterprise,debitAccountName, clerk, Permission.DEBIT),
                     note 
                     );

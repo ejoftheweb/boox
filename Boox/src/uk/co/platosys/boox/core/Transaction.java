@@ -64,6 +64,10 @@ import uk.co.platosys.util.Logger;
  *uses some resources - it is recorded as a row in three tables, the credit account, the debit 
  *account and the journal. 
  * 
+ * <h2>Use of javax.sql</h2>
+ * <p>Transaction is currently the only Boox class to use javax.sql directly; everything else uses
+ * the platosysDB classes. At present, platosysDB does not support batch transactions on the DB; it is important
+ * that transaction postings either succeed or fail together to retain database integrity</p>
  * 
  * @author edward
  */
@@ -81,7 +85,7 @@ public final class Transaction implements AuditElement {
     boolean canPost=false;
     long transactionID;
     Date date;
-    java.sql.Timestamp postingTime;
+   Date postingTime;
     String message="OK";
     public static final String DEFAULT_CURRENCY="GBP";
     Logger logger = Logger.getLogger("boox");
@@ -122,7 +126,7 @@ public final class Transaction implements AuditElement {
     /**
      * package-protected constructor recreates a transaction for auditing purposes.
      */
-    protected Transaction (Clerk clerk, Enterprise enterprise, Money money, String credit, String debit, String note, java.sql.Timestamp postingTime, long transactionID){
+    protected Transaction (Clerk clerk, Enterprise enterprise, Money money, String credit, String debit, String note, Date postingTime, long transactionID){
         
         this.clerk=clerk;
         this.enterprise=enterprise;
@@ -276,7 +280,7 @@ public final class Transaction implements AuditElement {
     /**
      *@return the date the transaction was posted.
      */    
-    public java.sql.Timestamp getPostingTime(){
+    public Date getPostingTime(){
          return postingTime;
     
     }
@@ -302,7 +306,7 @@ public final class Transaction implements AuditElement {
     public Currency getCurrency(){
         return currency;
     }
-    protected void setPostingTime(java.sql.Timestamp postingTime){
+    protected void setPostingTime(Date postingTime){
         this.postingTime=postingTime;
     }
     public long getTransactionID(){

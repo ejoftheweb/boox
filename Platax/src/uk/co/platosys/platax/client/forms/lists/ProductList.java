@@ -46,8 +46,8 @@ public class ProductList extends AbstractList {
 	public ProductList(Platax parent, GWTEnterprise enterprise, int list_selection_type) {
 		super(parent, enterprise.getName()+":Products", list_selection_type);
 		this.parent=parent;
-		 topLabel.setText("List of Products");
-		 subHeader.setText("blah blah");
+		 setTitle("List of Products");
+		 setSubTitle("blah blah");
 		 productService.listProducts(enterprise.getEnterpriseID(), list_selection_type, productListCallBack);
 		 
 		 listDataProvider.addDataDisplay(dataGrid);
@@ -159,6 +159,12 @@ public class ProductList extends AbstractList {
 			Window.alert(error);
 		}
 	};
+
+	@Override
+	public void refresh() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	}
 

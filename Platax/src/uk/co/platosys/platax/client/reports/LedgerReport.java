@@ -80,5 +80,10 @@ public class LedgerReport extends AbstractForm {
 		    // Make the call to the stock price service.
 		    rlsa.readBalance(enterpriseID, ledgerName, callback);
 		    rlsa.audit(enterpriseID, ledgerName, callback1);
-		  }}
+		  }
+	@Override
+	public void refresh() {
+		// TODO Auto-generated method stub
+		
+	}}
 	

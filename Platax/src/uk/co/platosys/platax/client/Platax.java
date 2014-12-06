@@ -135,5 +135,7 @@ public class Platax implements EntryPoint {
 		tabPanel.selectTab(0);
 		
 	} 
-		
+	public void setSelectedTab(PTab tab){
+		tabPanel.selectTab(tab);
+	}
 }

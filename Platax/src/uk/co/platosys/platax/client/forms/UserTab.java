@@ -31,8 +31,8 @@ public class UserTab extends AbstractForm {
     setHeadStyleName(Styles.PTABH_STYLE);
     //pTab info fields
 	setTabHeaderText(user.getUsername());
-    topLabel.setText(LabelText.USER_HI + user.getUsername());
-	subHeader.setText(LabelText.USER_SUMMARY);
+    setTitle(LabelText.USER_HI + user.getUsername());
+	setSubTitle(LabelText.USER_SUMMARY);
 	
 	
 	//declare variables
@@ -133,6 +133,12 @@ public class UserTab extends AbstractForm {
 	
 		
 		
+		
+	}
+
+	@Override
+	public void refresh() {
+		// TODO Auto-generated method stub
 		
 	}
 

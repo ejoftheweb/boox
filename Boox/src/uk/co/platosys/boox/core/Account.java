@@ -24,21 +24,15 @@
  * Account.java
  *
  * Created on 24 March 2007, 14:02
- *
+ * 6DEC14: rewritten to use only PlatosysDB, no direct SQL calls made.
  * 
  */
 
 package uk.co.platosys.boox.core;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -50,7 +44,11 @@ import uk.co.platosys.boox.core.exceptions.TimingException;
 import uk.co.platosys.boox.money.Currency;
 import uk.co.platosys.boox.money.CurrencyException;
 import uk.co.platosys.boox.money.Money;
-import uk.co.platosys.db.jdbc.ConnectionSource;
+import uk.co.platosys.db.PlatosysDBException;
+import uk.co.platosys.db.Row;
+import uk.co.platosys.db.Table;
+import uk.co.platosys.db.jdbc.JDBCTable;
+import uk.co.platosys.db.RowNotFoundException;
 import uk.co.platosys.util.ISODate;
 import uk.co.platosys.util.Logger;
 import uk.co.platosys.util.ShortHash;
@@ -60,6 +58,8 @@ import uk.co.platosys.util.ShortHash;
  * 
  * An Account, therefore, is a list of transactions, which may be either Credit or Debit transactions. 
  * An Account has a Balance, which is the sum of credits and debits with credits treated as negative. 
+ * 
+ * the balance is recorded in a row with the transaction id of 0. 
  * 
  * Transactions are listed with a TransactionID, unique with system scope. The account listing
  * also identifies the contra account - the account on which the other side of the transaction is recorded.
@@ -94,12 +94,14 @@ import uk.co.platosys.util.ShortHash;
  * 
  * 
  * 
+ * 
  * @author edward
  */
 
 public class Account implements Budgetable,  Auditable {
     Money balance;
     Clerk clerk;
+    JDBCTable table;
     //account metadata as held in chart of accounts:
     String sysname; // the system name, used to name the table in the database. A shorthash of the fully-qualified name, unique with enterprise scope
     String name;//the display name;  Short, generally user-friendly, not necessarily uniqe
@@ -118,7 +120,7 @@ public class Account implements Budgetable,  Auditable {
     ISODate date = new ISODate();
     TreeMap<Date, Money> budget=new TreeMap<Date, Money>();
      static final String CHART_TABLE_NAME=Chart.TABLENAME;//to rename later.
-     static final String TID_COLNAME="transactionID";
+     static final String TID_COLNAME="transactionid";
      static final String CONTRA_COLNAME="contra";
      static final String AMOUNT_COLNAME="amount";
      static final String BALANCE_COLNAME="balance";
@@ -127,6 +129,7 @@ public class Account implements Budgetable,  Auditable {
      static final String NOTES_COLNAME="notes";
      static final String PREFIX="ac"; //ensures legality for the tablename
      static final String DELIMITER="#";
+     static final String BASIC_TYPE="basic";
     //Journal journal;
    /**
      * package-protected constructor creates an account object by reading its metadata and current value from the SQL database
@@ -135,125 +138,64 @@ public class Account implements Budgetable,  Auditable {
      */
    
    
-   protected  Account(Enterprise enterprise, String sysname, Clerk clerk)  {
-        Connection connection=null;
+   protected  Account(Enterprise enterprise, String sysname1, Clerk clerk)  {
         try{
-            sysname=sysname.toLowerCase();
+            this.sysname=sysname1.toLowerCase();
             this.databaseName=enterprise.getDatabaseName();
             this.enterprise=enterprise;
-            //this.journal=enterprise.getJournal();
-            this.sysname=sysname;
             this.clerk=clerk;
-            connection=ConnectionSource.getConnection(databaseName);
-            java.sql.Statement statement = connection.createStatement();
-            String sqlString = ("SELECT * FROM  "+CHART_TABLE_NAME+"  WHERE "+Chart.SYSNAME_COLNAME+" = \'"+sysname+"\'");
-            logger.log(5, sqlString);
-            ResultSet resultSet=statement.executeQuery(sqlString);
-            if (resultSet.next()){
-            	name=resultSet.getString(Chart.NAME_COLNAME);
-                fullName=resultSet.getString(Chart.FULLNAME_COLNAME);
-                ownerName=resultSet.getString(Chart.OWNER_COLNAME);
-                ledgerName=resultSet.getString(Chart.LEDGER_COLNAME);
-                logger.log("ledgerName ="+ledgerName);
-                this.ledger=Ledger.getLedger(enterprise, ledgerName);
-                logger.log(5, "Account "+name+" opened in ledger "+ledger.getName());
-                type=resultSet.getString(Chart.TYPE_COLNAME);
-                currency=Currency.getCurrency(resultSet.getString(Chart.CURRENCY_COLNAME));
-                description=resultSet.getString(Chart.DESCRIPTION_COLNAME);
-            }else{
-                logger.log(1, "ACC-init: read chart issues: for accname:" +name);
+            this.table=JDBCTable.getTable(databaseName, sysname, TID_COLNAME, Table.INTEGER_COLUMN);
+            JDBCTable chartTable =JDBCTable.getTable(databaseName, CHART_TABLE_NAME);
+            Row row=null;
+            try{
+               row= chartTable.getRow(Chart.SYSNAME_COLNAME, sysname);
+            }catch(RowNotFoundException rnfe){
+            	logger.log(1, "ACC-init:  account:" +name+ " not found in chart of accounts");
+            	throw new BooxException("Account "+sysname1+ " not found");
             }
-            
-            balance=getBalance(enterprise, clerk);
-               
-            
-            
-             connection.close();
-        }catch(Exception e){
+            name=row.getString(Chart.NAME_COLNAME);
+            fullName=row.getString(Chart.FULLNAME_COLNAME);
+            ownerName=row.getString(Chart.OWNER_COLNAME);
+            ledgerName=row.getString(Chart.LEDGER_COLNAME);
+            this.ledger=Ledger.getLedger(enterprise, ledgerName);
+            type=row.getString(Chart.TYPE_COLNAME);
+            currency=Currency.getCurrency(row.getString(Chart.CURRENCY_COLNAME));
+            description=row.getString(Chart.DESCRIPTION_COLNAME);
+            logger.log(2, "Account "+name+" opened in ledger "+ledger.getName());
+            try{
+            	logger.log(2, "now getting balance for account "+name);
+            	balance=getBalance(enterprise, clerk);
+            }catch(Exception x){
+            	logger.log("Account issue getting balance for account"+name, x);
+            }
+       }catch(Exception e){
             logger.log("Account - problem initialising "+name+" in db "+databaseName, e);
             this.description=e.getMessage();
-            
-        }finally{
-           try{connection.close();}catch(Exception x){}
-            
-        }
-    }
-   protected  Account(Enterprise enterprise, String name, Ledger ledger, Clerk clerk)  {
-       Connection connection=null;
-       try{
-           //sysname=sysname.toLowerCase();
-           this.databaseName=enterprise.getDatabaseName();
-           this.enterprise=enterprise;
-           //this.journal=enterprise.getJournal();
-           //this.sysname=sysname;
-           this.clerk=clerk;
-           String ledgerFullName = ledger.getFullName();
-           this.fullName=ledgerFullName+DELIMITER+name;
-           connection=ConnectionSource.getConnection(databaseName);
-           java.sql.Statement statement = connection.createStatement();
-           String sqlString = ("SELECT * FROM  "+CHART_TABLE_NAME+"  WHERE "+Chart.FULLNAME_COLNAME+" = \'"+fullName+"\'");
-           logger.log(5, sqlString);
-           ResultSet resultSet=statement.executeQuery(sqlString);
-           if (resultSet.next()){
-           	name=resultSet.getString(Chart.NAME_COLNAME);
-               sysname=resultSet.getString(Chart.SYSNAME_COLNAME);
-               ownerName=resultSet.getString(Chart.OWNER_COLNAME);
-               ledgerName=resultSet.getString(Chart.LEDGER_COLNAME);
-               //logger.log("ledgerName ="+ledgerName);
-               this.ledger=Ledger.getLedger(enterprise, ledgerName);
-               //logger.log(5, "Account "+name+" opened in ledger "+ledger.getName());
-               type=resultSet.getString(Chart.TYPE_COLNAME);
-               currency=Currency.getCurrency(resultSet.getString(Chart.CURRENCY_COLNAME));
-               description=resultSet.getString(Chart.DESCRIPTION_COLNAME);
-           }else{
-               logger.log(1, "ACC-init: read chart issues: for accname:" +name);
-           }
-           
-           balance=getBalance(enterprise, clerk);
-              
-           
-           
-            connection.close();
-       }catch(Exception e){
-           logger.log("Account - problem initialising "+name+" in db "+databaseName, e);
-           this.description=e.getMessage();
-           
-       }finally{
-          try{connection.close();}catch(Exception x){}
-           
        }
-   }
-   
+    }
+  
     /**
      * Returns a Money object representing the current balance of this account
      * @return The balance
      */
      public Money getBalance(Enterprise enterprise, Clerk clerk) throws PermissionsException{
+    	 logger.log("AccountGB started");
         if(clerk.canRead(enterprise, ledger)){
-        	 Connection connection=null;
-        	 try{
-	        	 connection=ConnectionSource.getConnection(databaseName);
-	             java.sql.Statement statement = connection.createStatement();
-	            
-	           //logger.log(5, "acc "+name+" bal is "+balance.toPlainString()+balance.getCurrency().getTLA());
-	        	 ResultSet resultSet = statement.executeQuery("SELECT amount FROM "+sysname+" WHERE contra = \'balance\'");
-	             if (resultSet.next()){
-	                 BigDecimal amount=resultSet.getBigDecimal("amount");
-	                 //logger.log(5, "account "+ name +" currency ="+currency);
+        	 try{ 
+        		 if(table!=null){
+        			 Row row = table.getRow(0);
+        			 BigDecimal amount=row.getBigDecimal(AMOUNT_COLNAME);
+	                 logger.log(5, "account "+ name +" currency ="+currency);
 	                 balance= new Money(currency, amount);
-	                 //logger.log(5, name + "balance currency is "+balance.getCurrency().getTLA());
-	             }
+	                 logger.log(5, name + "balance currency is "+balance.getCurrency().getTLA());
+	                 logger.log(5, "acc "+name+" bal is "+balance.toPlainString()+balance.getCurrency().getTLA());
+	 	         }else{
+	 	        	 throw new BooxException("Balance line not found in account "+sysname);
+	 	         }
         	 }catch(Exception x){
         		 logger.log("exception reading balance", x);
-        	 }finally{
-        		 try {
-					connection.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					logger.log("exception thrown", e);
-				}
         	 }
-            return balance;
+             return balance;
         }else{
             logger.log("Permissions Exception thrown on account "+name);
             throw new PermissionsException("Clerk "+clerk.getName()+ " does not have read permissions on ledger: "+ledger.getName()+
@@ -269,24 +211,18 @@ public class Account implements Budgetable,  Auditable {
      */
      public Money getBalance(Enterprise enterprise, Clerk clerk, ISODate date) throws PermissionsException{
         if(clerk.canAudit(enterprise, getLedger())){
-            Connection connection=null;
+        	Money audBal=null;
             try{
-                connection = ConnectionSource.getConnection(databaseName);
-                Statement statement = connection.createStatement();
-                String queryString = "SELECT balance,date FROM "+name+" WHERE date < \'"+date.toString()+"\' ORDER BY date DESC";
-                ResultSet rs = statement.executeQuery(queryString);
-                if(rs.next()){
-                    Money bal = new Money(currency, rs.getBigDecimal("balance"));
-                    connection.close();
-                    return bal;
-                }else{
-                    connection.close();
-                    return Money.zero(currency);
-                }
-            
+               String queryString = "SELECT balance,date FROM "+name+" WHERE date < \'"+date.toString()+"\' ORDER BY date DESC";
+               List<Row> rows = table.query(queryString);
+               for(Row row:rows){
+            	    BigDecimal amount=row.getBigDecimal(AMOUNT_COLNAME);
+	                 logger.log(5, "account "+ name +" currency ="+currency);
+	                 audBal= new Money(currency, amount); 
+               }
+               return audBal;
             }catch(Exception e){
-                try{connection.close();}catch(Exception x){}
-                logger.log("Account-getBalance(date) error", e);
+                 logger.log("Account-getBalance(date) error", e);
                 return null;
             }
         }else{
@@ -303,25 +239,16 @@ public class Account implements Budgetable,  Auditable {
      */
      public Money getBalance(Enterprise enterprise, Clerk clerk, long transactionID) throws PermissionsException, BooxException{
         if(clerk.canAudit(enterprise, getLedger())){
-             Connection connection=null;
             try{
-                connection = ConnectionSource.getConnection(databaseName);
-                Statement statement = connection.createStatement();
-                String queryString = "SELECT "+BALANCE_COLNAME+" FROM "+name+" WHERE "+TID_COLNAME+" = "+Long.toString(transactionID);
-                ResultSet rs = statement.executeQuery(queryString);
-                if(rs.next()){
-                    Money bal = new Money(currency, rs.getBigDecimal(BALANCE_COLNAME));
-                    connection.close();
-                    return bal;
-                }else{
-                    connection.close();
-                    throw new BooxException("TransactionID "+ Long.toString(transactionID)+" not found in account "+name);
-                }
+                Row row = table.getRow(transactionID);
+            	Money bal = new Money(currency, row.getBigDecimal(BALANCE_COLNAME));
+                return bal;
+               
             
             }catch(Exception e){
-                try{connection.close();}catch(Exception x){}
-                logger.log("Account-getBalance(tid) error", e);
-                return null;
+            	logger.log("Account-getBalance(tid) error", e);
+                throw new BooxException("AccountGB(tid):Exception", e);
+                
             }
         }else{
             throw new PermissionsException("Clerk "+clerk.getName()+ " does not have audit permissions on ledger: "+getLedger().getName()+
@@ -341,22 +268,17 @@ public class Account implements Budgetable,  Auditable {
         if (!clerk.canAudit(enterprise, getLedger())){
             throw new PermissionsException("Clerk "+clerk.getName()+" does not have audit permissions on ledger:" +getLedger().getCurrencyName()+
                     " so cannot audit account "+getName());
-                    
         }
-        Connection connection=null;
             try{
-                connection=ConnectionSource.getConnection(databaseName);
-                Statement statement=connection.createStatement();
-                ResultSet rs = statement.executeQuery("SELECT * FROM "+name+ " ORDER BY transactionID ASC");
                 List<AuditElement> auditList = new ArrayList<AuditElement>();
-                while(rs.next()){
+                for (Row rs:table.getRows()){
                     String debitAccountName;
                     String creditAccountName;
                     long transactionID = rs.getLong(TID_COLNAME);
                     if (transactionID!=0){
                     String contra = rs.getString(CONTRA_COLNAME);
                     BigDecimal amount = rs.getBigDecimal(AMOUNT_COLNAME);
-                    Timestamp timestamp=rs.getTimestamp(DATE_COLNAME);
+                    Date timestamp=rs.getTimeStamp(DATE_COLNAME);
                     String clerkName = rs.getString(CLERK_COLNAME);
                     String notes=rs.getString(NOTES_COLNAME);
                     int sign=amount.signum();
@@ -372,15 +294,13 @@ public class Account implements Budgetable,  Auditable {
                     Transaction transaction = new Transaction(transactionClerk, enterprise, money,creditAccountName,debitAccountName,notes, timestamp, transactionID);
                     ISODate transactionDate = new ISODate(timestamp.getTime());
                     if (transactionDate.after(date)){date=transactionDate;}
-                    
-                    auditList.add(transaction);
+                    	auditList.add(transaction);
                     }
                 }
-                connection.close();
-                return auditList;
+                  return auditList;
             }catch(Exception e){
                 logger.log("problem generating audit list for account "+ name, e);
-                try{connection.close();}catch(Exception x){}
+               
             
                 return null;
             }
@@ -475,42 +395,27 @@ public class Account implements Budgetable,  Auditable {
      * @param databaseName
      * @param sysname
      * @return
+     * @throws PlatosysDBException 
      */
-    public static boolean exists(String databaseName, String sysname){
-             Connection connection=null;
+    public static boolean exists(Enterprise enterprise, String sysname) throws BooxException{
             try{
-                connection = ConnectionSource.getConnection(databaseName);
-                Statement statement = connection.createStatement();
-                String queryString = "SELECT * FROM   "+CHART_TABLE_NAME+"   WHERE "+Chart.SYSNAME_COLNAME+" = '"+sysname+"'";
-                ResultSet rs = statement.executeQuery(queryString);
-                if(rs.next()){
-                    connection.close();
-                    return true;
-                }else{
-                    connection.close();
-                    return false;
-                }
-
-            }catch(Exception e){
-                try{connection.close();}catch(Exception x){}
-                logger.log("Account-exists error", e);
-                return false;
+            	Table table= JDBCTable.getTable(enterprise.getDatabaseName(), Chart.TABLENAME);
+                Row row = table.getRow(Chart.SYSNAME_COLNAME, sysname);
+    		}catch(RowNotFoundException rnfe){
+            	   return false;
+            }catch(PlatosysDBException pdbe){
+            	throw new BooxException("AccountExists error", pdbe);
             }
-   }
-    public static Account getAccount(Enterprise enterprise, Clerk clerk, String sysname) throws PermissionsException {
+            return true;
+    }
+    
+    public static Account getAccount(Enterprise enterprise, String sysname, Clerk clerk ) throws PermissionsException {
+    	logger.log("Account getting account "+sysname);
     	return new Account(enterprise, sysname, clerk);
     }
-    public static Account getAccount(Enterprise enterprise, String name, Ledger ledger, Clerk clerk, Permission permission) throws PermissionsException{
-    	if (!(clerk.hasPermission(enterprise, ledger, permission))){
-	        
-	          throw new PermissionsException("Clerk "+clerk.getName()+" does not have "+permission.getName()+ " permission  on ledger "+ledger.getName());
-	      }else{
-	    	  return new Account(enterprise, name, ledger, clerk);
-	      }
-    }
+    
     public static Account getAccount(Enterprise enterprise, String sysname, Clerk clerk, Permission permission) throws PermissionsException {
-    	 //logger.log("Boa- Clerk: "+clerk.getName());
-    	        Account account = new Account(enterprise, sysname, clerk);
+    	     Account account = new Account(enterprise, sysname, clerk);
     	      Ledger ledger=account.getLedger();
 
     	      if (clerk.hasPermission(enterprise, ledger, permission)){
@@ -553,10 +458,7 @@ public class Account implements Budgetable,  Auditable {
      */
     public static Account createAccount(Enterprise enterprise, String name, Clerk owner, Ledger ledger, Currency currency, String description, boolean keepname) throws BooxException, PermissionsException{
 
-       /*/if(! owner.canCreateAccounts()){
-            debugLogger.log(3, "clerk "+owner.getName()+"cannot create accounts");
-            throw new PermissionsException( "clerk "+owner.getName()+"cannot create accounts");
-        */
+      
        String ledgerName = ledger.getFullName();
        String fullname = ledgerName+DELIMITER+name;
        String sysname;
@@ -566,69 +468,77 @@ public class Account implements Budgetable,  Auditable {
     	   sysname = PREFIX+ShortHash.hash(fullname);
        }
         String sqlString="";
-        Connection connection=null;
         try {
         	//TODO redo this logic
             name=name.toLowerCase();
             description=description.replace("\'","\'\'");
-            connection = ConnectionSource.getConnection(enterprise.getDatabaseName());
-            Statement statement = connection.createStatement();
-             String SQLString = ("SELECT * FROM  "+CHART_TABLE_NAME+"  WHERE ("+Chart.FULLNAME_COLNAME+" = \'"+fullname+"\')");
-            ResultSet rs = statement.executeQuery(SQLString);
-            if (rs.next()){
-              
-                
-                if((rs.getString(Chart.OWNER_COLNAME)).equals(owner.getName())){
-            		
-                    return new Account(enterprise, sysname, owner);
-            	}else{
-	                
-	                if (!(rs.getString(Chart.OWNER_COLNAME)).equals(owner.getName())){
-	                	logger.log("Account "+name+" exists with different owner: renaming as "+owner.getName()+"_"+name);
-	                	name=owner.getName()+"_"+name;
-	                	fullname = ledgerName+DELIMITER+name;
-	                    sysname = PREFIX+ShortHash.hash(fullname);
-	                }
-            	}
+            Table chartTable = Chart.getTable(enterprise);
+            Row rs;
+            //first check to see whether this account exists.
+            try{
+            	rs = chartTable.getRow(Chart.FULLNAME_COLNAME, fullname);
+	            if((rs.getString(Chart.OWNER_COLNAME)).equals(owner.getName())){
+	                return new Account(enterprise, sysname, owner);
+	            }else{
+	            	if (!(rs.getString(Chart.OWNER_COLNAME)).equals(owner.getName())){
+			            logger.log("Account "+name+" exists with different owner: renaming as "+owner.getName()+"_"+name);
+			            name=owner.getName()+"_"+name;
+			            fullname = ledgerName+DELIMITER+name;
+			            sysname = PREFIX+ShortHash.hash(fullname);
+	            	}
+	            }
+	        }catch (RowNotFoundException rnfe){
+            	//which is fine, so we do nothing. 
             }
-            sqlString =("INSERT INTO  "+CHART_TABLE_NAME+" ("
-            		+Chart.SYSNAME_COLNAME+","
-            		+Chart.NAME_COLNAME+","
-            		+Chart.FULLNAME_COLNAME+","
-            		+Chart.OWNER_COLNAME+"," 
-            		+Chart.LEDGER_COLNAME+","
-            		+Chart.CURRENCY_COLNAME+","
-            		+Chart.DESCRIPTION_COLNAME+") " +
-            				"VALUES(\'"+sysname+"\',\'"+name+"\',\'"+fullname+"\',\'"+owner.getName()+"\',\'"+ledgerName+"\',\'"+currency.getTLA()+"\',\'"+description+"\')");
-            statement.execute(sqlString);
+	        try{
+	        	//put the info into the chart of accounts.	
+	            String cols[]=Chart.COLS;	
+	           /*String[] COLS={SYSNAME_COLNAME,
+						NAME_COLNAME, 
+						FULLNAME_COLNAME, 
+						OWNER_COLNAME, 
+						LEDGER_COLNAME, 
+						CURRENCY_COLNAME, 
+						TYPE_COLNAME, 
+						DESCRIPTION_COLNAME};*/
+	            
+	            String [] vals={sysname,
+	            		        name,
+	            		        fullname,
+	            		        owner.getName(),
+	            		        ledgerName,
+	            		        currency.getTLA(),
+	            		        BASIC_TYPE,
+	            		        description};
+	             chartTable.addRow(cols, vals);
+	           
+	            //now create the account table.
+	             Table accountTable = JDBCTable.createForeignKeyTable(enterprise.getDatabaseName(), sysname,TID_COLNAME, Journal.TABLENAME);
+	            accountTable.addColumn(CONTRA_COLNAME, Table.TEXT_COLUMN);
+	            accountTable.addColumn(AMOUNT_COLNAME, Table.DECIMAL_COLUMN);
+	            accountTable.addColumn(BALANCE_COLNAME, Table.DECIMAL_COLUMN);
+	            accountTable.addColumn(DATE_COLNAME, Table.TIMESTAMP_COLUMN);
+	            accountTable.addColumn(CLERK_COLNAME, Table.TEXT_COLUMN);
+	            accountTable.addColumn(NOTES_COLNAME, Table.TEXT_COLUMN);
+	            //
+	            accountTable.addRow(TID_COLNAME, 0);
+	            accountTable.amend(0, CONTRA_COLNAME, "balance");
+	            accountTable.amend(0, AMOUNT_COLNAME, 0);
+	            accountTable.amend(0, BALANCE_COLNAME, 0);
+	            accountTable.amend(0, DATE_COLNAME, new ISODate());
+	            accountTable.amend(0, CLERK_COLNAME,  owner.getName());
+	            accountTable.amend(0, NOTES_COLNAME, "balance");
+	            	
+	            return new Account(enterprise, sysname, owner);
             
-            sqlString=("CREATE TABLE "+sysname+" ("+TID_COLNAME+" integer PRIMARY KEY REFERENCES "+Journal.TABLENAME+","
-            		+CONTRA_COLNAME+" text,"
-            		+AMOUNT_COLNAME+" numeric(20,2),"
-            		+BALANCE_COLNAME+"  numeric (20,2),"
-            		+DATE_COLNAME+ " timestamp,"
-            		+CLERK_COLNAME+" text,"
-            		+NOTES_COLNAME+" text)");
-            statement.execute(sqlString);
-            sqlString=("INSERT INTO "+sysname+" ("
-            +TID_COLNAME+","
-            +CONTRA_COLNAME+","
-            +AMOUNT_COLNAME+","
-            +BALANCE_COLNAME+","
-            +DATE_COLNAME+","
-            +CLERK_COLNAME+","
-            +NOTES_COLNAME+")" +
-            		" VALUES(0, \'balance\',  0, 0, \'"+ ((new java.sql.Timestamp(new java.util.Date().getTime())).toString())+"\',\'"+owner.getName()+"\',\'Current Balance\' )");
-            statement.execute(sqlString);
-            
-            connection.close();
-            return new Account(enterprise, sysname, owner);
         }catch(Exception e){
-            try{connection.close();}catch(Exception p){}
-
            logger.log("error creating account: \n"+sqlString, e);
-            return null;
+           return null;
         }
+	    }catch(Exception e){
+	           logger.log("error creating account: \n"+sqlString, e);
+	           return null;
+	    }
     }
  
 
@@ -642,9 +552,6 @@ public class Account implements Budgetable,  Auditable {
 	public Money getBudget(Clerk clerk, Date date) throws PermissionsException,TimingException {
 		if(date.getTime()<budget.firstKey().getTime()){throw new TimingException("Account"+name+" has no budget before "+date.toGMTString());}
 		if(date.getTime()>budget.lastKey().getTime()){throw new TimingException("Account"+name+" has no budget after "+date.toGMTString());}
-		  
-		
-		
 		Date before;
 		Date after;
 		 if (budget.get(date)!=null){
@@ -659,21 +566,18 @@ public class Account implements Budgetable,  Auditable {
 				 
 			 } 
 		 }*/
-		
 	}
 
 	@Override
 	public void setBudget(Clerk clerk, Money money, Date date)
 			throws PermissionsException, CurrencyException, TimingException {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setInterpolationMode(Clerk clerk, int interpolationMode)
 			throws PermissionsException {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -698,30 +602,18 @@ public class Account implements Budgetable,  Auditable {
 	    */
 	   public static List<Account> getAccounts(Enterprise enterprise,  Clerk clerk){
 	       List<Account> accountList=new ArrayList<Account>();
-	       
-	       Connection connection=null;
-	       try{
-	        connection = ConnectionSource.getConnection(enterprise.getDatabaseName());
-	        Statement statement = connection.createStatement();
-	        ResultSet rs= statement.executeQuery("SELECT * from "+Chart.TABLENAME);
-	        while(rs.next()){
-	            Ledger ledger = new Ledger(enterprise,rs.getString(Chart.LEDGER_COLNAME));
+	      try{
+	       List<Row> rows = Chart.accountRows(enterprise);
+	       for (Row rs:rows){
+	    	  Ledger ledger = new Ledger(enterprise,rs.getString(Chart.LEDGER_COLNAME));
 	           Account account = new Account(enterprise, rs.getString(Chart.NAME_COLNAME), clerk);
 	           if (clerk.canAudit(enterprise,ledger)){
 	                accountList.add(account);
 	           }
 	        }
-	        connection.close();
-	       
 	       }catch(Exception e){
-	           try{connection.close();}catch(Exception p){}
-
-	           logger.log("Account-list accounts: problem listing accounts", e);
-	            
-	           
+	            logger.log("Account-list accounts: problem listing accounts", e);
 	       }
 	          return accountList; 
-	           
-	       
 	   }  
 }

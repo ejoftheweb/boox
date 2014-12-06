@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+    <mail xmlns="http://www.platosys.co.uk/xmail">
+        <para>
+            <head>Thank You</head>
+            <content>We are glad you have agreed to try Platax, the revolutionary book-keeping system for small enterprises. Please login and
+                don't be afraid to tell us what you think.
+            </content>
+       </para>
+       <para>
+           <head>CEP</head>
+           <content>We are proud to support CEP, the Campaign to Eliminate Paperwork. We believe that paperwork is the bane of everyone working in
+               or running a small enterprise and we'd like to see it eliminated entirely. We can dream! There are three angles to the campaign:
+               legislation, technology and standards.</content>
+       </para>
+       <para>
+           <head>Legislation</head>
+           <content>We don't favour a bonfire of regulations: health and safety, tax compliance, environmental rules are all good causes and small
+               enterprises should comply. But we'd like to see compliance made as easy as possible, without paperwork.
+           </content>
+       </para>
+       <para>
+           <head>Technology</head>
+           <content>
+               Technology is our best hope for eliminating paperwork. The paperless office has been a dream for decades; here at Platosys, we're
+               trying to make it a reality for small businesses.
+           </content>
+      </para>
+      <para>
+           <head>Standards</head>
+           <content>
+               To eliminate  paperwork, we need to eliminate  paper receipts and bills. But we still need to record earnings and expenses, so we 
+               need to replace paper with digital, and replace manual handling with automatic posting. We need to develop universal standards
+               for the digital formats of receipts and bills.
+           </content>
+      </para>
+    </mail>
+</root>

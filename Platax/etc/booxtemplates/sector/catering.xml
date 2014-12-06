@@ -14,9 +14,11 @@
 <Ledgers> 
     <!-- XBX is the system name for the default currency. -->
     <Ledger name="XBX">
+        <!-- the balance on the Operations ledger is an approximate proxy for profit -->
+        <Ledger name="Operations" isPrivate="false">
         <!-- the Income ledger records all income received by the business, whether sales or interest earned -->
         <Ledger name="Income" isPrivate="false">
-           <Ledger name="Sold" isPrivate="false">
+           <Ledger name="Sales" isPrivate="false">
                <Ledger name="OnSales" isPrivate="false">
                    <Account name="Food" fullName="food" description="Eat-in food"/>
                    <Account name="Beverage" fullName="beverage" description="Beverage on-sales"/>

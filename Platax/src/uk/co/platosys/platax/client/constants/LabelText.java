@@ -62,9 +62,13 @@ public class LabelText {
 	public static final String ADD_CUSTOMER_HEADER="Add a new customer to the system";
 	public static final String CUSTOMER="Customer";
 	public static final String CUSTOMER_NAME = "Customer Name";
+	public static final String CUSTOMER_NAME_INFO="Short name for this customer";
+	public static final String CUSTOMER_LEGALNAME = "Customer Legal Name";
+	public static final String CUSTOMER_LEGALNAME_INFO="Customer's legal name";
 	public static final String IS_PRIVATE="Private?";
 	public static final String IS_PRIVATE_INFO="if a private individual";
-	
+	public static final String IS_TRADE="Trade?";
+	public static final String IS_TRADE_INFO="if this is a trade (business) customer";
 	public static final String ADD_PRODUCT_HEADER="Add a new product to the catalogue";
 	public static final String PRODUCT="Product";
 	public static final String PRODUCT_NAME = "Product Name";

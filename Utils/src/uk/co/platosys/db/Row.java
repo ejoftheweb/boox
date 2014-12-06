@@ -111,6 +111,14 @@ public interface Row {
      * @throws ColumnNotFoundException
      */
 	public boolean getBoolean(String columnName) throws ClassCastException, ColumnNotFoundException;
+	/**
+     * returns a big decimal, full precision number.
+     * @param columnName
+     * @return
+     * @throws ClassCastException
+     * @throws ColumnNotFoundException
+     */
+	public java.math.BigDecimal getBigDecimal (String columnName) throws ClassCastException, ColumnNotFoundException;
     /**
      * returns a Set of the rows column names.
      * @return

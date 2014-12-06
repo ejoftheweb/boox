@@ -15,7 +15,7 @@ public abstract class Body {
 	
 	private String name;
 	private String legalName;
-	private String id;
+	private String sysname;
 	private String databaseName="none";
 	private boolean isTrade;
 	//private Map<String, Xaddress> addresses=new HashMap<String, Xaddress>();
@@ -46,11 +46,11 @@ public abstract class Body {
 	protected void setLegalName(String legalName) {
 		this.legalName = legalName;
 	}
-	public String getId() {
-		return id;
+	public String getSysname() {
+		return sysname;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setSysname(String sysname) {
+		this.sysname = sysname;
 	}
 	public boolean isTrade() {
 		return isTrade;

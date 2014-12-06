@@ -9,8 +9,10 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
@@ -40,8 +42,8 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 	public static PlataxTabPanel parent;
 	protected int totalPages;
 	protected int pageNumber;
-	protected final FormHeaderLabel topLabel = new FormHeaderLabel();//"About your enterprise");
-    protected final FormSubHeaderLabel subHeader = new FormSubHeaderLabel();//"Please fill in as much as you can"
+	private final FormHeaderLabel topLabel = new FormHeaderLabel();//"About your enterprise");
+    private final FormSubHeaderLabel subHeader = new FormSubHeaderLabel();//"Please fill in as much as you can"
     
 	public AbstractForm(Platax platax) {
 		super(platax);
@@ -138,4 +140,15 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 	final FieldInfoLabel nextInfoLabel=new FieldInfoLabel("");
 	final FieldLabel nextLabel=new FieldLabel(LabelText.MORE);
 	CancelButton cancelButton = new CancelButton();
+	public void setTitle(String title){
+		topLabel.setText(title);
+	}
+	public void setSubTitle(String subTitle){
+		subHeader.setText(subTitle);
+	}
+	public void clear(){}
+	public void add(IsWidget widget){}
+	public Iterator<Widget> iterator(){return null;}
+	public boolean remove(Widget widget){return false;}
+	public abstract void refresh();
 }

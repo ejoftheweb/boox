@@ -12,6 +12,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("productService")
 public interface ProductService extends RemoteService {
-	public GWTItem addProduct(String enterpriseID, String  customerName, String productName, double price, int taxBand, boolean exclusive);
+	public GWTItem addProduct(String enterpriseID, String  productName, String productDescription, double price, int taxBand, boolean exclusive);
 	public ArrayList<GWTItem> listProducts(String enterpriseID, int selection);
 }

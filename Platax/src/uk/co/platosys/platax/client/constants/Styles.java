@@ -20,10 +20,11 @@ public class Styles {
   public final static String PTABH_BILL="px_ptab_head_bill";
   public final static String BILL_HEAD_PANEL="px_bill_head";
   public final static String BILL_CPARTY_PANEL="px_bill_cparty";
+ 
   public final static String FIELD_LABEL="px_field_label";
-  
   public final static String FIELD_INFO_LABEL="px_field_info_label";
   public final static String FIELD_INFO_LABEL_ALARMED="px_field_info_label_alarmed";
+  
   public final static String COLUMN_HEADER="px_column_header";
   public final static String FORM_HEADER="px_form_header";
   public final static String FORM_SUB_HEADER="px_form_subheader";
@@ -37,5 +38,6 @@ public class Styles {
   public static final String PTAB_CLOSE_TAG_DISABLED="px_ptab_closetag_disabled";
   
   public static final String POPUP_HEADER="px_popup_header";
+  public final static String BODY_NAME_LABEL="px_body_name";
   
 }

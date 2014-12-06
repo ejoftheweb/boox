@@ -90,7 +90,7 @@ public class Product extends Item {
     }
     
     private Product(Enterprise enterprise, Clerk clerk, Row row) throws ClassCastException, ColumnNotFoundException, PermissionsException{
-    	
+    	logger.log("creating product");
     	  this.setId(row.getLong(Catalogue.ITEMID_COLNAME));
     	  try{
     		  Currency currency=Currency.getCurrency(row.getString(Catalogue.ITEMCURRENCY_COLNAME));
@@ -103,20 +103,22 @@ public class Product extends Item {
     	  }catch(Exception x){
     		  logger.log("Pinit: issue ", x);
     	  }
+    	  try{
 	      this.name=row.getString(Catalogue.ITEMNAME_COLNAME);
-	      	//logger.log("Pinit - name "+name);
+	      	logger.log("Pinit - name "+name);
 	      this.setSysname(row.getString(Catalogue.ITEMSYSNAME_COLNAME));
 	      this.setTaxBand(row.getInt(Catalogue.ITEMTAXBAND_COLNAME));
 	      this.description=row.getString(Catalogue.ITEMDESC_COLNAME);
-	      this.stockLevel=row.getDouble(Catalogue.ITEMSTOCKLEVEL_COLNAME);
-	      this.setSalesAccount(Account.getAccount(enterprise, clerk, row.getString(Catalogue.ITEMACCOUNT_COLNAME)));
-		  this.setSalesLedger(Ledger.getLedger(enterprise, row.getString(Catalogue.ITEMLEDGER_COLNAME)));
+	      this.setSalesAccount(Account.getAccount(enterprise, row.getString(Catalogue.ITEMACCOUNT_COLNAME), clerk));
+		  this.setSalesLedger(salesAccount.getLedger());
 		  this.setStockLevel(row.getDouble(Catalogue.ITEMSTOCKLEVEL_COLNAME));
 		  this.setAddedStockLevel(row.getDouble(Catalogue.ITEMADDEDSTOCK_COLNAME));
 		  this.setOpeningStockLevel(row.getDouble(Catalogue.ITEMOPENINGSTOCKLEVEL_COLNAME));
 		  this.setWastedStockLevel(row.getDouble(Catalogue.ITEMWASTEDSTOCK_COLNAME)); 
 		  logger.log("Pinit: product "+name+" price "+ price.toPlainString());
-	     
+    	  }catch(Exception x){
+    		  logger.log("problem initialising product", x);
+    	  }
     }
 	public Product(Enterprise enterprise, Clerk clerk, long long1) {
 		
@@ -133,20 +135,24 @@ public class Product extends Item {
 		return getProducts(enterprise, clerk);
 	}
 	private static List<Item> getProducts(Enterprise enterprise, Clerk clerk){
+		logger.log("ProductGP getting product list");
 		  List<Item> products = new ArrayList<Item>();
 		  try{
 			   if(catalogueTable==null){catalogueTable=getCatalogueTable(enterprise, clerk);}
 			   List<Row> rows = catalogueTable.getRows();
-			   Iterator<Row> rit = rows.iterator();
-			   while(rit.hasNext()){
-				   Product product = new Product (enterprise, clerk, rit.next());
+			   logger.log("ProductGP: there are "+rows.size()+" to list");
+			   int p=0;
+			   for(Row row: rows){
+				   Product product = new Product (enterprise, clerk, row);
 			       products.add(product);
+			       p++;
+			       logger.log("ProductGP: added "+p+" "+product.getName());
 			   }
 		  }catch(Exception x){
 			  logger.log("ProductGPs problem getting products ", x);
 			  return products;
 		  }
-		
+		logger.log("ProductGPs returning "+products.size()+" products");
 		return products;
 	}
 	/**
@@ -244,6 +250,7 @@ public class Product extends Item {
 	}
 	private void setSalesLedger(Ledger ledger) {
 		this.salesLedger=ledger;
+		logger.log("Product "+name+" has sales ledger "+ledger.getFullName());
 		
 	}
 	 private void setStockAccount(Account account) {
@@ -407,12 +414,15 @@ public class Product extends Item {
 	 }
  }
 private void setOpeningStockLevel(double openingStockLevel) {
+	logger.log(name+ "OS="+openingStockLevel);
 	this.openingStockLevel = openingStockLevel;
 }
 private void setWastedStockLevel(double wastedStockLevel) {
+	logger.log(name+ "WS="+wastedStockLevel);
 	this.wastedStockLevel = wastedStockLevel;
 }
 private void setAddedStockLevel(double addedStockLevel) {
+	logger.log(name+ "AS="+addedStockLevel);
 	this.addedStockLevel = addedStockLevel;
 }
 public double getOpeningStockLevel() {
@@ -468,6 +478,7 @@ public double getStockLevel() {
 }
 
 public void setStockLevel(double stockLevel2) {
+	logger.log(name+ "SL="+stockLevel2);
     this.stockLevel = stockLevel2;
 }
 public int getTaxBand() {

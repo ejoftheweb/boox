@@ -66,7 +66,7 @@ public class EnterpriseTab extends AbstractForm {
 		    }
 			//Layout Page
 			this.setTabHeaderText(name);
-			topLabel.setText(legalName);
+			setTitle(legalName);
 			
 			
 		    EnterpriseMenu eMenu = new EnterpriseMenu(enterprise, platax);
@@ -97,4 +97,10 @@ public class EnterpriseTab extends AbstractForm {
 			
 			
 		}
+
+			@Override
+			public void refresh() {
+				// TODO Auto-generated method stub
+				
+			}
 }

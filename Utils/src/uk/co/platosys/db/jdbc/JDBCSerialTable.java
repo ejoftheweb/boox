@@ -15,9 +15,13 @@ public class JDBCSerialTable extends JDBCTable implements SerialTable {
 	  public JDBCSerialTable(String databaseName, String tableName,
 			String primaryKeyColumnName) throws PlatosysDBException {
 		  super(databaseName, tableName, primaryKeyColumnName);
-		// TODO Auto-generated constructor stub
+		
 	}
-
+	  public JDBCSerialTable(String databaseName, String tableName,
+				String primaryKeyColumnName, String primaryKeyColumnType) throws PlatosysDBException {
+			  super(databaseName, tableName, primaryKeyColumnName, primaryKeyColumnType);
+			
+		}
 	public static JDBCSerialTable createTable(String databaseName, String tableName, String primaryKeyColumnName) throws PlatosysDBException {
 	        //this.databaseName=databaseName;  
 	        Connection connection=null;
@@ -26,7 +30,7 @@ public class JDBCSerialTable extends JDBCTable implements SerialTable {
 	                Statement statement=connection.createStatement();
 	                statement.execute("CREATE TABLE "+tableName+" ("+primaryKeyColumnName+ " SERIAL PRIMARY KEY)");
 	                connection.close();
-	                return new JDBCSerialTable(databaseName, tableName, primaryKeyColumnName);
+	                return new JDBCSerialTable(databaseName, tableName, primaryKeyColumnName, Table.INTEGER_COLUMN);
 	            }catch(Exception ex){
 	                logger.log( "problem creating serial table "+tableName+"  in db "+databaseName, ex);
 	                try{connection.close();}catch(Exception p){}

@@ -26,6 +26,8 @@ import uk.co.platosys.boox.core.exceptions.BooxException;
 import uk.co.platosys.boox.core.exceptions.PermissionsException;
 import uk.co.platosys.boox.core.Directory;
 import uk.co.platosys.boox.money.Money;
+import uk.co.platosys.boox.stock.Item;
+import uk.co.platosys.boox.stock.Product;
 import uk.co.platosys.boox.trade.Customer;
 import uk.co.platosys.platax.client.services.EnterpriseService;
 import uk.co.platosys.platax.client.services.UserService;
@@ -40,6 +42,7 @@ import uk.co.platosys.platax.shared.boox.GWTBankDetails;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTDirectoryEntry;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
+import uk.co.platosys.platax.shared.boox.GWTItem;
 import uk.co.platosys.platax.shared.boox.GWTModule;
 import uk.co.platosys.platax.shared.boox.GWTRole;
 import uk.co.platosys.platax.shared.boox.GWTSegment;
@@ -61,197 +64,6 @@ public class EnterpriseServiceImpl extends Xservlet implements
 	private static final long serialVersionUID = 5953214743330925557L;
 static Logger logger = Logger.getLogger("platax");
 	
-
-
-
- public GWTEnterprise registerEnterprise(String name, String legalName) {
-	PlataxUser puser=null;
-	Enterprise enterprise=null;
-	Clerk supervisor=null;
-	String supervisorpassword=null;
-	
-	try {
-		puser = (PlataxUser) getSession().getAttribute(PXConstants.USER);
-		if (puser==null){
-			logger.log("RESI no user in session to create enterprise");
-			throw new PlataxException("RESI no user in session to create enterprise");
-		}
-		logger.log("RESI puser is "+puser.getUsername());
-	    logger.log("RESI puser has xuserid "+puser.getXuserID());
-		//TODO revisit this process
-		//
-		logger.log("registering enterprise "+name);
-		//STAGE I: create the enterprise!
-		//TODO: Check for Duplicates!
-		enterprise = Enterprise.createEnterprise(name, legalName, null);
-		logger.log("RESI enterprise "+enterprise.getName()+" created");
-		logger.log("RESI: enterprise "+enterprise.getName()+" has dBname:"+enterprise.getDatabaseName());
-	}catch(Exception e){
-		logger.log("RESI register enterprise failed at Stage I", e);
-		return null;
-	}try{
-		logger.log("RESI now getting a supervisor password");
-		supervisorpassword = RandomString.getRandomKey();
-		logger.log("RESI supervisor password is "+supervisorpassword);
-		logger.log("RESI now creating supervisor "+puser.getXuserID()+" with password "+supervisorpassword);
-		supervisor = Boox.createSupervisor(enterprise, puser.getXuserID(), supervisorpassword);
-		logger.log("RESI supervisor" + supervisor.getName()+ " created");
-	}catch(Exception e){
-		logger.log("RESI register enterprise failed at Stage II", e);
-		return null;
-		
-   
-	}try{	
-	    //STAGE III: create the basic accounts structure
-		Map<String, Module> modules = Boox.getModules();
-		for(String modulename: modules.keySet()){
-			Module module = modules.get(modulename);
-			Boox.createLedgersAndAccounts(enterprise, supervisor, module.getFile());
-		}
-		
-		puser.addEnterprise(enterprise, supervisor, supervisorpassword);
-		return convert(enterprise, supervisor);
-	}catch(Exception e){
-		logger.log("RESI problem creating enterprise at stage V", e);
-		return null;
-	}
-	
-}
-
- @Override
-	public GWTEnterprise registerEnterprise(String name, String legalName,
-			ArrayList<String> modulenames) {
-		PlataxUser puser=null;
-		Enterprise enterprise=null;
-		Clerk supervisor=null;
-		String supervisorpassword=null;
-		File accountsTemplateFolder=null;
-		File accountsTemplateFile=null;
-		
-		try {
-			puser = (PlataxUser) getSession().getAttribute(PXConstants.USER);
-			if (puser==null){
-				logger.log("RESI no user in session to create enterprise");
-				throw new PlataxException("RESI no user in session to create enterprise");
-			}
-			logger.log("RESI puser is "+puser.getUsername());
-		    logger.log("RESI puser has xuserid "+puser.getXuserID());
-			//TODO revisit this process
-			//
-			logger.log("registering enterprise "+name);
-			//STAGE I: create the enterprise!
-			//TODO: Check for Duplicates!
-			enterprise = Enterprise.createEnterprise(name, legalName, null);
-			logger.log("RESI enterprise "+enterprise.getName()+" created");
-			logger.log("RESI: enterprise "+enterprise.getName()+" has dBname:"+enterprise.getDatabaseName());
-		}catch(Exception e){
-			logger.log("RESI register enterprise failed at Stage I", e);
-			return null;
-		}try{
-			logger.log("RESI now getting a supervisor password");
-			supervisorpassword = RandomString.getRandomKey();
-			logger.log("RESI supervisor password is "+supervisorpassword);
-			logger.log("RESI now creating supervisor "+puser.getXuserID()+" with password "+supervisorpassword);
-			supervisor = Boox.createSupervisor(enterprise, puser.getXuserID(), supervisorpassword);
-			logger.log("RESI supervisor" + supervisor.getName()+ " created");
-		}catch(Exception e){
-			logger.log("RESI register enterprise failed at Stage II", e);
-			return null;
-			
-	   
-		}try{	
-		    //STAGE III: create the basic accounts structure
-			Map<String, Module> modules = Boox.getModules();
-			for(String modulename: modulenames){
-				Module module = modules.get(modulename);
-				Boox.createLedgersAndAccounts(enterprise, supervisor, module.getFile());
-			}
-			
-			puser.addEnterprise(enterprise, supervisor, supervisorpassword);
-			return convert(enterprise, supervisor);
-		}catch(Exception e){
-			logger.log("RESI problem creating enterprise at stage V", e);
-			return null;
-		}
-		
-	}
-
-
-	
-	public GWTEnterprise registerEnterprise(String name, String legalName, String type, String sector) {
-		PlataxUser puser=null;
-		Enterprise enterprise=null;
-		Clerk supervisor=null;
-		String supervisorpassword=null;
-		File accountsTemplateFolder=null;
-		File accountsTemplateFile=null;
-		
-		try {
-			puser = (PlataxUser) getSession().getAttribute(PXConstants.USER);
-			if (puser==null){
-				logger.log("RESI no user in session to create enterprise");
-				throw new PlataxException("RESI no user in session to create enterprise");
-			}
-			logger.log("RESI puser is "+puser.getUsername());
-		    logger.log("RESI puser has xuserid "+puser.getXuserID());
-			//TODO revisit this process
-			//
-			logger.log("registering enterprise "+name);
-			//STAGE I: create the enterprise!
-			//TODO: Check for Duplicates!
-			enterprise = Enterprise.createEnterprise(name, legalName, null);
-			logger.log("RESI enterprise "+enterprise.getName()+" created");
-			logger.log("RESI: enterprise "+enterprise.getName()+" has dBname:"+enterprise.getDatabaseName());
-		}catch(Exception e){
-			logger.log("RESI register enterprise failed at Stage I", e);
-			return null;
-		}try{
-			logger.log("RESI now getting a supervisor password");
-			supervisorpassword = RandomString.getRandomKey();
-			logger.log("RESI supervisor password is "+supervisorpassword);
-			logger.log("RESI now creating supervisor "+puser.getXuserID()+" with password "+supervisorpassword);
-			supervisor = Boox.createSupervisor(enterprise, puser.getXuserID(), supervisorpassword);
-			logger.log("RESI supervisor" + supervisor.getName()+ " created");
-		}catch(Exception e){
-			logger.log("RESI register enterprise failed at Stage II", e);
-			return null;
-			
-	   //TODO: rejig this to reflect the modules approach		
-		}try{	
-		    //STAGE III: create the basic accounts structure
-				accountsTemplateFolder = new File(Constants.SYSTEM_CONFIG_DIR, PXConstants.ACCTS_TEMPLATE_FOLDER);
-				accountsTemplateFile = new File(accountsTemplateFolder, PXConstants.ACCTS_TEMPLATE_FILE );
-				logger.log("RESI now to create LandAcs for enterprise:"+enterprise.getName());
-				Boox.createLedgersAndAccounts(enterprise, supervisor, accountsTemplateFile);
-		}catch(Exception e){
-			logger.log("RESI register enterprise failed at Stage III", e);
-			return null;
-		}try{		
-				//STAGE IV: create the capital accounts structure
-				File capitalAccountsFolder = new File(accountsTemplateFolder, PXConstants.CAPITAL_TEMPLATES_FOLDER);
-				File capitalAccountsFile=new File(capitalAccountsFolder, type+".xml");
-				Boox.createLedgersAndAccounts(enterprise, supervisor, capitalAccountsFile);
-				puser.addEnterprise(enterprise, supervisor, supervisorpassword);
-				
-		}catch(Exception e){
-			logger.log("RESI problem creating enterprise at stage IV", e);
-			return null;
-		}try{		
-			//STAGE V: create the sector accounts structure
-			File sectorAccountsFolder = new File(accountsTemplateFolder, PXConstants.SECTOR_TEMPLATES_FOLDER);
-			File sectorAccountsFile=new File(sectorAccountsFolder, sector+".xml");
-			Boox.createLedgersAndAccounts(enterprise, supervisor, sectorAccountsFile);
-			puser.addEnterprise(enterprise, supervisor, supervisorpassword);
-			return convert(enterprise, supervisor);
-		}catch(Exception e){
-			logger.log("RESI problem creating enterprise at stage V", e);
-			return null;
-		}
-		
-	}
-
-
-
 
 	public static ArrayList<GWTCustomer> getGWTCustomers(GWTEnterprise gwtEnterprise, Clerk clerk){
 		ArrayList<GWTCustomer> gwtCustomers = new ArrayList<GWTCustomer>();
@@ -283,22 +95,19 @@ static Logger logger = Logger.getLogger("platax");
 	 */
 	public static GWTEnterprise convert(Enterprise enterprise, Clerk clerk){
 		try{
-		GWTEnterprise gwtEnterprise = new GWTEnterprise(enterprise.getEnterpriseID(), enterprise.getName(), enterprise.getLegalName()) ;
+		GWTEnterprise gwtEnterprise = new GWTEnterprise(enterprise.getSysname(), enterprise.getName(), enterprise.getLegalName()) ;
 		logger.log("ESI has created new gwtEnterprise "+enterprise.getName());
 		//set the privileges held by this platax user??
 		//gwtEnterprise = readRatios(enterprise, user, gwtEnterprise);
 		gwtEnterprise.setCustomers(getGWTCustomers(gwtEnterprise, clerk));
-		//gwtEnterprise.setProducts(getProducts(gwtEnterprise, user));
+		//gwtEnterprise.setProducts(ProductServiceImpl.listProducts(gwtEnterprise.getEnterpriseID(), 0));
 		return gwtEnterprise;
 		}catch (Exception x){
 			logger.log("ESI convert error", x);
 			return null;
 		}
 	}
-
-
-
-
+	
 	/**
 	 * method to get an enterprise to read its current ratios.
 	 * @param enterprise
@@ -326,12 +135,6 @@ static Logger logger = Logger.getLogger("platax");
 	    
 	}
 
-
-	public static void createLedgersAndAccounts(Enterprise enterprise, Clerk clerk, Element element, Ledger ledger) throws BooxException, PermissionsException{
-	    Boox.createLedgersAndAccounts(enterprise, clerk, element, ledger);
-	}
-
-
 	public TreeMap<String, String> getOrgTypes() {
 		TreeMap<String, String> orgTypes = new TreeMap<String, String>();
 		orgTypes.put("please select", "");
@@ -344,12 +147,8 @@ static Logger logger = Logger.getLogger("platax");
 				orgTypes.put(module.getDescription(),module.getName());
 			}
 		}
-		
 		return orgTypes;
 	}
-
-
-
 
 	public TreeMap<String, String> getSectors() {
 		TreeMap<String, String> orgTypes = new TreeMap<String, String>();
@@ -367,7 +166,7 @@ static Logger logger = Logger.getLogger("platax");
 		return orgTypes;
 	}
 
- public ArrayList<GWTModule> getModules(){
+	public ArrayList<GWTModule> getModules(){
 	 try{
 		 logger.log("ESIgm trying to get the modules");
 	 ArrayList<GWTModule> gwmodules = new ArrayList<GWTModule>();
@@ -389,7 +188,7 @@ static Logger logger = Logger.getLogger("platax");
 		 logger.log("ESIgm threw exception ", x);
 		 return null;
 	 }
- }
+   }
 
 
 	@Override
@@ -397,11 +196,7 @@ static Logger logger = Logger.getLogger("platax");
 		// TODO trap message not found
 		return SystemMessages.getMessage(key);
 	}
-	public GWTEnterprise registerEnterprise(String name, String legalName,
-			String templateFileName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	@Override
 	public GWTEnterprise addEnterpriseModules(String sysname,
 			ArrayList<String> modulenames) {
@@ -453,48 +248,45 @@ static Logger logger = Logger.getLogger("platax");
     	gModule.setSegment(module.getSegment());
     	return gModule;
     }
-
+    /**
+     * This is the main method for registering an enterprise with Boox/Platax. The enterprise is created in Boox, 
+     * the current pxUser is established as the supervising Clerk, passwords are created and safely stored, the basic
+     * accounts framework is created followed by the capital accounts structure (according to the orgtype parameter)
+     * 
+     * @param name
+     * @param legalName
+     * @param orgtype
+     * @param role
+     * @param isStartup
+     * @param startDate
+     * 
+     */
 	@Override
 	public GWTEnterprise registerEnterprise(String name, String legalName,
-			String orgtype, String role, boolean isStartup, Date startDate) {
+		String orgtype, String role, boolean isStartup, Date startDate) {
 		PlataxUser puser=null;
 		Enterprise enterprise=null;
 		Clerk supervisor=null;
 		String supervisorpassword=null;
 		File accountsTemplateFolder=null;
 		File accountsTemplateFile=null;
-		//TODO do something with the 
 		try {
 			puser = (PlataxUser) getSession().getAttribute(PXConstants.USER);
 			if (puser==null){
-				logger.log("RESI no user in session to create enterprise");
 				throw new PlataxException("RESI no user in session to create enterprise");
 			}
-			logger.log("RESI puser is "+puser.getUsername());
-		    logger.log("RESI puser has xuserid "+puser.getXuserID());
-			//TODO revisit this process
-			//
-			logger.log("registering enterprise "+name);
-			//STAGE I: create the enterprise!
 			//TODO: Check for Duplicates!
 			enterprise = Enterprise.createEnterprise(name, legalName, null);
-			logger.log("RESI enterprise "+enterprise.getName()+" created");
-			logger.log("RESI: enterprise "+enterprise.getName()+" has dBname:"+enterprise.getDatabaseName());
 		}catch(Exception e){
 			logger.log("RESI register enterprise failed at Stage I", e);
 			return null;
 		}try{
-			logger.log("RESI now getting a supervisor password");
+			//TODO manage the role
 			supervisorpassword = RandomString.getRandomKey();
-			logger.log("RESI supervisor password is "+supervisorpassword);
-			logger.log("RESI now creating supervisor "+puser.getXuserID()+" with password "+supervisorpassword);
 			supervisor = Boox.createSupervisor(enterprise, puser.getXuserID(), supervisorpassword);
-			logger.log("RESI supervisor" + supervisor.getName()+ " created");
 		}catch(Exception e){
 			logger.log("RESI register enterprise failed at Stage II", e);
 			return null;
-			
-	   //TODO: rejig this to reflect the modules approach		
 		}try{	
 		    //STAGE III: create the basic accounts structure
 				accountsTemplateFolder = new File(Constants.SYSTEM_CONFIG_DIR, PXConstants.ACCTS_TEMPLATE_FOLDER);
@@ -505,29 +297,25 @@ static Logger logger = Logger.getLogger("platax");
 			logger.log("RESI register enterprise failed at Stage III", e);
 			return null;
 		}try{		
-				//STAGE IV: create the capital accounts structure
+			//STAGE IV: create the capital accounts structure
 				File capitalAccountsFolder = new File(accountsTemplateFolder, PXConstants.CAPITAL_TEMPLATES_FOLDER);
 				File capitalAccountsFile=new File(capitalAccountsFolder, orgtype+".xml");
 				Boox.createLedgersAndAccounts(enterprise, supervisor, capitalAccountsFile);
-				puser.addEnterprise(enterprise, supervisor, supervisorpassword);
-				
 		}catch(Exception e){
 			logger.log("RESI problem creating enterprise at stage IV", e);
 			return null;
-		}try{		
-			
+		}try{	
+			//TODO manage the date
 			puser.addEnterprise(enterprise, supervisor, supervisorpassword);
 			return convert(enterprise, supervisor);
 		}catch(Exception e){
 			logger.log("RESI problem creating enterprise at stage V", e);
 			return null;
 		}
-		
 	}
 
 	@Override
 	public ArrayList<GWTRole> getRoles() {
-		// TODO Auto-generated method stub
 		List<Role> roles = Role.getRoles();
 		ArrayList<GWTRole> gRoles = new ArrayList<GWTRole>();
 		for(Role role: roles){

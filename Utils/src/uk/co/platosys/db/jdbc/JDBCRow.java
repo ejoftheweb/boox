@@ -26,6 +26,7 @@
 
 package uk.co.platosys.db.jdbc;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Types;
@@ -44,7 +45,8 @@ import uk.co.platosys.util.Logger;
  * This is a JDBC implementation of the Row interface, where the underlying database (e.g. MySQL or Postgresql) is accessed via jdbc. 
  * Use this for server applications.
  * 
- * Models a row in a database table.
+ * Copies a row from a database table. The row data is retrieved from the table and is retained in javaspace
+ * even when the underlying database connection is closed. 
  *
  * @author edward
  */
@@ -53,151 +55,125 @@ public class JDBCRow implements Row {
     private String rowName;
      private Logger logger = Logger.getLogger("platosysdb");
    
-    /** Creates a new instance of JDBCRow */
-    protected JDBCRow(String rowName, ResultSet rs) throws TypeNotSupportedException {
-        this.rowName=rowName; 
-        //logger.log(5, "ROW-init: "+rowName+", ResultSet is "+rs.toString());
+     /**
+      * The primary constructor takes a single ResultSet argument and creates the Row object from the 
+      * current position of the ResultSet cursor.
+      * 
+      * All the Row constructors are package-protected; you get Row instances by calling one of the 
+      * getRow methods on a Table instance. 
+      * 
+      */
+     protected JDBCRow(ResultSet rs) throws TypeNotSupportedException {
+         this.rowName=""; 
         try{
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int noOfColumns = rsmd.getColumnCount();
-            //logger.log(5, "JDBCRow has "+Integer.toString(noOfColumns)+" columns");
-            for (int i=1; i<(noOfColumns+1); i++){
-                String colName = rsmd.getColumnName(i);
-                logger.log(5, "JDBCRow: column no:"+Integer.toString(i)+" is named "+colName);
-                int type = rsmd.getColumnType(i);
-                logger.log(5, "JDBCRow: col type is "+Integer.toString(type));
-                switch (type){
-                    case Types.INTEGER: row.put(colName, new Long(rs.getLong(colName)));break;
-                    case Types.BIGINT: row.put(colName, new Long(rs.getLong(colName)));break;
-                    case Types.CLOB: row.put(colName, rs.getString(colName));break;
-                    case Types.LONGVARCHAR: row.put(colName, rs.getString(colName));break;
-                    case Types.VARCHAR: row.put(colName, rs.getString(colName));break;
-                    case Types.DATE: row.put(colName, new ISODate(rs.getDate(colName).getTime()));break;
-                    case Types.NUMERIC: row.put(colName, new Double(rs.getDouble(colName)));break;
-                    case Types.TIMESTAMP: row.put(colName,new ISODate(rs.getTimestamp(colName).getTime()));break;
-                    case Types.BOOLEAN: row.put(colName, new Boolean(rs.getBoolean(colName)));break;
-                     case Types.BIT: row.put(colName, new Boolean(rs.getBoolean(colName)));break;
-                   
-                    default: throw new TypeNotSupportedException(colName+ " contains a datatype not supported by platosys.db");
-                }
-            }
-        }catch(TypeNotSupportedException tnse){
-           logger.log("JDBCRow constructor threw TypeNotSupportedException:", tnse);
-            throw tnse;
-        }catch(Exception e){
-            logger.log("JDBCRow constructor threw exception:", e);
-        }
-    }
-    private ISODate getTimeStamp(ResultSet rs, String colName){
-        try{
-            return new ISODate(rs.getTimestamp(colName).getTime());
-        }catch(Exception e){
-            return new ISODate(0);
-        }
-    }
-     private ISODate getDate(ResultSet rs, String colName){
-        try{
-            return new ISODate(rs.getDate(colName).getTime());
-        }catch(Exception e){
-            return new ISODate(0);
-        }
-    }
-        /**
-         * Creates a new instance of JDBCRow populated from
-         * the current position of the result set cursor.
-         * 
-         * 
-         *
-         *
-         */
-    protected JDBCRow(ResultSet rs) throws TypeNotSupportedException {
-        this.rowName=""; 
-        //logger.log(5, "ROW-init: "+rowName+", ResultSet is "+rs.toString());
-        try{
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int noOfColumns = rsmd.getColumnCount();
-            //logger.log(5, "JDBCRow has "+Integer.toString(noOfColumns)+" columns");
-            for (int i=1; i<(noOfColumns+1); i++){
-                String colName = rsmd.getColumnName(i);
-                //logger.log(5, "JDBCRow: column no:"+Integer.toString(i)+" is named "+colName);
-                int type = rsmd.getColumnType(i);
-                //logger.log(5, "JDBCRow: col type is "+Integer.toString(type));
-                //DONE: deal with NPE thrown when columns are empty/null
-                switch (type){
-                    case Types.INTEGER:
-                    	try{
-                    		row.put(colName, new Long(rs.getLong(colName)));
-                    	}catch(NullPointerException npe){
-                    		row.put(colName, null);                    	
-                    	}break;
-                    case Types.BIGINT: 
-                    	try{
-                    		row.put(colName, new Long(rs.getLong(colName)));
-                    	}catch(NullPointerException npe){
-                    		row.put(colName, null);                    	
-                    	}break;
-                    case Types.CLOB:
-                    	try{
-                    		row.put(colName, rs.getString(colName));
-                    	}catch(NullPointerException npe){
-                    		row.put(colName, null);                    	
-                    	}break;
-                    case Types.LONGVARCHAR:
-                    	try{
-                    		row.put(colName, rs.getString(colName));
-                    	}catch(NullPointerException npe){
-                    		row.put(colName, null);                    	
-                    	}break;
-                    case Types.VARCHAR: 
-                    	try{
-                    		row.put(colName, rs.getString(colName));
-                    	}catch(NullPointerException npe){
-                    		row.put(colName, null);                    	
-                    	}break;
-                    case Types.DATE:
-                    	try{
-                    		row.put(colName, new ISODate(rs.getDate(colName).getTime()));
-                    	}catch(NullPointerException npe){
-                    		row.put(colName, null);                    	
-                    	}break;
-                    case Types.NUMERIC: 
-                    	try{
-                    		row.put(colName, new Double(rs.getDouble(colName)));
-                    	}catch(NullPointerException npe){
-                    		row.put(colName, null);                    	
-                    	}break;
-                    case Types.TIMESTAMP: 
-                    	try{
-                    		row.put(colName, new ISODate(rs.getTimestamp(colName).getTime()));
-                    	}catch(NullPointerException npe){
-                    		row.put(colName, null);                    	
-                    	}break;
-                    case Types.BOOLEAN:
-                    	try{
-                    		row.put(colName, new Boolean(rs.getBoolean(colName)));
-                    	}catch(NullPointerException npe){
-                    		row.put(colName, null);                    	
-                    	}break;
-                    	
-                     case Types.BIT:
-                    	 try{
+             ResultSetMetaData rsmd = rs.getMetaData();
+             int noOfColumns = rsmd.getColumnCount();
+             for (int i=1; i<(noOfColumns+1); i++){
+                 String colName = rsmd.getColumnName(i);
+                 int type = rsmd.getColumnType(i);
+                 switch (type){
+                     case Types.INTEGER:
+                     	try{
+                     		row.put(colName, new Long(rs.getLong(colName)));
+                     	}catch(NullPointerException npe){
+                     		row.put(colName, null);                    	
+                     	}break;
+                     case Types.BIGINT: 
+                     	try{
+                     		row.put(colName, new Long(rs.getLong(colName)));
+                     	}catch(NullPointerException npe){
+                     		row.put(colName, null);                    	
+                     	}break;
+                     case Types.CLOB:
+                     	try{
+                     		row.put(colName, rs.getString(colName));
+                     	}catch(NullPointerException npe){
+                     		row.put(colName, null);                    	
+                     	}break;
+                     case Types.LONGVARCHAR:
+                     	try{
+                     		row.put(colName, rs.getString(colName));
+                     	}catch(NullPointerException npe){
+                     		row.put(colName, null);                    	
+                     	}break;
+                     case Types.VARCHAR: 
+                     	try{
+                     		row.put(colName, rs.getString(colName));
+                     	}catch(NullPointerException npe){
+                     		row.put(colName, null);                    	
+                     	}break;
+                     case Types.DATE:
+                     	try{
+                     		row.put(colName, new ISODate(rs.getDate(colName).getTime()));
+                     	}catch(NullPointerException npe){
+                     		row.put(colName, null);                    	
+                     	}break;
+                     case Types.NUMERIC: 
+                     	try{
+                     		row.put(colName, (rs.getBigDecimal(colName)));
+                     	}catch(NullPointerException npe){
+                     		row.put(colName, null);                    	
+                     	}break;
+                     case Types.TIMESTAMP: 
+                     	try{
+                     		row.put(colName, new ISODate(rs.getTimestamp(colName).getTime()));
+                     	}catch(NullPointerException npe){
+                     		row.put(colName, null);                    	
+                     	}break;
+                     case Types.BOOLEAN:
+                     	try{
                      		row.put(colName, new Boolean(rs.getBoolean(colName)));
                      	}catch(NullPointerException npe){
                      		row.put(colName, null);                    	
                      	}break;
-                    default: throw new TypeNotSupportedException(colName+ " contains a datatype not supported by platosys.db");
-                }
-            }
-        }catch(TypeNotSupportedException tnse){
-           logger.log("JDBCRow constructor threw TypeNotSupportedException:", tnse);
-            throw tnse;
-        }catch(Exception e){
-            logger.log("JDBCRow constructor threw exception:", e);
-        }
+                     	
+                      case Types.BIT:
+                     	 try{
+                      		row.put(colName, new Boolean(rs.getBoolean(colName)));
+                      	}catch(NullPointerException npe){
+                      		row.put(colName, null);                    	
+                      	}break;
+                      case Types.DECIMAL:
+                      	 try{
+                       		row.put(colName, (rs.getBigDecimal(colName)));
+                       	}catch(NullPointerException npe){
+                       		row.put(colName, null);                    	
+                       	}break;
+                     default: throw new TypeNotSupportedException(colName+ " contains a datatype not supported by platosys.db");
+                 }
+             }
+         }catch(TypeNotSupportedException tnse){
+            logger.log("JDBCRow constructor threw TypeNotSupportedException:", tnse);
+             throw tnse;
+         }catch(Exception e){
+             logger.log("JDBCRow constructor threw exception:", e);
+         }
+     }
+     
+    /**
+     *  This creates a Row with the name "rowName", from the current position 
+     *  of the ResultSet cursor. It doesn't iterate through the ResultSet; that's
+     *  done by Table.
+     *  
+     *  Creates a new instance of JDBCRow
+     *  
+     */
+    protected JDBCRow(String rowName, ResultSet rs) throws TypeNotSupportedException {
+        this(rs);
+    	this.rowName=rowName; 
     }
-    public JDBCRow(long primaryKeyTest, ResultSet resultSet) {
-			// TODO Auto-generated constructor stub
-		}
+    /**
+     * Creates a new instance of JDBCRow populated from
+     * the current position of the result set cursor. The rowName is a String-formatted Long
+     * from the rowNumber parameter.
+     */
+    protected JDBCRow(long rowNumber, ResultSet rs) throws TypeNotSupportedException {
+    	 this(rs);
+     	this.rowName=Long.toString(rowNumber); 
+	}  
+    
+      
+      
 	public Object getColumnContent(String columnName) throws ColumnNotFoundException {
         if(row.containsKey(columnName.toLowerCase())){
             return row.get(columnName.toLowerCase());
@@ -257,15 +233,28 @@ public class JDBCRow implements Row {
         return row.keySet();
     }
 	@Override
-	public Date getTimeStamp(String colName) throws ClassCastException,
-			uk.co.platosys.db.ColumnNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+	public Date getTimeStamp(String colName) throws ClassCastException, ColumnNotFoundException{
+	 if(row.containsKey(colName.toLowerCase())){
+	     return (Date) row.get(colName.toLowerCase());
+     }else{
+         throw new ColumnNotFoundException("JDBCRow "+rowName+" does not contain a column called "+colName);
+     }
 	}
 	@Override
-	public Date getDate(String colName) throws ClassCastException,
-			uk.co.platosys.db.ColumnNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+	public Date getDate(String colName) throws ClassCastException, ColumnNotFoundException {
+		 if(row.containsKey(colName.toLowerCase())){
+		     return (Date) row.get(colName.toLowerCase());
+	     }else{
+	         throw new ColumnNotFoundException("JDBCRow "+rowName+" does not contain a column called "+colName);
+	     }
+	}
+
+	@Override
+	public BigDecimal getBigDecimal(String colName)throws ClassCastException, ColumnNotFoundException {
+		if(row.containsKey(colName.toLowerCase())){
+		     return (BigDecimal) row.get(colName.toLowerCase());
+	     }else{
+	         throw new ColumnNotFoundException("JDBCRow "+rowName+" does not contain a column called "+colName);
+	     }
 	}
 }

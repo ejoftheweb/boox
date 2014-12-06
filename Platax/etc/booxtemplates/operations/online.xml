@@ -13,7 +13,7 @@
     <Ledger name="XBX">
      <Ledger name="Operations"> 
         <Ledger name="Income" isPrivate="false">
-           <Ledger name="Sold" isPrivate="false">
+           <Ledger name="Sales" isPrivate="false">
               <Account name="OnlineSales" fullName="Goods sold" description="Online Sales Account"/>
            </Ledger>
            <Ledger name="InterestEarned" isPrivate="false"/>    
@@ -33,9 +33,10 @@
         <Ledger name="Cash" isPrivate="false">
             <Account name="PettyCash" fullName="Petty Cash" description="Petty Cash Account"/>
         </Ledger>
-        <Ledger name="AccountsReceivable" isPrivate="false">
-		<Ledger name="CardProcessors" isPrivate="false">
-        	<Ledger name="Customers" isPrivate="false"/>
+        <Ledger name="Debtors" isPrivate="false">
+            <Ledger name="Customers" isPrivate="false"/>
+			<Ledger name="CardProcessors" isPrivate="false"/>
+        	
         </Ledger>
         <Ledger name="Stock" isPrivate="false">
         	<Ledger name="Products" isPrivate="false"/>
@@ -44,13 +45,13 @@
     </Ledger>
     
     <Ledger name="Liabilities" isPrivate="false">
-        <Ledger name="AccountsPayable" isPrivate="false">
-			<Ledger name="Card Processors" isPrivate="false"/>
+        <Ledger name="Creditors" isPrivate="false">
+			<Ledger name="CardProcessors" isPrivate="false"/>
         	<Ledger name="Suppliers" isPrivate="false"/>
         </Ledger>
     </Ledger>
     </Ledger>
     </Ledger>
-    </Ledger>
+    
 </Ledgers>
 </root>

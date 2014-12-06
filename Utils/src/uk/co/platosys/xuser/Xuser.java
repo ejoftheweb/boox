@@ -85,6 +85,8 @@ public class Xuser {
 		    row = xusersTable.getRow(xuserID);
 		}catch(RowNotFoundException rnf1){
 			throw new XuserException("unknown Xuser"+xuserID);
+		}catch(PlatosysDBException pdbe){
+			throw new XuserException("Xuser PDBEx", pdbe);
 		}
 		try {
 			this.xuserID=row.getString(XUSERID_COLNAME);

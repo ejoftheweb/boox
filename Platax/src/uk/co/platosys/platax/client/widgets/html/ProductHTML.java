@@ -12,7 +12,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 
-public class ProductHTML extends AnchorHTML {
+public class ProductHTML{}/* extends AnchorHTML {
 
 	public ProductHTML(final GWTItem item, final Platax context) {
 	    super(item.getName(), context);
@@ -29,4 +29,4 @@ public class ProductHTML extends AnchorHTML {
 		 
 	}
 
-}
+}*/

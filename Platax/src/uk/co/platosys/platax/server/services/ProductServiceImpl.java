@@ -16,6 +16,7 @@ import uk.co.platosys.boox.money.CurrencyException;
 import uk.co.platosys.boox.money.Money;
 import uk.co.platosys.db.PlatosysDBException;
 import uk.co.platosys.platax.client.services.ProductService;
+import uk.co.platosys.platax.server.core.PXConstants;
 import uk.co.platosys.platax.server.core.PlataxServer;
 import uk.co.platosys.platax.server.core.PlataxUser;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
@@ -33,18 +34,18 @@ public class ProductServiceImpl extends Xservlet implements ProductService {
 	private static final long serialVersionUID = 96663546207710390L;
 
 	public GWTItem addProduct(String enterpriseID,
-							  String customerName,
-							  String productName, 
+							  String productName,
+							  String productDescription, 
 							  double dprice, 
 							  int taxBand, 
 							  boolean exclusive) {
 		try{
-			PlataxUser pxuser =  (PlataxUser) getSession().getAttribute("PlataxUser");
+			PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
 			Enterprise enterprise = pxuser.getEnterprise(enterpriseID);
 			Clerk clerk = pxuser.getClerk(enterprise);
 			//ProductCatalogue productCatalogue = new ProductCatalogue(enterprise);
 			Money mprice = new Money(enterprise.getDefaultCurrency(), dprice);
-			Product product = Product.createProduct(enterprise,  productName, productName, mprice, clerk, taxBand,0);
+			Product product = Product.createProduct(enterprise,  productName, productDescription, mprice, clerk, taxBand,0);
 			return ProductServiceImpl.createGWTItem(product);
 		}catch(Exception ex){
 			logger.log("APSI failed to add a product because of error" , ex);
@@ -89,23 +90,23 @@ public class ProductServiceImpl extends Xservlet implements ProductService {
 	}
 
 	@Override
-	public ArrayList<GWTItem> listProducts(String enterpriseID, int selection) {
+	public  ArrayList<GWTItem> listProducts(String enterpriseID, int selection) {
+		logger.log("PSIlP called, getting list of products");
 		ArrayList<GWTItem> gwtItems = new ArrayList<GWTItem>();
 		
 		try{
-			PlataxUser pxuser =  (PlataxUser) getSession().getAttribute("PlataxUser");
+			PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
 			Enterprise enterprise = pxuser.getEnterprise(enterpriseID);
 			Clerk clerk = pxuser.getClerk(enterprise);
 				List<Item> items = Product.getProducts(enterprise, clerk,  selection);
-			Iterator<Item>cit=items.iterator();
-			while(cit.hasNext()){
-				Item item=cit.next();
+			for(Item item:items){
 				gwtItems.add(new GWTItem(item.getName(), item.getSysname(), PlataxServer.convert(item.getPrice())));
 			}
 		}catch (Exception x){
 			//the permissions exception will be caught here for now
-			PlataxServer.logger.log("plataxSVR exception getting customer list", x);
+			logger.log("PSIlp exception getting products list", x);
 		}
+		logger.log("PSIlP returning "+gwtItems.size()+" items");
 		return gwtItems;
 	}
 	

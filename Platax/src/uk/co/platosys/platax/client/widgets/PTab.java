@@ -177,12 +177,15 @@ public int getIndex(){
 }
 
 public Widget asWidget(){return page;}
-//if you want these methods to do anything, override them in the subclass.
-public void clear(){}
-public void add(IsWidget widget){}
 
-public Iterator<Widget> iterator(){return null;}
-public boolean remove(Widget widget){return false;}
+//if you want these methods to do anything, override them in the subclass.
+public abstract void clear();
+public abstract void add(IsWidget widget);
+public abstract Iterator<Widget> iterator();
+public abstract boolean remove(Widget widget);
+public abstract void refresh();
+
+
 
 public InlineLabel getCounter(){
 	return counter;
@@ -193,4 +196,5 @@ public void setStyleName( String styleName){
 public void setHeadStyleName(String styleName){
 	tabItem.setStyleName(styleName);
 }
+
 }

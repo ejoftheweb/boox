@@ -1,5 +1,6 @@
 package uk.co.platosys.platax.client.forms.bills;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
@@ -18,16 +19,22 @@ import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.constants.Styles;
+import uk.co.platosys.platax.client.forms.CustomerForm;
+import uk.co.platosys.platax.client.forms.ProductForm;
 import uk.co.platosys.platax.client.forms.popups.AddCustomerPopupForm;
 import uk.co.platosys.platax.client.forms.popups.AddProductPopupForm;
 import uk.co.platosys.platax.client.services.CustomerService;
 import uk.co.platosys.platax.client.services.CustomerServiceAsync;
 import uk.co.platosys.platax.client.services.InvoiceService;
 import uk.co.platosys.platax.client.services.InvoiceServiceAsync;
+import uk.co.platosys.platax.client.services.ProductService;
+import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.platax.client.widgets.QuantityBox;
 import uk.co.platosys.platax.client.widgets.buttons.LineCancelButton;
+import uk.co.platosys.platax.client.widgets.labels.BodyNameLabel;
 import uk.co.platosys.platax.client.widgets.labels.ColumnHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
+import uk.co.platosys.platax.client.widgets.labels.FormSubHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyColumnHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
@@ -35,66 +42,158 @@ import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.boox.GWTBill;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
+import uk.co.platosys.platax.shared.boox.GWTItem;
 import uk.co.platosys.platax.shared.boox.GWTLineItem;
 import uk.co.platosys.util.ISODate;
+/**
+ * InvoiceForm is a PTab for use in the central tabbed panel
+ * 
+ * @author edward
+ *
+ */
 
 public class InvoiceForm extends AbstractBill {
 	private GWTCustomer gwtCustomer=null;
 	private GWTInvoice gwtInvoice=null;
-	Button newProductButton;
-    final InvoiceServiceAsync invoiceService = (InvoiceServiceAsync) GWT.create(InvoiceService.class);
 	String invoiceSysname;
-	
 	String customerName;
+	//widgets
+	final Button newProductButton = new Button(ButtonText.ADD_NEW);
+	final Button newCustomerButton = new Button(ButtonText.ADD_NEW);
 	
-	public InvoiceForm(Platax parent, final GWTEnterprise gwtEnterprise) {
-		super(parent, gwtEnterprise.getName()+":"+StringText.INVOICE);
+	//services
+    final InvoiceServiceAsync invoiceService = (InvoiceServiceAsync) GWT.create(InvoiceService.class);
+    final ProductServiceAsync productService = (ProductServiceAsync) GWT.create(ProductService.class);
+    final CustomerServiceAsync customerService = (CustomerServiceAsync) GWT.create(CustomerService.class);
+	
+    //callbacks
+    final AsyncCallback<ArrayList<GWTItem>> getItemsCallback = new AsyncCallback<ArrayList<GWTItem>>(){
+    	@Override
+		public void onFailure(Throwable caught) {
+			Window.alert(StringText.SERVER_ERROR+"INV0");
+		}
+    	@Override
+		public void onSuccess(ArrayList<GWTItem> result) {
+    		if(result==null){Window.alert(StringText.SERVER_ERROR+"INV0A");}
+    		else {itemListBox.addItems(result);}
+		}
+    };
+    
+    final AsyncCallback<GWTInvoice> createInvoiceCallback = new AsyncCallback<GWTInvoice>(){
+    	@Override
+		public void onSuccess(GWTInvoice result) {
+    		if(result==null){Window.alert(StringText.SERVER_ERROR+"INV1A");}
+    		else {setInvoice(result);}
+		}
+  		@Override
+		public void onFailure(Throwable cause) {
+  			Window.alert(StringText.SERVER_ERROR+"INV1");
+		}
+    };
+    
+    final AsyncCallback<GWTLineItem> postLineCallback = new AsyncCallback<GWTLineItem>(){
+    	@Override
+		public void onSuccess(GWTLineItem result) {
+    		if(result==null){Window.alert(StringText.SERVER_ERROR+"INV2A");}
+    		else {
+    		int row = result.getLineNumber();
+    		table.setWidget(row, 0, new Label(Integer.toString(result.getLineNumber())));
+    		table.setWidget(row,1, new Label(result.getItemName()));
+			table.setWidget(row,2, new Label(Float.toString(result.getItemQty())));
+			table.setWidget(row,3, new MoneyLabel(result.getPrice()));
+			table.setWidget(row,4, new MoneyLabel(result.getNet()));
+			table.setWidget(row,5, new MoneyLabel(result.getTax()));
+			table.setWidget(row,6, new MoneyLabel(result.getGross()));
+			try{
+				netMoney = netMoney.add(result.getNet());
+				taxMoney= taxMoney.add(result.getTax());
+				grossMoney=grossMoney.add(result.getGross());
+				billNet.setValue(netMoney);
+				billTax.setValue(taxMoney);
+				billGross.setValue(grossMoney);
+			}catch(Exception x){}
+			table.setWidget(row+1, 4, billNet);
+			table.setWidget(row+1, 5, billTax);
+			table.setWidget(row+1, 6, billGross);
+    	}}
+		@Override
+		public void onFailure(Throwable cause) {
+			Window.alert(StringText.SERVER_ERROR+"INV2");
+		}
+    };
+    
+    final AsyncCallback<GWTLineItem> voidLineCallback = new AsyncCallback<GWTLineItem>(){
+    	@Override
+		public void onSuccess(GWTLineItem result) {
+    		if(result==null){Window.alert(StringText.SERVER_ERROR+"INV3A");}
+    		else {
+    		int row = result.getLineNumber();
+    		table.setWidget(row,1, new Label(result.getItemName()));
+			table.setWidget(row,2, new Label(Float.toString(result.getItemQty())));
+			table.setWidget(row,3, new MoneyLabel(result.getPrice()));
+			table.setWidget(row,4, new MoneyLabel(result.getNet()));
+			table.setWidget(row,5, new MoneyLabel(result.getTax()));
+			table.setWidget(row,6, new MoneyLabel(result.getGross()));
+		}}
+		@Override
+		public void onFailure(Throwable cause) {
+			Window.alert(StringText.SERVER_ERROR+"INV3");
+		}
+    };
+    final AsyncCallback<ArrayList<GWTCustomer>> getCustomersCallback = new AsyncCallback<ArrayList<GWTCustomer>>(){
+    	@Override
+		public void onFailure(Throwable caught) {
+			Window.alert(StringText.SERVER_ERROR+"INV4");
+		}
+    	@Override
+		public void onSuccess(ArrayList<GWTCustomer> result) {
+    		if(result==null){Window.alert(StringText.SERVER_ERROR+"INV4A");}
+    		else {contactListBox.addContacts(result);}
+		}
+    };
+    
+    //constructor
+	/**
+	 * Constructs an invoice form.
+	 * @param platax
+	 * @param gwtEnterprise
+	 */
+	public InvoiceForm(final Platax platax, final GWTEnterprise gwtEnterprise) {
+		super(platax, gwtEnterprise.getName()+":"+StringText.INVOICE);
 		setStyleName(Styles.PTAB_INVOICE);
 		setHeadStyleName(Styles.PTABH_INVOICE);
-		
+		setTitle(LabelText.INVOICE);
+		setTabHeaderText(gwtEnterprise.getName()+":"+ LabelText.INVOICE);
 		this.gwtEnterprise=gwtEnterprise;
 		this.enterpriseName=gwtEnterprise.getName();
 		this.enterpriseID=gwtEnterprise.getEnterpriseID();
-		this.setTabHeaderText(gwtEnterprise.getName()+":"+ LabelText.INVOICE);
-		//
-		formHeadLabel.setText(LabelText.INVOICE);
-		//hpanel.add( new Label(LabelText.CUSTOMER));
-		/*headPanel.add(new FormHeaderLabel(LabelText.INVOICE));
-		headPanel.add( new Label(LabelText.DATE));
-		headPanel.add( dateBox);*/
-		//form.add(hpanel0);
 		
-		//hpanel.add( new Label(LabelText.CUSTOMER));
-		cpartyPanel.add( new Label(LabelText.CUSTOMER));
-		//hpanel1.add( dateBox);
-		contactListBox.addContacts(gwtEnterprise.getCustomers());
-		cpartyPanel.add( contactListBox);
-		
-		//itemListBox.addItems(gwtEnterprise.getProducts());
-		//table.setWidget(1, 1, contactListBox);
-		Button newCustomerButton = new Button(ButtonText.ADD_NEW);
-		newProductButton = new Button(ButtonText.ADD_NEW);
+		refreshProducts();
+		refreshCustomers();
+		//the counter-party panel
+		cpartyPanel.insert( new FormSubHeaderLabel(LabelText.CUSTOMER),0);
+		cpartyNamePanel.setWidget(contactListBox);
 		cpartyPanel.add(newCustomerButton);
-		//form.add(hpanel1);
-		
+		submitButtonPanel.add(new Button(ButtonText.RAISE_INVOICE));
+		//handlers
 		newCustomerButton.addClickHandler(new ClickHandler(){
 		    @Override
 			public void onClick(ClickEvent event) {
-				AddCustomerPopupForm acf = new AddCustomerPopupForm(InvoiceForm.this, gwtEnterprise);
-				acf.setPopupPositionAndShow(acf.poscall);
+				platax.addTab(new CustomerForm(platax, gwtEnterprise));
 			}
 		});
 		newProductButton.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-					AddProductPopupForm apf = new AddProductPopupForm(InvoiceForm.this, customerName, gwtEnterprise);
-					apf.setPopupPositionAndShow(apf.poscall);
+					platax.addTab(new ProductForm(platax, gwtEnterprise));
 			}
 		});
-		contactListBox.addClickHandler(new ClickHandler(){
+		contactListBox.addChangeHandler(new ChangeHandler(){
 			@Override
-			public void onClick(ClickEvent event){
+			public void onChange(ChangeEvent event){
 				String customerSysname=contactListBox.getValue(contactListBox.getSelectedIndex());
+				cpartyNamePanel.setWidget(new BodyNameLabel(contactListBox.getItemText(contactListBox.getSelectedIndex())));
+				cpartyPanel.remove(newCustomerButton);
 				invoiceService.createInvoice(enterpriseID, customerSysname,new Date(),  createInvoiceCallback);
 				table.setWidget(0,0, new ColumnHeaderLabel(LabelText.ITEM_LINENO_HEADER));
 				table.setWidget(0,1, new ColumnHeaderLabel(LabelText.ITEM_NAME_HEADER));
@@ -135,25 +234,21 @@ public class InvoiceForm extends AbstractBill {
 				try {
 					postLine();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
-		submitButtonPanel.add(new Button(ButtonText.RAISE_INVOICE));
+		
 	}
 
 	protected void setInvoice(GWTInvoice gwtInvoice) {
 		this.gwtInvoice=gwtInvoice;
+		billNumberBox.setValue(gwtInvoice.getSysname());
 		this. itemListBox.addItems(gwtInvoice.getProducts());
-		//this.invoiceSysname=gwtInvoice.getSysname();
 		this.gwtCustomer=gwtInvoice.getCustomer();
 		this.customerName=gwtCustomer.getName();
-		int index= cpartyPanel.getWidgetIndex(contactListBox);
-		cpartyPanel.remove(index);
-		cpartyPanel.insert(new Label(customerName), index);
 		setTabHeaderText(enterpriseName+":"+customerName);
-		//table.setWidget(1,1, new Label(customerName));
+		
 	}
 
 	
@@ -177,87 +272,23 @@ public class InvoiceForm extends AbstractBill {
 			}
 		});
 		table.setWidget(rows, 7,voidLineButton);
-		
+	}
+    
+    public void refreshProducts(){
+    	productService.listProducts(enterpriseID, 0, getItemsCallback);
     }
-    final AsyncCallback<GWTInvoice> createInvoiceCallback = new AsyncCallback<GWTInvoice>(){
-    	@Override
-		public void onSuccess(GWTInvoice result) {
-			setInvoice(result);
-		}
-  		@Override
-		public void onFailure(Throwable cause) {
-			 //Debugging code
-			StackTraceElement[] st = cause.getStackTrace();
-		   String error = "addCustomer failed\n";
-		   error = error+cause.getClass().getName()+"\n";
-		   for (int i=0; i<st.length; i++){
-			   error = error + st[i].toString()+ "\n";
-		   }
-			Window.alert(error);
-		}
- };
-    final AsyncCallback<GWTLineItem> postLineCallback = new AsyncCallback<GWTLineItem>(){
-    	@Override
-		public void onSuccess(GWTLineItem result) {
-    		int row = result.getLineNumber();
-    		table.setWidget(row, 0, new Label(Integer.toString(result.getLineNumber())));
-    		table.setWidget(row,1, new Label(result.getItemName()));
-			table.setWidget(row,2, new Label(Float.toString(result.getItemQty())));
-			table.setWidget(row,3, new MoneyLabel(result.getPrice()));
-			table.setWidget(row,4, new MoneyLabel(result.getNet()));
-			table.setWidget(row,5, new MoneyLabel(result.getTax()));
-			table.setWidget(row,6, new MoneyLabel(result.getGross()));
-			try{
-				netMoney = netMoney.add(result.getNet());
-				taxMoney= taxMoney.add(result.getTax());
-				grossMoney=grossMoney.add(result.getGross());
-				billNet.setValue(netMoney);
-				billTax.setValue(taxMoney);
-				billGross.setValue(grossMoney);
-			}catch(Exception x){}
-			table.setWidget(row+1, 4, billNet);
-			table.setWidget(row+1, 5, billTax);
-			table.setWidget(row+1, 6, billGross);
-    	}
-		@Override
-		public void onFailure(Throwable cause) {
-			 //Debugging code
-			StackTraceElement[] st = cause.getStackTrace();
-		   String error = "addCustomer failed\n";
-		   error = error+cause.getClass().getName()+"\n";
-		   for (int i=0; i<st.length; i++){
-			   error = error + st[i].toString()+ "\n";
-		   }
-			Window.alert(error);
-		}
-    };
-    final AsyncCallback<GWTLineItem> voidLineCallback = new AsyncCallback<GWTLineItem>(){
-    	@Override
-		public void onSuccess(GWTLineItem result) {
-    		int row = result.getLineNumber();
-    		table.setWidget(row,1, new Label(result.getItemName()));
-			table.setWidget(row,2, new Label(Float.toString(result.getItemQty())));
-			table.setWidget(row,3, new MoneyLabel(result.getPrice()));
-			table.setWidget(row,4, new MoneyLabel(result.getNet()));
-			table.setWidget(row,5, new MoneyLabel(result.getTax()));
-			table.setWidget(row,6, new MoneyLabel(result.getGross()));
-		}
-		@Override
-		public void onFailure(Throwable cause) {
-			 //Debugging code
-			StackTraceElement[] st = cause.getStackTrace();
-		   String error = "void line failed\n";
-		   error = error+cause.getClass().getName()+"\n";
-		   for (int i=0; i<st.length; i++){
-			   error = error + st[i].toString()+ "\n";
-		   }
-			Window.alert(error);
-		}
-    };
-
+    public void refreshCustomers(){
+    	customerService.listCustomers(enterpriseID, 0, getCustomersCallback);
+    }
 	@Override
 	public GWTBill getGWTBill() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void refresh() {
+		refreshProducts();
+		refreshCustomers();
 	}
 }

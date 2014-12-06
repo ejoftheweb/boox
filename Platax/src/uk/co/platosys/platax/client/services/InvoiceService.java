@@ -14,7 +14,7 @@ import uk.co.platosys.platax.shared.boox.GWTInvoiceList;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-@RemoteServiceRelativePath("invoice")
+@RemoteServiceRelativePath("invoiceService")
 public interface InvoiceService extends RemoteService {
    public GWTInvoice createInvoice(String enterpriseID, String customerID, Date date);
    public GWTLineItem postLine(GWTLineItem line);

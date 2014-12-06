@@ -32,10 +32,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.dbcp2.ConnectionFactory;
 import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
+import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingDataSource;
+import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.postgresql.util.PSQLException;
 
@@ -51,9 +55,10 @@ import uk.co.platosys.util.Logger;
  */
 public class ConnectionBroker  {
      private static DatabaseProperties properties = new DatabaseProperties(); 
-     private Map<String, PoolingDataSource>  dataSources=new HashMap<String, PoolingDataSource>();
+     private Map<String, PoolingDataSource<PoolableConnection>>  dataSources=new HashMap<String, PoolingDataSource<PoolableConnection>>();
+     private Map<String, GenericObjectPool<PoolableConnection>> pools = new HashMap<String, GenericObjectPool<PoolableConnection>>();
      private Logger logger = DatabaseProperties.DATABASE_LOGGER;
-     private static int MAX_ACTIVE=100;//this should be configurable; but it's dependent on the underlying db's capacity
+     private static int MAX_ACTIVE=1000;//this should be configurable; but it's dependent on the underlying db's capacity
      private boolean done=false;   
     /**
      * Creates a new instance of ConnectionBroker
@@ -62,10 +67,10 @@ public class ConnectionBroker  {
     	init();
     }
     private void init(){
+    	
         List<DatabaseCredentials> databases = properties.getDatabases();
-        Iterator<DatabaseCredentials> it = databases.iterator();
-        logger.log(5, "ConnectionBroker init routine");
-        while (it.hasNext()){
+        for(DatabaseCredentials credentials:databases){
+        
             String name="";
             String driver="";
             String userName="";
@@ -73,7 +78,6 @@ public class ConnectionBroker  {
             String url="";
             ConnectionFactory connFac=null;
             try {
-                DatabaseCredentials credentials = (DatabaseCredentials) it.next();
                 name = credentials.getName();
                 logger.log("ConnectionBroker initialising database "+name);
                 driver = credentials.getDriver();
@@ -81,17 +85,24 @@ public class ConnectionBroker  {
                 userName = credentials.getUsername();
                 password = credentials.getPassword();
                 logger.log("ConnectionBroker credentials for "+name+ " are "+driver+" "+url+" "+userName+" "+password);
+                
             }catch(Exception e){
                 logger.log("ConnectionBroker had a problem getting credentials for "+name, e);
             }
             try{
+            	//although we only use postgresql, there's no reason we couldn't use a different sql rdbms with a different driver for each
+            	//database.
                 Class.forName(driver);
             }catch(ClassNotFoundException e){
                 logger.log("ConnectionBroker couldn't load database driver", e);
-            }try{
+            }
+            try{
                 connFac = new DriverManagerConnectionFactory(url, userName, password);
                 PoolableConnectionFactory poolableConFac = new PoolableConnectionFactory(connFac, null);
-                PoolingDataSource dataSource = new PoolingDataSource(new GenericObjectPool(poolableConFac));
+                GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<PoolableConnection>(poolableConFac);
+                pools.put(name, connectionPool);
+                poolableConFac.setPool(connectionPool);
+                PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<PoolableConnection>(connectionPool);
                 logger.log(5, "ConnectionBroker has made dataSource "+ dataSource.toString());
                 try {
                     Connection connection = dataSource.getConnection();
@@ -113,19 +124,37 @@ public class ConnectionBroker  {
         while(!done){}//wait for databases to be set up.
             try{
                 if (dataSources.containsKey(databaseName)){
-                   PoolingDataSource dataSource =dataSources.get(databaseName);
-                         return dataSource.getConnection();
-
+                   PoolingDataSource<?> dataSource =dataSources.get(databaseName);
+                   		 GenericObjectPool<PoolableConnection> pool = pools.get(databaseName);
+                   		 logger.log("1 "+databaseName+" has "+pool.getNumIdle()+" idle plus "+pool.getNumActive()+"  borrowed");
+                         Connection connection = dataSource.getConnection();
+                         if (connection!=null){
+                        	 logger.log("2 "+databaseName+" has "+pool.getNumIdle()+" idle plus "+pool.getNumActive()+" borrowed");
+                        	 return connection;
+                         }else{
+                        	logger.log("dataSource returned a null connection");
+                        	return null;
+                         }
+                         
+                         
                 }else{
                 	logger.log("not found first time, reloading datasources");
                 	done=false;
                     init();
                     while(!done){}//
                 	if (dataSources.containsKey(databaseName)){
-                        PoolingDataSource dataSource =dataSources.get(databaseName);
-                              return dataSource.getConnection();
-
-                     }else{
+                        PoolingDataSource<?> dataSource =dataSources.get(databaseName);
+                        GenericObjectPool<PoolableConnection> pool = pools.get(databaseName);
+                  		 logger.log("3 "+databaseName+" has "+pool.getNumIdle()+"  idle plus "+pool.getNumActive()+" borrowed");
+                        Connection connection = dataSource.getConnection();
+                        if (connection!=null){
+                       	 logger.log("4 "+databaseName+" has "+pool.getNumIdle()+"  idle plus "+pool.getNumActive()+"  borrowed");
+                       	 return connection;
+                        }else{
+                       	logger.log("dataSource returned a null connection");
+                       	return null;
+                        }
+                	}else{
                     	 logger.log(2, "CB - Database "+databaseName+ " is not known ");
                     	 throw new PlatosysDBException("CB says Database "+databaseName+ " is not known");
                      }
@@ -133,7 +162,52 @@ public class ConnectionBroker  {
             }catch(Exception e){
                 throw new PlatosysDBException("ConnectionBroker issues", e);
             }
-
-
     }
+    /**
+     * this method is copied from the apache place and isn't actually used
+     * 
+     * @param connectURI
+     * @return
+     */
+    public static DataSource setupDataSource(String connectURI) {
+    	        //
+    		        // First, we'll create a ConnectionFactory that the
+    		        // pool will use to create Connections.
+    		        // We'll use the DriverManagerConnectionFactory,
+    		        // using the connect string passed in the command line
+    		        // arguments.
+    		        //
+    		        ConnectionFactory connectionFactory =
+    		            new DriverManagerConnectionFactory(connectURI,null);
+    		
+    		        //
+    		        // Next we'll create the PoolableConnectionFactory, which wraps
+    		        // the "real" Connections created by the ConnectionFactory with
+    		        // the classes that implement the pooling functionality.
+    		        //
+    		        PoolableConnectionFactory poolableConnectionFactory =
+    		            new PoolableConnectionFactory(connectionFactory, null);
+    		
+    		        //
+    		        // Now we'll need a ObjectPool that serves as the
+    		        // actual pool of connections.
+    		        //
+    		        // We'll use a GenericObjectPool instance, although
+    		        // any ObjectPool implementation will suffice.
+    		        //
+    		        ObjectPool<PoolableConnection> connectionPool =
+    		                new GenericObjectPool<>(poolableConnectionFactory);
+    		        
+    		        // Set the factory's pool property to the owning pool
+    		        poolableConnectionFactory.setPool(connectionPool);
+    		
+    		        //
+    		        // Finally, we create the PoolingDriver itself,
+    		        // passing in the object pool we created.
+    		        //
+    		        PoolingDataSource<PoolableConnection> dataSource =
+    		                new PoolingDataSource<>(connectionPool);
+    		
+    		        return dataSource;
+    		    }
 }

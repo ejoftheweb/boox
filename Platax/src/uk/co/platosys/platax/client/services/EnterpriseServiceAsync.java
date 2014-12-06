@@ -16,9 +16,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface EnterpriseServiceAsync {
 	
-	public void registerEnterprise(String name, String legalName, AsyncCallback<GWTEnterprise> callback);
-	public void registerEnterprise(String name, String legalName, String type, String sector, AsyncCallback<GWTEnterprise> callback);
-	public void registerEnterprise(String name, String legalName, ArrayList<String> modulenames, AsyncCallback<GWTEnterprise> callback);
 	public void registerEnterprise(String name, String legalName, String orgType, String role, boolean isStartup, Date startDate, AsyncCallback<GWTEnterprise> callback);
 	public void addEnterpriseModules(String sysname, ArrayList<String> modulenames , AsyncCallback<GWTEnterprise> callback );
 	//public void setDirectoryEntry(String sysname, GWTDirectoryEntry enry, AsyncCallback<GWTEnterprise> callback);

@@ -1,0 +1,2 @@
+serviceClass: uk.co.platosys.platax.client.services.InvoiceService
+path: 793186E4F3CF2769D9DB70AAC96D8C84.gwt.rpc

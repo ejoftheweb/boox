@@ -19,9 +19,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("enterpriseService")
 public interface EnterpriseService extends RemoteService {
-   public GWTEnterprise registerEnterprise(String name, String legalName);
-   public GWTEnterprise registerEnterprise(String name, String legalName, String type, String sector);
-   public GWTEnterprise registerEnterprise(String name, String legalName, ArrayList<String> modulenames);
+
    public GWTEnterprise registerEnterprise(String name, String legalName, String orgtype, String role, boolean isStartup, Date startDate);//ArrayList<String> modulenames);
    
    

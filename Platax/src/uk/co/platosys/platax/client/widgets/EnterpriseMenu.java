@@ -12,6 +12,8 @@ import com.google.gwt.user.client.ui.UIObject;
 
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.MenuText;
+import uk.co.platosys.platax.client.forms.CustomerForm;
+import uk.co.platosys.platax.client.forms.ProductForm;
 import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
 import uk.co.platosys.platax.client.forms.lists.*;
 import uk.co.platosys.platax.shared.boox.*;
@@ -178,9 +180,10 @@ public class EnterpriseMenu extends MenuBar {
 		customerMenu.addItem(MenuText.ADD_NEW_LABEL,  new Command(){
 			@Override
 			public void execute() {
-				// TODO Auto-generated method stub
-			}
-		});
+				//Window.alert("new invoice menu item selected");
+		  		CustomerForm itab = new CustomerForm(platax, enterprise);	
+				platax.addTab(itab);
+		}});
 		/////
 		//items on the productsmenu, submenu of Income menu
 		productsMenu.addItem(MenuText.ALL_LABEL, new Command(){
@@ -193,9 +196,10 @@ public class EnterpriseMenu extends MenuBar {
 		productsMenu.addItem(MenuText.ADD_NEW_LABEL,  new Command(){
 			@Override
 			public void execute() {
-				// TODO Auto-generated method stub
-			}
-		});
+				//Window.alert("new invoice menu item selected");
+		  		ProductForm itab = new ProductForm(platax, enterprise);	
+				platax.addTab(itab);
+		}});
 		////
 		///SpendingMenu and its submenus///
 			//Items on the Expenditure Menu

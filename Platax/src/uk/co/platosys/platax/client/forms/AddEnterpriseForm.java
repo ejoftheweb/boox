@@ -225,7 +225,6 @@ public class AddEnterpriseForm extends AbstractForm {
 						   error = error + st[i].toString()+ "\n";
 					   }
 						Window.alert(error);
-					
 					}
 				};	
 			
@@ -239,8 +238,8 @@ public class AddEnterpriseForm extends AbstractForm {
 			private void init(Platax platax){
 				setCloseConfirm(false);
 				platax=platax;
-				topLabel.setText(LabelText.NEW_ENTERPRISE_PAGE_HEAD);
-				subHeader.setText(LabelText.NEW_ENTERPRISE_PAGE_SUB_HEAD);
+				setTitle(LabelText.NEW_ENTERPRISE_PAGE_HEAD);
+				setSubTitle(LabelText.NEW_ENTERPRISE_PAGE_SUB_HEAD);
 				nameBox.setEnabled(true);
 				legalNameBox.setEnabled(false);
 				orgTypeList.addItem(StringText.PLEASE_SELECT, StringText.NULL);
@@ -370,8 +369,8 @@ public class AddEnterpriseForm extends AbstractForm {
 					Date startDate = startDateBox.getValue();
 					
 					enterpriseService.registerEnterprise(name, legalname, orgtype, role, isStartup, startDate, callback1);
-					topLabel.setText(StringText.THANKYOU);
-					subHeader.setText(StringText.WAIT_FOR_SERVER);
+					setTitle(StringText.THANKYOU);
+					setSubTitle(StringText.WAIT_FOR_SERVER);
 					form.remove(table);
 				}
 			});
@@ -386,8 +385,8 @@ public class AddEnterpriseForm extends AbstractForm {
 				}
 			}
 			private void layoutPage2(final GWTEnterprise ent){
-				topLabel.setText(LabelText.NEW_ENTERPRISE_PAGE2_HEAD+" "+ent.getName());
-				subHeader.setText(LabelText.NEW_ENTERPRISE_PAGE2_SUB_HEAD);
+				setTitle(LabelText.NEW_ENTERPRISE_PAGE2_HEAD+" "+ent.getName());
+				setSubTitle(LabelText.NEW_ENTERPRISE_PAGE2_SUB_HEAD);
 				int rowno=0;
 				Window.alert(Integer.toString(segments.size()));
 				for (GWTSegment segment:segments){
@@ -436,5 +435,11 @@ public class AddEnterpriseForm extends AbstractForm {
 					}
 				});
 				form.add(table);
+			}
+
+			@Override
+			public void refresh() {
+				// TODO Auto-generated method stub
+				
 			}
 }

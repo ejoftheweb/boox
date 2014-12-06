@@ -247,6 +247,7 @@ public class Boox {
                 //statement.execute("CREATE TABLE journal (transactionID integer PRIMARY KEY, debit text, credit text, amount numeric(20,2), currency text, date timestamp, clerk text REFERENCES clerks (name), note text)");
                 //
                 JDBCSerialTable journalTable = JDBCSerialTable.createTable(enterprise.getDatabaseName(), Journal.TABLENAME, Journal.TID_COLNAME);
+                if(journalTable==null){logger.log("journal table not created");}
                 journalTable.addColumn(Journal.DEBIT_COLNAME, Table.TEXT_COLUMN);
                 journalTable.addColumn(Journal.CREDIT_COLNAME, Table.TEXT_COLUMN);
                 journalTable.addColumn(Journal.AMOUNT_COLNAME, Table.NUMERIC_COLUMN);

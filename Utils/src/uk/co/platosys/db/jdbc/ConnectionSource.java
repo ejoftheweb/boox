@@ -55,6 +55,7 @@ public class ConnectionSource {
      */ 
     
     public static Connection getConnection(String databaseName)throws PlatosysDBException {
+    	logger.log("ConnectionSource getting a connection to "+databaseName);
         try{
             if (connectionBroker==null){
                 connectionBroker=new ConnectionBroker();

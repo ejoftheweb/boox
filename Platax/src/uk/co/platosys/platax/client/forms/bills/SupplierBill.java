@@ -234,4 +234,10 @@ public class SupplierBill extends AbstractBill {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void refresh() {
+		// TODO Auto-generated method stub
+		
+	}
 }

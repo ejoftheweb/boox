@@ -71,10 +71,8 @@ public class PlataxUser extends Xuser {
 	 */
 	private PlataxUser(String name, char[] password, HttpServletRequest request) throws XuserCredentialsException, XuserException{
 		super(name, password, request);
-		//logger.log(4, "pxuser superclass constructor called");
 		logger.log(4,"created pxuser with username"+getUsername() );
 		logger.log(4, "created pxuser with xuserid "+getXuserID());
-		//populate the enterprise array!
 		try{
 			//the clerkstable is a system-wide table of users and enterprises;
 			JDBCTable clerkstable;
@@ -90,7 +88,7 @@ public class PlataxUser extends Xuser {
 				logger.log("PXconstructor: finding enterprise with id "+enterpriseID);
 				Enterprise enterprise = Enterprise.getEnterprise(enterpriseID);
 				logger.log("PXconstructor: adding enterprise "+enterprise.getName());
-				enterprises.put(enterprise.getEnterpriseID(), enterprise);
+				enterprises.put(enterprise.getSysname(), enterprise);
 			}
 			
 		}catch(Exception x){
@@ -167,7 +165,7 @@ public class PlataxUser extends Xuser {
 			 
 			try {
 				String[] cols= {PX_EID_COLNAME, PX_XUSERID_COLNAME};
-				String[] vals= {enterprise.getEnterpriseID(), getXuserID()};
+				String[] vals= {enterprise.getSysname(), getXuserID()};
 				Row row = clerkstable.getRow(cols, vals);
 				String clerkname = row.getString(PX_CLERKNAME_COLNAME);
 				String pwd=row.getString(PX_PWD_COLNAME);
@@ -213,14 +211,13 @@ public class PlataxUser extends Xuser {
 			}
     	}
 		String[] cols= {PX_EID_COLNAME, PX_XUSERID_COLNAME, PX_CLERKNAME_COLNAME,PX_PWD_COLNAME};
-		String[] vals= {enterprise.getEnterpriseID(), getXuserID(), clerk.getName(), password};
+		String[] vals= {enterprise.getSysname(), getXuserID(), clerk.getName(), password};
 		try {
 			clerkstable.addRow(cols, vals);
 		} catch (PlatosysDBException e) {
 			logger.log("problem adding row to clerkstable", e);
 		}
-    	
-    	enterprises.put(enterprise.getEnterpriseID(),enterprise);
+    	enterprises.put(enterprise.getSysname(),enterprise);
     	pxuser.addEnterprise(EnterpriseServiceImpl.convert(enterprise, clerk));
     }
 
@@ -228,7 +225,6 @@ public class PlataxUser extends Xuser {
         return authenticated;
     }
     public Collection<Enterprise> getEnterprises(){
-        
     	return enterprises.values();
     }
     public boolean isShareholder(Enterprise enterprise){
@@ -239,16 +235,16 @@ public class PlataxUser extends Xuser {
     	//TODO
     	return 0;
     }
+    
     /**
      * PXUser is a lightweight, serializable distillation of plataxUser, used to convey
      * details to GWT clients
      * @return
      */
     public PXUser getPXUser(){
-    	   	
-    	
     	return pxuser;
     }
+    
     /**
      * This method does the user registration. It calls the register method in Xuser, the superclass.
      * 
@@ -264,13 +260,12 @@ public class PlataxUser extends Xuser {
 		logger.log(1, "registering user "+email+" "+username);
 		try{
 			String regkey = register( email, username,name, pword);//calls method in superclass Xuser.
-			
-		if (investor){
-			//TODO some more stuff about being an investor
-			return regkey;
-		}else{
-			return regkey;
-		}
+			if (investor){
+				//TODO some more stuff about being an investor
+				return regkey;
+			}else{
+				return regkey;
+			}
 		}catch (XuserExistsException xee){
 			throw xee;
 		}catch (XuserException xe){
@@ -281,6 +276,7 @@ public class PlataxUser extends Xuser {
 		}
 		return null;
     }
+    
     private JDBCTable createClerksTable(){
     	logger.log(2, "no clerkstable, creating it");
     	JDBCTable clerkstable;
@@ -298,17 +294,19 @@ public class PlataxUser extends Xuser {
     }
     /**
      * Enterprise objects associated with a PlataxUser are stored in a HashMap indexed by
-     * the enterprise name. This method returns an Enterprise object given its name.
+     * the enterpriseID/sysname. This method returns an Enterprise object given its id/sysname.
      * 
      * @param enterpriseName
      * @return
      * @throws PlataxException
      */
-    public Enterprise getEnterprise(String enterpriseName) throws PlataxException {
-    	if (enterprises.get(enterpriseName)!=null){
-    		return (enterprises.get(enterpriseName));
+    public Enterprise getEnterprise(String enterpriseSysname) throws PlataxException {
+    	logger.log("PXusr getting enterprise "+enterpriseSysname);
+    	if (enterprises.get(enterpriseSysname)!=null){
+    		return (enterprises.get(enterpriseSysname));
     	}else{
-    		throw new PlataxException("plataxUser: enterprise "+enterpriseName+ " is not found here");
+    		logger.log("plataxUser: enterprise "+enterpriseSysname+ " is not found here");
+    		throw new PlataxException("plataxUser: enterprise "+enterpriseSysname+ " is not found here");
     	}
     }
     

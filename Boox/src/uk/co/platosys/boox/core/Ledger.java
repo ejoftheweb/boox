@@ -138,11 +138,11 @@ public final class Ledger implements Budgetable, Auditable {
                 logger.log(1, "Ledger-Init: couldn\'t find ledger fullname:" +fullName+ " in database "+databaseName);
                 throw new BooxException("couldn\'t find ledger fullname:" +fullName+ " in database "+databaseName);
             }
-            
+         logger.log("ledger "+fullName+" initialised OK");   
         }catch(Exception e){
             logger.log( "Ledger-init: had issues ", e);
         }finally{
-            try{connection.close();}catch(Exception p){}
+            try{connection.close();}catch(Exception p){logger.log("ledger-init exception closing connection");}
         }
         }else{
             logger.log(2, "Didn't create ledger "+name+", database not initialised");

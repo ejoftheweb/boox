@@ -10,6 +10,7 @@ import uk.co.platosys.boox.Body;
 import uk.co.platosys.boox.core.Account;
 import uk.co.platosys.boox.core.Boox;
 import uk.co.platosys.boox.core.Clerk;
+import uk.co.platosys.boox.core.Directory;
 import uk.co.platosys.boox.core.Enterprise;
 import uk.co.platosys.boox.core.Ledger;
 import uk.co.platosys.boox.core.exceptions.BooxException;
@@ -55,13 +56,9 @@ public class Customer extends CounterParty{
 	public static final String CUSTOMERS_LEDGER_NAME="Root:XBX:Current:Assets:Debtors:Customers"; //make configurable from props file?
 	public static final int SELECTION_ALL=0;
 	
-	private Enterprise enterprise;
 	private long customerID;
 	private String name;
-	private String legalName;
 	private String sysname;
-	private String ledgerName;
-	private String accountName;
 	private Account account;
 	private Ledger ledger;
 	private Terms terms;
@@ -78,12 +75,11 @@ public class Customer extends CounterParty{
 			
 			JDBCSerialTable customersTable=JDBCSerialTable.openTable(enterprise.getDatabaseName(), TABLE_NAME, ID_COLNAME);
 			JDBCRow row = customersTable.getRow(customerID);
-			this.enterprise=enterprise;
 			this.customerID=customerID;
 			this.name=row.getString(NAME_COLNAME);
 			this.sysname=row.getString(SYSNAME_COLNAME);
 			this.ledger=Ledger.getLedger(enterprise, row.getString(LEDGER_COLNAME));
-			this.account=Account.getAccount(enterprise, clerk, row.getString(ACCOUNT_COLNAME));
+			this.account=Account.getAccount(enterprise,  row.getString(ACCOUNT_COLNAME), clerk);
 			this.terms=Terms.getTerms(enterprise, row.getString(TERMS_COLNAME));
 		} catch (Exception e) {
 			logger.log("Customer-init/id: exception thrown", e);
@@ -93,13 +89,12 @@ public class Customer extends CounterParty{
 		 try {
 			JDBCSerialTable customersTable=JDBCSerialTable.openTable(enterprise.getDatabaseName(), TABLE_NAME, ID_COLNAME);
 			JDBCRow row = customersTable.getRow(SYSNAME_COLNAME, sysname);
-			this.enterprise=enterprise;
 			this.customerID=row.getLong(ID_COLNAME);
 			this.name=row.getString(NAME_COLNAME);
 			putInfo(Body.NAME, name);
 			this.sysname=sysname;
 			this.ledger=Ledger.getLedger(enterprise, row.getString(LEDGER_COLNAME));
-			this.account=Account.getAccount(enterprise, clerk, row.getString(ACCOUNT_COLNAME));
+			this.account=Account.getAccount(enterprise,  row.getString(ACCOUNT_COLNAME),clerk);
 			this.terms=Terms.getTerms(enterprise, row.getString(TERMS_COLNAME));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -107,17 +102,13 @@ public class Customer extends CounterParty{
 		}
 	}
 	private Customer (Enterprise enterprise, Clerk clerk, long customerID, String name, String sysname, String ledgerName, String accountName) throws PermissionsException{
-		this.enterprise=enterprise;
 		this.customerID=customerID;
 		this.name=name;
 		putInfo(Body.NAME, name);
 		this.sysname=sysname;
-		this.ledgerName=ledgerName;
-		this.accountName=accountName;
 		this.ledger=Ledger.getLedger(enterprise,ledgerName);
-		this.account=Account.getAccount(enterprise, clerk, accountName);
+		this.account=Account.getAccount(enterprise,  accountName, clerk);
 		this.terms=Terms.getDefaultTerms(enterprise);
-	
 	}
 	@Override
 	public Ledger getLedger() {
@@ -243,6 +234,7 @@ public class Customer extends CounterParty{
 		  customersTable.amend(id, TERMS_COLNAME, Terms.DEFAULT_TERMS);
 		  Customer customer = new Customer(enterprise, clerk, id);
 		  logger.log("CustomerCC: created customer"+customer.getName());
+		  if (isTrade){Directory.addBody(customer, false);}
 		  return customer;
 	  }
 	  
@@ -253,15 +245,21 @@ public class Customer extends CounterParty{
   public static Customer getCustomer(Enterprise enterprise, Clerk clerk, String sysname){
 	  return new Customer(enterprise, clerk, sysname);
   }
+  
+  /**
+   * returns a list of customers.
+   * note that as of 141204 the selection parameter does nothing yet
+   * @param enterprise
+   * @param clerk
+   * @param selection
+   * @return
+   * @throws PermissionsException
+   */
   public static List<Customer> getCustomers(Enterprise enterprise, Clerk clerk, int selection) throws PermissionsException{
   	List<Customer> customers = new ArrayList<Customer>();
   	try{
-  	JDBCTable customersTable=JDBCTable.getTable(enterprise.getDatabaseName(), Customer.TABLE_NAME);
-  	
-  	List<Row> rows = customersTable.getRows();
-  	Iterator<Row> rit = rows.iterator();
-	  	while(rit.hasNext()){
-	  		Row row = rit.next();
+	  	JDBCTable customersTable=JDBCTable.getTable(enterprise.getDatabaseName(), Customer.TABLE_NAME);
+	  	for (Row row:customersTable.getRows()){
 	  		long customerID=row.getLong(ID_COLNAME);
 	  		String name=row.getString(NAME_COLNAME);
 	  		String sysname=row.getString(SYSNAME_COLNAME);
@@ -278,7 +276,7 @@ public class Customer extends CounterParty{
   	}catch(Exception ex){
   		logger.log("Customer: problem with the customers list for enterprise "+enterprise.getName(), ex);
   	}
-  	
+  	logger.log("CgCs returning customer list with "+customers.size()+" customers");
   	return customers;
   }
 public Terms getTerms() {

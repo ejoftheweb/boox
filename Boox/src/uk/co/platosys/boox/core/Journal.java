@@ -55,7 +55,7 @@ import uk.co.platosys.util.PlatosysProperties;
  */
 public final class Journal  {
 	public static final String TABLENAME="bx_journal";
-	public static final String TID_COLNAME="transactionID";
+	public static final String TID_COLNAME="transactionid";
 	public static final String DEBIT_COLNAME="debit";
 	public static final String CREDIT_COLNAME="credit";
 	public static final String AMOUNT_COLNAME="amount";

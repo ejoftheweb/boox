@@ -37,27 +37,40 @@ static Logger logger = Logger.getLogger("platax");
 	}
 
 	@Override
-	public GWTCustomer addCustomer(String enterpriseID, String name, boolean isPrivate) throws PlataxException  {
-		logger.log("ACSL calling add customer service");
+	public GWTCustomer addCustomer(String enterpriseID, String name, boolean isTrade) throws PlataxException  {
+		try{
+		logger.log("ACSL calling add customer service "+enterpriseID+" for "+name);
 		PlataxUser pxuser =  (PlataxUser) getSession().getAttribute("PlataxUser");
+		logger.log("ACSL user in session is "+pxuser.getUsername());
 		Enterprise enterprise = pxuser.getEnterprise(enterpriseID);
+		logger.log("ACSL ent in session is "+enterprise.getName());
 		Clerk clerk = pxuser.getClerk(enterprise);
+		logger.log("ACSL clerk is "+clerk.getName());
+		
 		Ledger ledger = Ledger.getLedger(enterprise, Customer.CUSTOMERS_LEDGER_NAME);
+		logger.log("CSL ledger is "+ledger.getFullName());
 		Customer customer;
 		try {
-			customer = Customer.createCustomer(enterprise, clerk, ledger, name, isPrivate );
+			customer = Customer.createCustomer(enterprise, clerk, ledger, name, isTrade );
 			logger.log("ACSL has created customer:"+customer.getName());
 		} catch (PermissionsException e) {
 			logger.log("exception thrown", e);
 			throw new PlataxException("ACSL: permissionsException", e);
-		} catch (PlatosysDBException e) {
-			logger.log("exception thrown", e);
-			throw new PlataxException("ACSL: platosysDBException", e);
-		} catch (BooxException e) {
-		    logger.log("exception thrown", e);
-			throw new PlataxException("ACSL: booxException", e);
+		} catch (PlatosysDBException f) {
+			logger.log("exception thrown", f);
+			throw new PlataxException("ACSL: platosysDBException", f);
+		} catch (BooxException g) {
+		    logger.log("exception thrown", g);
+			throw new PlataxException("ACSL: booxException", g);
+		} catch (Exception h){
+			 logger.log("exception thrown", h);
+				throw new PlataxException("ACSL: generic Exception", h);
 		}
 		return convert(customer);
+		}catch(Exception e){
+			logger.log("CSL exception", e);
+			return null;
+		}
 	}
 
 	protected static  GWTCustomer convert(Customer customer){
@@ -97,20 +110,25 @@ static Logger logger = Logger.getLogger("platax");
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public ArrayList<GWTCustomer> listCustomers(String enterpriseID, int selection) {
 		try{
-		PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
-		Enterprise enterprise= pxuser.getEnterprise(enterpriseID);
-		Clerk clerk= pxuser.getClerk(enterprise);
-		List<Customer> customers = Customer.getCustomers(enterprise, clerk, selection);
-		ArrayList<GWTCustomer> gwcusts = new ArrayList<GWTCustomer>();
-		Iterator<Customer> cit = customers.iterator();
-		while(cit.hasNext()){
-			gwcusts.add(convert(cit.next(), enterprise, clerk));
-		}
-		return gwcusts;
+			PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
+			Enterprise enterprise= pxuser.getEnterprise(enterpriseID);
+			Clerk clerk= pxuser.getClerk(enterprise);
+			List<Customer> customers = Customer.getCustomers(enterprise, clerk, selection);
+			ArrayList<GWTCustomer> gwcusts = new ArrayList<GWTCustomer>();
+			for(Customer customer:customers){
+				if(selection==0){
+					//produces a lightweight list with no financial data
+					gwcusts.add(convert(customer));
+				}else{
+					gwcusts.add(convert(customer, enterprise, clerk));
+				}
+			}
+			logger.log("CSI returning a list of "+gwcusts.size()+" gCustomers");
+			return gwcusts;
 		}catch(Exception x){
 			logger.log("CSI problem getting the customer list", x);
 			return null;
@@ -119,6 +137,7 @@ static Logger logger = Logger.getLogger("platax");
 
 	@Override
 	public GWTCustomer checkName(String customerName) {
+		logger.log("Checking customerName "+customerName);
 		try {
 			if(Directory.bodyExists(customerName)){
 				String sysname = Directory.getSysnameFromName(customerName);
@@ -126,6 +145,7 @@ static Logger logger = Logger.getLogger("platax");
 				gCustomer.setLegalName(Directory.getLegalName(sysname));
 				return gCustomer;
 			}else{
+				logger.log("CustomerName "+customerName +" doesn't exist, returning null");
 				return null;
 			}
 		} catch (Exception e) {

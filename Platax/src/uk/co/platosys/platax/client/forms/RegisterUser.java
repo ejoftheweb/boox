@@ -34,8 +34,8 @@ public class RegisterUser extends AbstractForm {
 		setCloseConfirm(false);
 		//PTab/AF fields
 		setTabHeaderText(StringText.SIGNUP);
-		topLabel.setText(StringText.SIGNUP_HEADER);
-		subHeader.setText(StringText.SIGNUP_SUBTEXT);
+		setTitle(StringText.SIGNUP_HEADER);
+		setSubTitle(StringText.SIGNUP_SUBTEXT);
 		
 		//Declare Variables
 		//final Label topLabel = new Label("Please enter your details to register as a PLATAX user");
@@ -98,7 +98,7 @@ public class RegisterUser extends AbstractForm {
 						form.add(table);
 					}
 				}else{
-					topLabel.setText(result);
+					setTitle(result);
 				}
 			}
 			public void onFailure(Throwable cause){
@@ -263,11 +263,17 @@ public class RegisterUser extends AbstractForm {
 				String confirm = confirmBox.getValue();
 				boolean investor = investorBox.getValue();
 				userService.registerUser(email, username, name, password, confirm, true, investor, callback);
-				topLabel.setText(StringText.THANKYOU);
-				subHeader.setText(StringText.WAIT_FOR_SIGNUP);
+				setTitle(StringText.THANKYOU);
+				setSubTitle(StringText.WAIT_FOR_SIGNUP);
 				form.remove(table);
 			}
 		});
+		
+	}
+
+	@Override
+	public void refresh() {
+		// TODO Auto-generated method stub
 		
 	}
 	

@@ -25,6 +25,10 @@
 	font-weight: bold;
 	background: #ffaaaa;
 }
+.px_body_name {
+	font-weight: bold;
+	font-size: 110%;
+}
 .px_form_header {
 	font-size: 125%;
 	font-weight: bold;

@@ -44,8 +44,8 @@ public class LoginForm extends AbstractForm {
 		emailTextBox.setText("edward@copyweb.co.uk");
 		passwordTextBox.setText("P&nNfZ36");
 		//end of dev code//
-		topLabel.setText(StringText.LOGIN);
-		subHeader.setText(StringText.LOGIN_OR_SIGNUP);
+		setTitle(StringText.LOGIN);
+		setSubTitle(StringText.LOGIN_OR_SIGNUP);
 		setTabHeaderText(StringText.LOGIN);
 		setCloseEnabled(false);
 		final Platax platax = pplatax;	
@@ -65,7 +65,7 @@ public class LoginForm extends AbstractForm {
 					platax.setUser(result);
 					
 				}else{
-					topLabel.setText(StringText.LOGIN_FAILED);
+					setTitle(StringText.LOGIN_FAILED);
 					form.add(table);
 				}
 			}
@@ -89,8 +89,8 @@ public class LoginForm extends AbstractForm {
 				try {
 					loginService.login(emailTextBox.getText(), passwordTextBox.getText(), logincallback);
 					form.remove(table);
-					topLabel.setText(StringText.THANKYOU);
-					subHeader.setText(StringText.WAIT_FOR_SERVER);
+					setTitle(StringText.THANKYOU);
+					setSubTitle(StringText.WAIT_FOR_SERVER);
 					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -126,6 +126,12 @@ public class LoginForm extends AbstractForm {
 		form.add(registerAnchor);
 		
 	    
+	}
+
+	@Override
+	public void refresh() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	}

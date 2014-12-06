@@ -32,8 +32,8 @@ public class CustomerList extends AbstractList {
 	public CustomerList(Platax parent, GWTEnterprise enterprise, int list_selection_type) {
 		super(parent, enterprise.getName()+":Customers", list_selection_type);
 		this.parent=parent;
-		 topLabel.setText("List of Customers");
-		 subHeader.setText("blah blah");
+		 setTitle("List of Customers");
+		 setSubTitle("blah blah");
 		 customerService.listCustomers(enterprise.getEnterpriseID(), list_selection_type, customerListCallBack);
 		 
 		 //table headers:
@@ -98,6 +98,11 @@ public class CustomerList extends AbstractList {
 			Window.alert(error);
 		}
 	};
+	@Override
+	public void refresh() {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 
