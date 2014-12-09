@@ -29,6 +29,11 @@ import uk.co.platosys.util.Logger;
  * A TaxedTransaction wraps two Transactions into one.
  * 
  * 
+ * We make use of lineno attribute here. Although each transaction -the tax and the value transaction - will have a separate TID, they
+ * will share the same lineno value. The linenos are invoice-specific and allow an invoice to be recreated.
+ * 
+ * 
+ * 
  * @author edward
  */
 public class TaxedTransaction {

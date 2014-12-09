@@ -85,7 +85,7 @@ import uk.co.platosys.util.ShortHash;
  * <h2>Changing Ledgers<h2>
  * Ledger transactions are not recorded in the database and ledgers do not therefore keep a live record of their balance;
  *  a call to Ledger.getBalance()  makes the ledger calculate its balance from scratch.
- * It is therefore possible to move an account from on ledger to another without affecting the overall
+ * It is therefore possible to move an account from one ledger to another without affecting the overall
  * balance of the system; it is merely a matter of changing the metadata about that account in the Chart
  * table. It will, however, change the account fullName. 
  * The likely usecase for changing ledgers is adding more enterprise-specific detail to the accounting structure
@@ -93,7 +93,14 @@ import uk.co.platosys.util.ShortHash;
  * 
  * Ledger changing is not yet implemented (Nov2014)
  * 
- * 
+ * <h2>Line numbering and transaction pairing</h2>
+ * As of Dec 2014, we are implementing line numbering and transaction pairing with two additional integer fields.
+ * These concepts are closely related. Line numbering allows recreation of a bill (input or output invoice) from its account.Line numbers have account scope.
+ * Transaction pairing matches a value transaction with the corresponding tax transaction.  
+ *  
+ * In any one account, transactions with the same line number (line) are typically paired. 
+ * This is reinforced by the TAXED_TID field which is not-null only
+ * in a transaction pair. The value is the TID of the value- or tax- transaction partner.
  * 
  * 
  * @author edward
@@ -129,6 +136,7 @@ public class Account implements Budgetable,  Auditable {
      static final String CLERK_COLNAME="clerk";
      static final String NOTES_COLNAME="notes";
      static final String LINE_COLNAME="line";
+     static final String TAXED_TID_COLNAME="taxed_tid";
      static final String PREFIX="ac"; //ensures legality for the tablename
      static final String DELIMITER="#";
      static final String BASIC_TYPE="basic";
@@ -520,14 +528,16 @@ public class Account implements Budgetable,  Auditable {
 	           
 	            //now create the account table.
 	             Table accountTable = JDBCTable.createForeignKeyTable(enterprise.getDatabaseName(), sysname,TID_COLNAME, Journal.TABLENAME);
-	            accountTable.addColumn(CONTRA_COLNAME, Table.TEXT_COLUMN);
-	            accountTable.addColumn(AMOUNT_COLNAME, Table.DECIMAL_COLUMN);
-	            accountTable.addColumn(BALANCE_COLNAME, Table.DECIMAL_COLUMN);
-	            accountTable.addColumn(DATE_COLNAME, Table.TIMESTAMP_COLUMN);
-	            accountTable.addColumn(CLERK_COLNAME, Table.TEXT_COLUMN);
-	            accountTable.addColumn(NOTES_COLNAME, Table.TEXT_COLUMN);
-	            accountTable.addColumn(LINE_COLNAME, Table.INTEGER_COLUMN);
-	            //
+	            accountTable.addColumn(CONTRA_COLNAME, Table.TEXT_COLUMN);//the name of the contra account
+	            accountTable.addColumn(AMOUNT_COLNAME, Table.DECIMAL_COLUMN);//the transaction amount (negative is a credit)
+	            accountTable.addColumn(BALANCE_COLNAME, Table.DECIMAL_COLUMN);//the balance of the account after this transaction
+	            accountTable.addColumn(DATE_COLNAME, Table.TIMESTAMP_COLUMN);//the date/time of the account
+	            accountTable.addColumn(CLERK_COLNAME, Table.TEXT_COLUMN);//the sysname of the clerk who posted the transaction
+	            accountTable.addColumn(NOTES_COLNAME, Table.TEXT_COLUMN);//freeform notes
+	            accountTable.addColumn(LINE_COLNAME, Table.INTEGER_COLUMN);//the line number of this transaction (e.g. in an invoice)
+	            accountTable.addColumn(TAXED_TID_COLNAME, Table.INTEGER_COLUMN);//if this is a tax transaction, the TID of the associated value transaction
+	           
+	            //this row with TID 0 always contains the balance of the account.
 	            accountTable.addRow(TID_COLNAME, 0);
 	            accountTable.amend(0, CONTRA_COLNAME, "balance");
 	            accountTable.amend(0, AMOUNT_COLNAME, new BigDecimal(0));
