@@ -68,10 +68,10 @@ public class Platax implements EntryPoint {
 		dlp.addEast(messagePanel, 25);
 		
 		//the tab panel
-		//At startup, we add only these two panels. 
+		//At startup, we add only the login panel: 
 		List<PTab> pTabs=new ArrayList<PTab>();
 		pTabs.add(new LoginForm(this));
-		pTabs.add(new RegisterUser(this));
+		//pTabs.add(new RegisterUser(this));
 	
 	
 		//tabPanel=new PlataxTabPanel(5, Unit.PCT);

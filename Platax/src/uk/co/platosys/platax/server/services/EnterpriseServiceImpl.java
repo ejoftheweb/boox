@@ -56,8 +56,7 @@ import uk.co.platosys.xuser.XuserException;
 import uk.co.platosys.xuser.XuserExistsException;
 
 
-public class EnterpriseServiceImpl extends Xservlet implements
-		EnterpriseService {
+public class EnterpriseServiceImpl extends Xservlet implements EnterpriseService {
 /**
 	 * 
 	 */
@@ -198,10 +197,28 @@ static Logger logger = Logger.getLogger("platax");
 	}
 	
 	@Override
-	public GWTEnterprise addEnterpriseModules(String sysname,
-			ArrayList<String> modulenames) {
-		// TODO Auto-generated method stub
-		return null;
+	public GWTEnterprise addEnterpriseModules(String sysname, ArrayList<String> modulenames) {
+		PlataxUser puser=null;
+		Enterprise enterprise=null;
+		Clerk clerk=null;
+		File accountsTemplateFile=null;
+		try {
+			puser = (PlataxUser) getSession().getAttribute(PXConstants.USER);
+			if (puser==null){
+				throw new PlataxException("RESI no user in session to create enterprise");
+			}
+			enterprise=puser.getEnterprise(sysname);
+			clerk=puser.getClerk(enterprise);
+			Map<String, Module> modules=Module.getModules();
+			for(String modulename:modulenames){
+			   Module module = modules.get(modulename);
+			   accountsTemplateFile=module.getFile();				
+			   Boox.createLedgersAndAccounts(enterprise, clerk, accountsTemplateFile);
+			}
+		}catch(Exception x){
+			logger.log("ESI-AEM problem adding modules");
+		}
+		return convert(enterprise, clerk);
 	}
 	 
 	public GWTEnterprise setDirectoryEntry(String sysname,

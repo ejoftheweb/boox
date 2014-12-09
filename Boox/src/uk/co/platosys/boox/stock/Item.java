@@ -27,7 +27,7 @@ public abstract class Item {
     }
     public abstract String getName();
     public abstract Money getPrice();
-    public abstract double getStockLevel();
+    public abstract float getStockLevel();
     public abstract String getDescription();
 	//private abstract void setId(long id);
 	public abstract long getId();

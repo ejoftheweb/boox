@@ -21,6 +21,7 @@
         <!-- the Income ledger records all income received by the business, whether sales or interest earned -->
         <Ledger name="Income" isPrivate="false">
            <Ledger name="Sales" isPrivate="false">
+               <Ledger name="Products" isPrivate="false"/>
               <Account name="Sales" fullName="Goods sold" description="General Sales Account"/>
            </Ledger>
            <Ledger name="InterestEarned" isPrivate="false"/>    

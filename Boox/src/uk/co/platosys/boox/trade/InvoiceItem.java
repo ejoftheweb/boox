@@ -78,10 +78,12 @@ public class InvoiceItem extends TaxedTransaction {
                             String debitAccountName,
                             String note,
                             boolean inclusive,
-                            int taxBand)
+                            int taxBand,
+                            int lineno)                            
     throws PermissionsException
     {
-        super(enterprise, clerk,money,creditAccountName,debitAccountName,note,inclusive,false,taxBand);  
+        super(enterprise, clerk,money,creditAccountName,debitAccountName,note,inclusive,false,taxBand, lineno);  
+        this.index=lineno;
     logger.log("II init done");
     }
     
@@ -106,7 +108,7 @@ public class InvoiceItem extends TaxedTransaction {
     	String creditAccountName = product.getAccount().getName();
     	String debitAccountName = invoice.getAccount().getName();
     	
-    	InvoiceItem invoiceItem= new InvoiceItem(enterprise, clerk, amount, creditAccountName, debitAccountName, "", false, taxBand);
+    	InvoiceItem invoiceItem= new InvoiceItem(enterprise, clerk, amount, creditAccountName, debitAccountName, "", false, taxBand, lineno);
         invoiceItem.setQuantity(quantity);
         invoiceItem.setUnitPrice(price);
         invoiceItem.setDescription(product.getName());

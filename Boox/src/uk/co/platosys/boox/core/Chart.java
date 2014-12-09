@@ -17,10 +17,10 @@ import uk.co.platosys.db.jdbc.JDBCTable;
 
 
 public abstract  class Chart {
- static final String TABLENAME="bx_chart";
- static final String SYSNAME_COLNAME="sysname";
+ public static final String TABLENAME="bx_chart";
+ public static final String SYSNAME_COLNAME="sysname";
  static final String NAME_COLNAME="name";
- static final String FULLNAME_COLNAME="fullname";
+ public static final String FULLNAME_COLNAME="fullname";
  static final String OWNER_COLNAME="owner";
  static final String LEDGER_COLNAME="ledger";
  static final String CURRENCY_COLNAME="currency";

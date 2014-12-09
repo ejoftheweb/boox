@@ -3,27 +3,29 @@ package uk.co.platosys.platax.client.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.i18n.client.Constants;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import uk.co.platosys.platax.shared.boox.GWTVat;
 
 public class TaxBandChooser extends RadioButtonGroup {
 	public static final String ZERO_RATE_LABEL="0%";
 	public static final String LOW_RATE_LABEL="5%";
 	public static final String STANDARD_RATE_LABEL="20%";
 	public static final String HIGHER_RATE_LABEL="20%";
-	public static final String ZERO_RATE_VALUE="0%";
-	public static final String LOW_RATE_VALUE="5%";
-	public static final String STANDARD_RATE_VALUE="20%";
-	public static final String HIGHER_RATE_VALUE="20%";//this is kludgy.
-	public static final FieldValue ZERO_VALUE= new FieldValue(ZERO_RATE_LABEL,"ZERO" );
-	public static final FieldValue STANDARD_VALUE = new FieldValue(STANDARD_RATE_LABEL, "STANDARD");
-	public static final FieldValue LOW_VALUE=new FieldValue(LOW_RATE_LABEL, "LOW");
-	public static final FieldValue HIGHER_VALUE=new FieldValue(HIGHER_RATE_LABEL, "HIGHER");
-	static FieldValue [] rates = {ZERO_VALUE, LOW_VALUE, STANDARD_VALUE};
+	public static final String UNTAXED_LABEL="No VAT";
+	
+	public static final String ZERO_RATE="ZERO";
+	public static final String LOW_RATE="LOW";
+	public static final String STANDARD_RATE="STANDARD";
+	public static final String HIGHER_RATE="HIGHER";
+	public static final String UNTAXED_RATE="NOVAT";
+	
+	
+	public static final FieldValue ZERO_VALUE= new FieldValue(ZERO_RATE_LABEL,ZERO_RATE);
+	public static final FieldValue STANDARD_VALUE = new FieldValue(STANDARD_RATE_LABEL, STANDARD_RATE);
+	public static final FieldValue LOW_VALUE=new FieldValue(LOW_RATE_LABEL, LOW_RATE);
+	public static final FieldValue HIGHER_VALUE=new FieldValue(HIGHER_RATE_LABEL, HIGHER_RATE);
+	public static final FieldValue UNTAXED_VALUE=new FieldValue(UNTAXED_LABEL, UNTAXED_RATE);
+	
+	static FieldValue [] rates = {ZERO_VALUE, LOW_VALUE, STANDARD_VALUE, UNTAXED_VALUE};
     static List<FieldValue> values = setValues();
 	static final String ITEMS_STYLE="tax-chooser";
 	public TaxBandChooser(String radioButtonGroupId, 
@@ -44,7 +46,14 @@ public class TaxBandChooser extends RadioButtonGroup {
 		return fvalues;
 	}
 	public int getTaxBand(){
-		//TODO fixme
-		return 0;//we need to look at the mechanism for handling tax bands; this is a get-it-to-compile klujj
+		switch(getValue()){
+		case LOW_RATE:return GWTVat.LOW_BAND;
+		case HIGHER_RATE:return GWTVat.HIGHER_BAND;
+		case STANDARD_RATE:return GWTVat.STANDARD_BAND;
+		case ZERO_RATE:return GWTVat.ZERO_BAND;
+		case UNTAXED_RATE:return GWTVat.UNTAXED_BAND;
+			default:return GWTVat.STANDARD_BAND;
+		}
+		
 	}
 }

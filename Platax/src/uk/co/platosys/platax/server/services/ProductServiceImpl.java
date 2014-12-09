@@ -40,12 +40,14 @@ public class ProductServiceImpl extends Xservlet implements ProductService {
 							  int taxBand, 
 							  boolean exclusive) {
 		try{
+			logger.log("PSI-ADD about to add product:"+productName);
 			PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
 			Enterprise enterprise = pxuser.getEnterprise(enterpriseID);
 			Clerk clerk = pxuser.getClerk(enterprise);
-			//ProductCatalogue productCatalogue = new ProductCatalogue(enterprise);
 			Money mprice = new Money(enterprise.getDefaultCurrency(), dprice);
+			logger.log("PSI-ADD about to create product:"+productName);
 			Product product = Product.createProduct(enterprise,  productName, productDescription, mprice, clerk, taxBand,0);
+			logger.log("PSI-ADD has added product)"+product.getName());
 			return ProductServiceImpl.createGWTItem(product);
 		}catch(Exception ex){
 			logger.log("APSI failed to add a product because of error" , ex);

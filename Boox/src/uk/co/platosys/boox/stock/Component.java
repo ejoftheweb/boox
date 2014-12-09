@@ -90,7 +90,7 @@ public class Component extends Item {
     public void setCostPrice(Supplier supplier, Money price){
     	
     }
-    public double getStockLevel() {
+    public float getStockLevel() {
         return stockLevel;
     }
 

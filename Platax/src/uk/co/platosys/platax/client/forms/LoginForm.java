@@ -34,7 +34,7 @@ public class LoginForm extends AbstractForm {
 	final TextBox passwordTextBox= new PasswordTextBox();
 	final CheckBox chckbxNewCheckBox = new CheckBox(LabelText.REMEMBER_ME);
 	final Button loginButton = new Button(StringText.LOGIN);
-	final Anchor registerAnchor=new Anchor(StringText.SIGNUP);
+	final Anchor registerAnchor=new Anchor(StringText.SIGNUP_GO);
 	
 	final LoginServiceAsync loginService = (LoginServiceAsync) GWT.create(LoginService.class);
 

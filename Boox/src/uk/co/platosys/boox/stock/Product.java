@@ -5,6 +5,7 @@
 
 package uk.co.platosys.boox.stock;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -40,10 +41,10 @@ public class Product extends Item {
     private String name;
     private String description;
     private Money price;
-    private double stockLevel;
-    private double openingStockLevel;
-    private double wastedStockLevel;
-    private double addedStockLevel;
+    private float stockLevel;
+    private float openingStockLevel;
+    private float wastedStockLevel;
+    private float addedStockLevel;
     private int taxBand=TaxedTransaction.UNTAXED_BAND;
      private Account salesAccount;
      private Account stockAccount;
@@ -61,6 +62,7 @@ public class Product extends Item {
     
     public static JDBCSerialTable catalogueTable;
     private Product(){}
+    
     protected Product (long id, String name, String description, Money price, int stockLevel){
         this.id=id;
         this.name=name;
@@ -95,7 +97,7 @@ public class Product extends Item {
     	  try{
     		  Currency currency=Currency.getCurrency(row.getString(Catalogue.ITEMCURRENCY_COLNAME));
     		  //logger.log("Pinit - currency "+currency.getTLA());
-    		  double amt = row.getDouble(Catalogue.ITEMPRICE_COLNAME);
+    		  BigDecimal amt = row.getBigDecimal(Catalogue.ITEMPRICE_COLNAME);
     		 // logger.log("Pinit - amt "+amt);
     		  Money price = new Money(currency, amt);
     		 // logger.log("Pinit - price "+price.toPrefixedString());
@@ -111,10 +113,10 @@ public class Product extends Item {
 	      this.description=row.getString(Catalogue.ITEMDESC_COLNAME);
 	      this.setSalesAccount(Account.getAccount(enterprise, row.getString(Catalogue.ITEMACCOUNT_COLNAME), clerk));
 		  this.setSalesLedger(salesAccount.getLedger());
-		  this.setStockLevel(row.getDouble(Catalogue.ITEMSTOCKLEVEL_COLNAME));
-		  this.setAddedStockLevel(row.getDouble(Catalogue.ITEMADDEDSTOCK_COLNAME));
-		  this.setOpeningStockLevel(row.getDouble(Catalogue.ITEMOPENINGSTOCKLEVEL_COLNAME));
-		  this.setWastedStockLevel(row.getDouble(Catalogue.ITEMWASTEDSTOCK_COLNAME)); 
+		  this.setStockLevel(row.getFloat(Catalogue.ITEMSTOCKLEVEL_COLNAME));
+		  this.setAddedStockLevel(row.getFloat(Catalogue.ITEMADDEDSTOCK_COLNAME));
+		  this.setOpeningStockLevel(row.getFloat(Catalogue.ITEMOPENINGSTOCKLEVEL_COLNAME));
+		  this.setWastedStockLevel(row.getFloat(Catalogue.ITEMWASTEDSTOCK_COLNAME)); 
 		  logger.log("Pinit: product "+name+" price "+ price.toPlainString());
     	  }catch(Exception x){
     		  logger.log("problem initialising product", x);
@@ -171,6 +173,18 @@ public class Product extends Item {
 			  return null;
 		  }
 	}
+	/**
+	 * Creates the necessary database resources for a Product
+	 * 
+	 * @param enterprise
+	 * @param productName
+	 * @param description
+	 * @param price
+	 * @param clerk
+	 * @param taxBand
+	 * @param stockLevel
+	 * @return
+	 */
 	public static Product createProduct(Enterprise enterprise,
 										String productName,
 										String description,
@@ -202,15 +216,18 @@ public class Product extends Item {
 	    				throw new PlatosysDBException("Catalogue Fault: sysname col not found", e);
 	    			}
 	    		  }else{
-	    			  //Create the product:
+	    			  logger.log("ProductCP: creating the product "+productName );
 	    			  long id = catalogueTable.addSerialRow(Catalogue.ITEMID_COLNAME, Catalogue.ITEMNAME_COLNAME,productName);
 	    		      Product product=new Product();
+	    		      logger.log("ProductCP: "+productName+" allocated ID "+Long.toString(id));
+		    			 
 	    			  product.setId(id);
 	    			  product.setName(productName);
 	    			  product.setDescription(description);
 	    			  // make a sysname for it:
 	    			  String sysname = PRODUCT_SYSNAME_PREFIX+ShortHash.hash(enterprise.getName()+productName+Long.toString(id));
 	    			  product.setSysname(sysname);
+	    			  logger.log("ProductCP: "+productName+" sysname is "+product.getSysname());
 	    			  catalogueTable.amend(id, Catalogue.ITEMSYSNAME_COLNAME, sysname );
 	    			  product.setDescription(description);
 	    			  catalogueTable.amend(id, Catalogue.ITEMDESC_COLNAME, description);
@@ -221,19 +238,19 @@ public class Product extends Item {
 	  	              catalogueTable.amend(id, Catalogue.ITEMSTOCKLEVEL_COLNAME, stockLevel);
 	  	              product.setTaxBand(taxBand);
 	  	              catalogueTable.amend(id, Catalogue.ITEMTAXBAND_COLNAME, taxBand);
-	    			  logger.log("ProductCP: new product allocated ID "+Long.toString(id));
-	    			  logger.log("ProductCP: new product sysname is"+sysname);
-	    			  //Product needs a Ledger: 
+	    			 //Product needs a Ledger: 
 	    			  //TODO: implement category-level ledgers
 	    			  Ledger salesledger = Ledger.createLedger(enterprise, sysname, Ledger.getLedger(enterprise,  PRODUCTS_SALES_LEDGER_NAME), enterprise.getDefaultCurrency(), clerk, true);
 	    			  Ledger stockledger = Ledger.createLedger(enterprise, sysname, Ledger.getLedger(enterprise,  PRODUCTS_STOCK_LEDGER_NAME), enterprise.getDefaultCurrency(), clerk, true);
 	    			  
 	    			  catalogueTable.amend(id, Catalogue.ITEMLEDGER_COLNAME, salesledger.getFullName());
 	    			  product.setSalesLedger(salesledger);
+	    			  product.setStockLedger(stockledger);
 	    			  //There is one account per product.
 	    			  Account salesaccount = Account.createAccount(enterprise, sysname,  clerk, salesledger, enterprise.getDefaultCurrency(), product.getName(), true);
 	    			  catalogueTable.amend(id, Catalogue.ITEMACCOUNT_COLNAME, salesaccount.getSysname());
 	    			  product.setSalesAccount(salesaccount);
+	    			  logger.log("ProductCP: "+productName+" has account "+salesaccount.getFullName());
 	    			  return product;
 	    		  }  
 	    	   
@@ -280,12 +297,12 @@ public class Product extends Item {
 	    	            catalogueTable.addColumn(Catalogue.ITEMSYSNAME_COLNAME, JDBCTable.TEXT_COLUMN);
 	    	            catalogueTable.addColumn(Catalogue.ITEMNAME_COLNAME, JDBCTable.TEXT_COLUMN);
 	    	            catalogueTable.addColumn(Catalogue.ITEMDESC_COLNAME, JDBCTable.TEXT_COLUMN);
-	    	            catalogueTable.addColumn(Catalogue.ITEMPRICE_COLNAME, JDBCTable.NUMERIC_COLUMN);
+	    	            catalogueTable.addColumn(Catalogue.ITEMPRICE_COLNAME, JDBCTable.DECIMAL_COLUMN);
 	    	            catalogueTable.addColumn(Catalogue.ITEMCURRENCY_COLNAME, JDBCTable.TEXT_COLUMN);
-	    	            catalogueTable.addColumn(Catalogue.ITEMSTOCKLEVEL_COLNAME, JDBCTable.NUMERIC_COLUMN);
-	    	            catalogueTable.addColumn(Catalogue.ITEMOPENINGSTOCKLEVEL_COLNAME, JDBCTable.NUMERIC_COLUMN);
-	    	            catalogueTable.addColumn(Catalogue.ITEMADDEDSTOCK_COLNAME, JDBCTable.NUMERIC_COLUMN);
-	    	            catalogueTable.addColumn(Catalogue.ITEMWASTEDSTOCK_COLNAME, JDBCTable.NUMERIC_COLUMN);
+	    	            catalogueTable.addColumn(Catalogue.ITEMSTOCKLEVEL_COLNAME, JDBCTable.REAL_COLUMN);
+	    	            catalogueTable.addColumn(Catalogue.ITEMOPENINGSTOCKLEVEL_COLNAME, JDBCTable.REAL_COLUMN);
+	    	            catalogueTable.addColumn(Catalogue.ITEMADDEDSTOCK_COLNAME, JDBCTable.REAL_COLUMN);
+	    	            catalogueTable.addColumn(Catalogue.ITEMWASTEDSTOCK_COLNAME, JDBCTable.REAL_COLUMN);
 		    	                 
 	    	            catalogueTable.addColumn(Catalogue.ITEMLEDGER_COLNAME, JDBCTable.TEXT_COLUMN);
 	    	            catalogueTable.addColumn(Catalogue.ITEMACCOUNT_COLNAME, JDBCTable.TEXT_COLUMN);
@@ -341,14 +358,14 @@ public class Product extends Item {
  * @throws BooxException 
   */
  
- public boolean adjustStock(Enterprise enterprise, Clerk clerk, double stockAdjustment) throws PlatosysDBException, BooxException{
+ public boolean adjustStock(Enterprise enterprise, Clerk clerk, float stockAdjustment) throws PlatosysDBException, BooxException{
 	 if(catalogueTable==null){
 		 catalogueTable=getCatalogueTable(enterprise, clerk);
 	 }
 	 if (id==0){throw new BooxException("Product-adjustStock: product has invalid ID");}
 	 try{
 		 //this is a very inefficient way of doing it. We may need to write a db method to do it in SQL on the server, much better.
-	  double oldStock=catalogueTable.readNumber(id, Catalogue.ITEMSTOCKLEVEL_COLNAME);
+	  float oldStock=catalogueTable.readNumber(id, Catalogue.ITEMSTOCKLEVEL_COLNAME);
 	  catalogueTable.amend(id, Catalogue.ITEMSTOCKLEVEL_COLNAME, oldStock+stockAdjustment );
 	  this.stockLevel=stockLevel+stockAdjustment;
 	  return true;
@@ -369,7 +386,7 @@ public class Product extends Item {
  * @throws PlatosysDBException 
  * @throws BooxException 
   */
- public boolean wasteStock(Enterprise enterprise, Clerk clerk, double stockAdjustment) throws PlatosysDBException, BooxException{
+ public boolean wasteStock(Enterprise enterprise, Clerk clerk, float stockAdjustment) throws PlatosysDBException, BooxException{
 	 if(catalogueTable==null){
 		 catalogueTable=getCatalogueTable(enterprise, clerk);
 	 }
@@ -377,7 +394,7 @@ public class Product extends Item {
 	 try{
 		 //this is a very inefficient way of doing it. We may need to write a db method to do it in SQL on the server, much better.
 		 //also these should all be batched so they stand and fall together.
-	  double oldStock=catalogueTable.readNumber(id, Catalogue.ITEMWASTEDSTOCK_COLNAME);
+	  float oldStock=catalogueTable.readNumber(id, Catalogue.ITEMWASTEDSTOCK_COLNAME);
 	  catalogueTable.amend(id, Catalogue.ITEMWASTEDSTOCK_COLNAME, oldStock+stockAdjustment );
 	  this.wastedStockLevel=wastedStockLevel+stockAdjustment;
 	  return adjustStock(enterprise, clerk, (0-stockAdjustment));
@@ -395,7 +412,7 @@ public class Product extends Item {
   * @param stock
   * @return
   */
- public boolean addStock(Enterprise enterprise,Clerk clerk, double stockAdjustment) throws PlatosysDBException, BooxException{
+ public boolean addStock(Enterprise enterprise,Clerk clerk, float stockAdjustment) throws PlatosysDBException, BooxException{
 	 if(catalogueTable==null){
 		 catalogueTable=getCatalogueTable(enterprise, clerk);
 	 }
@@ -403,7 +420,7 @@ public class Product extends Item {
 	 try{
 		 //this is a very inefficient way of doing it. We may need to write a db method to do it in SQL on the server, much better.
 		 //also these should all be batched so they stand and fall together.
-	  double oldStock=catalogueTable.readNumber(id, Catalogue.ITEMADDEDSTOCK_COLNAME);
+	  float oldStock=catalogueTable.readNumber(id, Catalogue.ITEMADDEDSTOCK_COLNAME);
 	  catalogueTable.amend(id, Catalogue.ITEMADDEDSTOCK_COLNAME, oldStock+stockAdjustment );
 	  this.addedStockLevel=addedStockLevel+stockAdjustment;
 	  return adjustStock(enterprise, clerk,  (stockAdjustment));
@@ -413,15 +430,15 @@ public class Product extends Item {
 		 return false;
 	 }
  }
-private void setOpeningStockLevel(double openingStockLevel) {
+private void setOpeningStockLevel(float openingStockLevel) {
 	logger.log(name+ "OS="+openingStockLevel);
 	this.openingStockLevel = openingStockLevel;
 }
-private void setWastedStockLevel(double wastedStockLevel) {
+private void setWastedStockLevel(float wastedStockLevel) {
 	logger.log(name+ "WS="+wastedStockLevel);
 	this.wastedStockLevel = wastedStockLevel;
 }
-private void setAddedStockLevel(double addedStockLevel) {
+private void setAddedStockLevel(float addedStockLevel) {
 	logger.log(name+ "AS="+addedStockLevel);
 	this.addedStockLevel = addedStockLevel;
 }
@@ -473,11 +490,11 @@ public void setSellingPrice(Money price) {
 public void setSellingPrice(Customer customer, Money price){
 	
 }
-public double getStockLevel() {
+public float getStockLevel() {
     return stockLevel;
 }
 
-public void setStockLevel(double stockLevel2) {
+public void setStockLevel(float stockLevel2) {
 	logger.log(name+ "SL="+stockLevel2);
     this.stockLevel = stockLevel2;
 }

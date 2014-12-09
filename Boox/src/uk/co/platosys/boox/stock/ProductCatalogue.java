@@ -146,7 +146,7 @@ public class ProductCatalogue extends Catalogue {
     		     // catalogueItem.setId(id);
     			catalogueTable.amend(id, ITEMSYSNAME_COLNAME, catalogueItem.getSysname());
   	            catalogueTable.amend(id, ITEMDESC_COLNAME, catalogueItem.getDescription());
-  	            catalogueTable.amend(id, ITEMPRICE_COLNAME, catalogueItem.getPrice().getAmount().doubleValue());
+  	            catalogueTable.amend(id, ITEMPRICE_COLNAME, catalogueItem.getPrice().getAmount());
   	            catalogueTable.amend(id, ITEMCURRENCY_COLNAME, catalogueItem.getPrice().getCurrency().getTLA());
   	            catalogueTable.amend(id, ITEMSTOCKLEVEL_COLNAME, catalogueItem.getStockLevel());
     			  logger.log("ProductCatCP: new product allocated ID "+Long.toString(id));
@@ -185,9 +185,9 @@ public class ProductCatalogue extends Catalogue {
 	    	            catalogueTable.addColumn(ITEMNAME_COLNAME, JDBCTable.TEXT_COLUMN);
 	    	            
 	    	            catalogueTable.addColumn(ITEMDESC_COLNAME, JDBCTable.TEXT_COLUMN);
-	    	            catalogueTable.addColumn(ITEMPRICE_COLNAME, JDBCTable.NUMERIC_COLUMN);
+	    	            catalogueTable.addColumn(ITEMPRICE_COLNAME, JDBCTable.DECIMAL_COLUMN);
 	    	            catalogueTable.addColumn(ITEMCURRENCY_COLNAME, JDBCTable.TEXT_COLUMN);
-	    	            catalogueTable.addColumn(ITEMSTOCKLEVEL_COLNAME, JDBCTable.INTEGER_COLUMN);
+	    	            catalogueTable.addColumn(ITEMSTOCKLEVEL_COLNAME, JDBCTable.REAL_COLUMN);
 	    	            catalogueTable.addColumn(ITEMLEDGER_COLNAME, JDBCTable.TEXT_COLUMN);
 	    	            catalogueTable.addColumn(ITEMACCOUNT_COLNAME, JDBCTable.TEXT_COLUMN);
 		    	          

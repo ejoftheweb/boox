@@ -87,14 +87,23 @@ public interface Row {
      * @throws ColumnNotFoundException
      */
 	public ISODate getISODate(String columnName) throws ClassCastException, ColumnNotFoundException; 
-    /**
+	 /**
      * returns a double
      * @param columnName
      * @return
      * @throws ClassCastException
      * @throws ColumnNotFoundException
      */
+	@Deprecated
 	public double getDouble(String columnName) throws ClassCastException, ColumnNotFoundException;
+	 /**
+     * returns a float
+     * @param columnName
+     * @return
+     * @throws ClassCastException
+     * @throws ColumnNotFoundException
+     */
+	public float getFloat(String columnName) throws ClassCastException, ColumnNotFoundException;
     /**
      * returns an int
      * @param columnName

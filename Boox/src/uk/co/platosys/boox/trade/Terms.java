@@ -25,6 +25,13 @@ import uk.co.platosys.util.ShortHash;
 
 /**
  * Class encapsulating trade terms
+ *  fields: the name is a reference for a particular set of terms;
+ *  days: the number of days for payment;
+ *  qdays: the reduced number of days for quick payment;
+ *  mend: if the days are counted from the month-end rather than invoice date;
+ *  discount: any cash discount agreed for payment within the specified number of days;
+ *  qdiscount: any additional cash discount agreed for payment within the shorter time. 
+ * 
  * @author edward
  *
  * TODO serialise via a table.
@@ -44,14 +51,14 @@ public class Terms {
 	static int DEFAULT_DAYS=15;
 	static  int DEFAULT_QDAYS=1;
 	static boolean DEFAULT_MEND=true;
-	static  double DEFAULT_DISCOUNT=0;
-	static  double DEFAULT_QUICK_DISCOUNT=0.01;
+	static  float DEFAULT_DISCOUNT=0;
+	static  float DEFAULT_QUICK_DISCOUNT=0.01f;
 	static Logger logger = Logger.getLogger("boox");
  int days=15;
  int qDays=1;
  boolean mend=true;
- double discount=0;
- double quickDiscount=0.01;
+ float discount=0;
+ float quickDiscount=0.01f;
  String name="DEFAULT";
  Enterprise enterprise;
  
@@ -69,8 +76,8 @@ public class Terms {
     			 this.days=row.getInt(TERMS_DAYS_COLNAME);
      			this.qDays=row.getInt(TERMS_QDAYS_COLNAME);
      			this.mend=row.getBoolean(TERMS_MEND_COLNAME);
-     			this.discount=row.getDouble(TERMS_DISCOUNT_COLNAME);
-     			this.quickDiscount=row.getDouble(TERMS_QDISCOUNT_COLNAME);
+     			this.discount=row.getFloat(TERMS_DISCOUNT_COLNAME);
+     			this.quickDiscount=row.getFloat(TERMS_QDISCOUNT_COLNAME);
     		}catch (RowNotFoundException rnfe){
     			createTerms(enterprise, name);
     		}catch (ColumnNotFoundException cnfe){
@@ -102,8 +109,8 @@ public class Terms {
     			 this.days=row.getInt(TERMS_DAYS_COLNAME);
      			this.qDays=row.getInt(TERMS_QDAYS_COLNAME);
      			this.mend=row.getBoolean(TERMS_MEND_COLNAME);
-     			this.discount=row.getDouble(TERMS_DISCOUNT_COLNAME);
-     			this.quickDiscount=row.getDouble(TERMS_QDISCOUNT_COLNAME);
+     			this.discount=row.getFloat(TERMS_DISCOUNT_COLNAME);
+     			this.quickDiscount=row.getFloat(TERMS_QDISCOUNT_COLNAME);
     		
     		}catch (ColumnNotFoundException cnfe){
     			throw new PlatosysDBException("missing col in terms table", cnfe);
@@ -135,13 +142,13 @@ public class Terms {
 	public double getDiscount() {
 		return discount;
 	}
-	public void setDiscount(double discount) {
+	public void setDiscount(float discount) {
 		this.discount = discount;
 	}
 	public double getQuickDiscount() {
 		return quickDiscount;
 	}
-	public void setQuickDiscount(double quickDiscount) {
+	public void setQuickDiscount(float quickDiscount) {
 		this.quickDiscount = quickDiscount;
 	}
    
@@ -193,10 +200,10 @@ public class Terms {
     		try{
     			termsTable = JDBCTable.createTable(enterprise.getDatabaseName(), TERMS_TABLE_NAME, TERMS_NAME_COLNAME, Table.TEXT_COLUMN);
     			termsTable.addColumn(TERMS_DAYS_COLNAME, Table.INTEGER_COLUMN);
-    			termsTable.addColumn(TERMS_DISCOUNT_COLNAME, Table.NUMERIC_COLUMN);
+    			termsTable.addColumn(TERMS_DISCOUNT_COLNAME, Table.REAL_COLUMN);
     			termsTable.addColumn(TERMS_MEND_COLNAME, Table.BOOLEAN_COLUMN);
     			termsTable.addColumn(TERMS_QDAYS_COLNAME, Table.INTEGER_COLUMN);
-    			termsTable.addColumn(TERMS_QDISCOUNT_COLNAME, Table.NUMERIC_COLUMN);
+    			termsTable.addColumn(TERMS_QDISCOUNT_COLNAME, Table.REAL_COLUMN);
     			termsTable.addRow(TERMS_NAME_COLNAME, DEFAULT_TERMS);
     			termsTable.amend(DEFAULT_TERMS, TERMS_DAYS_COLNAME, DEFAULT_DAYS);
         		termsTable.amend(DEFAULT_TERMS, TERMS_QDAYS_COLNAME,DEFAULT_QDAYS);
@@ -215,24 +222,22 @@ public class Terms {
     	}
   	  //name: should be unique.  
   	  if(termsTable.rowExists(TERMS_NAME_COLNAME, name)){
-  		  logger.log("TermsCC: Terms called "+name+" already exists");
+  		  //logger.log("TermsCC: Terms called "+name+" already exists");
   		  //then   Terms of this name already exists so we return it
   		  JDBCRow row;
-  		try {
-  			row = termsTable.getRow(TERMS_NAME_COLNAME, name);
-  		} catch (RowNotFoundException e) {
-  			logger.log("Terms.CC: RNF exception thrown", e);
-  			//eh? the row exists but exception thrown??
-  			throw new PlatosysDBException("Faulty Terms Database: Terms row not found", e);
-  		}
-  		  try {
-  			return new Terms(enterprise, row);
-  		} catch (Exception e) {
-  			
-  			logger.log("exception thrown", e);
-  			//col not found exception? Table is buggad. 
-  			throw new PlatosysDBException("Terms Database Fault: Terms name col not found", e);
-  		}
+	  		try {
+	  			row = termsTable.getRow(TERMS_NAME_COLNAME, name);
+	  		} catch (RowNotFoundException e) {
+	  			logger.log("Terms.CC: RNF exception thrown", e);
+	  			//eh? the row exists but exception thrown??
+	  			throw new PlatosysDBException("Faulty Terms Database: Terms row not found", e);
+	  		}
+	  		try {
+	  			return new Terms(enterprise, row);
+	  		} catch (Exception e) {
+	  			logger.log("exception thrown", e);
+	  			throw new PlatosysDBException("Terms Database Fault: ", e);
+	  		}
   	  }else{
   		  //
   		  //Create the Terms:

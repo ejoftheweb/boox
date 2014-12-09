@@ -202,6 +202,7 @@ public class InvoiceForm extends AbstractBill {
 				table.setWidget(0,4, new MoneyColumnHeaderLabel(LabelText.ITEM_NET_HEADER));
 				table.setWidget(0,5, new MoneyColumnHeaderLabel(LabelText.ITEM_TAX_HEADER));
 				table.setWidget(0,6, new MoneyColumnHeaderLabel(LabelText.ITEM_GROSS_HEADER));
+				table.setWidget(1,0, new Label());
 				lineEntryPanel.add(new Label(LabelText.ENTER_INVOICE_ITEM));
 				lineEntryPanel.add(itemListBox);
 				lineEntryPanel.add(newProductButton);
@@ -243,7 +244,7 @@ public class InvoiceForm extends AbstractBill {
 
 	protected void setInvoice(GWTInvoice gwtInvoice) {
 		this.gwtInvoice=gwtInvoice;
-		billNumberBox.setValue(gwtInvoice.getSysname());
+		billNumberBox.setValue(gwtInvoice.getUserno());
 		this. itemListBox.addItems(gwtInvoice.getProducts());
 		this.gwtCustomer=gwtInvoice.getCustomer();
 		this.customerName=gwtCustomer.getName();
@@ -253,12 +254,12 @@ public class InvoiceForm extends AbstractBill {
 
 	
     protected void postLine() throws Exception{
-    	final int rows = table.getRowCount();
+    	final int rows = table.getRowCount()-1;
     	final GWTLineItem gwtLineItem = new GWTLineItem();
     	gwtLineItem.setEnterprise(gwtEnterprise);
     	gwtLineItem.setCustomer(gwtCustomer);
     	gwtLineItem.setSIN(gwtInvoice.getSysname());
-    	//gwtLineItem.setLineNumber(rows);
+    	gwtLineItem.setLineNumber(rows);
     	gwtLineItem.setItemSysname(itemListBox.getValue(itemListBox.getSelectedIndex()));
     	gwtLineItem.setItemQty(qtyBox.getQuantity());
     	invoiceService.postLine(gwtLineItem, postLineCallback);

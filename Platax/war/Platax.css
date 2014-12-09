@@ -80,6 +80,47 @@
 	text-align: center;
 	font-size: 105%;
 }
+.px_column_header {
+	font-weight: bold;
+}
+.px_money_column_header {
+	font-weight: bold;
+	text-align: right;
+	padding-right: 1em;
+}
+.px_money_label {
+	text-align: right;
+	padding-left: 2em;
+	padding-right: 1em;
+}
+.px_money_total_value_credit {
+	border-top: 1px black;
+	text-align: right;
+	color: red;
+	padding-left: 2em;
+	padding-right: 1em;
+}
+.px_money_total_value_debit {
+	border-top: 1px black;
+	text-align: right;
+	color: black;
+	padding-left: 2em;
+	padding-right: 1em;
+}
+.px_money_grand_total_value_credit {
+	border-bottom: 2px black double;
+	text-align: right;
+	color: red;
+	padding-left: 2em;
+	padding-right: 1em;
+}
+.px_money_grand_total_value_debit {
+	border-bottom: 2px black double;
+	text-align: right;
+	color: black;
+	padding-left: 2em;
+	padding-right: 1em;
+}
 /** Example rules used by the template application (remove for your app) */
 h1 {
   font-size: 2em;

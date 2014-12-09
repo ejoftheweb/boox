@@ -26,6 +26,7 @@
 
 package uk.co.platosys.db;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -64,11 +65,12 @@ import uk.co.platosys.util.Logger;
 public interface Table {
     public static final String TEXT_COLUMN="text";
     public static final String BOOLEAN_COLUMN="boolean";
-    public static final String NUMERIC_COLUMN="numeric";
-    public static final String DECIMAL_COLUMN="decimal"; //use this for currency values.
-    public static final String INTEGER_COLUMN="integer";
-    public static final String DATE_COLUMN="date";
-    public static final String TIMESTAMP_COLUMN="timestamp";
+    public static final String REAL_COLUMN="real";//use this for non-currency floating-point numbers eg. %ge rates.
+    public static final String NUMERIC_COLUMN="real"; //retained for backwards compatibility. Do not use.
+    public static final String DECIMAL_COLUMN="numeric"; //use this for currency values and high-precision floats. 
+    public static final String INTEGER_COLUMN="integer"; //use this for whole numbers.
+    public static final String DATE_COLUMN="date";//times with day precision
+    public static final String TIMESTAMP_COLUMN="timestamp";// times with millisecond precision
     public static final String DEFAULT_DATABASE="musite";//HOBBLEDY_HOOP should not be here!
     
 
@@ -280,7 +282,7 @@ public interface Table {
     public boolean amend(String primaryKeyTest, String columnName, java.sql.Timestamp timestamp) throws PlatosysDBException;
 
      public boolean amend(String primaryKeyTest, String columnName, ISODate date) throws PlatosysDBException ;
-
+     public boolean amend(String primaryKeyTest, String columnName, BigDecimal decimal) throws PlatosysDBException ;
    /**
 
      * allows easy amendments to a database table without the need to construct complex escaped sql strings.
@@ -302,6 +304,16 @@ public interface Table {
      * @throws uk.co.platosys.db.PlatosysDBException if wrong
      */
     public boolean amendWhere(String[] testColumns, String[] testValues,  String columnName, boolean value) throws PlatosysDBException;
+    /**
+     * Amend a table if a combination of conditions is true (only works for textual conditions!!).
+     * @return true if the amendment was successful
+     * @param testColumns - a string array of column names;
+     * @param testValues - a string array of values;
+     * @param columnName - the column to be amended;
+     * @param value - the new value for the column
+     * @throws uk.co.platosys.db.PlatosysDBException if wrong
+     */
+    public boolean amendWhere(String[] testColumns, String[] testValues,  String columnName, BigDecimal value) throws PlatosysDBException;
      public boolean updateWhere(String testColumn, String testValue, String columnName, String value) throws PlatosysDBException;
      /*
      public boolean updateWhere(String[] testColumns, String[] testValues, String columnName, String value) throws PlatosysDBException {
@@ -384,7 +396,7 @@ public interface Table {
      * @return the value read from the table;
      * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
      */
-    public Double readNumber(long primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException;
+    public float readNumber(long primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException;
    
     /**
      * 
@@ -394,15 +406,37 @@ public interface Table {
      * @return the value read from the table;
      * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
      */
-    public Double readNumber(String primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException ;
-        /**
-     * 
-     * reads an atomic timestamp
-     * @param primaryKeyTest the primary key identifying the table row;
-     * @param columnName the name of the column to be read;
-     * @return the value read from the table;
-     * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
-     */
+   public float readNumber(String primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException ;
+      
+   /**
+    * 
+    * reads an atomic decimal value from the database
+    * Note that in general, the decimal type is used for currencies requiring the highest precision. The method 
+    * returns a java.math.BigDecimal, the recommended type for currency values.
+    * @param primaryKeyTest the primary key identifying the table row;
+    * @param columnName the name of the column to be read;
+    * @return the value read from the table;
+    * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
+    */
+   public BigDecimal readDecimal(long primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException;
+   /**
+    * 
+    * reads an atomic decimal value from the database
+    * Note that in general, the decimal type is used for currencies requiring the highest precision. The method 
+    * returns a java.math.BigDecimal, the recommended type for currency values.
+    * @param primaryKeyTest the primary key identifying the table row;
+    * @param columnName the name of the column to be read;
+    * @return the value read from the table;
+    * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
+    */
+   public BigDecimal readDecimal(String primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException;
+   /**
+    * 
+    * reads an atomic timestamp
+    * @param primaryKeyTest the primary key identifying the table row;
+    * @param columnName the name of the column to be read;
+    * @return the value read from the table;
+    * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.*/
     public ISODate readTimeStamp(String primaryKeyTest, String columnName) throws PlatosysDBException, RowNotFoundException ;
           /**
      * 
@@ -421,4 +455,6 @@ public interface Table {
 			throws PlatosysDBException;
 	boolean updateWhere(String[] testColumns, String[] testValues,
 			String columnName, String value) throws PlatosysDBException;
+	boolean amend(long primaryKeyTest, String columnName, BigDecimal value)
+			throws PlatosysDBException;
 }

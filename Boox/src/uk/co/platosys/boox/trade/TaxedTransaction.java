@@ -7,6 +7,7 @@ package uk.co.platosys.boox.trade;
 
 import uk.co.platosys.boox.core.Account;
 import uk.co.platosys.boox.core.Boox;
+import uk.co.platosys.boox.core.Chart;
 import uk.co.platosys.boox.core.Clerk;
 import uk.co.platosys.boox.core.Enterprise;
 import uk.co.platosys.boox.core.Journal;
@@ -15,8 +16,14 @@ import uk.co.platosys.boox.core.Permission;
 import uk.co.platosys.boox.money.CurrencyException;
 import uk.co.platosys.boox.money.Money;
 import uk.co.platosys.boox.core.Transaction;
+import uk.co.platosys.boox.core.exceptions.BooxException;
 import uk.co.platosys.boox.core.exceptions.PermissionsException;
 import uk.co.platosys.boox.constants.Constants;
+import uk.co.platosys.db.ColumnNotFoundException;
+import uk.co.platosys.db.PlatosysDBException;
+import uk.co.platosys.db.Row;
+import uk.co.platosys.db.RowNotFoundException;
+import uk.co.platosys.db.jdbc.JDBCTable;
 import uk.co.platosys.util.Logger;
 /**
  * A TaxedTransaction wraps two Transactions into one.
@@ -38,15 +45,14 @@ public class TaxedTransaction {
    public  static double STANDARD_RATE=20.0d;
    public  static double LOW_RATE=5.0d;
    public  static double ZERO_RATE=0d;
-    static String HIGHER_RATE_INPUT_TAX_ACCOUNT_NAME="VATInputHigher";
-    static String STANDARD_RATE_INPUT_TAX_ACCOUNT_NAME="VATInputStandard";
-    static String LOW_RATE_INPUT_TAX_ACCOUNT_NAME="VATInputLower";
-    static String ZERO_RATE_INPUT_TAX_ACCOUNT_NAME="VATInputZero";
-    static String HIGHER_RATE_OUTPUT_TAX_ACCOUNT_NAME="VATOutputHigher";
-    static String STANDARD_RATE_OUTPUT_TAX_ACCOUNT_NAME="VATOutputStandard";
-    static String LOW_RATE_OUTPUT_TAX_ACCOUNT_NAME="VATOutputLower";
-    static String ZERO_RATE_OUTPUT_TAX_ACCOUNT_NAME="VATOutputZero";
-    
+    static String HIGHER_RATE_INPUT_TAX_ACCOUNT_NAME="Root:XBX:Current:Liabilities:Tax:VAT:InputVat#VATInputHigher";
+    static String STANDARD_RATE_INPUT_TAX_ACCOUNT_NAME="Root:XBX:Current:Liabilities:Tax:VAT:InputVat#VATInputStandard";
+    static String LOW_RATE_INPUT_TAX_ACCOUNT_NAME="Root:XBX:Current:Liabilities:Tax:VAT:InputVat#VATInputLower";
+    static String ZERO_RATE_INPUT_TAX_ACCOUNT_NAME="Root:XBX:Current:Liabilities:Tax:VAT:InputVat#VATInputZero";
+    static String HIGHER_RATE_OUTPUT_TAX_ACCOUNT_NAME="Root:XBX:Current:Liabilities:Tax:VAT:OutputVat#VATOutputHigher";
+    static String STANDARD_RATE_OUTPUT_TAX_ACCOUNT_NAME="Root:XBX:Current:Liabilities:Tax:VAT:OutputVat#VATOutputStandard";
+    static String LOW_RATE_OUTPUT_TAX_ACCOUNT_NAME="Root:XBX:Current:Liabilities:Tax:VAT:OutputVat#VATOutputLower";
+    static String ZERO_RATE_OUTPUT_TAX_ACCOUNT_NAME="Root:XBX:Current:Liabilities:Tax:VAT:OutputVat#VATOutputZero";
     static String INPUT_TAX_LEDGER_NAME="Root:XBX:Current:Liabilities:Tax:VAT:InputVAT";
     static String OUTPUT_TAX_LEDGER_NAME="Root:XBX:Current:Liabilities:Tax:VAT:OutputVAT";
     
@@ -64,7 +70,7 @@ public class TaxedTransaction {
     private boolean taxed=true;
     protected static Logger logger = Logger.getLogger("boox");
     private int taxBand=UNTAXED_BAND;
-    
+    int lineno;
     /**
      * This class is misnamed! 
      * This constructor is called when an untaxed line item is added.
@@ -135,7 +141,8 @@ public class TaxedTransaction {
                             String note,
                             boolean inclusive,
                             boolean input,
-                            int taxBand)
+                            int taxBand,
+                            int lineno)
             throws PermissionsException
     {
         logger.log("TT init");
@@ -145,7 +152,7 @@ public class TaxedTransaction {
         //this.journal=enterprise.getJournal();
         this.creditAccountName=creditAccountSysname;
         this.debitAccountName=debitAccountSysname;
-        //this.lineNumber=lineNumber;
+        this.lineno=lineno;
         this.note=note;
         this.taxBand=taxBand;
         switch(taxBand){
@@ -177,7 +184,7 @@ public class TaxedTransaction {
         		    enterprise,
                     clerk,
                     getNetMoney(),
-                   Account.getAccount(enterprise,creditAccountName, clerk, Permission.CREDIT),
+                    Account.getAccount(enterprise,creditAccountName, clerk, Permission.CREDIT),
                     Account.getAccount(enterprise,debitAccountName,clerk, Permission.DEBIT),
                       note
                     );
@@ -191,13 +198,13 @@ public class TaxedTransaction {
 	        case ZERO_BAND:taxAccountName=ZERO_RATE_INPUT_TAX_ACCOUNT_NAME;break;
 	        default: taxAccountName=STANDARD_RATE_INPUT_TAX_ACCOUNT_NAME;
         }  
-        	Ledger inputTaxLedger = Ledger.getLedger(enterprise, INPUT_TAX_LEDGER_NAME);
+        	
             taxTransaction=new Transaction(
             		enterprise,
                     clerk,
                     getTaxMoney(),
                     Account.getAccount(enterprise,creditAccountName, clerk, Permission.CREDIT),
-                    Account.getAccount(enterprise,taxAccountName,  clerk, Permission.DEBIT),
+                    Account.getAccount(enterprise,Account.getAccountSysname(enterprise, taxAccountName),  clerk, Permission.DEBIT),
                     note
                     );
         }else{
@@ -208,13 +215,12 @@ public class TaxedTransaction {
 	        case ZERO_BAND:taxAccountName=ZERO_RATE_OUTPUT_TAX_ACCOUNT_NAME;break;
 	        default: taxAccountName=STANDARD_RATE_OUTPUT_TAX_ACCOUNT_NAME;break;
         	}
-        	Ledger outputTaxLedger = Ledger.getLedger(enterprise, OUTPUT_TAX_LEDGER_NAME);
-            
+        	
             taxTransaction=new Transaction(
             		enterprise,
                     clerk,
                     getTaxMoney(),
-                    Account.getAccount(enterprise,taxAccountName, clerk, Permission.CREDIT),
+                    Account.getAccount(enterprise,Account.getAccountSysname(enterprise, taxAccountName), clerk, Permission.CREDIT),
                     Account.getAccount(enterprise,debitAccountName, clerk, Permission.DEBIT),
                     note 
                     );
@@ -226,7 +232,7 @@ public class TaxedTransaction {
      * Posts the value transaction only.
      * @return true if successful.
      */
-    public boolean postValue() throws PermissionsException {
+    private boolean postValue() throws PermissionsException {
         if(!valueTransaction.canPost()){return false;}
         valueID=valueTransaction.post();
         if (taxed){
@@ -245,7 +251,7 @@ public class TaxedTransaction {
      * @return the tax transaction ID, or the value transaction ID if this is an untaxed
      * transaction.
      */
-    public long postTax() throws PermissionsException {
+    private long postTax() throws PermissionsException {
         if (taxed&&(valueID>0)){
         	
             taxTID =  taxTransaction.post();
@@ -309,4 +315,5 @@ public class TaxedTransaction {
     public double getTaxRate(){
     	return taxRate;
     }
+   
 }

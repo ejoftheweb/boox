@@ -44,6 +44,7 @@ import uk.co.platosys.boox.core.exceptions.TimingException;
 import uk.co.platosys.boox.money.Currency;
 import uk.co.platosys.boox.money.CurrencyException;
 import uk.co.platosys.boox.money.Money;
+import uk.co.platosys.db.ColumnNotFoundException;
 import uk.co.platosys.db.PlatosysDBException;
 import uk.co.platosys.db.Row;
 import uk.co.platosys.db.Table;
@@ -127,6 +128,7 @@ public class Account implements Budgetable,  Auditable {
      static final String DATE_COLNAME="date";
      static final String CLERK_COLNAME="clerk";
      static final String NOTES_COLNAME="notes";
+     static final String LINE_COLNAME="line";
      static final String PREFIX="ac"; //ensures legality for the tablename
      static final String DELIMITER="#";
      static final String BASIC_TYPE="basic";
@@ -181,15 +183,19 @@ public class Account implements Budgetable,  Auditable {
      public Money getBalance(Enterprise enterprise, Clerk clerk) throws PermissionsException{
     	 logger.log("AccountGB started");
         if(clerk.canRead(enterprise, ledger)){
+        	logger.log("AccountGB - read permission is ok");
         	 try{ 
         		 if(table!=null){
+        			 logger.log("AccountGB - table exists");
         			 Row row = table.getRow(0);
+        			 logger.log("AccountGB - got the zero row");
         			 BigDecimal amount=row.getBigDecimal(AMOUNT_COLNAME);
 	                 logger.log(5, "account "+ name +" currency ="+currency);
 	                 balance= new Money(currency, amount);
 	                 logger.log(5, name + "balance currency is "+balance.getCurrency().getTLA());
-	                 logger.log(5, "acc "+name+" bal is "+balance.toPlainString()+balance.getCurrency().getTLA());
+	                 logger.log(5, "acc "+name+" bal is "+balance.getCurrency().getTLA()+":"+balance.toPlainString());
 	 	         }else{
+	 	        	 logger.log("issue getting the balance on account "+fullName);
 	 	        	 throw new BooxException("Balance line not found in account "+sysname);
 	 	         }
         	 }catch(Exception x){
@@ -520,11 +526,12 @@ public class Account implements Budgetable,  Auditable {
 	            accountTable.addColumn(DATE_COLNAME, Table.TIMESTAMP_COLUMN);
 	            accountTable.addColumn(CLERK_COLNAME, Table.TEXT_COLUMN);
 	            accountTable.addColumn(NOTES_COLNAME, Table.TEXT_COLUMN);
+	            accountTable.addColumn(LINE_COLNAME, Table.INTEGER_COLUMN);
 	            //
 	            accountTable.addRow(TID_COLNAME, 0);
 	            accountTable.amend(0, CONTRA_COLNAME, "balance");
-	            accountTable.amend(0, AMOUNT_COLNAME, 0);
-	            accountTable.amend(0, BALANCE_COLNAME, 0);
+	            accountTable.amend(0, AMOUNT_COLNAME, new BigDecimal(0));
+	            accountTable.amend(0, BALANCE_COLNAME, new BigDecimal(0));
 	            accountTable.amend(0, DATE_COLNAME, new ISODate());
 	            accountTable.amend(0, CLERK_COLNAME,  owner.getName());
 	            accountTable.amend(0, NOTES_COLNAME, "balance");
@@ -616,4 +623,29 @@ public class Account implements Budgetable,  Auditable {
 	       }
 	          return accountList; 
 	   }  
+	   /**
+	    * Returns the account sysname given its fullname
+	    * @param accountFullname
+	    * @return
+	    */
+	   public static String getAccountSysname(Enterprise enterprise, String accountFullname){
+		    Row row=null;
+		    String taxAccountSysname=null;
+		    try{
+		   	 JDBCTable chartTable =JDBCTable.getTable(enterprise.getDatabaseName(), Chart.TABLENAME);
+		      row= chartTable.getRow(Chart.FULLNAME_COLNAME, accountFullname);
+		       taxAccountSysname=row.getString(Chart.SYSNAME_COLNAME);
+		    }catch(RowNotFoundException rnfe){
+		    	logger.log("TT-:  account:" +accountFullname+ " not found in chart of accounts", rnfe);
+		    	//throw new BooxException("Account "+accountFullname+ " not found");
+		    } catch (ClassCastException e) {
+		   	 logger.log( "TT-:  account:ccde", e);
+			} catch (ColumnNotFoundException e) {
+				 logger.log( "TT-:  account:cnfe", e);
+			} catch (PlatosysDBException e) {
+				 logger.log( "TT-:  account:psdbe", e);
+			}
+		    logger.log("Account-gAS: "+accountFullname+" = "+taxAccountSysname);
+		    return taxAccountSysname;
+	    }
 }

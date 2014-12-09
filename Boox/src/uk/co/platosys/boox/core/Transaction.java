@@ -114,8 +114,8 @@ public final class Transaction implements AuditElement {
         this.creditAccount=creditAccount;
         this.debitAccount=debitAccount;
 
-        this.creditAccountName=creditAccount.getName();
-        this.debitAccountName=debitAccount.getName();
+        this.creditAccountName=creditAccount.getSysname();
+        this.debitAccountName=debitAccount.getSysname();
         //this.debitAccount=new Account(databaseName, debit, clerk);
         this.note=note;
         this.currency = money.getCurrency();
@@ -177,7 +177,7 @@ public final class Transaction implements AuditElement {
             String amountString =  money.toPlainString();
             String creditAmountString = "-"+amountString;
             //the journal first
-            statement.addBatch("UPDATE journal SET " +
+            statement.addBatch("UPDATE "+Journal.TABLENAME+" SET " +
 	            Journal.CREDIT_COLNAME+" = \'"+creditAccountContraName+"\',"+
 	            Journal.DEBIT_COLNAME+" = \'"+debitAccountContraName+"\',"+
 	            Journal.AMOUNT_COLNAME+" = "+amountString+","+

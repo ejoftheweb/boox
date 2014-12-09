@@ -212,7 +212,6 @@ public class AddEnterpriseForm extends AbstractForm {
 				final AsyncCallback<GWTEnterprise> finishedCallback = new AsyncCallback<GWTEnterprise>(){
 					public void onSuccess(GWTEnterprise result){
 						if(result==null){Window.alert("Server error-null result for submit2 call");}
-						
 						platax.removeTab(AddEnterpriseForm.this);
 						platax.addTab(new EnterpriseTab(platax, result));
 						//platax.addTab(new AddEnterpriseForm(platax));
@@ -237,7 +236,7 @@ public class AddEnterpriseForm extends AbstractForm {
 			
 			private void init(Platax platax){
 				setCloseConfirm(false);
-				platax=platax;
+				this.platax=platax;
 				setTitle(LabelText.NEW_ENTERPRISE_PAGE_HEAD);
 				setSubTitle(LabelText.NEW_ENTERPRISE_PAGE_SUB_HEAD);
 				nameBox.setEnabled(true);
@@ -387,26 +386,28 @@ public class AddEnterpriseForm extends AbstractForm {
 			private void layoutPage2(final GWTEnterprise ent){
 				setTitle(LabelText.NEW_ENTERPRISE_PAGE2_HEAD+" "+ent.getName());
 				setSubTitle(LabelText.NEW_ENTERPRISE_PAGE2_SUB_HEAD);
+				table.clear();
 				int rowno=0;
-				Window.alert(Integer.toString(segments.size()));
+				//Window.alert(Integer.toString(segments.size()));
 				for (GWTSegment segment:segments){
-					
-					table.setWidget(rowno, 0, new FieldLabel(segment.getName()));
-									
-					if (segment.isMultiSelect()){
-						CheckList cp = new CheckList();
-						table.setWidget(rowno, 1, cp);
-					    cp.addItems(segment.getModules());;
-					    table. setWidget(rowno,2, new FieldInfoLabel(segment.getInstructions()));
-					
-					}else{
-						HMVListBox segmods = new HMVListBox();
-						table.setWidget(rowno, 1, segmods);
-					    fillList(segmods, segment);
-					    table. setWidget(rowno,2, new FieldInfoLabel(segment.getInstructions()));
+					if(!((segment.getName().equals(CAPITAL_SEGMENT_NAME)))){
+						table.setWidget(rowno, 0, new FieldLabel(segment.getName()));
+										
+						if (segment.isMultiSelect()){
+							CheckList cp = new CheckList();
+							table.setWidget(rowno, 1, cp);
+						    cp.addItems(segment.getModules());;
+						    table. setWidget(rowno,2, new FieldInfoLabel(segment.getInstructions()));
+						
+						}else{
+							HMVListBox segmods = new HMVListBox();
+							table.setWidget(rowno, 1, segmods);
+						    fillList(segmods, segment);
+						    table. setWidget(rowno,2, new FieldInfoLabel(segment.getInstructions()));
+						}
+						segment.setRowIndex(rowno);
+						rowno++;
 					}
-					segment.setRowIndex(rowno);
-					rowno++;
 				}
 				//The submit row:
 			    table.setWidget(rowno, 0, new FieldLabel(ButtonText.CONFIRM));
@@ -416,14 +417,15 @@ public class AddEnterpriseForm extends AbstractForm {
 					@Override
 					public void onClick(ClickEvent event) {
 						ArrayList<String> modulenames=new ArrayList<String>();
-						for(GWTSegment segment:segments){
-							if (segment.isMultiSelect()){
-								CheckList cp = (CheckList) table.getWidget(segment.getRowIndex(), 1);
-								modulenames.addAll(cp.getValues());
-							}else{
-								HMVListBox box = (HMVListBox) table.getWidget(segment.getRowIndex(), 1);
+						
+						for(int row=0; row<table.getRowCount(); row++){
+							if((table.getWidget(row, 1)) instanceof CheckList){
+								CheckList box = (CheckList) table.getWidget(row, 1);
 								modulenames.addAll(box.getValues());
-							}
+							}else if((table.getWidget(row, 1)) instanceof HMVListBox){
+								HMVListBox box = (HMVListBox) table.getWidget(row, 1);
+								modulenames.addAll(box.getValues());
+							}else{}
 						}
 						String confirm=StringText.MODULES_CONFIRM;
 						for(String modulename:modulenames){

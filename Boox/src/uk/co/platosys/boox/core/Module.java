@@ -1,11 +1,18 @@
 package uk.co.platosys.boox.core;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
+import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
 import uk.co.platosys.boox.core.exceptions.BooxException;
+import uk.co.platosys.util.DocMan;
+import uk.co.platosys.util.Logger;
 /**Segments and Modules explained
 *  
 *  These are a feature of Boox and allow for the creation of specific accounting structures (a chart of accounts, etc)
@@ -49,6 +56,7 @@ public class Module {
  public static final String MULTISELECT_ATTVALUE="multiple";
  public static final File MODULE_DIR=new File("/etc/platosys/booxtemplates/");//TODO read from a property.
  public static final File MODULE_FILE=new File (MODULE_DIR, "boox.xml");
+ public static  Logger logger = Boox.logger;
  
 	public Module(String name, String description, String segment, String filename) {
 		this.name=name;
@@ -94,5 +102,28 @@ public class Module {
 	public void setMultipleSelection(boolean multipleSelection) {
 		this.multipleSelection = multipleSelection;
 	}
+	/**
+	    * This returns a Map of the available Modules, indexed by the module name, reading from the boox.xml config
+	    * file which lists them all. 
+	    * @return
+	    */
+	   public static Map<String, Module> getModules(){
+		   try{ 
+			   logger.log("Module-getting the modules");
+			   Map<String, Module> modules = new HashMap<String, Module>();
+			   Document moduleDoc = DocMan.build(Module.MODULE_FILE);
+			   Element rtel = moduleDoc.getRootElement();
+			   List<Element> modelements = rtel.getChildren(Module.ELEMENT_NAME, ns);
+			   Iterator<Element> it = modelements.iterator();
+			   while (it.hasNext()){
+				   Module module = new Module(it.next());
+				   modules.put(module.getName(), module);
+			   }
+			   return modules;
+		   }catch(Exception e){
+			   logger.log("Module- problem parsing the modules file", e);
+			   return null;
+		   }
+	   }
 
 }

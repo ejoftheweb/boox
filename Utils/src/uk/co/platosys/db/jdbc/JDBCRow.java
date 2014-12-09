@@ -53,7 +53,7 @@ import uk.co.platosys.util.Logger;
 public class JDBCRow implements Row {
     private Map<String, Object> row=new HashMap<String, Object>();
     private String rowName;
-     private Logger logger = Logger.getLogger("platosysdb");
+     private Logger logger = Logger.getLogger("jdplat");
    
      /**
       * The primary constructor takes a single ResultSet argument and creates the Row object from the 
@@ -64,6 +64,8 @@ public class JDBCRow implements Row {
       * 
       */
      protected JDBCRow(ResultSet rs) throws TypeNotSupportedException {
+    	 logger.log("JDBCRow init");
+     	
          this.rowName=""; 
         try{
              ResultSetMetaData rsmd = rs.getMetaData();
@@ -71,6 +73,7 @@ public class JDBCRow implements Row {
              for (int i=1; i<(noOfColumns+1); i++){
                  String colName = rsmd.getColumnName(i);
                  int type = rsmd.getColumnType(i);
+                 //logger.log("JGR "+colName+" type is "+type);
                  switch (type){
                      case Types.INTEGER:
                      	try{
@@ -108,9 +111,10 @@ public class JDBCRow implements Row {
                      	}catch(NullPointerException npe){
                      		row.put(colName, null);                    	
                      	}break;
-                     case Types.NUMERIC: 
+                     case Types.REAL: 
                      	try{
-                     		row.put(colName, (rs.getBigDecimal(colName)));
+                     		logger.log("JGR: "+colName+" type is REAL");
+                     		row.put(colName, (rs.getFloat(colName)));
                      	}catch(NullPointerException npe){
                      		row.put(colName, null);                    	
                      	}break;
@@ -135,10 +139,18 @@ public class JDBCRow implements Row {
                       	}break;
                       case Types.DECIMAL:
                       	 try{
+                      		//logger.log("JGR: "+colName+" type is DECIMAL");
                        		row.put(colName, (rs.getBigDecimal(colName)));
                        	}catch(NullPointerException npe){
                        		row.put(colName, null);                    	
                        	}break;
+                      case Types.NUMERIC:
+                       	 try{
+                       		//logger.log("JGR: "+colName+" type is DECIMAL");
+                        		row.put(colName, (rs.getBigDecimal(colName)));
+                        	}catch(NullPointerException npe){
+                        		row.put(colName, null);                    	
+                        	}break;
                      default: throw new TypeNotSupportedException(colName+ " contains a datatype not supported by platosys.db");
                  }
              }
@@ -170,6 +182,7 @@ public class JDBCRow implements Row {
     protected JDBCRow(long rowNumber, ResultSet rs) throws TypeNotSupportedException {
     	 this(rs);
      	this.rowName=Long.toString(rowNumber); 
+     	logger.log("JDBCRow created with no: "+rowNumber);
 	}  
     
       
@@ -256,5 +269,14 @@ public class JDBCRow implements Row {
 	     }else{
 	         throw new ColumnNotFoundException("JDBCRow "+rowName+" does not contain a column called "+colName);
 	     }
+	}
+
+	@Override
+	public float getFloat(String columnName) throws ClassCastException,ColumnNotFoundException {
+		if(row.containsKey(columnName.toLowerCase())){
+		     return (float) row.get(columnName.toLowerCase());
+	    }else{
+	        throw new ColumnNotFoundException("JDBCRow "+rowName+" does not contain a column called "+columnName);
+	    }
 	}
 }

@@ -62,6 +62,7 @@ public static Logger logger  = Logger.getLogger("platax");
   
     ///this section has a series of methods to create GWTserializable analogues of Boox accounting objects and the inverse
     public static GWTMoney convert(Money money){
+    	if(money==null){logger.log("PXServer convert - null money");}
     	return new GWTMoney(money.getCurrency().getTLA(), money.getAmount().doubleValue());
     }
     public static Money convert(GWTMoney gwtMoney){

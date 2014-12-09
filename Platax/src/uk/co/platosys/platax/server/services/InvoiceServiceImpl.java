@@ -47,8 +47,8 @@ public class InvoiceServiceImpl extends Xservlet implements InvoiceService {
 			Clerk clerk= getClerk(enterprise);
 			Customer customer= Customer.getCustomer(enterprise, clerk, customerID);
 			logger.log("ISL-cI: got customer, name is:"+customer.getName());
-			//now we have to create an Invoice for this customer.
-			Invoice invoice = Invoice.createInvoice(enterprise, clerk, customer);//(enterprise, clerk, customer);
+			
+			Invoice invoice = Invoice.getInvoice(enterprise, clerk, customer);//(enterprise, clerk, customer);
 			pxuser.putInvoice(invoice);
 			GWTCustomer gwtCustomer = CustomerServiceImpl.convert(customer);
 			if (gwtCustomer==null){throw new PlataxException("ISL create invoice, seem to have no customer?");}

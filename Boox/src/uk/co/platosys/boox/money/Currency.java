@@ -65,6 +65,7 @@ public class Currency {
     private Currency(String symbol){
         this.symbol=symbol;
         this.tla=symbol;
+        if(!(tla.equals("XBX"))){
         try{
             this.javaCurrency=java.util.Currency.getInstance(tla);
             String format = "#,###.";
@@ -76,17 +77,16 @@ public class Currency {
         }catch(IllegalArgumentException ie){
            this.format=DEFAULT_FORMAT;
         }
-
+        this.format=DEFAULT_FORMAT;
+        }
         currencies.put(tla, this);
-       
     }
     
     private Currency(java.util.Currency javaCurrency){
         this.javaCurrency=javaCurrency;
         this.symbol=javaCurrency.getSymbol();
         this.tla=javaCurrency.getCurrencyCode();
-
-    }
+   }
     public String getSymbol(){
         return symbol;
     } 

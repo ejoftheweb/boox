@@ -317,8 +317,8 @@ Map<String,String[]> parameterMap;
      */
     @Override
 	protected 	void onAfterResponseSerialized(String serializedResponse){
-    	logger.log("Xservlet: responseSerialised");
-		logger.log(serializedResponse);
+    	//logger.log("Xservlet: responseSerialised");
+		//logger.log(serializedResponse);
 	}
     /**
      * catches the SerializationException for forensic examination.

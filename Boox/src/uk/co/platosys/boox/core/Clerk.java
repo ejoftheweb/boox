@@ -208,14 +208,7 @@ public  class Clerk {
     public boolean canCreateAccounts(){
         return createAccounts;
     }
-    @Deprecated
-    public void setLedger(Ledger ledger){
-        this.ledger=ledger;
-    }
-    @Deprecated
-    public Ledger getLedger(){
-        return ledger;
-    }
+    
     /**
      * Returns true if the clerk object is both authenticated and
      * has the appropriate permissions. Use the hasPermission(String permission) method
@@ -290,6 +283,7 @@ public  class Clerk {
      */
     public boolean canRead(Enterprise enterprise, Ledger ledger){
         if (authenticated){
+        	logger.log("Clerk:canRead checking started");
             return hasPermission(enterprise, ledger, Permission.READ);
         }else{
         	logger.log("Clerk:canRead - clerk"+name+" is not authenticated");
@@ -314,7 +308,7 @@ public  class Clerk {
     }
     
     public boolean hasPermission(Enterprise enterprise, Ledger ledger, Permission permission){
-        //logger.log("Clerk-HP checking for permission "+permission.getName()+ " on ledger "+ledger.getFullName());
+        logger.log("Clerk-HP checking for permission "+permission.getName()+ " on ledger "+ledger.getFullName());
         
         //Permission checking Algorithm:
         //First, check to see if the permission is there on the ledger directly.

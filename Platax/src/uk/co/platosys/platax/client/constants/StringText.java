@@ -7,6 +7,7 @@ public class StringText {
 	public static final String BILL="Bill";
 	public static final String LOGIN="Login";
 	public static final String SIGNUP="Sign Up";
+	public static final String SIGNUP_GO="Don't have an account?";
 	public static final String REALLY_LOGOUT="Really logout?";
 	public static final String REALLY_CLOSE_TAB="Really close this tab?";
 	public static final String SERVER_ERROR="Sorry there has been a server error, code:";

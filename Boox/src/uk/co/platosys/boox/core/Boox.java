@@ -250,7 +250,7 @@ public class Boox {
                 if(journalTable==null){logger.log("journal table not created");}
                 journalTable.addColumn(Journal.DEBIT_COLNAME, Table.TEXT_COLUMN);
                 journalTable.addColumn(Journal.CREDIT_COLNAME, Table.TEXT_COLUMN);
-                journalTable.addColumn(Journal.AMOUNT_COLNAME, Table.NUMERIC_COLUMN);
+                journalTable.addColumn(Journal.AMOUNT_COLNAME, Table.DECIMAL_COLUMN);
                 journalTable.addColumn(Journal.CURRENCY_COLNAME, Table.TEXT_COLUMN);
                 journalTable.addColumn(Journal.DATE_COLNAME, Table.TIMESTAMP_COLUMN);
                 journalTable.addColumn(Journal.CLERK_COLNAME, Table.TEXT_COLUMN);
@@ -524,12 +524,7 @@ public class Boox {
       
        }
    }
-   
- 
   
-    
- 
- 
    private static String readProperty (String propertyName){
        String propertiesFileName="/etc/platosys/boox.xml";
     
@@ -550,6 +545,7 @@ public class Boox {
     * file which lists them all. 
     * @return
     */
+   @Deprecated
    public static Map<String, Module> getModules(){
 	   try{ 
 		   logger.log("Bx-getting the modules");

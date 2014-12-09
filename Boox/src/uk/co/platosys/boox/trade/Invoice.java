@@ -101,6 +101,9 @@ import uk.co.platosys.db.jdbc.JDBCTable;
  * scope. The UIN is by default the same as the SIN but can be manually overridden (and should be when, for example, invoices
  * are written on numbered preprinted forms). 
  
+ * STATUS sequence:
+ * CREATED: PENDING; RAISED:OPEN; PAID:PAID
+ * 
  * 
  * @author edward
  */
@@ -115,7 +118,7 @@ public class Invoice  {
    public static final int SELECTION_PENDING=24;
    public static final int SELECTION_OVERDUE=16;
    public static final int SELECTION_DISPUTED=8;
-   public static final String OPEN="open";
+   public static final String OPEN="OPEN";
    public static final String PAID="PAID";
    public static final String PENDING="PENDING";
    public static final String OVERDUE="OVERDUE";
@@ -258,10 +261,10 @@ public class Invoice  {
 		 this.createdDate=row.getISODate(INVOICE_CREATED_DATE_COLNAME);
 		 this.dueDate=row.getISODate(INVOICE_DUE_DATE_COLNAME);
 		 this.valueDate=row.getISODate(INVOICE_VALUE_DATE_COLNAME);
-		 this.currency=currency.getCurrency(row.getString(INVOICE_CURRENCY_COLNAME));
-		 this.net=new Money(currency, row.getDouble(INVOICE_NET_COLNAME));
-		 this.tax=new Money(currency, row.getDouble(INVOICE_TAX_COLNAME));
-		 this.total=new Money(currency, row.getDouble(INVOICE_TOTAL_COLNAME));
+		 this.currency=Currency.getCurrency(row.getString(INVOICE_CURRENCY_COLNAME));
+		 this.net=new Money(currency, row.getBigDecimal(INVOICE_NET_COLNAME));
+		 this.tax=new Money(currency, row.getBigDecimal(INVOICE_TAX_COLNAME));
+		 this.total=new Money(currency, row.getBigDecimal(INVOICE_TOTAL_COLNAME));
 		  this.account=getInvoiceAccount(enterprise,clerk, sysname);
 		  this.outstanding=account.getBalance(enterprise, clerk);
 		  if(outstanding.moreThan(Money.zero(currency))){
@@ -374,6 +377,7 @@ public class Invoice  {
 		    	 File invoiceFile=new File(INVOICES_FOLDER, sysname);
 		    	 DocMan.write(invoiceFile,invoiceDocument);
 		    	setRaisedDate(new ISODate());
+		    	setStatus(OPEN);
 		    	return invoiceDocument;
 		    
 	   }catch(Exception x){
@@ -742,5 +746,48 @@ public InvoiceItem getInvoiceItemAt(int index)throws BooxException {
 public Money getBalance(Clerk clerk) throws PermissionsException{
 	return account.getBalance(enterprise, clerk);
 }
-
+/**
+ * Returns the most recent invoice for this customer.
+ * 
+ * @param enterprise
+ * @param clerk
+ * @return
+ */
+public static Invoice getInvoice(Enterprise enterprise, Clerk clerk, Customer customer){
+	//TODO
+	/* First, we must check to see if we have any unraised/draft invoices for this customer. Should only be one!
+	 * If so, we return it.
+	 * 
+	 * Second, if not we return an invoice which is a clone of the last invoice we raised for that customer.
+	 * 
+	 * 
+	 */
+	try{
+	Table invoicesTable = getInvoicesTable(enterprise);
+	List<Row> rows = invoicesTable.getRows(INVOICE_CUSTOMER_SYSNAME_COLNAME, customer.getSysname());
+	ISODate date = new ISODate(0);
+	String invSysname=null;
+	for (Row row:rows){
+		ISODate invDate;
+		
+			invDate = row.getISODate(INVOICE_CREATED_DATE_COLNAME);
+		
+		if (invDate.after(date)){
+			date=invDate;
+			invSysname=row.getString(INVOICE_SYSNAME_COLNAME);
+		}
+	}
+	if(invSysname==null){
+		logger.log("creating first invoice for customer:"+customer.getName());
+		return createInvoice(enterprise, clerk, customer);
+	}else{
+		logger.log("opening  latest invoice for customer:"+customer.getName());
+		
+		return openInvoice(enterprise, clerk, invSysname);
+	}
+	}catch(Exception e){
+		logger.log("Invoice-gI problem", e);
+		return null;
+	}
+}
 }

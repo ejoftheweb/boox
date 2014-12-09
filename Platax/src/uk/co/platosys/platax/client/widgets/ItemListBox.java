@@ -16,7 +16,7 @@ public class ItemListBox extends ListBox {
 	   Iterator<? extends GWTItem> cit = gwtItems.iterator();
 	   while(cit.hasNext()){
 		   GWTItem gwtItem=cit.next();
-		   addItem(gwtItem.getName(),gwtItem.getItemID());
+		   addItem(gwtItem.getName(),gwtItem.getSysname());
 	   }
    }
 

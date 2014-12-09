@@ -11,10 +11,18 @@ import uk.co.platosys.db.SerialTable;
 import uk.co.platosys.db.Table;
 
 public class JDBCSerialTable extends JDBCTable implements SerialTable {
-	static Logger logger = Logger.getLogger("dbplat");
+	static Logger logger = Logger.getLogger("jdplat");
+	
+	/**
+	 * The primary key of a serial table is the serial column which is of Integer type
+	 * @param databaseName
+	 * @param tableName
+	 * @param primaryKeyColumnName
+	 * @throws PlatosysDBException
+	 */
 	  public JDBCSerialTable(String databaseName, String tableName,
 			String primaryKeyColumnName) throws PlatosysDBException {
-		  super(databaseName, tableName, primaryKeyColumnName);
+		  super(databaseName, tableName, primaryKeyColumnName, Table.INTEGER_COLUMN);
 		
 	}
 	  public JDBCSerialTable(String databaseName, String tableName,

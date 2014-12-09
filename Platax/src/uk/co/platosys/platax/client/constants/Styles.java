@@ -26,6 +26,7 @@ public class Styles {
   public final static String FIELD_INFO_LABEL_ALARMED="px_field_info_label_alarmed";
   
   public final static String COLUMN_HEADER="px_column_header";
+  public final static String MONEY_COLUMN_HEADER="px_money_column_header";
   public final static String FORM_HEADER="px_form_header";
   public final static String FORM_SUB_HEADER="px_form_subheader";
   public final static String GROUP_COLUMN_HEADER="px_group_column_header";

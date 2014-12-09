@@ -27,6 +27,7 @@
 
 package uk.co.platosys.db.jdbc;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -67,7 +68,12 @@ import uk.co.platosys.db.TypeNotSupportedException;
  * - amend an item in a row: table.amend(rowKey, columnName, newValue); (if it can't find the row, a new one is added).
  * - read a date: ISODate isoDate = table.readDate(rowKey, columnName);
  *
- *
+ * Revisions Dec2014
+ * 
+ * Support has now been added for integer (long) primary keys and for the decimal column type. Decimal maps to a java.math.BigDecimal leaving numeric
+ * for other floating-point types. 
+ * Support for serial primary keys is now provided in the SerialTable class which is an extension of this. 
+ * 
  * @author edward
  */
 public class JDBCTable implements Table {
@@ -84,7 +90,7 @@ public class JDBCTable implements Table {
     String primaryKeyColumnName;
 	private String primaryKeyColumnType;
 	
-   protected static Logger logger = Logger.getLogger("dbplat");
+   protected static Logger logger = Logger.getLogger("jdplat");
    /**
     * protected no-args constructor for subclasses in the same package
     */
@@ -101,9 +107,11 @@ public class JDBCTable implements Table {
     		String primaryKeyColumnType) 
     throws PlatosysDBException {
         Connection connection=null;
+        Statement statement=null;
+        ResultSet rs=null;
             connection=ConnectionSource.getConnection(databaseName);
             try{
-                Statement statement=connection.createStatement();
+                statement=connection.createStatement();
                 statement.execute("CREATE TABLE "+tableName+" ("+primaryKeyColumnName+ " "+primaryKeyColumnType+" PRIMARY KEY)");
                 connection.close();
                 return new JDBCTable(databaseName, tableName, primaryKeyColumnName, primaryKeyColumnType);
@@ -111,6 +119,12 @@ public class JDBCTable implements Table {
                 logger.log("problem creating table "+tableName+"  in db "+databaseName, ex);
                 try{connection.close();}catch(Exception p){}
                return null; 
+            }finally{
+            	try{
+            		if (rs!=null){rs.close();}
+            		if (statement!=null){statement.close();}
+            		if (connection!=null){connection.close();}
+            	}catch(Exception x){}
             }
     }
     
@@ -126,10 +140,12 @@ public class JDBCTable implements Table {
     		String columnType, 
     		boolean primaryKey)
     throws PlatosysDBException {
-        Connection connection=null;
-            connection=ConnectionSource.getConnection(databaseName);
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		 connection=ConnectionSource.getConnection(databaseName);
             try{
-                Statement statement=connection.createStatement();
+                statement=connection.createStatement();
                 String sqlString = null;
                 if (primaryKey){
                     sqlString="CREATE TABLE "+tableName+" ("+columnName+ " "+columnType+" PRIMARY KEY)";
@@ -143,6 +159,12 @@ public class JDBCTable implements Table {
                try{connection.close();}catch(Exception p){}
 
                return null;
+            }finally{
+            	try{
+            		if (rs!=null){rs.close();}
+            		if (statement!=null){statement.close();}
+            		if (connection!=null){connection.close();}
+            	}catch(Exception x){}
             }
          }
     
@@ -157,12 +179,14 @@ public class JDBCTable implements Table {
         		   String foreignKeyColumnName, 
         		   String foreignKeyTableName ) 
         	throws PlatosysDBException {
-           Connection connection=null;
-            connection=ConnectionSource.getConnection(databaseName);
+        	   Connection connection=null;
+        		ResultSet rs=null;
+        		Statement statement=null;
+        		connection=ConnectionSource.getConnection(databaseName);
             String SQLString="";
             try{
-                Statement statement=connection.createStatement();
-                ResultSet rs =statement.executeQuery("SELECT "+foreignKeyColumnName+" FROM "+foreignKeyTableName);//this will only work if column names are the same!!
+               statement=connection.createStatement();
+                rs =statement.executeQuery("SELECT "+foreignKeyColumnName+" FROM "+foreignKeyTableName);//this will only work if column names are the same!!
                 ResultSetMetaData rsmd = rs.getMetaData();
                 int keyType = rsmd.getColumnType(rs.findColumn(foreignKeyColumnName));
                 rs.close();
@@ -176,6 +200,12 @@ public class JDBCTable implements Table {
                 try{connection.close();}catch(Exception p){}
 
                return null; 
+            }finally{
+            	try{
+            		if (rs!=null){rs.close();}
+            		if (statement!=null){statement.close();}
+            		if (connection!=null){connection.close();}
+            	}catch(Exception x){}
             }
     }
    /**
@@ -189,11 +219,13 @@ public class JDBCTable implements Table {
         		   String foreignKeyTableName, 
         		   String foreignTableColumnName)
            throws PlatosysDBException {
-            Connection connection=null;
-            connection=ConnectionSource.getConnection(databaseName);
+        	   Connection connection=null;
+        		ResultSet rs=null;
+        		Statement statement=null;
+        		connection=ConnectionSource.getConnection(databaseName);
             try{
-                Statement statement=connection.createStatement();
-                ResultSet rs =statement.executeQuery("SELECT "+foreignTableColumnName+" FROM "+foreignKeyTableName);
+                statement=connection.createStatement();
+                rs =statement.executeQuery("SELECT "+foreignTableColumnName+" FROM "+foreignKeyTableName);
                 ResultSetMetaData rsmd = rs.getMetaData();
                 int keyType = rsmd.getColumnType(rs.findColumn(foreignTableColumnName));
                 rs.close();
@@ -204,6 +236,12 @@ public class JDBCTable implements Table {
                 try{connection.close();}catch(Exception p){}
 
                return null; 
+            }finally{
+            	try{
+            		if (rs!=null){rs.close();}
+            		if (statement!=null){statement.close();}
+            		if (connection!=null){connection.close();}
+            	}catch(Exception x){}
             }
         }
           /**
@@ -282,11 +320,14 @@ public class JDBCTable implements Table {
         }
     }
     private boolean checkCols (String databaseName, String tableName, String primaryKeyColumnName, String primaryKeyColumnType) throws PlatosysDBException {
-    	 Connection connection=ConnectionSource.getConnection(databaseName);
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		connection=ConnectionSource.getConnection(databaseName);
     	 primaryKeyColumnName=primaryKeyColumnName.toLowerCase();
          try{
-         	Statement statement=connection.createStatement();
-             ResultSet rs=statement.executeQuery("SELECT * FROM "+tableName);//this is potentially very hungry!
+         	statement=connection.createStatement();
+             rs=statement.executeQuery("SELECT * FROM "+tableName);//this is potentially very hungry!
              ResultSetMetaData rsmd = rs.getMetaData();
              boolean colfound=false;
              int cols=rsmd.getColumnCount();
@@ -318,7 +359,13 @@ public class JDBCTable implements Table {
              logger.log(2,"TABLE checkCols "+tableName+" error ");
              try{connection.close();}catch(Exception p){}
              throw new PlatosysDBException("table "+tableName+" error", e);
-         }
+         }finally{
+         	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
+        }
     }
    /** 
      * Creates a new instance of JDBCTable with no primary key
@@ -330,10 +377,14 @@ public class JDBCTable implements Table {
         this.databaseName=databaseName;
         this.tableName=tableName;
         this.primaryKeyColumnName=null;
-        Connection connection=ConnectionSource.getConnection(databaseName);
+        Connection connection=null;
+ 		ResultSet rs=null;
+ 		Statement statement=null;
+ 		
+       connection=ConnectionSource.getConnection(databaseName);
         try{
-            Statement statement=connection.createStatement();
-            ResultSet rs=statement.executeQuery("SELECT * FROM "+tableName);
+        	statement=connection.createStatement();
+            rs=statement.executeQuery("SELECT * FROM "+tableName);
             connection.close();
         }catch(Exception e){
             logger.log(2,"TABLE-init: table "+tableName+" does not exist");
@@ -341,6 +392,12 @@ public class JDBCTable implements Table {
 
             throw new PlatosysDBException("table "+tableName+" does not exist", e);
                     
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
          /**
@@ -355,16 +412,20 @@ public class JDBCTable implements Table {
         this.databaseName=databaseName;
         this.tableName=tableName;
         this.primaryKeyColumnName=primaryKeyColumnName;
-        Connection connection=ConnectionSource.getConnection(databaseName);
+        Connection connection=null;
+ 		ResultSet rs=null;
+ 		Statement statement=null;
+ 		
+        connection=ConnectionSource.getConnection(databaseName);
         try{
-            Statement statement=connection.createStatement();
-            ResultSet rs=statement.executeQuery("SELECT * FROM "+tableName);
+            statement=connection.createStatement();
+            rs=statement.executeQuery("SELECT * FROM "+tableName);
             connection.close();
         }catch(Exception e){
             logger.log(2,"TABLE-init: table "+tableName+" does not exist");
             if(createIfAbsent){
                 try{
-                    Statement statement=connection.createStatement();
+                    statement=connection.createStatement();
                     String sqlString=("CREATE TABLE "+tableName+" ("+primaryKeyColumnName+" text PRIMARY KEY)");
                     logger.log(5, sqlString);
                     statement.execute(sqlString);
@@ -379,16 +440,24 @@ public class JDBCTable implements Table {
                 try{connection.close();}catch(Exception p){}
 
             }
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
     public Set<String> getColumnNames(){
-         Connection connection=null;
-         Set<String> colnames = new HashSet<String>();
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		Set<String> colnames = new HashSet<String>();
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
-            ResultSet resultSet=statement.executeQuery("SELECT *  FROM "+tableName);
-            ResultSetMetaData rsmd = resultSet.getMetaData();
+            statement=connection.createStatement();
+            rs=statement.executeQuery("SELECT *  FROM "+tableName);
+            ResultSetMetaData rsmd = rs.getMetaData();
             int noOfColumns = rsmd.getColumnCount();
             for(int i=0; i<noOfColumns; i++){
                 colnames.add(rsmd.getColumnName(i));
@@ -399,6 +468,12 @@ public class JDBCTable implements Table {
             //Logger.log("JDBCTable.rowExists(): error", e);
             try{connection.close();}catch(Exception cex){}
             return null;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
     /**
@@ -407,12 +482,14 @@ public class JDBCTable implements Table {
      * @return true if the row is found
      */
     public boolean rowExists(String primaryKeyTest){
-        Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
-            ResultSet resultSet=statement.executeQuery("SELECT "+primaryKeyColumnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+ " = \'"+primaryKeyTest+"\'");
-            if(resultSet.next()){
+            statement=connection.createStatement();
+            rs=statement.executeQuery("SELECT "+primaryKeyColumnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+ " = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
                 connection.close();
                 return true;
             }else{
@@ -423,6 +500,12 @@ public class JDBCTable implements Table {
             //Logger.log("JDBCTable.rowExists(): error", e);
             try{connection.close();}catch(Exception cex){}
             return false;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
     
@@ -432,12 +515,14 @@ public class JDBCTable implements Table {
      * @return true if the row is found
      */
     public boolean rowExists(int primaryKeyTest){
-        Connection connection=null;
-        try{
+    	Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
-            ResultSet resultSet=statement.executeQuery("SELECT "+primaryKeyColumnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+ " = "+primaryKeyTest);
-            if(resultSet.next()){
+            statement=connection.createStatement();
+            rs=statement.executeQuery("SELECT "+primaryKeyColumnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+ " = "+primaryKeyTest);
+            if(rs.next()){
                 connection.close();
                 return true;
             }else{
@@ -448,6 +533,12 @@ public class JDBCTable implements Table {
             //Logger.log("JDBCTable.rowExists(): error", e);
             try{connection.close();}catch(Exception cex){}
             return false;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
     
@@ -458,12 +549,14 @@ public class JDBCTable implements Table {
      * @return true if at lease one row is found where columnName=columnValue
      */
     public boolean rowExists(String columnName, String columnValue){
-        Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
-            ResultSet resultSet=statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+columnName+ " = \'"+columnValue+"\'");
-            if(resultSet.next()){
+            statement=connection.createStatement();
+            rs=statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+columnName+ " = \'"+columnValue+"\'");
+            if(rs.next()){
                 connection.close();
                 return true;
             }else{
@@ -474,6 +567,12 @@ public class JDBCTable implements Table {
             //Logger.log("JDBCTable.rowExists(): error", e);
             try{connection.close();}catch(Exception cex){}
             return false;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
     
@@ -488,9 +587,11 @@ public class JDBCTable implements Table {
             throw new PlatosysDBException ("columns and values arrays don't match");
         }
         Connection connection=null;
-        try{
+ 		ResultSet rs=null;
+ 		Statement statement=null;
+ 		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
+            statement=connection.createStatement();
             String sqlWhereClause =  " WHERE (";
             for (int i=0; i<columns.length; i++){
                 sqlWhereClause=sqlWhereClause+"("+columns[i]+" = \'"+values[i]+"\') AND ";
@@ -498,8 +599,8 @@ public class JDBCTable implements Table {
             sqlWhereClause=sqlWhereClause.substring(0, sqlWhereClause.length()-4);
             sqlWhereClause=sqlWhereClause+")";
             String sqlQuery= "SELECT * FROM "+tableName+sqlWhereClause;
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-            if(resultSet.next()){
+            rs = statement.executeQuery(sqlQuery);
+            if(rs.next()){
                 connection.close();
                 return true;
             }else{
@@ -512,14 +613,22 @@ public class JDBCTable implements Table {
             try{connection.close();}catch(Exception p){}
 
             return false;
-        }
+        }finally{
+            	try{
+            		if (rs!=null){rs.close();}
+            		if (statement!=null){statement.close();}
+            		if (connection!=null){connection.close();}
+            	}catch(Exception x){}
+            }
     }
 
      public boolean addRow(String columnName, long columnValue){
-        Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
+            statement=connection.createStatement();
             statement.execute("INSERT INTO "+tableName+" ("+columnName+") VALUES ("+columnValue+")");
             connection.close();
             return true;
@@ -527,14 +636,22 @@ public class JDBCTable implements Table {
             //Logger.log("JDBCTable.addRow(): error", e);
             try{connection.close();}catch(Exception cex){}
             return false;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
    
     public boolean addRow(String columnName, String columnValue){
-        Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
+            statement=connection.createStatement();
             statement.execute("INSERT INTO "+tableName+" ("+columnName+") VALUES (\'"+columnValue+"\')");
             connection.close();
             return true;
@@ -542,6 +659,12 @@ public class JDBCTable implements Table {
             logger.log("JDBCTable.addRow(): error", e);
             try{connection.close();}catch(Exception cex){}
             return false;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
   
@@ -550,9 +673,11 @@ public class JDBCTable implements Table {
             throw new PlatosysDBException("JDBCTable - Add JDBCRow: not the same number of columns and values");
         }
         Connection connection=null;
-        try{
+ 		ResultSet rs=null;
+ 		Statement statement=null;
+ 		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
+            statement=connection.createStatement();
             String SQLString="INSERT INTO "+tableName+ " (";
             for (int i=0; i<columns.length; i++){
                 SQLString=SQLString+columns[i]+",";
@@ -574,20 +699,28 @@ public class JDBCTable implements Table {
             logger.log("JDBCTable.addRow([][]): error", e);
             try{connection.close();}catch(Exception cex){}
             return false;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
     public JDBCRow getRow(String primaryKeyTest)throws RowNotFoundException, PlatosysDBException {
     	if (!(primaryKeyColumnType.equals(TEXT_COLUMN))){
     		throw new PlatosysDBException(" primary key is not a text column");
     	}
-       Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		 try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
-            ResultSet resultSet=statement.executeQuery("SELECT * FROM "+tableName+ " WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            if(resultSet.next()){
+           statement=connection.createStatement();
+            rs=statement.executeQuery("SELECT * FROM "+tableName+ " WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
                //logger.log(5, "JDBCTable found row for "+primaryKeyTest);
-               JDBCRow row = new JDBCRow(primaryKeyTest, resultSet);
+               JDBCRow row = new JDBCRow(primaryKeyTest, rs);
                connection.close();
                return row;
             }else{
@@ -603,21 +736,36 @@ public class JDBCTable implements Table {
         catch(Exception e){
             try{connection.close();}catch(Exception cex){}
             return null;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }    
     }
     
     public JDBCRow getRow(long primaryKeyTest)throws RowNotFoundException, PlatosysDBException {
+    	logger.log("JDBCT getting row "+primaryKeyTest+" from table "+tableName);
     	if (!(primaryKeyColumnType.equals(INTEGER_COLUMN))){
     		throw new PlatosysDBException(" primary key is not an integer");
     	}
-       Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		 try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
-            ResultSet resultSet=statement.executeQuery("SELECT * FROM "+tableName+ " WHERE "+primaryKeyColumnName+" = "+primaryKeyTest);
-            if(resultSet.next()){
+            if(connection==null){throw new PlatosysDBException("couldn't get a db connection wtaf");}
+            logger.log("JDBCT got connection to "+databaseName);
+        	
+            statement=connection.createStatement();
+            logger.log("JDBCT created statement for "+tableName);
+        	
+            rs=statement.executeQuery("SELECT * FROM "+tableName+ " WHERE "+primaryKeyColumnName+" = "+primaryKeyTest);
+            logger.log("JDBCT getting result set for "+primaryKeyTest+" from table "+tableName);
+        	if(rs.next()){
                //logger.log(5, "JDBCTable found row for "+primaryKeyTest);
-               JDBCRow row = new JDBCRow(primaryKeyTest, resultSet);
+               JDBCRow row = new JDBCRow(primaryKeyTest, rs);
                connection.close();
                return row;
             }else{
@@ -633,7 +781,13 @@ public class JDBCTable implements Table {
         catch(Exception e){
             try{connection.close();}catch(Exception cex){}
             return null;
-        }    
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
+        }
     }
     /**
      * Selects a row on something other than the table's primary key. Returns only the first matching 
@@ -645,14 +799,16 @@ public class JDBCTable implements Table {
      */
     
     public JDBCRow getRow(String queryColumnName, String queryColumnValue)throws RowNotFoundException {
-       Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		 try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
-            ResultSet resultSet=statement.executeQuery("SELECT * FROM "+tableName+ " WHERE "+queryColumnName+" = \'"+queryColumnValue+"\'");
-            if(resultSet.next()){
+           statement=connection.createStatement();
+            rs=statement.executeQuery("SELECT * FROM "+tableName+ " WHERE "+queryColumnName+" = \'"+queryColumnValue+"\'");
+            if(rs.next()){
                //logger.log(5, "JDBCTable found row for "+queryColumnValue);
-               JDBCRow row = new JDBCRow(queryColumnName+"="+queryColumnValue, resultSet);
+               JDBCRow row = new JDBCRow(queryColumnName+"="+queryColumnValue, rs);
                connection.close();
                return row;
             }else{
@@ -667,18 +823,25 @@ public class JDBCTable implements Table {
         catch(Exception e){
             try{connection.close();}catch(Exception cex){}
             return null;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }    
     }
 
     /**
-     *Returns the first JDBCRow found where the columns in testColumns have the values in testValuses
+     *Returns the first JDBCRow found where the columns in testColumns have the values in testValues
      */
     public JDBCRow getRow(String[] testColumns, String[] testValues) throws RowNotFoundException {
-        Connection connection=null;
-        List<JDBCRow> rows = new Vector();
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
+            statement=connection.createStatement();
             String sqlWhereClause =  " WHERE (";
             for (int i=0; i<testColumns.length; i++){
                 sqlWhereClause=sqlWhereClause+"("+testColumns[i]+" = \'"+testValues[i]+"\') AND ";
@@ -686,9 +849,9 @@ public class JDBCTable implements Table {
             sqlWhereClause=sqlWhereClause.substring(0, sqlWhereClause.length()-4);
             sqlWhereClause=sqlWhereClause+")";
             String sqlQuery= "SELECT * FROM "+tableName+sqlWhereClause;
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-           if (resultSet.next()){
-              JDBCRow row = new JDBCRow (resultSet);
+            rs = statement.executeQuery(sqlQuery);
+           if (rs.next()){
+              JDBCRow row = new JDBCRow (rs);
                connection.close();
                return row;
             }else{
@@ -703,6 +866,12 @@ public class JDBCTable implements Table {
           
             logger.log("JDBCTable getRows had a problem", e);
             return null;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
 
@@ -710,11 +879,13 @@ public class JDBCTable implements Table {
      *Returns a List of Rows where the columns in testColumns have the values in testValuses
      */
     public List<Row> getRows(String[] testColumns, String[] testValues){
-        Connection connection=null;
-        List<Row> rows = new ArrayList();
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		List<Row> rows = new ArrayList<Row>();
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
+            statement=connection.createStatement();
             String sqlWhereClause =  " WHERE (";
             for (int i=0; i<testColumns.length; i++){
                 sqlWhereClause=sqlWhereClause+"("+testColumns[i]+" = \'"+testValues[i]+"\') AND ";
@@ -722,9 +893,9 @@ public class JDBCTable implements Table {
             sqlWhereClause=sqlWhereClause.substring(0, sqlWhereClause.length()-4);
             sqlWhereClause=sqlWhereClause+")";
             String sqlQuery= "SELECT * FROM "+tableName+sqlWhereClause;
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-            while(resultSet.next()){
-                rows.add(new JDBCRow (resultSet));
+            rs = statement.executeQuery(sqlQuery);
+            while(rs.next()){
+                rows.add(new JDBCRow (rs));
             }
             connection.close();
             return rows;
@@ -733,6 +904,12 @@ public class JDBCTable implements Table {
 
             logger.log("JDBCTable getRows had a problem", e);
             return null;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
  /**
@@ -740,16 +917,16 @@ public class JDBCTable implements Table {
      */
     public List<Row> getRows(String column, String value){
         Connection connection=null;
-        List<Row> rows = new ArrayList();
+        List<Row> rows = new ArrayList<Row>();
         try{
             connection=ConnectionSource.getConnection(databaseName);
             Statement statement=connection.createStatement();
             String sqlWhereClause =  " WHERE ("+column+" = \'"+value+"\')";
 
             String sqlQuery= "SELECT * FROM "+tableName+sqlWhereClause;
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-            while(resultSet.next()){
-                rows.add(new JDBCRow (resultSet));
+            ResultSet rs = statement.executeQuery(sqlQuery);
+            while(rs.next()){
+                rows.add(new JDBCRow (rs));
             }
             connection.close();
             return rows;
@@ -767,18 +944,20 @@ public class JDBCTable implements Table {
      * @return
      */
     public List<Row> getRows(String sqlWhere){
-        Connection connection=null;
-        List<Row> rows = new ArrayList<Row>();
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		 List<Row> rows = new ArrayList<Row>();
         String sqlQuery="";
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
+            statement=connection.createStatement();
             String sqlWhereClause = " WHERE ( "+sqlWhere;
             sqlWhereClause=sqlWhereClause+")";
             sqlQuery= "SELECT * FROM "+tableName+sqlWhereClause;
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-            while(resultSet.next()){
-                rows.add(new JDBCRow (resultSet));
+             rs = statement.executeQuery(sqlQuery);
+            while(rs.next()){
+                rows.add(new JDBCRow (rs));
             }
             connection.close();
             return rows;
@@ -787,6 +966,12 @@ public class JDBCTable implements Table {
             try{connection.close();}catch(Exception p){}
 
             return null;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
     /**
@@ -795,14 +980,16 @@ public class JDBCTable implements Table {
      * @return
      */
     public List<Row> query(String sqlQuery)throws PlatosysDBException{
-        Connection connection=null;
-        List<Row> rows = new ArrayList<Row>();
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		List<Row> rows = new ArrayList<Row>();
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-            while(resultSet.next()){
-                rows.add(new JDBCRow (resultSet));
+           statement=connection.createStatement();
+            rs = statement.executeQuery(sqlQuery);
+            while(rs.next()){
+                rows.add(new JDBCRow (rs));
             }
             connection.close();
             return rows;
@@ -813,6 +1000,12 @@ public class JDBCTable implements Table {
             throw new PlatosysDBException("SQL query problem", e);
             
 
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
         /**
@@ -820,17 +1013,19 @@ public class JDBCTable implements Table {
          * @return
          */
 
-          public List<Row> getRows(){
-        Connection connection=null;
-        List<Row> rows = new Vector();
+      public List<Row> getRows(){
+    	  Connection connection=null;
+   		ResultSet rs=null;
+   		Statement statement=null;
+   		 List<Row> rows = new ArrayList<Row>();
         String sqlQuery="";
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
+           statement=connection.createStatement();
             sqlQuery= "SELECT * FROM "+tableName;
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-            while(resultSet.next()){
-                rows.add(new JDBCRow (resultSet));
+           rs = statement.executeQuery(sqlQuery);
+            while(rs.next()){
+                rows.add(new JDBCRow (rs));
             }
             connection.close();
             return rows;
@@ -839,6 +1034,12 @@ public class JDBCTable implements Table {
 
             logger.log("JDBCTable getRows(sql) had a problem with sql string: \n"+sqlQuery, e);
             return null;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
             /**
@@ -848,15 +1049,15 @@ public class JDBCTable implements Table {
 
       public List<Row> getSortedRows(String sortedColumnName){
         Connection connection=null;
-        List<Row> rows = new ArrayList();
+        List<Row> rows = new ArrayList<Row>();
         String sqlQuery="";
         try{
             connection=ConnectionSource.getConnection(databaseName);
             Statement statement=connection.createStatement();
             sqlQuery= "SELECT * FROM "+tableName+ " ORDER BY "+ sortedColumnName+ " ASC";
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-            while(resultSet.next()){
-                rows.add(new JDBCRow (resultSet));
+            ResultSet rs = statement.executeQuery(sqlQuery);
+            while(rs.next()){
+                rows.add(new JDBCRow (rs));
             }
             connection.close();
             return rows;
@@ -869,11 +1070,13 @@ public class JDBCTable implements Table {
     }
     public boolean columnExists(String columnName){
         //this is likely to be rather slow with a big database, no?
-       Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		 try{
             connection=ConnectionSource.getConnection(databaseName);
-           Statement statement=connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM "+tableName);
+          statement=connection.createStatement();
+            rs = statement.executeQuery("SELECT * FROM "+tableName);
             ResultSetMetaData rsmd=rs.getMetaData();
             int noOfColumns=rsmd.getColumnCount();
             for(int i=0; i<noOfColumns; i++){
@@ -887,6 +1090,12 @@ public class JDBCTable implements Table {
             try{connection.close();}catch(Exception p){}
 
             return false;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
     
@@ -899,16 +1108,24 @@ public class JDBCTable implements Table {
      * @return 
      */
     public boolean addColumn(String columnName, String columnType){
-       Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		  try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
+            statement=connection.createStatement();
             statement.execute("ALTER TABLE "+tableName+" ADD COLUMN "+columnName+" "+columnType);
             connection.close();
             return true;
         }catch (Exception e){
            try{connection.close();}catch(Exception ex){}
              return false;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
        /**
@@ -922,10 +1139,12 @@ public class JDBCTable implements Table {
      * @return
      */
     public boolean addForeignKeyColumn(String columnName, String columnType, String foreignKeyTableName)throws PlatosysDBException{
-       Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		  try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
+           statement=connection.createStatement();
             statement.execute("ALTER TABLE "+tableName+" ADD COLUMN "+columnName+" "+columnType+" REFERENCES "+foreignKeyTableName);
             connection.close();
             return true;
@@ -934,6 +1153,12 @@ public class JDBCTable implements Table {
            try{connection.close();}catch(Exception ex){}
             throw new PlatosysDBException("Problem adding foreign key column - missing table?", e);
              
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
    /**
@@ -945,20 +1170,28 @@ public class JDBCTable implements Table {
      * @return true if successful
      */
     public boolean addColumn(String columnName, String columnType, boolean unique, boolean notNull){
-       Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		 try{
             String unq="";
             String nnll="";
             if (unique){unq=" UNIQUE";}
             if (notNull){nnll=" NOT NULL";}
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement=connection.createStatement();
+           statement=connection.createStatement();
             statement.execute("ALTER TABLE "+tableName+" ADD COLUMN "+columnName+" "+columnType+unq+nnll);
             connection.close();
             return true;
         }catch (Exception e){
            try{connection.close();}catch(Exception ex){}
              return false;
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
     
@@ -980,13 +1213,15 @@ public class JDBCTable implements Table {
      * @throws uk.co.platosys.db.PlatosysDBException if wrong
      */
     public boolean amend(long primaryKeyTest, String columnName, String value) throws PlatosysDBException {
-        Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             value=value.replace("\'","\'\'");
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
-            if(resultSet.next()){
+            rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
+            if(rs.next()){
                 try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = \'"+value+"\' WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
                 }catch(Exception e){
@@ -1007,6 +1242,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with String value "+value+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
   
@@ -1025,12 +1266,14 @@ public class JDBCTable implements Table {
             throw new PlatosysDBException("no primary key column set on table: "+tableName);
         }
         Connection connection=null;
-        try{
+ 		ResultSet rs=null;
+ 		Statement statement=null;
+ 		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             value=value.replace("\'","\'\'");
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            if(resultSet.next()){
+            rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
                 String SQLString="";
                 try {
                     SQLString="UPDATE "+tableName+" SET "+columnName+" = \'"+value+"\' WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\' ";
@@ -1055,6 +1298,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with String value "+value+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
     public boolean amendWhere(String testColumn, String testValue, String columnName, String columnValue) throws PlatosysDBException{
@@ -1074,10 +1323,12 @@ public class JDBCTable implements Table {
     public boolean amendWhere(String[] testColumns, String[] testValues,  String columnName, String value) throws PlatosysDBException {
         if (testColumns.length!=testValues.length){throw new PlatosysDBException("value and column arrays don't match");}
         Connection connection=null;
-        value=value.replace("\'","\'\'");
+ 		ResultSet rs=null;
+ 		Statement statement=null;
+ 		value=value.replace("\'","\'\'");
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             String sqlWhereClause =  " WHERE (";
             for (int i=0; i<testColumns.length; i++){
                 sqlWhereClause=sqlWhereClause+"("+testColumns[i]+" = \'"+testValues[i]+"\') AND ";
@@ -1085,8 +1336,8 @@ public class JDBCTable implements Table {
             sqlWhereClause=sqlWhereClause.substring(0, sqlWhereClause.length()-4);
             sqlWhereClause=sqlWhereClause+")";
             String sqlQuery= "SELECT * FROM "+tableName+sqlWhereClause;
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-            if(resultSet.next()){
+            rs = statement.executeQuery(sqlQuery);
+            if(rs.next()){
                 try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = \'"+value+"\'"+sqlWhereClause);
                 }catch(Exception e){
@@ -1120,6 +1371,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with String value "+value+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
       /**
@@ -1134,13 +1391,14 @@ public class JDBCTable implements Table {
     	 if(primaryKeyColumnName==null){
              throw new PlatosysDBException("no primary key column set on table: "+tableName);
          }
-        Connection connection=null;
-        try{
+    	 Connection connection=null;
+  		ResultSet rs=null;
+  		Statement statement=null;
+  		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
-           
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
-            if(resultSet.next()){
+            statement = connection.createStatement();
+            rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
+            if(rs.next()){
                 try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = "+value+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
                 }catch(Exception e){
@@ -1161,6 +1419,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with String value "+value+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
     /**
@@ -1176,11 +1440,13 @@ public class JDBCTable implements Table {
              throw new PlatosysDBException("no primary key column set on table: "+tableName);
          }
     	 Connection connection=null;
-        try{
+ 		ResultSet rs=null;
+ 		Statement statement=null;
+ 		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            if(resultSet.next()){
+            statement = connection.createStatement();
+            rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
                 try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = "+Long.toString(value)+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\' ");
                 }catch(Exception e){
@@ -1200,6 +1466,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with Long value "+Long.toString(value)+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
         /**
@@ -1211,13 +1483,13 @@ public class JDBCTable implements Table {
      * @throws uk.co.platosys.db.PlatosysDBException if wrong
      */
     public boolean amend(long primaryKeyTest, String columnName, double value) throws PlatosysDBException {
-        Connection connection=null;
-        try{
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
-            
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
-            if(resultSet.next()){
+            statement = connection.createStatement();
+            rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
+            if(rs.next()){
                 try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = "+value+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
                 }catch(Exception e){
@@ -1238,18 +1510,25 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with String value "+value+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     } 
     @Override
 	public boolean amend(long primaryKeyTest, String columnName,ISODate isoDate) throws PlatosysDBException {
     	 String value = isoDate.dateTimeMs();
     	 Connection connection=null;
-         try{
+ 		ResultSet rs=null;
+ 		Statement statement=null;
+ 		try{
              connection=ConnectionSource.getConnection(databaseName);
-             Statement statement = connection.createStatement();
-             
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
-             if(resultSet.next()){
+             statement = connection.createStatement();
+             rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
+             if(rs.next()){
                  try {
                      statement.execute("UPDATE "+tableName+" SET "+columnName+" = \'"+value+"\' WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
                  }catch(Exception e){
@@ -1270,7 +1549,13 @@ public class JDBCTable implements Table {
                  connection.close();
              }catch(Exception ex){}
              throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with String value "+value+", caused by:", e);
-         }
+         }finally{
+         	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
+        }
 	}
     /**
      * allows easy amendments to a database table without the need to construct complex escaped sql strings.
@@ -1281,12 +1566,14 @@ public class JDBCTable implements Table {
      * @throws uk.co.platosys.db.PlatosysDBException if things go wrong
      */
     public boolean amend(String primaryKeyTest, String columnName, double value) throws PlatosysDBException {
-        Connection connection=null;
-        try{
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            if(resultSet.next()){
+            statement = connection.createStatement();
+            rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
                 try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = "+Double.toString(value)+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\' ");
                 }catch(Exception e){
@@ -1306,6 +1593,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with Double value "+Double.toString(value)+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
      /**
@@ -1320,9 +1613,11 @@ public class JDBCTable implements Table {
     public boolean amendWhere(String[] testColumns, String[] testValues,  String columnName, double value) throws PlatosysDBException {
         if (testColumns.length!=testValues.length){throw new PlatosysDBException("value and column arrays don't match");}
         Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             String sqlWhereClause =  " WHERE (";
             for (int i=0; i<testColumns.length; i++){
                 sqlWhereClause=sqlWhereClause+"("+testColumns[i]+" = \'"+testValues[i]+"\') AND ";
@@ -1330,8 +1625,8 @@ public class JDBCTable implements Table {
             sqlWhereClause=sqlWhereClause.substring(0, sqlWhereClause.length()-4);
             sqlWhereClause=sqlWhereClause+")";
             String sqlQuery= "SELECT * FROM "+tableName+sqlWhereClause;
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-            if(resultSet.next()){
+            rs = statement.executeQuery(sqlQuery);
+            if(rs.next()){
                 try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = "+Double.toString(value)+" "+sqlWhereClause);
                 }catch(Exception e){
@@ -1373,6 +1668,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with double value "+value+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
             /**
@@ -1387,9 +1688,11 @@ public class JDBCTable implements Table {
     public boolean amendWhere(String[] testColumns, String[] testValues,  String columnName, java.sql.Timestamp timestamp) throws PlatosysDBException {
         if (testColumns.length!=testValues.length){throw new PlatosysDBException("value and column arrays don't match");}
         Connection connection=null;
-        try{
+		ResultSet rs=null;
+		Statement statement=null;
+		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             String sqlWhereClause =  " WHERE (";
             for (int i=0; i<testColumns.length; i++){
                 sqlWhereClause=sqlWhereClause+"("+testColumns[i]+" = \'"+testValues[i]+"\') AND ";
@@ -1397,8 +1700,8 @@ public class JDBCTable implements Table {
             sqlWhereClause=sqlWhereClause.substring(0, sqlWhereClause.length()-4);
             sqlWhereClause=sqlWhereClause+")";
             String sqlQuery= "SELECT * FROM "+tableName+sqlWhereClause;
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-            if(resultSet.next()){
+            rs = statement.executeQuery(sqlQuery);
+            if(rs.next()){
                 try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = \'"+timestamp.toString()+"\' "+sqlWhereClause);
                 }catch(Exception e){
@@ -1440,6 +1743,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with timestamp value "+timestamp.toString()+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }  /**
      * allows easy amendments to a database table without the need to construct complex escaped sql strings.
@@ -1450,13 +1759,15 @@ public class JDBCTable implements Table {
      * @throws uk.co.platosys.db.PlatosysDBException 
      */
     public boolean amend(String primaryKeyTest, String columnName, java.sql.Date date) throws PlatosysDBException {
-        Connection connection=null;
-        try{
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+		try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            statement = connection.createStatement();
+            rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
             String sqlString="";
-            if(resultSet.next()){
+            if(rs.next()){
                 try {
                     sqlString=("UPDATE "+tableName+" SET "+columnName+" = \'"+date.toString()+"\' WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\' ");
                     statement.execute(sqlString);
@@ -1479,6 +1790,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with Date value "+date.toString()+", caused by:" +e.getMessage(), e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
            /**
@@ -1491,12 +1808,14 @@ public class JDBCTable implements Table {
      * @throws uk.co.platosys.db.PlatosysDBException 
      */
     public boolean amend(String primaryKeyTest, String columnName, java.sql.Timestamp timestamp) throws PlatosysDBException {
-        Connection connection=null;
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            if(resultSet.next()){
+            statement = connection.createStatement();
+            rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
                 try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = \'"+timestamp.toString()+"\' WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\' ");
                 }catch(Exception e){
@@ -1516,16 +1835,24 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with timestamp value "+timestamp.toString()+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
 
      public boolean amend(String primaryKeyTest, String columnName, ISODate date) throws PlatosysDBException {
-        Connection connection=null;
+    	 Connection connection=null;
+ 		ResultSet rs=null;
+ 		Statement statement=null;
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            if(resultSet.next()){
+             statement = connection.createStatement();
+             rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
                 try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = \'"+date.dateTimeMs()+"\' WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\' ");
                 }catch(Exception e){
@@ -1545,6 +1872,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with timestamp value "+date.dateTimeMs()+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
 
@@ -1559,12 +1892,14 @@ public class JDBCTable implements Table {
      * @throws uk.co.platosys.db.PlatosysDBException 
      */
     public boolean amend(String primaryKeyTest, String columnName, boolean value) throws PlatosysDBException {
-        Connection connection=null;
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            if(resultSet.next()){
+            statement = connection.createStatement();
+            rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
                 try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = \'"+Boolean.toString(value)+"\' WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\' ");
                 }catch(Exception e){
@@ -1586,6 +1921,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with boolean value "+Boolean.toString(value)+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
      /**
@@ -1600,12 +1941,14 @@ public class JDBCTable implements Table {
     public boolean amendWhere(String[] testColumns, String[] testValues,  String columnName, boolean value) throws PlatosysDBException {
         if (testColumns.length!=testValues.length){throw new PlatosysDBException("value and column arrays don't match");}
         Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
         String sqlInsert="";
         String sqlUpdate="";
         String sqlQuery="";
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
+             statement = connection.createStatement();
             String sqlWhereClause =  " WHERE (";
             for (int i=0; i<testColumns.length; i++){
                 sqlWhereClause=sqlWhereClause+"("+testColumns[i]+" = \'"+testValues[i]+"\') AND ";
@@ -1613,8 +1956,8 @@ public class JDBCTable implements Table {
             sqlWhereClause=sqlWhereClause.substring(0, sqlWhereClause.length()-4);
             sqlWhereClause=sqlWhereClause+")";
             sqlQuery= "SELECT * FROM "+tableName+sqlWhereClause;
-            ResultSet resultSet = statement.executeQuery(sqlQuery);
-            if(resultSet.next()){
+             rs = statement.executeQuery(sqlQuery);
+            if(rs.next()){
                 try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = \'"+Boolean.toString(value)+"\'"+sqlWhereClause);
                 }catch(Exception e){
@@ -1652,13 +1995,22 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with boolean value "+value+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
      public boolean updateWhere(String testColumn, String testValue, String columnName, String value) throws PlatosysDBException {
-        Connection connection=null;
+    	 Connection connection=null;
+ 		ResultSet rs=null;
+ 		Statement statement=null;
+         connection=null;
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
+           statement = connection.createStatement();
                try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = \'"+value+"\' WHERE "+testColumn+" = \'"+testValue+"\' ");
                 }catch(Exception e){
@@ -1673,6 +2025,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with string value "+value+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
      /*
@@ -1704,10 +2062,12 @@ public class JDBCTable implements Table {
     }
       */
      public boolean updateWhere(String testColumn, String testValue, String columnName, boolean value) throws PlatosysDBException {
-        Connection connection=null;
+    	 Connection connection=null;
+ 		ResultSet rs=null;
+ 		Statement statement=null;
         try{
             connection=ConnectionSource.getConnection(databaseName);
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
                try {
                     statement.execute("UPDATE "+tableName+" SET "+columnName+" = \'"+Boolean.toString(value)+"\' WHERE "+testColumn+" = \'"+testValue+"\' ");
                 }catch(Exception e){
@@ -1722,6 +2082,12 @@ public class JDBCTable implements Table {
                 connection.close();
             }catch(Exception ex){}
             throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with boolean value "+Boolean.toString(value)+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
      /**
@@ -1732,13 +2098,16 @@ public class JDBCTable implements Table {
      * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
      */
     public String readString(long primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException{
-         Connection connection=ConnectionSource.getConnection(databaseName);
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+        connection=ConnectionSource.getConnection(databaseName);
         try{
-            Statement statement=connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
-            if(resultSet.next()){
+             statement=connection.createStatement();
+             rs = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
+            if(rs.next()){
                 try{
-                    String string = resultSet.getString(columnName);
+                    String string = rs.getString(columnName);
                     connection.close();
                     return string;
                 }catch(Exception e){
@@ -1756,6 +2125,12 @@ public class JDBCTable implements Table {
         }catch(Exception e){
             try{connection.close();}catch(Exception ex){}
             throw new PlatosysDBException("Problem reading table "+tableName);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
    
@@ -1767,14 +2142,17 @@ public class JDBCTable implements Table {
      * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
      */
     public String readString(String primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException{
-         Connection connection=ConnectionSource.getConnection(databaseName);
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+         connection=ConnectionSource.getConnection(databaseName);
         try{
-            Statement statement=connection.createStatement();
+          statement=connection.createStatement();
             String SQLString=("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            ResultSet resultSet = statement.executeQuery(SQLString);
-            if(resultSet.next()){
+           rs = statement.executeQuery(SQLString);
+            if(rs.next()){
                 try{
-                    String string = resultSet.getString(columnName);
+                    String string = rs.getString(columnName);
                     connection.close();
                     return string;
                 }catch(Exception e){
@@ -1792,6 +2170,12 @@ public class JDBCTable implements Table {
         }catch(Exception e){
             try{connection.close();}catch(Exception ex){}
             throw new PlatosysDBException("Problem reading table "+tableName);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
         /**
@@ -1803,13 +2187,16 @@ public class JDBCTable implements Table {
      * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
      */
     public long readLong(String primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException {
-        Connection connection=ConnectionSource.getConnection(databaseName);
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+       connection=ConnectionSource.getConnection(databaseName);
         try{
-            Statement statement=connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            if(resultSet.next()){
+           statement=connection.createStatement();
+            rs = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
                 try{
-                    long lng = resultSet.getLong(columnName);
+                    long lng = rs.getLong(columnName);
                     connection.close();
                     return lng;
                 }catch(Exception e){
@@ -1827,6 +2214,12 @@ public class JDBCTable implements Table {
         }catch(Exception e){
             try{connection.close();}catch(Exception ex){}
             throw new PlatosysDBException("Problem reading table "+tableName);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
    
@@ -1839,13 +2232,16 @@ public class JDBCTable implements Table {
      * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
      */
     public long readLong(long primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException {
-        Connection connection=ConnectionSource.getConnection(databaseName);
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+       connection=ConnectionSource.getConnection(databaseName);
         try{
-            Statement statement=connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
-            if(resultSet.next()){
+            statement=connection.createStatement();
+            rs = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
+            if(rs.next()){
                 try{
-                    long lng = resultSet.getLong(columnName);
+                    long lng = rs.getLong(columnName);
                     connection.close();
                     return lng;
                 }catch(Exception e){
@@ -1863,6 +2259,12 @@ public class JDBCTable implements Table {
         }catch(Exception e){
             try{connection.close();}catch(Exception ex){}
             throw new PlatosysDBException("Problem reading table "+tableName);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
         /**
@@ -1874,13 +2276,16 @@ public class JDBCTable implements Table {
      * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
      */
     public ISODate readDate(String primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException {
-        Connection connection=ConnectionSource.getConnection(databaseName);
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+        connection=ConnectionSource.getConnection(databaseName);
         try{
-            Statement statement=connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            if(resultSet.next()){
+           statement=connection.createStatement();
+            rs = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
                 try{
-                    java.sql.Date sqlDate = resultSet.getDate(columnName);
+                    java.sql.Date sqlDate = rs.getDate(columnName);
                     connection.close();
                     return new ISODate(sqlDate.getTime());
                 }catch(Exception e){
@@ -1898,6 +2303,12 @@ public class JDBCTable implements Table {
         }catch(Exception e){
             try{connection.close();}catch(Exception ex){}
             throw new PlatosysDBException("Problem reading table "+tableName);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
         /**
@@ -1908,14 +2319,17 @@ public class JDBCTable implements Table {
      * @return the value read from the table;
      * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
      */
-    public Double readNumber(long primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException {
-        Connection connection=ConnectionSource.getConnection(databaseName);
+    public float readNumber(long primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException {
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+        connection=ConnectionSource.getConnection(databaseName);
         try{
-            Statement statement=connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
-            if(resultSet.next()){
+            statement=connection.createStatement();
+            rs = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
+            if(rs.next()){
                 try{
-                    double dbl  = resultSet.getDouble(columnName);
+                    float dbl  = rs.getFloat(columnName);
                     connection.close();
                     return dbl;
                 }catch(Exception e){
@@ -1933,6 +2347,12 @@ public class JDBCTable implements Table {
         }catch(Exception e){
             try{connection.close();}catch(Exception ex){}
             throw new PlatosysDBException("Problem reading table "+tableName);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
    
@@ -1944,14 +2364,17 @@ public class JDBCTable implements Table {
      * @return the value read from the table;
      * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
      */
-    public Double readNumber(String primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException {
-        Connection connection=ConnectionSource.getConnection(databaseName);
+    public float readNumber(String primaryKeyTest, String columnName)throws PlatosysDBException, RowNotFoundException {
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+        connection=ConnectionSource.getConnection(databaseName);
         try{
-            Statement statement=connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            if(resultSet.next()){
+             statement=connection.createStatement();
+            rs  = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
                 try{
-                    double dbl  = resultSet.getDouble(columnName);
+                    float dbl  = rs.getFloat(columnName);
                     connection.close();
                     return dbl;
                 }catch(Exception e){
@@ -1969,6 +2392,12 @@ public class JDBCTable implements Table {
         }catch(Exception e){
             try{connection.close();}catch(Exception ex){}
             throw new PlatosysDBException("Problem reading table "+tableName);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
         /**
@@ -1980,13 +2409,16 @@ public class JDBCTable implements Table {
      * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
      */
     public ISODate readTimeStamp(String primaryKeyTest, String columnName) throws PlatosysDBException, RowNotFoundException {
-        Connection connection=ConnectionSource.getConnection(databaseName);
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+       connection=ConnectionSource.getConnection(databaseName);
         try{
-            Statement statement=connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            if(resultSet.next()){
+            statement=connection.createStatement();
+            rs = statement.executeQuery("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
                 try{
-                    java.sql.Timestamp tmstmp = resultSet.getTimestamp(columnName);
+                    java.sql.Timestamp tmstmp = rs.getTimestamp(columnName);
                     connection.close();
                     return new ISODate(tmstmp.getTime());
                 }catch(Exception e){
@@ -2004,6 +2436,12 @@ public class JDBCTable implements Table {
         }catch(Exception e){
             try{connection.close();}catch(Exception ex){}
             throw new PlatosysDBException("Problem reading table "+tableName);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
           /**
@@ -2015,14 +2453,18 @@ public class JDBCTable implements Table {
      * @throws PlatosysDBException if the column type is wrong or the primary key doesn't exist.
      */
     public boolean readBoolean(String primaryKeyTest, String columnName) throws PlatosysDBException, RowNotFoundException {
-        Connection connection=ConnectionSource.getConnection(databaseName);
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+         
         try{
-            Statement statement=connection.createStatement();
+        	connection=ConnectionSource.getConnection(databaseName);
+            statement=connection.createStatement();
             String SQLString=("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
-            ResultSet resultSet = statement.executeQuery(SQLString);
-            if(resultSet.next()){
+             rs = statement.executeQuery(SQLString);
+            if(rs.next()){
                 try{
-                    boolean bool = resultSet.getBoolean(columnName);
+                    boolean bool = rs.getBoolean(columnName);
                     connection.close();
                     return bool;
                 }catch(Exception e){
@@ -2040,6 +2482,12 @@ public class JDBCTable implements Table {
         }catch(Exception e){
             try{connection.close();}catch(Exception ex){}
             throw new PlatosysDBException("Problem reading table "+tableName);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
         }
     }
 
@@ -2048,11 +2496,14 @@ public class JDBCTable implements Table {
     }
     
     public static boolean tableExists(String databaseName, String tableName){
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
          try{
-           Connection connection=ConnectionSource.getConnection(databaseName);
-           Statement statement = connection.createStatement();
+           connection=ConnectionSource.getConnection(databaseName);
+          statement = connection.createStatement();
            try {
-                ResultSet rs = statement.executeQuery("SELECT tablename FROM pg_tables WHERE schemaname = \'public\'");
+                 rs = statement.executeQuery("SELECT tablename FROM pg_tables WHERE schemaname = \'public\'");
                 while(rs.next()){
                     if (rs.getString("tablename").equalsIgnoreCase(tableName)){
                         connection.close();
@@ -2070,15 +2521,27 @@ public class JDBCTable implements Table {
        }catch(Exception e){
            logger.log("TABLE - TableExists? error: ", e);
            return false;
-       }
+       }finally{
+       	try{
+    		if (rs!=null){rs.close();}
+    		if (statement!=null){statement.close();}
+    		if (connection!=null){connection.close();}
+    	}catch(Exception x){}
+    }
     }
     public int getSize(){
+    	Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
         try{
-           Connection connection=ConnectionSource.getConnection(databaseName);
-           Statement statement = connection.createStatement();
+            connection=ConnectionSource.getConnection(databaseName);
+           statement = connection.createStatement();
+           
+   		 
+   		
         try{
            int size=0;
-           ResultSet rs = statement.executeQuery("SELECT * FROM "+tableName);
+            rs = statement.executeQuery("SELECT * FROM "+tableName);
             while (rs.next()){
                     size++;
                 }
@@ -2094,7 +2557,13 @@ public class JDBCTable implements Table {
 
            logger.log("TABLEgetSize - TableExists? error: ", e);
            return 0;
-       }
+       }finally{
+       	try{
+    		if (rs!=null){rs.close();}
+    		if (statement!=null){statement.close();}
+    		if (connection!=null){connection.close();}
+    	}catch(Exception x){}
+    }
     }
 	@Override
 	public boolean updateWhere(String[] testColumns, String[] testValues,
@@ -2151,5 +2620,224 @@ public class JDBCTable implements Table {
 		}else{
 			throw new PlatosysDBException("table "+tbName+" does not exist in db "+dbName);
 		}
+	}
+	@Override
+	public BigDecimal readDecimal(long primaryKeyTest, String columnName)
+			throws PlatosysDBException, RowNotFoundException {
+		  Connection connection=ConnectionSource.getConnection(databaseName);
+		  ResultSet rs=null;
+			Statement statement=null;
+	        try{
+	          statement=connection.createStatement();
+	            String SQLString=("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+	            rs = statement.executeQuery(SQLString);
+	            if(rs.next()){
+	                try{
+	                    BigDecimal bool = rs.getBigDecimal(columnName);
+	                    connection.close();
+	                    return bool;
+	                }catch(Exception e){
+	                    connection.close();
+	                    throw new PlatosysDBException("Column "+columnName+" is not a boolean column");
+	                }
+	            }else{
+	                connection.close();
+	                throw new RowNotFoundException("Primary Key "+primaryKeyTest+ " not found in table "+tableName+ ": SQL is "+SQLString);
+	            }
+	         }catch(RowNotFoundException rnfe){
+	             try{connection.close();}catch(Exception p){}
+
+	            throw rnfe;
+	        }catch(Exception e){
+	            try{connection.close();}catch(Exception ex){}
+	            throw new PlatosysDBException("Problem reading table "+tableName);
+	        }finally{
+            	try{
+            		if (rs!=null){rs.close();}
+            		if (statement!=null){statement.close();}
+            		if (connection!=null){connection.close();}
+            	}catch(Exception x){}
+            }
+	}
+	@Override
+	public BigDecimal readDecimal(String primaryKeyTest, String columnName)
+			throws PlatosysDBException, RowNotFoundException {
+		  Connection connection=ConnectionSource.getConnection(databaseName);
+		  
+			ResultSet rs=null;
+			Statement statement=null;
+	        try{
+	            statement=connection.createStatement();
+	            String SQLString=("SELECT "+columnName+" FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+	           rs = statement.executeQuery(SQLString);
+	            if(rs.next()){
+	                try{
+	                    BigDecimal bool = rs.getBigDecimal(columnName);
+	                    connection.close();
+	                    return bool;
+	                }catch(Exception e){
+	                    connection.close();
+	                    throw new PlatosysDBException("Column "+columnName+" is not a boolean column");
+	                }
+	            }else{
+	                connection.close();
+	                throw new RowNotFoundException("Primary Key "+primaryKeyTest+ " not found in table "+tableName+ ": SQL is "+SQLString);
+	            }
+	         }catch(RowNotFoundException rnfe){
+	             try{connection.close();}catch(Exception p){}
+
+	            throw rnfe;
+	        }catch(Exception e){
+	            try{connection.close();}catch(Exception ex){}
+	            throw new PlatosysDBException("Problem reading table "+tableName);
+	        }finally{
+            	try{
+            		if (rs!=null){rs.close();}
+            		if (statement!=null){statement.close();}
+            		if (connection!=null){connection.close();}
+            	}catch(Exception x){}
+            }
+	}
+	@Override
+	public boolean amend(long primaryKeyTest, String columnName,	BigDecimal value) throws PlatosysDBException {
+		Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+        try{
+            connection=ConnectionSource.getConnection(databaseName);
+            statement = connection.createStatement();
+            rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
+            if(rs.next()){
+                try {
+                    statement.execute("UPDATE "+tableName+" SET "+columnName+" = "+value.toPlainString()+" WHERE "+primaryKeyColumnName+" = "+Long.toString(primaryKeyTest));
+                }catch(Exception e){
+                    throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" -is the type correct?", e);
+                }
+            }else{
+                try {
+                    statement.execute("INSERT INTO "+tableName+ "("+primaryKeyColumnName+","+columnName+") VALUES ("+Long.toString(primaryKeyTest)+","+value.toPlainString()+")");
+                }catch(Exception e){
+                    throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" -is the type correct?", e);
+                }
+            }
+            //logger.log(5, "JDBCTable amended OK, closing connection");
+            connection.close();
+            return true;
+        }catch(Exception e){
+            try{
+                connection.close();
+            }catch(Exception ex){}
+            throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with String value "+value+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
+        }
+	}
+	@Override
+	public boolean amendWhere(String[] testColumns, String[] testValues,String columnName, BigDecimal value) throws PlatosysDBException {
+	     if (testColumns.length!=testValues.length){throw new PlatosysDBException("value and column arrays don't match");}
+	        Connection connection=null;
+	        ResultSet rs=null;
+			Statement statement=null;
+	        try{
+	            connection=ConnectionSource.getConnection(databaseName);
+	            statement = connection.createStatement();
+	            String sqlWhereClause =  " WHERE (";
+	            for (int i=0; i<testColumns.length; i++){
+	                sqlWhereClause=sqlWhereClause+"("+testColumns[i]+" = \'"+testValues[i]+"\') AND ";
+	            }
+	            sqlWhereClause=sqlWhereClause.substring(0, sqlWhereClause.length()-4);
+	            sqlWhereClause=sqlWhereClause+")";
+	            String sqlQuery= "SELECT * FROM "+tableName+sqlWhereClause;
+	            rs = statement.executeQuery(sqlQuery);
+	            if(rs.next()){
+	                try {
+	                    statement.execute("UPDATE "+tableName+" SET "+columnName+" = "+value.toPlainString()+" "+sqlWhereClause);
+	                }catch(Exception e){
+	                    logger.log(1, sqlQuery);
+	                    throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with sql clause:" +sqlWhereClause, e);
+	                }
+	            }else{
+	                try {
+	                    String columnsClause="";
+	                    String valuesClause="";
+	                    for (int i=0; i<testColumns.length; i++){
+	                        columnsClause=columnsClause+testColumns[i]+"  ,";
+	                        valuesClause=valuesClause+"\'"+testValues[i]+"\'   ,";
+	                    }
+	                    columnsClause = columnsClause.substring(0, columnsClause.length()-2);
+	                    valuesClause=valuesClause.substring(0, valuesClause.length()-2);
+	                    String sqlInsert="INSERT INTO "+tableName+ "("+columnsClause+") VALUES ("+valuesClause+")";
+	                    String sqlUpdate="UPDATE "+tableName+" SET "+columnName+" = "+value.toPlainString()+" "+sqlWhereClause;
+	                    try{
+	                        statement.execute(sqlInsert);
+	                    }catch(Exception e){
+	                        logger.log(sqlInsert);
+	                        throw new PlatosysDBException(sqlInsert,e);
+	                    }try{
+	                         statement.execute(sqlUpdate);
+	                    }catch(Exception e){
+	                        logger.log(sqlUpdate);
+	                        throw new PlatosysDBException(sqlUpdate,e);
+	                    }
+	                }catch(Exception e){
+	                    throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" -is the type correct?", e);
+	                }
+	            }
+	           // logger.log(5, "JDBCTable amended OK, closing connection");
+	            connection.close();
+	            return true;
+	        }catch(Exception e){
+	            try{
+	                connection.close();
+	            }catch(Exception ex){}
+	            throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with BigDecimal value "+value+", caused by:", e);
+	        }finally{
+            	try{
+            		if (rs!=null){rs.close();}
+            		if (statement!=null){statement.close();}
+            		if (connection!=null){connection.close();}
+            	}catch(Exception x){}
+            }
+	}
+	@Override
+	public boolean amend(String primaryKeyTest, String columnName,			BigDecimal value) throws PlatosysDBException {
+		Connection connection=null;
+		ResultSet rs=null;
+		Statement statement=null;
+        try{
+            connection=ConnectionSource.getConnection(databaseName);
+             statement = connection.createStatement();
+            rs = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\'");
+            if(rs.next()){
+                try {
+                    statement.execute("UPDATE "+tableName+" SET "+columnName+" = "+value.toPlainString()+" WHERE "+primaryKeyColumnName+" = \'"+primaryKeyTest+"\' ");
+                }catch(Exception e){
+                    throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" -is the type correct?", e);
+                }
+            }else{
+                try {
+                    statement.execute("INSERT INTO "+tableName+ "("+primaryKeyColumnName+","+columnName+") VALUES (\'"+primaryKeyTest+"\',"+value.toPlainString()+")");
+                }catch(Exception e){
+                    throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" -is the type correct?",e);
+                }
+            }
+            connection.close();
+            return true;
+        }catch(Exception e){
+            try{
+                connection.close();
+            }catch(Exception ex){}
+            throw new PlatosysDBException(" error amending "+columnName+ " in table "+tableName+" with decimal value "+value.toPlainString()+", caused by:", e);
+        }finally{
+        	try{
+        		if (rs!=null){rs.close();}
+        		if (statement!=null){statement.close();}
+        		if (connection!=null){connection.close();}
+        	}catch(Exception x){}
+        }
 	}	
 }

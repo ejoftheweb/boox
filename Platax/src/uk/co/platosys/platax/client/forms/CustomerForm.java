@@ -45,7 +45,9 @@ public class CustomerForm extends AbstractForm  {
 		FieldInfoLabel isTradeInfoLabel=new FieldInfoLabel(LabelText.IS_TRADE_INFO);
 		final CheckBox isTradeBox = new CheckBox();
 		
-		
+		/*FieldLabel termsLabel = new FieldLabel(LabelText.NORMAL_TERMS);
+		FieldInfoLabel termsInfoLabel= new FieldInfoLabel(LabelText.NORMAL_TERMS_INFO);
+		final Chooser */
 		table.setWidget(0,0, customerNameLabel);
 		table.setWidget(0,1, customerNameBox);
 		table.setWidget(0,2, customerNameInfoLabel);

@@ -55,6 +55,7 @@ public class PlataxUser extends Xuser {
 	private PXUser pxuser;
 	private Map<String, Enterprise> enterprises = new HashMap<String, Enterprise>();
 	private Map<String, Invoice> invoices = new HashMap<String, Invoice>();
+	private Map<String, Clerk> clerks = new HashMap<String, Clerk>();
 	private static Logger logger  = Logger.getLogger("platax");
 	
 	private PlataxUser(){}
@@ -105,7 +106,7 @@ public class PlataxUser extends Xuser {
 		while(eit.hasNext()){
 			try{
 				Enterprise enterprise = enterprises.get(eit.next());
-				Clerk clerk = getClerk(enterprise);
+				Clerk clerk = instantiateClerk(enterprise);
 				pxuser.addEnterprise(EnterpriseServiceImpl.convert(enterprise, clerk));
 				logger.log("PlataxxUser: pxuser has "+pxuser.getNoOfEnterprises()+" enterprises");
 			}catch(Exception x){
@@ -148,6 +149,15 @@ public class PlataxUser extends Xuser {
      * @return 
      */
     public Clerk getClerk(Enterprise enterprise) throws PlataxException{
+    	if(clerks.containsKey(enterprise.getSysname())){
+    		return (clerks.get(enterprise.getSysname()));
+    		
+    	}else{
+    		logger.log("PlataxUser: no instantiated clerk for "+enterprise.getName()+", instantiating one");
+    		return instantiateClerk(enterprise);
+    	}
+    }
+    private Clerk instantiateClerk(Enterprise enterprise) throws PlataxException{
     	/*This implementation opens a mahoosive security hole!
     	 * [cleartext passwords stored in clerkstable]
     	 * TODO: close it!
@@ -169,7 +179,9 @@ public class PlataxUser extends Xuser {
 				Row row = clerkstable.getRow(cols, vals);
 				String clerkname = row.getString(PX_CLERKNAME_COLNAME);
 				String pwd=row.getString(PX_PWD_COLNAME);
-				return new Clerk(enterprise, clerkname, pwd);
+				Clerk clerk = new Clerk(enterprise, clerkname, pwd);
+				clerks.put(enterprise.getSysname(), clerk);
+				return clerk;
 			} catch (RowNotFoundException e) {
 				logger.log("row not found in clerks JDBCTable", e);
 				throw new PlataxException(e);
