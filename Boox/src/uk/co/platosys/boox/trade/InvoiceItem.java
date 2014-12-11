@@ -5,12 +5,9 @@
 
 package uk.co.platosys.boox.trade;
 
-import uk.co.platosys.boox.core.Account;
 import uk.co.platosys.boox.core.Clerk;
 import uk.co.platosys.boox.core.Enterprise;
-import uk.co.platosys.boox.core.Journal;
 import uk.co.platosys.boox.stock.Product;
-import uk.co.platosys.boox.money.CurrencyException;
 import uk.co.platosys.boox.money.Money;
 import uk.co.platosys.boox.core.exceptions.PermissionsException;
 
@@ -32,46 +29,45 @@ public class InvoiceItem extends TaxedTransaction {
     private String catalogueID="0";
     private String description="0";
     private String comment="0";
+    private Product product=null;
     private Money unitPrice=Money.ZERO;
     private int index=0;
     private float quantity=0;
     private double discount=0d;
     //private String lineNumber="0";
-    /**
-     * the untaxed version
+   
+    private InvoiceItem(){}
+    
+    /**the untaxed version
      * @param clerk
      * @param journal
      * @param money
      * @param creditAccountName
      * @param debitAccountName
-     * @param note
-     
-     */
-    private InvoiceItem (    Enterprise enterprise,
-                            Clerk clerk,
-                            Money money,
-                            String creditAccountName,
-                            String debitAccountName,
-                             String note
-                            )
-    throws PermissionsException
-    {
+     * @param note*/
+    private InvoiceItem (  
+    		Enterprise enterprise,
+            Clerk clerk,
+            Money money,
+            String creditAccountName,
+            String debitAccountName,
+            String note )
+    throws PermissionsException{
         super(enterprise, clerk,money,creditAccountName,debitAccountName,note);  
-    logger.log("II untaxed init done");
+        logger.log("II untaxed init done");
     } 
-    /**
-     * 
-     * @param enterprise - the enterprise in question
-     * @param clerk - the clerk opening the item
-     * @param money - the amount of the item
-     * @param creditAccountName - the name of the account to be credited
-     * @param debitAccountName - the name of the account to be debited
-     * @param note - a free-form note
-     * @param inclusive - whether the amount is or is not inclusive
-     * @param taxBand the tax band, see TaxedTransaction for the possible values. 
-     * @throws PermissionsException
-     */
-    private InvoiceItem (    Enterprise enterprise,
+    
+    /** the taxed version
+     *  @param enterprise - the enterprise in question
+     *  @param clerk - the clerk opening the item
+     *  @param money - the amount of the item
+     *  @param creditAccountName - the name of the account to be credited
+     *  @param debitAccountName - the name of the account to be debited
+     *  @param note - a free-form note
+     *  @param inclusive - whether the amount is or is not inclusive
+     *  @param taxBand the tax band, see TaxedTransaction for the possible values. 
+     *  @throws PermissionsException */
+    private InvoiceItem (   Enterprise enterprise,
                             Clerk clerk,
                             Money money,
                             String creditAccountName,
@@ -80,33 +76,31 @@ public class InvoiceItem extends TaxedTransaction {
                             boolean inclusive,
                             int taxBand,
                             int lineno)                            
-    throws PermissionsException
-    {
+    throws PermissionsException{
         super(enterprise, clerk,money,creditAccountName,debitAccountName,note,inclusive,false,taxBand, lineno);  
         this.index=lineno;
-    logger.log("II init done");
+        logger.log("II init done");
     }
     
-    /**
-     * <ul>
- * <li>**credit item, debit invoice
- * <li>**credit outputTax, debit invoice.
- * </ul>
+    /** <ul>
+     * 		<li>**credit item, debit invoice
+     * 		<li>**credit outputTax, debit invoice.
+     * </ul>
      * @param enterprise
      * @param clerk
      * @param customer
      * @param product
      * @param quantity
-     * @return
-     */
+     * @return */
+    
     public static InvoiceItem getInvoiceItem (Enterprise enterprise, Clerk clerk, Invoice invoice, Product product, float quantity, int lineno) throws PermissionsException{
     	
     	Money price = product.getSellingPrice(invoice.getCustomer());
     	int taxBand = product.getTaxBand(invoice.getCustomer());
     	logger.log("II says taxband is "+taxBand);
     	Money amount = Money.multiply(price, quantity);
-    	String creditAccountName = product.getAccount().getName();
-    	String debitAccountName = invoice.getAccount().getName();
+    	String creditAccountName = product.getAccount().getSysname();
+    	String debitAccountName = invoice.getSysname();
     	
     	InvoiceItem invoiceItem= new InvoiceItem(enterprise, clerk, amount, creditAccountName, debitAccountName, "", false, taxBand, lineno);
         invoiceItem.setQuantity(quantity);
@@ -122,6 +116,9 @@ public class InvoiceItem extends TaxedTransaction {
     	return invoiceItem;
     }
     
+    protected static InvoiceItem getInvoiceItem(){
+    	return new InvoiceItem();
+    }
     
     public String getCustomerRef() {
         return customerRef;
@@ -186,4 +183,18 @@ public class InvoiceItem extends TaxedTransaction {
    
     public String getLineNumber(){
         return Integer.toString(index);
-    }}
+    }
+
+	/**
+	 * @return the product*/
+	public Product getProduct() {
+		return product;
+	}
+
+	/**
+	 * @param product the product to set*/
+	public void setProduct(Product product) {
+		this.product = product;
+		this.description=product.getDescription();
+		this.catalogueID=product.getSysname();
+	}}

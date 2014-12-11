@@ -127,16 +127,13 @@ public final class Transaction implements AuditElement {
      * package-protected constructor recreates a transaction for auditing purposes.
      */
     protected Transaction (Clerk clerk, Enterprise enterprise, Money money, String credit, String debit, String note, Date postingTime, long transactionID){
-        
-        this.clerk=clerk;
+    	this.clerk=clerk;
         this.enterprise=enterprise;
         this.money=money;
         this.creditAccountName=credit;
         this.creditAccount = new Account(enterprise, creditAccountName, clerk);
         this.debitAccountName=debit;
         this.debitAccount = new Account(enterprise, debitAccountName, clerk);
-
-
         this.note=note;
         this.currency = money.getCurrency();
         this.postingTime=postingTime;

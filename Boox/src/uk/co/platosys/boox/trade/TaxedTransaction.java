@@ -76,8 +76,10 @@ public class TaxedTransaction {
     protected static Logger logger = Logger.getLogger("boox");
     private int taxBand=UNTAXED_BAND;
     int lineno;
-    /**
-     * This class is misnamed! 
+    
+    protected TaxedTransaction(){}
+    
+    /** This class is misnamed! 
      * This constructor is called when an untaxed line item is added.
      * @param clerk
      * @param journal
@@ -86,29 +88,19 @@ public class TaxedTransaction {
      * @param debitAccountName
      * @param note
      */
-
     public TaxedTransaction(
                             Enterprise enterprise,
                             Clerk clerk,
-                            //Journal journal,
                             Money money,
                             String creditAccountName,
                             String debitAccountName,
-                            //String lineNumber,
-                            String note
-                           )
-            throws PermissionsException
-    {
-        logger.log("TT untaxed init");
+                            String note)
+            throws PermissionsException{
         this.taxed=false;
-    //initialise fields
         this.clerk=clerk;
-        //this.journal=enterprise.getJournal();
         this.creditAccountName=creditAccountName;
         this.debitAccountName=debitAccountName;
-        //this.lineNumber=lineNumber;
         this.note=note;
-    //calculate the tax
         this.total=money;
         this.netMoney=money;
         this.taxMoney=Money.zero(money.getCurrency());
@@ -319,6 +311,12 @@ public class TaxedTransaction {
     }
     public double getTaxRate(){
     	return taxRate;
+    }
+    protected void setValueTransaction(Transaction valueTransaction){
+    	this.valueTransaction=valueTransaction;
+    }
+    protected void setTaxTransaction(Transaction taxTransaction){
+    	this.taxTransaction=taxTransaction;
     }
    
 }

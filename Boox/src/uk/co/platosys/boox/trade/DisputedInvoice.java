@@ -18,7 +18,7 @@ public class DisputedInvoice extends Invoice {
 	 * 
 	 */
 	public DisputedInvoice(Enterprise enterprise, Clerk clerk, String sysname) {
-		super(enterprise, clerk,   sysname);
+		super(enterprise,  sysname, clerk);
 	}
 
 }

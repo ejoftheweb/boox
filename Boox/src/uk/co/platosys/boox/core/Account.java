@@ -95,13 +95,14 @@ import uk.co.platosys.util.ShortHash;
  * 
  * <h2>Line numbering and transaction pairing</h2>
  * As of Dec 2014, we are implementing line numbering and transaction pairing with two additional integer fields.
- * These concepts are closely related. Line numbering allows recreation of a bill (input or output invoice) from its account.Line numbers have account scope.
+ * These concepts are closely related. Line numbering allows recreation of a bill (input or output invoice) from its account.
+ * Line numbers have account scope.
  * Transaction pairing matches a value transaction with the corresponding tax transaction.  
  *  
  * In any one account, transactions with the same line number (line) are typically paired. 
  * This is reinforced by the TAXED_TID field which is not-null only
  * in a transaction pair. The value is the TID of the value- or tax- transaction partner.
- * 
+ * Finally, a boolean column - is_tax - indicates the tax-transaction of the pair. 
  * 
  * @author edward
  */
@@ -109,7 +110,7 @@ import uk.co.platosys.util.ShortHash;
 public class Account implements Budgetable,  Auditable {
     Money balance;
     Clerk clerk;
-    JDBCTable table;
+    protected JDBCTable table;
     //account metadata as held in chart of accounts:
     String sysname; // the system name, used to name the table in the database. A shorthash of the fully-qualified name, unique with enterprise scope
     String name;//the display name;  Short, generally user-friendly, not necessarily uniqe
@@ -127,27 +128,25 @@ public class Account implements Budgetable,  Auditable {
     Enterprise enterprise; //the journal to which this account is attached;
     ISODate date = new ISODate();
     TreeMap<Date, Money> budget=new TreeMap<Date, Money>();
-     static final String CHART_TABLE_NAME=Chart.TABLENAME;//to rename later.
-     static final String TID_COLNAME="transactionid";
-     static final String CONTRA_COLNAME="contra";
-     static final String AMOUNT_COLNAME="amount";
-     static final String BALANCE_COLNAME="balance";
-     static final String DATE_COLNAME="date";
-     static final String CLERK_COLNAME="clerk";
-     static final String NOTES_COLNAME="notes";
-     static final String LINE_COLNAME="line";
-     static final String TAXED_TID_COLNAME="taxed_tid";
-     static final String PREFIX="ac"; //ensures legality for the tablename
-     static final String DELIMITER="#";
-     static final String BASIC_TYPE="basic";
+    public static final String CHART_TABLE_NAME=Chart.TABLENAME;//to rename later.
+     public static final String TID_COLNAME="transactionid";
+     public static final String CONTRA_COLNAME="contra";
+     public static final String AMOUNT_COLNAME="amount";
+     public static final String BALANCE_COLNAME="balance";
+     public static final String DATE_COLNAME="date";
+     public static final String CLERK_COLNAME="clerk";
+     public static final String NOTES_COLNAME="notes";
+     public static final String LINE_COLNAME="line";
+     public static final String TAXED_TID_COLNAME="taxed_tid";
+     public static final String IS_TAX_COLNAME="is_tax";
+     public static final String PREFIX="ac"; //ensures legality for the tablename
+     public static final String DELIMITER="#";
+     public static final String BASIC_TYPE="basic";
     //Journal journal;
-   /**
-     * package-protected constructor creates an account object by reading its metadata and current value from the SQL database
+  
+     /** package-protected constructor creates an account object by reading its metadata and current value from the SQL database
      * @param sysname the account sysname   
-     * @param clerk The Clerk opening the account.
-     */
-   
-   
+     * @param clerk The Clerk opening the account.*/
    protected  Account(Enterprise enterprise, String sysname1, Clerk clerk)  {
         try{
             this.sysname=sysname1.toLowerCase();
@@ -189,20 +188,13 @@ public class Account implements Budgetable,  Auditable {
      * @return The balance
      */
      public Money getBalance(Enterprise enterprise, Clerk clerk) throws PermissionsException{
-    	 logger.log("AccountGB started");
-        if(clerk.canRead(enterprise, ledger)){
-        	logger.log("AccountGB - read permission is ok");
+    	if(clerk.canRead(enterprise, ledger)){
         	 try{ 
         		 if(table!=null){
-        			 logger.log("AccountGB - table exists");
         			 Row row = table.getRow(0);
-        			 logger.log("AccountGB - got the zero row");
         			 BigDecimal amount=row.getBigDecimal(AMOUNT_COLNAME);
-	                 logger.log(5, "account "+ name +" currency ="+currency);
 	                 balance= new Money(currency, amount);
-	                 logger.log(5, name + "balance currency is "+balance.getCurrency().getTLA());
-	                 logger.log(5, "acc "+name+" bal is "+balance.getCurrency().getTLA()+":"+balance.toPlainString());
-	 	         }else{
+	             }else{
 	 	        	 logger.log("issue getting the balance on account "+fullName);
 	 	        	 throw new BooxException("Balance line not found in account "+sysname);
 	 	         }
@@ -215,10 +207,9 @@ public class Account implements Budgetable,  Auditable {
             throw new PermissionsException("Clerk "+clerk.getName()+ " does not have read permissions on ledger: "+ledger.getName()+
                     " so cannot read the balance of account "+getName());
         }
-        
-    }
-     /**
-     * Returns a Money object representing the  balance of this account immediately before the 
+     }
+     
+     /**Returns a Money object representing the  balance of this account immediately before the 
       * given date. 
       * This requires the canAudit permission;
      * @return The balance
@@ -245,11 +236,11 @@ public class Account implements Budgetable,  Auditable {
         }
         
     }
-     /**
-     * Returns a Money object representing the balance of this account after the given
+     
+     /** Returns a Money object representing the balance of this account after the given
       * transaction ID.
       * requires the canAudit permission;
-     * @return The balance
+      * @return The balance
      */
      public Money getBalance(Enterprise enterprise, Clerk clerk, long transactionID) throws PermissionsException, BooxException{
         if(clerk.canAudit(enterprise, getLedger())){
@@ -257,22 +248,24 @@ public class Account implements Budgetable,  Auditable {
                 Row row = table.getRow(transactionID);
             	Money bal = new Money(currency, row.getBigDecimal(BALANCE_COLNAME));
                 return bal;
-               
-            
             }catch(Exception e){
             	logger.log("Account-getBalance(tid) error", e);
                 throw new BooxException("AccountGB(tid):Exception", e);
-                
             }
         }else{
             throw new PermissionsException("Clerk "+clerk.getName()+ " does not have audit permissions on ledger: "+getLedger().getName()+
                     " so cannot read the transaction balance history of account "+getName());
         }
-        
-    }
+     }
+    
+    /** package protected method returns the balance without checking permissions, used by Ledgers to determine 
+      * their own balance.
+      * @return
+      */
     protected final Money getBalance(){
         return balance;
     }
+    
     /**
      * Returns a List of transactions on this account
      * Requires the canAudit permission
@@ -536,7 +529,8 @@ public class Account implements Budgetable,  Auditable {
 	            accountTable.addColumn(NOTES_COLNAME, Table.TEXT_COLUMN);//freeform notes
 	            accountTable.addColumn(LINE_COLNAME, Table.INTEGER_COLUMN);//the line number of this transaction (e.g. in an invoice)
 	            accountTable.addColumn(TAXED_TID_COLNAME, Table.INTEGER_COLUMN);//if this is a tax transaction, the TID of the associated value transaction
-	           
+	            accountTable.addColumn(IS_TAX_COLNAME, Table.BOOLEAN_COLUMN);//if this is a tax transaction, the TID of the associated value transaction
+		           
 	            //this row with TID 0 always contains the balance of the account.
 	            accountTable.addRow(TID_COLNAME, 0);
 	            accountTable.amend(0, CONTRA_COLNAME, "balance");

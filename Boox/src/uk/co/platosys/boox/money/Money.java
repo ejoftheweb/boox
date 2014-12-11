@@ -479,4 +479,25 @@ public final class Money implements Serializable {
         amount=amount.multiply(new BigDecimal(quantity));
         return new Money(money.getCurrency(),amount);
     }
+    
+    /**Divides the Money argument by the float divisor argument.
+     * @param money
+     * @param quantity
+     * @return a new Money*/
+    public static Money divide(Money money, float divisor){
+        BigDecimal amount = money.getAmount();
+        amount=amount.divide(new BigDecimal(divisor));
+        return new Money(money.getCurrency(),amount);
+    }
+   
+    /**Divides one Money  by another; returns a BigDecimal.
+     * @param dividend
+     * @param divisor
+     * @return a BigDecimal quotient*/
+    public static BigDecimal divide(Money dividend, Money divisor) throws CurrencyException{
+    	if(!dividend.getCurrency().equals(divisor.getCurrency())){throw new CurrencyException("mismatched currencies: "+dividend.getCurrency().getTLA()+" vs. "+divisor.getCurrency().getTLA());}
+    	BigDecimal amount = dividend.getAmount();
+        BigDecimal ddivisor = divisor.getAmount();
+        return amount.divide(ddivisor);
+    }
 }

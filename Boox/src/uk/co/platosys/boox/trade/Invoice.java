@@ -107,7 +107,7 @@ import uk.co.platosys.db.jdbc.JDBCTable;
  * 
  * @author edward
  */
-public class Invoice  {
+public class Invoice extends Account  {
    private Enterprise enterprise;
    private Account account;
    private Customer customer;
@@ -124,7 +124,6 @@ public class Invoice  {
    public static final String OVERDUE="OVERDUE";
    public static final String DISPUTED="DISPUTED";
       
-   private static final String INVOICE_DESCRIPTION="invoice";
    private static final String INVOICE_TABLENAME="invoice_list";
    private static final String INVOICE_NUMBER_COLNAME="invoice_no";
    private static final String INVOICE_SYSNAME_COLNAME="sysname";
@@ -143,37 +142,36 @@ public class Invoice  {
    private static final String INVOICE_TAX_COLNAME="tax";
    private static final String INVOICE_NET_COLNAME="net";
    private static final String INVOICE_CURRENCY_COLNAME="currency";
-   private static final String INVOICE_ACCOUNT_NAME_PREFIX="a";
    private static final String INVOICE_CLEARED_NOTE="invoice: ";
    private static final String INVOICE_ALLOCATE_NOTE="invoice: ";
    private static final File INVOICES_FOLDER= new File ("/var/platosys/boox/data/");//config-file this do'h
    
    //xml schema names etc
-   public static final String ROOT_ELEMENT_NAME="invoice";
-   public static final String INFO_ELEMENT_NAME="info";
-   public static final String ISSUER_ELEMENT_NAME="issuer";
-   public static final String CUSTOMER_ELEMENT_NAME="customer";
-   public static final String ITEMS_ELEMENT_NAME="items";
-   public static final String ITEM_ELEMENT_NAME="item";
-   public static final String TOTALS_ELEMENT_NAME="totals";
-   public static final String TOTAL_ELEMENT_NAME="total";
-   public static final String TERMS_ELEMENT_NAME="terms";
-   public static final String TERM_ELEMENT_NAME="term";
-   public static final String ISSUER_ITEM_ELEMENT_NAME="issuer-item";
-   public static final String CUSTOMER_ITEM_ELEMENT_NAME="customer-item";
+   public static final String ROOT_ELNAME="invoice";
+   public static final String INFO_ELNAME="info";
+   public static final String ISSUER_ELNAME="issuer";
+   public static final String CUSTOMER_ELNAME="customer";
+   public static final String ITEMS_ELNAME="items";
+   public static final String ITEM_ELNAME="item";
+   public static final String TOTALS_ELNAME="totals";
+   public static final String TOTAL_ELNAME="total";
+   public static final String TERMS_ELNAME="terms";
+   public static final String TERM_ELNAME="term";
+   public static final String ISSUER_ITEM_ELNAME="issuer-item";
+   public static final String CUSTOMER_ITEM_ELNAME="customer-item";
    
-   public static final String  LINE_NUMBER_ATTRIBUTE_NAME="line-number";
-   public static final String CUSTOMER_REF_ATTRIBUTE_NAME="customer-ref";
-   public static final String  CATALOGUE_ID_ATTRIBUTE_NAME="catalogue-id";
-   public static final String  DESCRIPTION_ATTRIBUTE_NAME="description";
-   public static final String  COMMENT_ATTRIBUTE_NAME="comment";
-   public static final String  UNIT_PRICE_ATTRIBUTE_NAME="unit-price";
-   public static final String  QUANTITY_ATTRIBUTE_NAME ="quantity";
-   public static final String TAXRATE_ATTRIBUTE_NAME="taxrate";
-	public static final String DISCOUNT_ATTRIBUTE_NAME="discount";
-	public static final String NET_ATTRIBUTE_NAME="net";
-	public static final String TAX_ATTRIBUTE_NAME ="tax";
-	public static final String GROSS_ATTRIBUTE_NAME="gross";
+   public static final String  LINE_NUMBER_ATTNAME="line-number";
+   public static final String CUSTOMER_REF_ATTNAME="customer-ref";
+   public static final String  CATALOGUE_ID_ATTNAME="catalogue-id";
+   public static final String  DESCRIPTION_ATTNAME="description";
+   public static final String  COMMENT_ATTNAME="comment";
+   public static final String  UNIT_PRICE_ATTNAME="unit-price";
+   public static final String  QUANTITY_ATTNAME ="quantity";
+   public static final String TAXRATE_ATTNAME="taxrate";
+	public static final String DISCOUNT_ATTNAME="discount";
+	public static final String NET_ATTNAME="net";
+	public static final String TAX_ATTNAME ="tax";
+	public static final String GROSS_ATTNAME="gross";
    
    //Identifier fields
    private String userInvoiceNumber="";
@@ -199,79 +197,100 @@ public class Invoice  {
    
    //admin etc fields
    private static Logger logger=Logger.getLogger("boox");
-   private SerialTable invoicesTable = null;
-   private int currentIndex=0;
    private Map<String, Money> totals = new HashMap<String, Money>();
    private Map<Integer, InvoiceItem> invoiceItems= new HashMap<Integer,InvoiceItem>();
    private Element rootElement=null;
    private static Namespace ns = Namespace.getNamespace("http://www.platosys.co.uk/boox/");
-   /**
-    * This private constructor is called only by the createInvoice method
+   private SerialTable invoicesTable;
+   /**This private constructor is called only by the createInvoice method
     * @param enterprise
     * @param clerk
     * @param customer
- * @throws PermissionsException 
-    */
-   private Invoice(Enterprise enterprise, Clerk clerk, Customer customer, Currency currency) throws PermissionsException{
-	try {
-		 this.enterprise=enterprise;
-		 this.invoicesTable=getInvoicesTable(enterprise);
-		 this.clerk=clerk;
-		 this.systemInvoiceNumber=getNextInvoiceNumber();//creates row in invoices table.
-		 logger.log("invoice: sin is "+systemInvoiceNumber);
-		 setCurrency(currency);
-		 setCreatedDate(new ISODate());
-		 //value and due dates default to the created date, but can be reset later as their setters are public.
-		 setValueDate(createdDate);
-		 setDueDate(createdDate);
-		 //
-		 setStatus(PENDING);
-		 setCustomer(customer);
-		 setSysname(SYSNAME_PREFIX+ShortHash.hash(Long.toString(systemInvoiceNumber)+enterprise.getName()));
-		 setUserInvoiceNumber(Long.toString(systemInvoiceNumber));
-		 setAccount(getInvoiceAccount(enterprise, customer, clerk, sysname));
-		 
-		  
-	} catch (PlatosysDBException e) {
-		// TODO Auto-generated catch block
-		logger.log("exception thrown", e);
-	} catch (BooxException e) {
-		// TODO Auto-generated catch block
-		logger.log("exception thrown", e);
-	}
+    * @throws PermissionsException */
+   private Invoice(
+		   Enterprise enterprise, 
+		   Clerk clerk, 
+		   Customer customer, 
+		   Currency currency, 
+		   String sysname, 
+		   long sin) throws PermissionsException{
+	    super( enterprise,  sysname, clerk);
+		try {
+			 this.invoicesTable=getInvoicesTable(enterprise);
+			 this.systemInvoiceNumber=sin;
+			 logger.log("invoice: sin is "+systemInvoiceNumber);
+			 setCurrency(currency);
+			 setCreatedDate(new ISODate());
+			 //value and due dates default to the created date, but can be reset later as their setters are public.
+			 setValueDate(createdDate);
+			 setDueDate(createdDate);
+			 setStatus(PENDING);
+			 setCustomer(customer);
+			 setUserInvoiceNumber(Long.toString(systemInvoiceNumber));
+		}catch (PlatosysDBException e) {
+			logger.log("exception thrown", e);
+		}
 	 
 	}
    
 /**
-    * This private constructor is called only by the openInvoice method, it takes a sysname argument
+    * This private constructor is called only by the openInvoice method, for opening
+    * an existing invoice. It takes a sysname argument to locate the Invoice resources.
     * @param enterprise
     * @param clerk
     * @param customer
     */
-   protected Invoice(Enterprise enterprise, Clerk clerk,  String sysname){
+   protected Invoice(Enterprise enterprise, String sysname,Clerk clerk){
+	   super(enterprise,sysname, clerk);
 	   //note we don't use the setters to set field values when reading from the table, because the setters write back to the table.
 	try {
-		 this.enterprise=enterprise;
 		this.invoicesTable=getInvoicesTable(enterprise);
 		this.clerk=clerk;
-		  this.sysname=sysname;
-		 Row row = invoicesTable.getRow(INVOICE_SYSNAME_COLNAME, sysname);
-		 this.systemInvoiceNumber=row.getLong(INVOICE_NUMBER_COLNAME);
-		 this.userInvoiceNumber=row.getString(INVOICE_USERNO_COLNAME);
-		 this.createdDate=row.getISODate(INVOICE_CREATED_DATE_COLNAME);
-		 this.dueDate=row.getISODate(INVOICE_DUE_DATE_COLNAME);
-		 this.valueDate=row.getISODate(INVOICE_VALUE_DATE_COLNAME);
-		 this.currency=Currency.getCurrency(row.getString(INVOICE_CURRENCY_COLNAME));
-		 this.net=new Money(currency, row.getBigDecimal(INVOICE_NET_COLNAME));
-		 this.tax=new Money(currency, row.getBigDecimal(INVOICE_TAX_COLNAME));
-		 this.total=new Money(currency, row.getBigDecimal(INVOICE_TOTAL_COLNAME));
-		  this.account=getInvoiceAccount(enterprise,clerk, sysname);
-		  this.outstanding=account.getBalance(enterprise, clerk);
+		Row row = invoicesTable.getRow(INVOICE_SYSNAME_COLNAME, sysname);
+		this.systemInvoiceNumber=row.getLong(INVOICE_NUMBER_COLNAME);
+		this.userInvoiceNumber=row.getString(INVOICE_USERNO_COLNAME);
+		this.createdDate=row.getISODate(INVOICE_CREATED_DATE_COLNAME);
+		this.dueDate=row.getISODate(INVOICE_DUE_DATE_COLNAME);
+		this.valueDate=row.getISODate(INVOICE_VALUE_DATE_COLNAME);
+		this.currency=Currency.getCurrency(row.getString(INVOICE_CURRENCY_COLNAME));
+		this.net=new Money(currency, row.getBigDecimal(INVOICE_NET_COLNAME));
+		this.tax=new Money(currency, row.getBigDecimal(INVOICE_TAX_COLNAME));
+		this.total=new Money(currency, row.getBigDecimal(INVOICE_TOTAL_COLNAME));
+		this.customer=Customer.getCustomer(enterprise, clerk, row.getString(INVOICE_CUSTOMER_SYSNAME_COLNAME));
+		
+		//now recreate the items from the lines in the invoice account:
+		List<Row> rows = table.getRows();
+		for (Row rw:rows){
+			 long tid = rw.getLong(Account.TID_COLNAME);
+			 if(tid!=0){
+				 InvoiceItem item;
+				 Integer  lineNo = new Integer(rw.getInt(Account.LINE_COLNAME));
+				 if(invoiceItems.containsKey(lineNo)){
+					 item=invoiceItems.get(lineNo);
+				 }else{
+					 item=InvoiceItem.getInvoiceItem();
+					 invoiceItems.put(lineNo, item);
+				 }
+				 item.setIndex(lineNo);
+				 if(rw.getBoolean(Account.IS_TAX_COLNAME)){
+					 item.setTaxTransaction(Transaction.getTransaction(enterprise, tid));
+				 }else{
+					 item.setValueTransaction(Transaction.getTransaction(enterprise, tid));
+					 String productSysname=rw.getString(Account.CONTRA_COLNAME);
+					 item.setProduct(Product.getProduct(enterprise, clerk, productSysname));
+					 Money unitPrice = item.getProduct().getSellingPrice(customer);
+					 Money amount = new Money(currency, rw.getBigDecimal(Account.AMOUNT_COLNAME));
+					 double qty = Money.divide(amount, unitPrice).doubleValue();
+					 item.setQuantity(qty);
+				 }
+			 }
+		 }
+	      this.outstanding=getBalance(enterprise, clerk);
 		  if(outstanding.moreThan(Money.zero(currency))){
 			  if(dueDate.before(new ISODate())){setStatus(OVERDUE);}
 			  if(dueDate.before(ISODate.getMonthAgo())){setStatus(DISPUTED);}
 		  }
-		  this.customer=Customer.getCustomer(enterprise, clerk, row.getString(INVOICE_CUSTOMER_SYSNAME_COLNAME));
+		  
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		logger.log("exception thrown", e);
@@ -282,15 +301,29 @@ public class Invoice  {
     *  
     */
    public static Invoice createInvoice(Enterprise enterprise, Clerk clerk, Customer customer) throws PermissionsException {
-	    return new Invoice(enterprise, clerk, customer, enterprise.getDefaultCurrency());
-   }  
+	   try {
+			 long sin = getNextInvoiceNumber(enterprise);
+			 logger.log("invoice: sin is "+sin);
+			 String sysname = SYSNAME_PREFIX+ShortHash.hash(Long.toString(sin)+enterprise.getName());
+		     return new Invoice(enterprise, clerk, customer, enterprise.getDefaultCurrency(), sysname, sin);
+	    } catch (PlatosysDBException e) {
+	    	logger.log("problem creating invoice", e);
+	    	return null;
+	    }}
   
    /**Use this method to create an Invoice in the given currency
     *  NB don't, yet, we need to do much more work to make this class more currency-aware.
     */
    public static Invoice createInvoice(Enterprise enterprise, Clerk clerk, Customer customer, Currency currency) throws PermissionsException {
-	    return new Invoice(enterprise, clerk, customer, currency);
-   }  
+	try {
+		 long sin = getNextInvoiceNumber(enterprise);
+		 logger.log("invoice: sin is "+sin);
+		 String sysname = SYSNAME_PREFIX+ShortHash.hash(Long.toString(sin)+enterprise.getName());
+	     return new Invoice(enterprise, clerk, customer, currency, sysname, sin);
+    } catch (PlatosysDBException e) {
+    	logger.log("problem creating invoice", e);
+    	return null;
+    }}
 /**
     * This method is used to open an existing Invoice
     * @param clerk
@@ -298,7 +331,7 @@ public class Invoice  {
     * @return
     */
    public static Invoice openInvoice(Enterprise enterprise, Clerk clerk, String sysname) throws PermissionsException{
-	    return new Invoice(enterprise, clerk,  sysname);
+	    return new Invoice(enterprise, sysname, clerk);
    }
    /**
     * adds an item to the invoice at the given index
@@ -330,45 +363,45 @@ public class Invoice  {
    public Document raise() throws PermissionsException{
 	   try{
 		    	Document invoiceDocument = new Document();
-		    	this.rootElement = new Element(ROOT_ELEMENT_NAME, ns);
+		    	this.rootElement = new Element(ROOT_ELNAME, ns);
 		    	invoiceDocument.setRootElement(rootElement);
-		    	Element infoElement = new Element(INFO_ELEMENT_NAME, ns);
+		    	Element infoElement = new Element(INFO_ELNAME, ns);
 		    	//TODO: populate the infoElement
 		    	rootElement.addContent(infoElement);
-		    	Element issuerElement=new Element(ISSUER_ELEMENT_NAME, ns);
+		    	Element issuerElement=new Element(ISSUER_ELNAME, ns);
 		    	 Map<String, String> info = enterprise.getInfo();
-		    	 issuerElement=populateInfoElement(issuerElement, info, ISSUER_ITEM_ELEMENT_NAME);//
+		    	 issuerElement=populateInfoElement(issuerElement, info, ISSUER_ITEM_ELNAME);//
 		    	 rootElement.addContent(issuerElement);
-		    	 Element customerElement=new Element(CUSTOMER_ELEMENT_NAME, ns);
+		    	 Element customerElement=new Element(CUSTOMER_ELNAME, ns);
 		    	 info=customer.getInfo();
-		    	 customerElement=populateInfoElement(customerElement, info, CUSTOMER_ITEM_ELEMENT_NAME);
+		    	 customerElement=populateInfoElement(customerElement, info, CUSTOMER_ITEM_ELNAME);
 		    	 rootElement.addContent(customerElement);
-		    	 Element itemsElement = new Element(ITEMS_ELEMENT_NAME, ns);
+		    	 Element itemsElement = new Element(ITEMS_ELNAME, ns);
 		    	 rootElement.addContent(itemsElement);
 		    	 Iterator<Integer> kit = invoiceItems.keySet().iterator();
 		    	 while(kit.hasNext()){
 		    		 InvoiceItem item = invoiceItems.get(kit.next());
-		    		 Element itemElement= new Element(ITEM_ELEMENT_NAME, ns);
-		    		 itemElement.setAttribute(LINE_NUMBER_ATTRIBUTE_NAME, item.getLineNumber());
-		    		 itemElement.setAttribute(CUSTOMER_REF_ATTRIBUTE_NAME, item.getCustomerRef());
-		    		 itemElement.setAttribute(CATALOGUE_ID_ATTRIBUTE_NAME, item.getCatalogueID());
-		    		 itemElement.setAttribute(DESCRIPTION_ATTRIBUTE_NAME, item.getDescription());
-		    		 itemElement.setAttribute(COMMENT_ATTRIBUTE_NAME, item.getComment());
-		    		 itemElement.setAttribute(UNIT_PRICE_ATTRIBUTE_NAME,item.getUnitPrice().toPlainString());
-		    		 itemElement.setAttribute(QUANTITY_ATTRIBUTE_NAME, Double.toString(item.getQuantity() ));
-		    		 itemElement.setAttribute(TAXRATE_ATTRIBUTE_NAME, Double.toString(item.getTaxRate()));
-		    		 itemElement.setAttribute(DISCOUNT_ATTRIBUTE_NAME, Double.toString(item.getDiscount()));
-		    		 itemElement.setAttribute(NET_ATTRIBUTE_NAME, item.getNetMoney().toPlainString());
-		    		 itemElement.setAttribute(TAX_ATTRIBUTE_NAME, item.getTaxMoney().toPlainString());
-		    		 itemElement.setAttribute(GROSS_ATTRIBUTE_NAME, item.getTotal().toPlainString());
+		    		 Element itemElement= new Element(ITEM_ELNAME, ns);
+		    		 itemElement.setAttribute(LINE_NUMBER_ATTNAME, item.getLineNumber());
+		    		 itemElement.setAttribute(CUSTOMER_REF_ATTNAME, item.getCustomerRef());
+		    		 itemElement.setAttribute(CATALOGUE_ID_ATTNAME, item.getCatalogueID());
+		    		 itemElement.setAttribute(DESCRIPTION_ATTNAME, item.getDescription());
+		    		 itemElement.setAttribute(COMMENT_ATTNAME, item.getComment());
+		    		 itemElement.setAttribute(UNIT_PRICE_ATTNAME,item.getUnitPrice().toPlainString());
+		    		 itemElement.setAttribute(QUANTITY_ATTNAME, Double.toString(item.getQuantity() ));
+		    		 itemElement.setAttribute(TAXRATE_ATTNAME, Double.toString(item.getTaxRate()));
+		    		 itemElement.setAttribute(DISCOUNT_ATTNAME, Double.toString(item.getDiscount()));
+		    		 itemElement.setAttribute(NET_ATTNAME, item.getNetMoney().toPlainString());
+		    		 itemElement.setAttribute(TAX_ATTNAME, item.getTaxMoney().toPlainString());
+		    		 itemElement.setAttribute(GROSS_ATTNAME, item.getTotal().toPlainString());
 		    		 itemsElement.addContent(itemElement);
 		    	 }
-		    	 Element totalsElement=new Element(TOTALS_ELEMENT_NAME, ns);
+		    	 Element totalsElement=new Element(TOTALS_ELNAME, ns);
 		    	 rootElement.addContent(totalsElement);
 		    	 Iterator<String> tit = totals.keySet().iterator();
 		    	 while(tit.hasNext()){
 		    		 String totalname=tit.next();
-		    		 Element totalElement=new Element(TOTAL_ELEMENT_NAME, ns);
+		    		 Element totalElement=new Element(TOTAL_ELNAME, ns);
 		    		 totalElement.setAttribute("name",totalname);
 		    		 totalElement.setAttribute("value", (totals.get(totalname)).toPlainString());
 		    		 totalsElement.addContent(totalElement);
@@ -525,14 +558,11 @@ public static List<Invoice> getInvoices(Enterprise enterprise, Customer customer
 }
 
 
-private Table getInvoicesTable() {
-	return invoicesTable;
-}
 
 
-private long getNextInvoiceNumber()throws PlatosysDBException{
+private static  long getNextInvoiceNumber(Enterprise enterprise)throws PlatosysDBException{
 try {
-		long sin= invoicesTable.addSerialRow();
+		long sin= getInvoicesTable(enterprise).addSerialRow();
 		logger.log("invoice: returning new invoice number "+sin);
 		return sin;
 	} catch (ClassCastException e) {
@@ -540,28 +570,8 @@ try {
 	}
 }
 
-private Account getInvoiceAccount(Enterprise enterprise, Customer customer, Clerk clerk, String sysname)throws BooxException, PermissionsException, PlatosysDBException{
-	   if(Account.exists(enterprise, sysname)){
-		   return Account.getAccount(enterprise,  sysname, clerk);
-	   }else{
-	   String fullname = customer.getName()+new ISODate().toString();
-	   		Account account=null;    
-	   		try {
-	        	account = Account.createAccount(enterprise, sysname, clerk, customer.getLedger(), enterprise.getDefaultCurrency(), fullname, true);
-	        	
-	        } catch (Exception e) {
-				throw new BooxException("couldn't create new invoice account for "+systemInvoiceNumber, e);
-	        }
-	   		return account;
-       }
-}
-private Account getInvoiceAccount(Enterprise enterprise, Clerk clerk, String sysname)throws BooxException, PermissionsException{
-	    if(Account.exists(enterprise, sysname)){
-		   return Account.getAccount(enterprise, sysname, clerk);
-	   }else{
-		   throw new BooxException("Invoice "+sysname+" doesn't seem to have an account");
-    }
-}
+
+
 private static SerialTable getInvoicesTable(Enterprise enterprise) throws PlatosysDBException{
 	//check database is setup
 		if(!JDBCTable.tableExists(enterprise.getDatabaseName(), INVOICE_TABLENAME)){
@@ -591,13 +601,7 @@ private static SerialTable getInvoicesTable(Enterprise enterprise) throws Platos
 				return JDBCSerialTable.openTable(enterprise.getDatabaseName(), INVOICE_TABLENAME, INVOICE_NUMBER_COLNAME);
 			}
 }
-private void setAccount(Account account) throws PlatosysDBException{
-	   this.account=account;
-	   invoicesTable.amend(systemInvoiceNumber, INVOICE_ACCOUNT_COLNAME, account.getName());
-}
-public Account getAccount(){
-	return account;
-}
+
 private void setCustomer(Customer customer) throws PlatosysDBException {
 	this.customer=customer;
 	invoicesTable.amend(systemInvoiceNumber, INVOICE_CUSTOMER_ACCOUNT_COLNAME, customer.getAccount().getName());
