@@ -157,4 +157,19 @@ public class LabelText {
     
     public static final String SHARES_POPUP_HEADER="Shares Popup";
     public static final String SHARES_REGISTERED_NUMBER="Number:";
+    
+    //labels used on the Cash register pages
+    public static final String CASHUP="Cash Up";
+    public static final String CASH_REGISTER_NAME="Which cash register?";
+    public static final String CASH_REGISTER_NAME_INFO="Select the cash register you are cashing-up";
+    public static final String CASHIER_NAME="Cashier Name";
+    public static final String CASHIER_NAME_INFO="Select the name of the cashier in charge of this shift";
+    public static final String ZREPORT_NUMBER = "Z-report number";
+    public static final String ZREPORT_NUMBER_INFO="Enter the Z-report number";
+    public static final String GT_AMOUNT="GT (Grand Total) amount";
+    public static final String GT_AMOUNT_INFO="Enter the grand total amount printed on your Z-report";
+    public static final String CASH_AMOUNT_INFO="Enter the total cash counted in the till, including the float";
+    public static final String CASH_AMOUNT="Cash in Till";
+    public static final String BANK_AMOUNT="Cash Banked";
+    public static final String BANK_AMOUNT_INFO="Enter the cash you will deposit in the bank";
 }

@@ -11,11 +11,13 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.UIObject;
 
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.MenuText;
 import uk.co.platosys.platax.client.forms.CustomerForm;
 import uk.co.platosys.platax.client.forms.ProductForm;
 import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
 import uk.co.platosys.platax.client.forms.lists.*;
+import uk.co.platosys.platax.client.forms.tasks.SimpleCashRegister;
 import uk.co.platosys.platax.shared.boox.*;
 
 /**
@@ -49,6 +51,10 @@ public class EnterpriseMenu extends MenuBar {
 		static final String PRODUCTS_MENU="productsMenu";
 			static final String ALL_PRODUCTS="allProducts";
 			static final String NEW_PRODUCT="newProduct";
+		static final String CASHUP_MENU="cashupMenu";
+			static final String REGISTER_CASH="registerCash";
+			static final String NEW_REGISTER="newregister";
+			static final String NEW_CASHIER="newcashier";
 	static final String SPENDING_MENU="spendingMenu";
 	static final String BANKING_MENU="bankingMenu";
 	static final String ASSETS_MENU="assetsMenu";
@@ -76,6 +82,7 @@ public class EnterpriseMenu extends MenuBar {
 				MenuItem newInvoice=new MenuItem(MenuText.ADD_NEW_LABEL);invoiceMenu.addItem(newInvoice);menuItems.put(NEW_INVOICE, newInvoice);
 			MenuBar customerMenu = new MenuBar(true);incomeMenu.addItem(MenuText.CUSTOMERS_LABEL,customerMenu);menuItems.put(CUSTOMER_MENU,customerMenu);
 			MenuBar productsMenu = new MenuBar(true);incomeMenu.addItem(MenuText.PRODUCTS_LABEL,productsMenu);menuItems.put(PRODUCTS_MENU, productsMenu);
+			MenuBar cashupMenu=new MenuBar(true);cashupMenu.addItem(MenuText.CASH_LABEL, cashupMenu);menuItems.put(CASHUP_MENU, cashupMenu);
 		MenuBar spendingMenu = new MenuBar(true); menuItems.put(SPENDING_MENU,spendingMenu);
 		MenuBar bankingMenu = new MenuBar(true); menuItems.put(BANKING_MENU, bankingMenu);
 		MenuBar assetsMenu = new MenuBar(true);  menuItems.put(ASSETS_MENU,assetsMenu);
@@ -120,7 +127,8 @@ public class EnterpriseMenu extends MenuBar {
 		incomeMenu.addItem(MenuText.CASH_LABEL, new Command(){
 			@Override
 			public void execute() {
-				// TODO Open Cash Sales Page Command
+				SimpleCashRegister scr = new SimpleCashRegister(platax, LabelText.CASHUP);
+				platax.addTab(scr);
 			}
 		});
 		//Items on the Invoice Menu (submenu of the income menu)
