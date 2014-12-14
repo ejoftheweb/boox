@@ -531,6 +531,10 @@ public final class Ledger implements Budgetable, Auditable {
               return null;
           }
       }
+	  public static Ledger getAccountLedger(Enterprise enterprise, String accountFullname){
+		  String ledgerName= accountFullname.split("#")[0];
+		  return getLedger(enterprise, ledgerName);
+     }
 	 /**
      * Creates a Ledger. If one of the same name, parent, owner and currency already exists,
      * it is returned; [if one of the same name, but different parent, owner and/or currency,

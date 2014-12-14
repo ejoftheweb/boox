@@ -202,6 +202,7 @@ public class Invoice extends Account  {
    private Element rootElement=null;
    private static Namespace ns = Namespace.getNamespace("http://www.platosys.co.uk/boox/");
    private SerialTable invoicesTable;
+  
    /**This private constructor is called only by the createInvoice method
     * @param enterprise
     * @param clerk
@@ -218,6 +219,7 @@ public class Invoice extends Account  {
 		try {
 			 this.invoicesTable=getInvoicesTable(enterprise);
 			 this.systemInvoiceNumber=sin;
+			 this.sysname=sysname;
 			 logger.log("invoice: sin is "+systemInvoiceNumber);
 			 setCurrency(currency);
 			 setCreatedDate(new ISODate());
@@ -233,17 +235,16 @@ public class Invoice extends Account  {
 	 
 	}
    
-/**
-    * This private constructor is called only by the openInvoice method, for opening
+   /** This private constructor is called only by the openInvoice method, for opening
     * an existing invoice. It takes a sysname argument to locate the Invoice resources.
     * @param enterprise
     * @param clerk
-    * @param customer
-    */
+    * @param customer */
    protected Invoice(Enterprise enterprise, String sysname,Clerk clerk){
 	   super(enterprise,sysname, clerk);
 	   //note we don't use the setters to set field values when reading from the table, because the setters write back to the table.
 	try {
+		this.sysname=sysname;
 		this.invoicesTable=getInvoicesTable(enterprise);
 		this.clerk=clerk;
 		Row row = invoicesTable.getRow(INVOICE_SYSNAME_COLNAME, sysname);
@@ -277,7 +278,9 @@ public class Invoice extends Account  {
 				 }else{
 					 item.setValueTransaction(Transaction.getTransaction(enterprise, tid));
 					 String productSysname=rw.getString(Account.CONTRA_COLNAME);
-					 item.setProduct(Product.getProduct(enterprise, clerk, productSysname));
+					 Product product = Product.getProduct(enterprise, clerk, productSysname);
+					 item.setProduct(product);
+					 logger.log("Invoice<init3>: item product is "+product.getName());
 					 Money unitPrice = item.getProduct().getSellingPrice(customer);
 					 Money amount = new Money(currency, rw.getBigDecimal(Account.AMOUNT_COLNAME));
 					 double qty = Money.divide(amount, unitPrice).doubleValue();
@@ -290,21 +293,23 @@ public class Invoice extends Account  {
 			  if(dueDate.before(new ISODate())){setStatus(OVERDUE);}
 			  if(dueDate.before(ISODate.getMonthAgo())){setStatus(DISPUTED);}
 		  }
-		  
-	} catch (Exception e) {
+	}catch (Exception e){
 		// TODO Auto-generated catch block
 		logger.log("exception thrown", e);
 	}
 	 
 	}
-   /**Use this method to create an Invoice in the default currency
-    *  
-    */
-   public static Invoice createInvoice(Enterprise enterprise, Clerk clerk, Customer customer) throws PermissionsException {
+  
+   /**Use this method to create an Invoice in the default currency*/
+   public static Invoice createInvoice(Enterprise enterprise, Clerk clerk, Customer customer) throws PermissionsException, BooxException {
 	   try {
 			 long sin = getNextInvoiceNumber(enterprise);
 			 logger.log("invoice: sin is "+sin);
 			 String sysname = SYSNAME_PREFIX+ShortHash.hash(Long.toString(sin)+enterprise.getName());
+			 String description = enterprise.getName()+" "+SYSNAME_PREFIX+Long.toString(sin);
+			 Account.createAccount(enterprise, sysname, clerk, customer.getLedger(), enterprise.getDefaultCurrency(), description, true);
+			 SerialTable invTable = getInvoicesTable(enterprise);
+			 invTable.amend(sin, INVOICE_SYSNAME_COLNAME, sysname);
 		     return new Invoice(enterprise, clerk, customer, enterprise.getDefaultCurrency(), sysname, sin);
 	    } catch (PlatosysDBException e) {
 	    	logger.log("problem creating invoice", e);
@@ -312,8 +317,7 @@ public class Invoice extends Account  {
 	    }}
   
    /**Use this method to create an Invoice in the given currency
-    *  NB don't, yet, we need to do much more work to make this class more currency-aware.
-    */
+    *  NB don't, yet, we need to do much more work to make this class more currency-aware.*/
    public static Invoice createInvoice(Enterprise enterprise, Clerk clerk, Customer customer, Currency currency) throws PermissionsException {
 	try {
 		 long sin = getNextInvoiceNumber(enterprise);
@@ -324,25 +328,23 @@ public class Invoice extends Account  {
     	logger.log("problem creating invoice", e);
     	return null;
     }}
-/**
-    * This method is used to open an existing Invoice
+
+   /** This method is used to open an existing Invoice
     * @param clerk
     * @param invoiceNumber
-    * @return
-    */
+    * @return an Invoice */
    public static Invoice openInvoice(Enterprise enterprise, Clerk clerk, String sysname) throws PermissionsException{
 	    return new Invoice(enterprise, sysname, clerk);
    }
-   /**
-    * adds an item to the invoice at the given index
-    * 
+   
+   /**adds an item to the invoice at the given index
     * @param item
     * @param lineno
     * @return the index if successful, otherwise 0 (if the invoice already contains an item at that index).
     * @throws CurrencyException
-    * @throws PlatosysDBException
-    */
+    * @throws PlatosysDBException  */
  protected int addInvoiceItem(InvoiceItem item, int index) throws CurrencyException, PlatosysDBException{
+	 //this doesn't seem to be posting it to the invoice account?
 	 setNet(Money.add(net, item.getNetMoney()));
 	 setTax(Money.add(tax, item.getTaxMoney()));
 	 setTotal(Money.add(net, tax));
@@ -354,12 +356,10 @@ public class Invoice extends Account  {
      	 return index;
      }
  }
-   /**
-    * Creates the invoice document
-    *
+   
+ /**Creates the invoice document
     * @return the invoice Document (a jdom Document);
-    * @throws PermissionsException
-    */
+    * @throws PermissionsException */
    public Document raise() throws PermissionsException{
 	   try{
 		    	Document invoiceDocument = new Document();
@@ -418,13 +418,12 @@ public class Invoice extends Account  {
 	   }
 	   return null;
    }
-   /**
-    * This operation clears the invoice balance by transferring it to the Customer account.
+   
+   /**This operation clears the invoice balance by transferring it to the Customer account.
     * @param clerk
     * @return
     * @throws PermissionsException
- * @throws PlatosysDBException 
-    */
+    * @throws PlatosysDBException */
    public Money clear(Clerk clerk) throws PermissionsException, PlatosysDBException{
 	   Money money = account.getBalance(enterprise, clerk);
 	    logger.log("balance of invoice account"+account.getName()+" = "+money.toPlainString());
@@ -439,12 +438,10 @@ public class Invoice extends Account  {
    }
   
 
-/**
-    * This operation allocates value to the invoice balance by transferring it from the Customer account.
+/** This operation allocates value to the invoice balance by transferring it from the Customer account.
     * @param clerk
     * @return
-    * @throws PermissionsException
-    */
+    * @throws PermissionsException */
    public Money allocate(Money settlement, Clerk clerk) throws PermissionsException{
 	   Money money = account.getBalance(enterprise, clerk);
 	    logger.log("balance of invoice account"+account.getName()+" = "+money.toPlainString());
@@ -472,14 +469,12 @@ public class Invoice extends Account  {
    }
    
  
-/**
- * This method with the private one which follows it returns a list of all the enterprise's invoices.
+/**This method with the private one which follows it returns a list of all the enterprise's invoices.
  * 
  * @param enterprise
  * @param selection
  * @return
- * @throws PlatosysDBException 
- */
+ * @throws PlatosysDBException */
 public static List<Invoice> getInvoices(Enterprise enterprise, Clerk clerk, int selection) throws PlatosysDBException{
 	switch (selection){
 		case SELECTION_ALL:
@@ -498,14 +493,13 @@ public static List<Invoice> getInvoices(Enterprise enterprise, Clerk clerk, int 
 			return getInvoices( getInvoicesTable(enterprise).getRows(), enterprise, clerk);
 	}
 }
-/**
- * This method with the private one which follows it returns a list of all the enterprise's invoices.
+
+/** This method with the private one which follows it returns a list of all the enterprise's invoices.
  * 
  * @param enterprise
  * @param selection
  * @return
- * @throws PlatosysDBException 
- */
+ * @throws PlatosysDBException */
 public static List<Invoice> getInvoices(Enterprise enterprise, Clerk clerk, Customer customer, int selection) throws PlatosysDBException{
 	String[] cols={INVOICE_CUSTOMER_SYSNAME_COLNAME, INVOICE_STATUS_COLNAME};
 	String cust= customer.getSysname();
@@ -750,9 +744,8 @@ public InvoiceItem getInvoiceItemAt(int index)throws BooxException {
 public Money getBalance(Clerk clerk) throws PermissionsException{
 	return account.getBalance(enterprise, clerk);
 }
-/**
- * Returns the most recent invoice for this customer.
- * 
+
+/**Returns the most recent invoice for this customer.
  * @param enterprise
  * @param clerk
  * @return
@@ -761,37 +754,49 @@ public static Invoice getInvoice(Enterprise enterprise, Clerk clerk, Customer cu
 	//TODO
 	/* First, we must check to see if we have any unraised/draft invoices for this customer. Should only be one!
 	 * If so, we return it.
-	 * 
-	 * Second, if not we return an invoice which is a clone of the last invoice we raised for that customer.
-	 * 
-	 * 
-	 */
+	 * Second, if not we return an invoice which is a clone of the last invoice we raised for that customer. */
 	try{
-	Table invoicesTable = getInvoicesTable(enterprise);
-	List<Row> rows = invoicesTable.getRows(INVOICE_CUSTOMER_SYSNAME_COLNAME, customer.getSysname());
-	ISODate date = new ISODate(0);
-	String invSysname=null;
-	for (Row row:rows){
-		ISODate invDate;
-		
-			invDate = row.getISODate(INVOICE_CREATED_DATE_COLNAME);
-		
-		if (invDate.after(date)){
-			date=invDate;
-			invSysname=row.getString(INVOICE_SYSNAME_COLNAME);
+		Table invoicesTable = getInvoicesTable(enterprise);
+		List<Row> rows = invoicesTable.getRows(INVOICE_CUSTOMER_SYSNAME_COLNAME, customer.getSysname());
+		logger.log("InvoiceGI: found "+rows.size()+"invoices for "+customer.getName());
+		ISODate date = new ISODate(new Long(0));
+		logger.log("InvoiceGI: starting date for search is"+date.toString());
+		String invSysname=null;
+		String status=null;
+		for (Row row:rows){
+			ISODate invDate;
+				invDate = row.getISODate(INVOICE_CREATED_DATE_COLNAME);
+			if (invDate.after(date)){
+				logger.log("InvoiceGI: "+invDate.toString()+" is after "+date.toString());
+				date=invDate;
+				invSysname=row.getString(INVOICE_SYSNAME_COLNAME);
+				status=row.getString(INVOICE_STATUS_COLNAME);
+			}else{
+				logger.log("InvoiceGI: "+invDate.toString()+" is before "+date.toString());
+			}
 		}
-	}
-	if(invSysname==null){
-		logger.log("creating first invoice for customer:"+customer.getName());
-		return createInvoice(enterprise, clerk, customer);
-	}else{
-		logger.log("opening  latest invoice for customer:"+customer.getName());
-		
-		return openInvoice(enterprise, clerk, invSysname);
-	}
+		if(invSysname==null){
+			logger.log("creating first invoice for customer:"+customer.getName());
+			return createInvoice(enterprise, clerk, customer);
+		}else{
+			if(status.equals(PENDING)){
+				logger.log("opening  latest invoice for customer:"+customer.getName());
+				return openInvoice(enterprise, clerk, invSysname);
+			}else{
+				return cloneInvoice(enterprise, clerk, invSysname);
+			}
+		}
 	}catch(Exception e){
 		logger.log("Invoice-gI problem", e);
 		return null;
 	}
+}
+private static Invoice cloneInvoice(Enterprise enterprise, Clerk clerk, String sysname) throws PermissionsException{
+	//FIXME
+	return openInvoice(enterprise, clerk, sysname);
+}
+
+public Map<Integer, InvoiceItem> getInvoiceItems() {
+	return invoiceItems;
 }
 }

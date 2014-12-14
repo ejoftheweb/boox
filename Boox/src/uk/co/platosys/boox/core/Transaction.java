@@ -74,13 +74,16 @@ import uk.co.platosys.util.Logger;
 public final class Transaction implements AuditElement {
     String creditAccountName;
     String debitAccountName;
-    Account creditAccount;
-    Account debitAccount;
+    //Account creditAccount;
+    //Account debitAccount;
     Money money;
     Currency currency;
     Enterprise enterprise;
     String databaseName;//=Boox.DATABASE_NAME;
     private String note;
+    private long taxed_tid=0;
+    private int line=0;
+    private boolean isTax;
     boolean posted=false;
     boolean canPost=false;
     long transactionID;
@@ -106,13 +109,14 @@ public final class Transaction implements AuditElement {
      * @param debitAccount
      * @param note
      **/
+    @Deprecated
     public Transaction (Enterprise enterprise, Clerk clerk,  Money money, Account creditAccount, Account debitAccount, String note){
         this.clerk=clerk;
         this.enterprise=enterprise;
         this.databaseName=enterprise.getDatabaseName();
         this.money=money;
-        this.creditAccount=creditAccount;
-        this.debitAccount=debitAccount;
+        //this.creditAccount=creditAccount;
+        //this.debitAccount=debitAccount;
 
         this.creditAccountName=creditAccount.getSysname();
         this.debitAccountName=debitAccount.getSysname();
@@ -124,6 +128,43 @@ public final class Transaction implements AuditElement {
         this.requiredApprovals=new HashSet<String>();
     }
     /**
+     * This is the constructor for an unposted transaction.
+     * you call its post() method to post it. 
+     *
+     * @param clerk
+     * @param money
+     * @param creditAccount
+     * @param debitAccount
+     * @param note
+     **/
+      public Transaction (Enterprise enterprise, Clerk clerk,  Money money, String creditAccountName, String debitAccountName, String note, int lineno){
+        this.clerk=clerk;
+        this.enterprise=enterprise;
+        this.databaseName=enterprise.getDatabaseName();
+        this.money=money;
+       
+        this.creditAccountName=creditAccountName;//.getSysname();
+        this.debitAccountName=debitAccountName;//t.getSysname();
+        this.note=note;
+        this.currency = money.getCurrency();
+        this.line=lineno;
+        canPost=checkPostable(enterprise);
+        this.approvals=new HashSet<Clerk>();
+        this.requiredApprovals=new HashSet<String>();
+    }
+    
+
+      
+      
+      
+      
+      
+      
+      public  void setTaxedTid(long taxed_tid){
+    	 this.taxed_tid=taxed_tid;
+    	 this.isTax=true;
+     }
+    /**
      * package-protected constructor recreates a transaction for auditing purposes.
      */
     protected Transaction (Clerk clerk, Enterprise enterprise, Money money, String credit, String debit, String note, Date postingTime, long transactionID){
@@ -131,9 +172,9 @@ public final class Transaction implements AuditElement {
         this.enterprise=enterprise;
         this.money=money;
         this.creditAccountName=credit;
-        this.creditAccount = new Account(enterprise, creditAccountName, clerk);
+        //this.creditAccount = new Account(enterprise, creditAccountName, clerk);
         this.debitAccountName=debit;
-        this.debitAccount = new Account(enterprise, debitAccountName, clerk);
+        //this.debitAccount = new Account(enterprise, debitAccountName, clerk);
         this.note=note;
         this.currency = money.getCurrency();
         this.postingTime=postingTime;
@@ -150,20 +191,28 @@ public final class Transaction implements AuditElement {
         Connection connection = null;
         if ((!posted)&&(canPost)){
         try{
-            String creditAccountContraName;
-            String debitAccountContraName;
-            transactionID=Journal.assignTransactionID(this);
+           transactionID=Journal.assignTransactionID(this);
             postingTime=new java.sql.Timestamp(new Date().getTime());
+            //this logic dictates that if a transaction is in a private ledger, the 
+            //contra account should show only the ledger, not the account. 
+            //it isn't quite right, because the parent ledger of most accounts shares 
+            //the sysname. So it is currently suspended while we think about 
+            //better ways to implement the secrecy.
+            String creditAccountContraName=creditAccountName;
+            String debitAccountContraName=debitAccountName;
+            
+            /*
             if(creditAccount.getLedger().isPrivate()){
                 creditAccountContraName=creditAccount.getLedger().getName();
             }else{
-                creditAccountContraName=creditAccount.getName();
+                creditAccountContraName=creditAccount.getSysname();
             }
             if(debitAccount.getLedger().isPrivate()){
                 debitAccountContraName=debitAccount.getLedger().getName();
             }else{
-                debitAccountContraName=debitAccount.getName();
-            }
+                debitAccountContraName=debitAccount.getSysname();
+            }*/
+            
             //Create a SQL transaction;
             connection = ConnectionSource.getConnection(databaseName);
             connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
@@ -185,24 +234,45 @@ public final class Transaction implements AuditElement {
 	            Journal.STATUS_COLNAME+" = true" +
 	            " WHERE ("+Journal.TID_COLNAME+" = "+Long.toString(transactionID)+")");
            
-           
-            //credit the credit account
-            //the balance line     
-            try{
-            	statement.addBatch("UPDATE "+creditAccountName+" SET amount = amount -"+amountString+", date = \'"+postingTime.toString()+"\' WHERE contra = \'balance\'");
-            }catch(Exception x){
-            	logger.log("problem in the batch posting", x);//the transaction line
+            if(isTax){
+	            //credit the credit account
+	            //the balance line     
+	            try{
+	            	statement.addBatch("UPDATE "+creditAccountName+" SET amount = amount -"+amountString+", date = \'"+postingTime.toString()+"\' WHERE contra = \'balance\'");
+	            }catch(Exception x){
+	            	logger.log("problem in the batch posting", x);
+	            }
+	            
+	            //the transaction line
+	            statement.addBatch("INSERT INTO "+creditAccountName+"(transactionID, contra, amount, balance, date, clerk, notes, line, taxed_tid, is_tax) VALUES ("+Long.toString(transactionID)+",\'"+debitAccountContraName+"\',"+creditAmountString+",(SELECT amount FROM "+creditAccountName+" WHERE contra = \'balance\'),\'"+postingTime.toString()+"\',\'"+clerk.getName()+"\',\'"+note+"\',"+line+","+taxed_tid+","+isTax+")");
+	            //debit the debit account
+	            //the balance line
+	            statement.addBatch("UPDATE "+debitAccountName+" SET amount = amount +"+amountString+", date = \'"+postingTime.toString()+"\' WHERE contra = \'balance\'");
+	            //the transaction line
+	            statement.addBatch("INSERT INTO "+debitAccountName+" (transactionID, contra, amount, balance, date, clerk, notes, line, taxed_tid, is_tax) VALUES ("+Long.toString(transactionID)+",\'"+creditAccountContraName+"\',"+amountString+",(SELECT amount FROM "+debitAccountName+" WHERE contra = \'balance\'),\'"+postingTime.toString()+"\',\'"+clerk.getName()+"\',\'"+note+"\',"+line+","+taxed_tid+","+isTax+")");
+	            statement.addBatch("COMMIT");
+	            
+            }else{
+            	//credit the credit account
+	            //the balance line     
+	            try{
+	            	statement.addBatch("UPDATE "+creditAccountName+" SET amount = amount -"+amountString+", date = \'"+postingTime.toString()+"\' WHERE contra = \'balance\'");
+	            }catch(Exception x){
+	            	logger.log("problem in the batch posting", x);
+	            }
+	            
+	            //the transaction line
+	            statement.addBatch("INSERT INTO "+creditAccountName+"(transactionID, contra, amount, balance, date, clerk, notes, line) VALUES ("+Long.toString(transactionID)+",\'"+debitAccountContraName+"\',"+creditAmountString+",(SELECT amount FROM "+creditAccountName+" WHERE contra = \'balance\'),\'"+postingTime.toString()+"\',\'"+clerk.getName()+"\',\'"+note+"\',"+line+")");
+	            //debit the debit account
+	            //the balance line
+	            statement.addBatch("UPDATE "+debitAccountName+" SET amount = amount +"+amountString+", date = \'"+postingTime.toString()+"\' WHERE contra = \'balance\'");
+	            //the transaction line
+	            statement.addBatch("INSERT INTO "+debitAccountName+" (transactionID, contra, amount, balance, date, clerk, notes, line) VALUES ("+Long.toString(transactionID)+",\'"+creditAccountContraName+"\',"+amountString+",(SELECT amount FROM "+debitAccountName+" WHERE contra = \'balance\'),\'"+postingTime.toString()+"\',\'"+clerk.getName()+"\',\'"+note+"\',"+line+")");
+	            statement.addBatch("COMMIT");
+	            
             }
-            statement.addBatch("INSERT INTO "+creditAccountName+"(transactionID, contra, amount, balance, date, clerk, notes) VALUES ("+Long.toString(transactionID)+",\'"+debitAccountContraName+"\',"+creditAmountString+",(SELECT amount FROM "+creditAccountName+" WHERE contra = \'balance\'),\'"+postingTime.toString()+"\',\'"+clerk.getName()+"\',\'"+note+"\')");
-            //debit the debit account
-            //the balance line
-            statement.addBatch("UPDATE "+debitAccountName+" SET amount = amount +"+amountString+", date = \'"+postingTime.toString()+"\' WHERE contra = \'balance\'");
-            //the transaction line
-            statement.addBatch("INSERT INTO "+debitAccountName+" (transactionID, contra, amount, balance, date, clerk, notes) VALUES ("+Long.toString(transactionID)+",\'"+creditAccountContraName+"\',"+amountString+",(SELECT amount FROM "+debitAccountName+" WHERE contra = \'balance\'),\'"+postingTime.toString()+"\',\'"+clerk.getName()+"\',\'"+note+"\')");
-            
- 
-            statement.addBatch("COMMIT");
             statement.executeBatch();
+            statement.close();
             connection.close(); 
             
             posted=true;
@@ -246,7 +316,7 @@ public final class Transaction implements AuditElement {
      */
     public Transaction reverse(Enterprise enterprise){
         if (isPosted()){
-            return new Transaction (enterprise, clerk,  money, debitAccount, creditAccount, "Transaction No: "+Long.toString(transactionID)+ " REVERSED");
+            return new Transaction (enterprise, clerk,  money, debitAccountName, creditAccountName, "Transaction No: "+Long.toString(transactionID)+ " REVERSED", line);
         }else{
             return null;
         }
@@ -262,7 +332,7 @@ public final class Transaction implements AuditElement {
      */
     public Transaction reverse(Enterprise enterprise, String explanation){
         if (isPosted()){
-            return new Transaction(enterprise, clerk,  money, debitAccount,creditAccount, "Transaction No: "+Long.toString(transactionID)+ "REVERSED - explanation: "+explanation);
+            return new Transaction(enterprise, clerk,  money, debitAccountName,creditAccountName, "Transaction No: "+Long.toString(transactionID)+ "REVERSED - explanation: "+explanation, line);
         }else{
             return null;
         }
@@ -312,8 +382,8 @@ public final class Transaction implements AuditElement {
     //we look at each of the Account objects and query whether they are postable.
     private boolean checkPostable(Enterprise enterprise){
     try {
-            Ledger ledger = debitAccount.getLedger();
-            logger.log(4, "T checking debit ledger "+ledger.getName());
+    	Ledger ledger = Ledger.getAccountLedger(enterprise, debitAccountName);
+        logger.log(4, "T checking debit ledger "+ledger.getName());
             //debug code
             if (enterprise==null){logger.log("TcP: null enterprise");}else{logger.log("enterprise:"+enterprise.getName());}
             if (ledger==null){logger.log("TcP: null ledger");}else{logger.log("ledger:"+ledger.getName());}
@@ -323,8 +393,8 @@ public final class Transaction implements AuditElement {
                 message=message+" debitAccount can't post: "+clerk.getName()+" does not have debit rights on "+ledger.getName();
                 return false;
             }
-            ledger=creditAccount.getLedger();
-            logger.log(4, "T checking credit ledger "+ledger.getName());
+            ledger = Ledger.getAccountLedger(enterprise, creditAccountName);
+               logger.log(4, "T checking credit ledger "+ledger.getName());
             
             if (!clerk.canCredit(enterprise, ledger)){
                 message=message+"creditAccount can't post: "+clerk.getName()+" does not have credit rights on "+ledger.getName();
@@ -391,7 +461,7 @@ public final class Transaction implements AuditElement {
     }
 
     
-
+/*
     public Account getContraAccount(Enterprise enterprise, Account account, Clerk clerk) throws PermissionsException, BooxException{
         if(account.getName().equals(debitAccountName)){
             if(creditAccount.getLedger().isPrivate()){
@@ -413,13 +483,13 @@ public final class Transaction implements AuditElement {
         }else{
             throw new BooxException(account.getName()+" is not of this Transaction "+transactionID);
         }
-    }
+    }*/
     
     /*
      *use this to get contra account details for audit purposes/creating statements etc.
      * 
      */
-    public String getContraAccountFullName(Account account, Clerk clerk) throws PermissionsException, BooxException {
+   /* public String getContraAccountFullName(Account account, Clerk clerk) throws PermissionsException, BooxException {
         if(account.getName().equals(debitAccountName)){
             if(creditAccount.getLedger().isPrivate()){
                 return "Private Ledger";
@@ -436,25 +506,8 @@ public final class Transaction implements AuditElement {
         }else{
             throw new BooxException(account.getName()+" is not of this Transaction "+transactionID);
         }
-    }
-     public String getContraAccountName(Account account, Clerk clerk) throws PermissionsException, BooxException {
-        if(account.getName().equals(debitAccountName)){
-            if(creditAccount.getLedger().isPrivate()){
-                return "Private Ledger";
-            }else{
-                return creditAccount.getName();
-            }
-        }else if(account.getName().equals(creditAccountName)) {
-            if(debitAccount.getLedger().isPrivate()){
-                return "Private Ledger";
-            }else{
-                return debitAccount.getName();
-            }
-
-        }else{
-            throw new BooxException(account.getName()+" is not of this Transaction "+transactionID);
-        }
-    }
+    }*/
+     
      public static Transaction getTransaction(Enterprise enterprise, long tid){
     	 return Journal.getTransaction(enterprise, tid);
      }

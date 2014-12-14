@@ -101,7 +101,7 @@ public class InvoiceItem extends TaxedTransaction {
     	Money amount = Money.multiply(price, quantity);
     	String creditAccountName = product.getAccount().getSysname();
     	String debitAccountName = invoice.getSysname();
-    	
+    	logger.log("II says: credit "+creditAccountName+", debit "+debitAccountName);
     	InvoiceItem invoiceItem= new InvoiceItem(enterprise, clerk, amount, creditAccountName, debitAccountName, "", false, taxBand, lineno);
         invoiceItem.setQuantity(quantity);
         invoiceItem.setUnitPrice(price);

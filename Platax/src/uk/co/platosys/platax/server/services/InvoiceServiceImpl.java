@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.platosys.boox.core.Clerk;
 import uk.co.platosys.boox.core.Enterprise;
@@ -53,13 +54,17 @@ public class InvoiceServiceImpl extends Xservlet implements InvoiceService {
 			GWTCustomer gwtCustomer = CustomerServiceImpl.convert(customer);
 			if (gwtCustomer==null){throw new PlataxException("ISL create invoice, seem to have no customer?");}
 			GWTInvoice gwtInvoice = new GWTInvoice();
-			List<Item> productList = Product.getProducts(enterprise, clerk, customer);
 			ArrayList<GWTItem> gwtProductList = new ArrayList<GWTItem>();
-			Iterator<Item> pit = productList.iterator();
-			while(pit.hasNext()){
-				gwtProductList.add(ProductServiceImpl.createGWTItem(pit.next()));
+			for(Item item:Product.getProducts(enterprise, clerk, customer)){
+				gwtProductList.add(ProductServiceImpl.createGWTItem(item));
 			}
-			
+			Map<Integer, InvoiceItem> invoiceItems = invoice.getInvoiceItems();
+			for (Integer index:invoiceItems.keySet()){
+				InvoiceItem invitem = invoiceItems.get(index);
+				logger.log("ISI converting item at "+index);
+				logger.log("ISI item name is"+invitem.getProduct().getName());
+				gwtInvoice.addLineItem(convert(invitem));
+			}
 			gwtInvoice.setProducts(gwtProductList);
 			gwtInvoice.setCustomer(gwtCustomer);
 			gwtInvoice.setEnterprise(EnterpriseServiceImpl.convert(enterprise, clerk));
@@ -133,9 +138,19 @@ public class InvoiceServiceImpl extends Xservlet implements InvoiceService {
 			return null;
 		}
 	}
-	
-	@Override
-	public GWTInvoice raiseInvoice(GWTInvoice gwtInvoice)  {
+	public GWTLineItem convert(InvoiceItem invitem){
+		try{
+			GWTLineItem lineItem = new GWTLineItem();
+			lineItem.setItemName(invitem.getProduct().getName());
+			lineItem.setItemQty((float) invitem.getQuantity());
+			lineItem.setPrice(PlataxServer.convert(invitem.getUnitPrice()));
+			return lineItem;
+		}catch(Exception x){
+			logger.log("ISI problem converting line item ", x);
+			return null;
+		}
+	}
+	@Override	public GWTInvoice raiseInvoice(GWTInvoice gwtInvoice)  {
 		try{
 			String sysname = gwtInvoice.getSysname();
 		    logger.log("ISIri- raising invoice "+sysname+ "for "+gwtInvoice.getGross().toPlainString());

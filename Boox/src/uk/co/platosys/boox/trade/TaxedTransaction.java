@@ -181,13 +181,12 @@ public class TaxedTransaction {
         		    enterprise,
                     clerk,
                     getNetMoney(),
-                    Account.getAccount(enterprise,creditAccountName, clerk, Permission.CREDIT),
-                    Account.getAccount(enterprise,debitAccountName,clerk, Permission.DEBIT),
-                      note
+                   creditAccountName,
+                   debitAccountName,
+                      note,
+                      lineno
                     );
-     
-            
-        if(input){
+       if(input){
         	switch(taxBand){
 	        case HIGHER_BAND:taxAccountName=HIGHER_RATE_INPUT_TAX_ACCOUNT_NAME;break;
 	        case STANDARD_BAND:taxAccountName=STANDARD_RATE_INPUT_TAX_ACCOUNT_NAME;break;
@@ -200,9 +199,11 @@ public class TaxedTransaction {
             		enterprise,
                     clerk,
                     getTaxMoney(),
-                    Account.getAccount(enterprise,creditAccountName, clerk, Permission.CREDIT),
-                    Account.getAccount(enterprise,Account.getAccountSysname(enterprise, taxAccountName),  clerk, Permission.DEBIT),
-                    note
+                    creditAccountName, 
+                    Account.getAccountSysname(enterprise, taxAccountName),
+                    note,
+                    lineno
+                    
                     );
         }else{
         	switch(taxBand){
@@ -212,45 +213,42 @@ public class TaxedTransaction {
 	        case ZERO_BAND:taxAccountName=ZERO_RATE_OUTPUT_TAX_ACCOUNT_NAME;break;
 	        default: taxAccountName=STANDARD_RATE_OUTPUT_TAX_ACCOUNT_NAME;break;
         	}
-        	
-            taxTransaction=new Transaction(
+        	taxTransaction=new Transaction(
             		enterprise,
                     clerk,
                     getTaxMoney(),
-                    Account.getAccount(enterprise,Account.getAccountSysname(enterprise, taxAccountName), clerk, Permission.CREDIT),
-                    Account.getAccount(enterprise,debitAccountName, clerk, Permission.DEBIT),
-                    note 
+                   Account.getAccountSysname(enterprise, taxAccountName),
+                    debitAccountName, 
+                    note,
+                    lineno
                     );
         
         }
     }
 
-    /**
-     * Posts the value transaction only.
-     * @return true if successful.
-     */
-    private boolean postValue() throws PermissionsException {
-        if(!valueTransaction.canPost()){return false;}
+    /** Posts the value transaction only.
+     * @return true if successful.*/
+    private long postValue() throws PermissionsException {
+        if(!valueTransaction.canPost()){return -1;}
         valueID=valueTransaction.post();
         if (taxed){
             taxTransaction.setNote("Tax on TID:"+Long.toString(valueID)+" "+valueTransaction.getNote());
         }
         //taxTransaction.post();
         if (valueID>0){
-            return true;
+            return valueID;
         }else{
             logger.log(3, "TT problem posting value transaction");
-            return false;
+            return valueID;
         }
     }
-    /**
-     * Posts the tax transaction.
+    
+    /** Posts the tax transaction.
      * @return the tax transaction ID, or the value transaction ID if this is an untaxed
-     * transaction.
-     */
+     * transaction.*/
     private long postTax() throws PermissionsException {
         if (taxed&&(valueID>0)){
-        	
+        	taxTransaction.setTaxedTid(valueID);
             taxTID =  taxTransaction.post();
            // logger.log("TT posted tax transaction with ID"+taxTID);
             return taxTID;
@@ -260,7 +258,7 @@ public class TaxedTransaction {
         }
     }
     public long post() throws PermissionsException {
-    	if(postValue()){
+    	if(postValue()>0){
     		return postTax();
     	}else{
     		return -1;

@@ -1,6 +1,8 @@
 package uk.co.platosys.platax.client.constants;
 
 public class StringText {
+	public static final String BRANDING_STRAPLINE ="revolutionary cloud accounting";
+	
 	public static final String THANKYOU="Thank you!";
 	public static final String ADD_NEW = "Add new";
 	public static final String INVOICE="Invoice";

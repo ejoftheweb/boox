@@ -244,15 +244,35 @@ public class InvoiceForm extends AbstractBill {
 
 	protected void setInvoice(GWTInvoice gwtInvoice) {
 		this.gwtInvoice=gwtInvoice;
+		Window.alert("invoice size" +gwtInvoice.getLineItems().size());
 		billNumberBox.setValue(gwtInvoice.getUserno());
 		this. itemListBox.addItems(gwtInvoice.getProducts());
 		this.gwtCustomer=gwtInvoice.getCustomer();
 		this.customerName=gwtCustomer.getName();
 		setTabHeaderText(enterpriseName+":"+customerName);
+		for(GWTLineItem lineItem:gwtInvoice.getLineItems()){
+			insertLine(lineItem);
+		}
 		
 	}
 
-	
+	 protected void insertLine(final GWTLineItem gwtLineItem) {
+	    	final int rows = table.getRowCount()-1;
+	    	table.setWidget(rows, 1, new Label(gwtLineItem.getItemName()));
+			table.setWidget(rows, 2, new QuantityBox(gwtLineItem.getItemQty()));
+			table.setWidget(rows,3, new MoneyLabel(gwtLineItem.getPrice()));
+			table.setWidget(rows,4, new MoneyLabel(gwtLineItem.getNet()));
+			table.setWidget(rows,5, new MoneyLabel(gwtLineItem.getTax()));
+			table.setWidget(rows,6, new MoneyLabel(gwtLineItem.getGross()));
+			final Button voidLineButton = new LineCancelButton();
+			voidLineButton.addClickHandler(new ClickHandler(){
+	           @Override
+				public void onClick(ClickEvent event) {
+					invoiceService.voidLine(gwtLineItem, voidLineCallback);
+				}
+			});
+			table.setWidget(rows, 7,voidLineButton);
+		}
     protected void postLine() throws Exception{
     	final int rows = table.getRowCount()-1;
     	final GWTLineItem gwtLineItem = new GWTLineItem();

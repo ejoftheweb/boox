@@ -49,7 +49,7 @@ import uk.co.platosys.util.PlatosysProperties;
 
 /**
  * The journal is simply a list of transactions.
- * This needs to be rejigged to use SerialTable
+ * 
  * 
  * @author edward
  */
@@ -96,13 +96,13 @@ public final class Journal  {
     	try {
 			JDBCSerialTable journalTable = JDBCSerialTable.openTable(enterprise.getDatabaseName(), TABLENAME,TID_COLNAME);
 			Row row =journalTable.getRow(transactionID);
-			Clerk clerk = new Clerk(row.getString(CLERK_COLNAME));
-			Money money = new Money(row.getString(CURRENCY_COLNAME), row.getDouble(AMOUNT_COLNAME));
+			Clerk transactionClerk =  new Clerk(row.getString(CLERK_COLNAME));
+			Money money = new Money(row.getString(CURRENCY_COLNAME), row.getBigDecimal(AMOUNT_COLNAME));
 			String credit = row.getString(CREDIT_COLNAME);
 			String debit=row.getString(DEBIT_COLNAME);
 			String note=row.getString(NOTE_COLNAME);
 			java.sql.Timestamp postingTime=new java.sql.Timestamp(row.getTimeStamp(DATE_COLNAME).getTime());
-			return new Transaction (clerk, enterprise,  money,  credit, debit, note,  postingTime,  transactionID);
+			return new Transaction (transactionClerk, enterprise,  money,  credit, debit, note,  postingTime,  transactionID);
 		        
 		} catch (PlatosysDBException e) {
 			// TODO Auto-generated catch block

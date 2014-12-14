@@ -38,6 +38,11 @@ import java.util.Calendar;
  * 
  * The class also has a load of other utility methods for getting dates day/week/month/year ago. 
  * 
+ * Note some differences between this and its superclass java.util.Date:
+ * 
+ *  new Date(0) returns 1 Jan 1970, new ISODate(0) returns now.
+ *  for 1Jan1970 you need new ISODate(new Long(0)).
+ * 
  */
 public class ISODate extends Date implements Serializable{
 	/**

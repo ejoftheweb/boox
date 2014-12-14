@@ -92,6 +92,9 @@ import uk.co.platosys.util.ShortHash;
  * than is provided in the initial modules, which, although sector-specific, are inherently generic. 
  * 
  * Ledger changing is not yet implemented (Nov2014)
+ * The issue to resolve to make it feasible is the algorithm to generate the sysname. At present it's a shorthash of the fullname, but it needs
+ * to be persistent. If you move ledgers and then put a new account with the same name in the old ledger it'll generate a conflicting sysname.
+ * 
  * 
  * <h2>Line numbering and transaction pairing</h2>
  * As of Dec 2014, we are implementing line numbering and transaction pairing with two additional integer fields.
@@ -296,7 +299,7 @@ public class Account implements Budgetable,  Auditable {
                         debitAccountName=contra;
                         creditAccountName=this.name;
                     }
-                    Clerk transactionClerk = new Clerk(clerkName);
+                    Clerk transactionClerk = Clerk.getClerk(enterprise, clerkName);
                     Money money = new Money(currency, amount);
                     Transaction transaction = new Transaction(transactionClerk, enterprise, money,creditAccountName,debitAccountName,notes, timestamp, transactionID);
                     ISODate transactionDate = new ISODate(timestamp.getTime());
@@ -307,40 +310,48 @@ public class Account implements Budgetable,  Auditable {
                   return auditList;
             }catch(Exception e){
                 logger.log("problem generating audit list for account "+ name, e);
-               
-            
                 return null;
             }
        
         
     }
-    /**
-     * As of Nov2014, this is not yet supported and a call will automatically throw an ONSE.
-     * 
+    
+    /**As of Nov2014, this is not yet supported and a call will automatically throw an ONSE.
      * @param ledger
      * @param clerk
      * @return
      * @throws PermissionsException
-     * @throws OperationNotSupportedException
-     */
+     * @throws OperationNotSupportedException */
     public boolean setLedger(Ledger ledger, Clerk clerk)throws PermissionsException, OperationNotSupportedException{
     	//TODO implement Account.setLedger()
     	throw new OperationNotSupportedException();
     }
+    
+    /** The account name is a human-readable String, unique with ledger scope.
+     * @return the name*/
     public String getName(){
         return name;
     }
 
+    /** The account sysname is unique with enterprise scope and is the safest way of identifying an
+     * account. It is a legal SQL tablename.
+     * @return the name */
     public String getSysname(){
         return sysname;
     }
+    
+    /** 
+     * 
+     */
     public Currency getCurrency(){
         return currency;
     }
+    
+    /** The fullname is also unique with enterprise scope and is a concatenation of the 
+     * @return
+     */
     public String getFullName(){
-        //logger.log(5,"Account "+name+" returning fullname = "+fullName);
-                
-        return fullName;
+       return fullName;
     }
     public String getOwnerName(){
         return ownerName;
@@ -383,22 +394,19 @@ public class Account implements Budgetable,  Auditable {
         return accountName;
     }
 
-    /**
-     * @return the type
-     */
-    public //held as string
-    String getType() {
+    /** Returns a String parameter being the account type. So far it can have only one value, Account.BASIC_TYPE
+     * @return the type */
+    public  String getType() {
         return type;
     }
 
-    /**
-     * @param type the type to set
-     */
+    /** We probably don't need account types, but the ability to set an account-type parameter is retained.
+     *  @param type the type to set */
     public void setType(String type) {
         this.type = type;
     }
-    /**
-     * Checks for the existence of an account with this sysname
+    
+    /**Checks for the existence of an account with this sysname
      * @param databaseName
      * @param sysname
      * @return
@@ -421,19 +429,25 @@ public class Account implements Budgetable,  Auditable {
     	return new Account(enterprise, sysname, clerk);
     }
     
+    /** Retrieves an account if the clerk has the relevant permission; if not, a PermissionsException is thrown
+     * @param enterprise
+     * @param sysname
+     * @param clerk
+     * @param permission
+     * @return
+     * @throws PermissionsException*/
     public static Account getAccount(Enterprise enterprise, String sysname, Clerk clerk, Permission permission) throws PermissionsException {
-    	     Account account = new Account(enterprise, sysname, clerk);
-    	      Ledger ledger=account.getLedger();
-
-    	      if (clerk.hasPermission(enterprise, ledger, permission)){
-    	          return account;
-    	      }else{
-    	          throw new PermissionsException("Clerk "+clerk.getName()+" does not have "+permission.getName()+ " permission  on ledger "+ledger.getName());
-    	      }
-    	    }
-    /**
-     * Creates an Account. The account created will have its own sysname.
-     * 
+      logger.log("AccountGA getting account "+sysname);
+    	Account account = new Account(enterprise, sysname, clerk);
+      Ledger ledger=account.getLedger();
+      if (clerk.hasPermission(enterprise, ledger, permission)){
+          return account;
+      }else{
+          throw new PermissionsException("Clerk "+clerk.getName()+" does not have "+permission.getName()+ " permission  on ledger "+ledger.getName());
+      }
+    }
+    
+    /**Creates an Account. The account created will have its own sysname.
      * @param enterprise
      * @param name
      * @param owner
@@ -442,14 +456,12 @@ public class Account implements Budgetable,  Auditable {
      * @param description
      * @return
      * @throws BooxException
-     * @throws PermissionsException
-     */
+     * @throws PermissionsException*/
     public static Account createAccount(Enterprise enterprise, String name, Clerk owner, Ledger ledger, Currency currency, String description) throws BooxException, PermissionsException{
     	return createAccount(enterprise, name, owner, ledger, currency, description, false);
     }
     
-    /**
-     * USE THIS METHOD WITH CARE: better to use the previous one. 
+    /** USE THIS METHOD WITH CARE: better to use the previous one. 
      * This method is called from within BOOX to create Accounts having the sysname of their parent object - eg invoices, customers or products.
      * 
      * @param enterprise
@@ -464,8 +476,6 @@ public class Account implements Budgetable,  Auditable {
      * @throws PermissionsException
      */
     public static Account createAccount(Enterprise enterprise, String name, Clerk owner, Ledger ledger, Currency currency, String description, boolean keepname) throws BooxException, PermissionsException{
-
-      
        String ledgerName = ledger.getFullName();
        String fullname = ledgerName+DELIMITER+name;
        String sysname;
@@ -478,7 +488,9 @@ public class Account implements Budgetable,  Auditable {
         try {
         	//TODO redo this logic
             name=name.toLowerCase();
-            description=description.replace("\'","\'\'");
+            if(description!=null){
+            	description=description.replace("\'","\'\'");
+            }
             Table chartTable = Chart.getTable(enterprise);
             Row rs;
             //first check to see whether this account exists.
@@ -494,22 +506,10 @@ public class Account implements Budgetable,  Auditable {
 			            sysname = PREFIX+ShortHash.hash(fullname);
 	            	}
 	            }
-	        }catch (RowNotFoundException rnfe){
-            	//which is fine, so we do nothing. 
-            }
+	        }catch (RowNotFoundException rnfe){}
 	        try{
-	        	//put the info into the chart of accounts.	
-	            String cols[]=Chart.COLS;	
-	           /*String[] COLS={SYSNAME_COLNAME,
-						NAME_COLNAME, 
-						FULLNAME_COLNAME, 
-						OWNER_COLNAME, 
-						LEDGER_COLNAME, 
-						CURRENCY_COLNAME, 
-						TYPE_COLNAME, 
-						DESCRIPTION_COLNAME};*/
-	            
-	            String [] vals={sysname,
+	           String cols[]=Chart.COLS;	
+	           String [] vals={ sysname,
 	            		        name,
 	            		        fullname,
 	            		        owner.getName(),
@@ -517,10 +517,10 @@ public class Account implements Budgetable,  Auditable {
 	            		        currency.getTLA(),
 	            		        BASIC_TYPE,
 	            		        description};
-	             chartTable.addRow(cols, vals);
+	            chartTable.addRow(cols, vals);
 	           
 	            //now create the account table.
-	             Table accountTable = JDBCTable.createForeignKeyTable(enterprise.getDatabaseName(), sysname,TID_COLNAME, Journal.TABLENAME);
+	            Table accountTable = JDBCTable.createForeignKeyTable(enterprise.getDatabaseName(), sysname,TID_COLNAME, Journal.TABLENAME);
 	            accountTable.addColumn(CONTRA_COLNAME, Table.TEXT_COLUMN);//the name of the contra account
 	            accountTable.addColumn(AMOUNT_COLNAME, Table.DECIMAL_COLUMN);//the transaction amount (negative is a credit)
 	            accountTable.addColumn(BALANCE_COLNAME, Table.DECIMAL_COLUMN);//the balance of the account after this transaction

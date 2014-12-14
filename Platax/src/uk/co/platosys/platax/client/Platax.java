@@ -31,7 +31,6 @@ public class Platax implements EntryPoint {
 	//declare components
 	DockLayoutPanel dlp = new DockLayoutPanel(Unit.PCT);
 	DockLayoutPanel topPanel = new DockLayoutPanel(Unit.PCT);
-	//LoginBox loginBox = new LoginBox();
 	BrandingBox brandingBox=new BrandingBox();
 	StatusBox statusBox=new StatusBox(this);
 	TaskPanel taskPanel = new TaskPanel();
@@ -52,7 +51,7 @@ public class Platax implements EntryPoint {
 	public void onModuleLoad() {
 		//create panels and components
 		//Top Panel
-		topPanel.addWest(brandingBox, 74 );
+		topPanel.addWest(brandingBox, 75 );
 		
 		topPanel.addEast(statusBox, 25);//, DockLayoutPanel.Direction.WEST, 300, null);
 		

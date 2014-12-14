@@ -9,6 +9,16 @@ package uk.co.platosys.platax.client.constants;
  */
 
 public class Styles {
+	
+	public final static String BRANDING_BOX="px_branding_box";
+	public final static String BRANDING_LABEL="px_branding_brand";
+	public final static String BRANDING_SUBLABEL="px_branding_strapline";
+	public final static String STATUS_BOX="px_status_box";
+	public final static String STATUS_LABEL="px_status_label";
+	public final static String STATUS_LOGGEDIN="px_status_loggedin";
+	public final static String STATUS_LOGGEDOUT="px_status_loggedout";
+	
+	//Ptab style names (Ptabs are the tabs in the central panel)
   public final static String PTAB_CONTENT_STYLE="px_ptab_content";
   public final static String PTABH_STYLE="px_ptab_head";
   public final static String PTAB_SHARE_STYLE="px_ptab_share";

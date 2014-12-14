@@ -37,9 +37,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import uk.co.platosys.boox.core.exceptions.BooxException;
@@ -57,7 +59,7 @@ import uk.co.platosys.util.Logger;
  * 
  * Clerk objects can be authenticated or unauthenticated. Authenticated clerks can
  * exercise their permissions; authentication is done by a login module. Non-authenticated
- * Clerk objects are much more limited.
+ * Clerk objects are much more limited; they are essentially just pointers.
  *
  * Clerks are normally referred to by their names. 
  * 
@@ -80,8 +82,6 @@ public  class Clerk {
     static final String LEDGERS_COLNAME="ledgers";
     static final String CLERKS_COLNAME="clerks";
     private String name;
-    private Ledger ledger;
-  
     private boolean createAccounts=false;
     private boolean createLedgers=false;
     private boolean createClerks=false;
@@ -90,8 +90,7 @@ public  class Clerk {
     private Set<ClerkGroup> groups=new HashSet<ClerkGroup>();
     private Set<String> names=new HashSet<String>();
     private String databaseName;
-    private Enterprise enterprise;
-    
+    private static Map<String, Clerk> clerks=new HashMap<String, Clerk>();
     /**
      * This constructor is deprecated.
      * Creates a new instance of Clerk
@@ -99,7 +98,6 @@ public  class Clerk {
     @Deprecated
     public Clerk(String name, Ledger ledger,  boolean createAccounts, boolean createLedgers, boolean createClerks ) {
         this.name=name;
-        this.ledger=ledger;
         this.createAccounts=createAccounts;
         this.createLedgers=createLedgers;
         this.createClerks=createClerks;
@@ -108,12 +106,11 @@ public  class Clerk {
      *
      * Creates a new instance of Clerk
      */
-    public Clerk(Enterprise enterprise, String name,   boolean createAccounts, boolean createLedgers, boolean createClerks ) {
+    private Clerk(Enterprise enterprise, String name,   boolean createAccounts, boolean createLedgers, boolean createClerks ) {
         this.name=name;
         this.createAccounts=createAccounts;
         this.createLedgers=createLedgers;
         this.createClerks=createClerks;
-        this.enterprise=enterprise;
         this.databaseName=enterprise.getDatabaseName();
         Connection connection=null;
         try{
@@ -159,7 +156,7 @@ public  class Clerk {
                if (HashPass.check(password, hashedPassword)){
                    this.name=name;
                    names.add(name);
-                   this.ledger=Ledger.getLedger(enterprise, rs.getString(LEDGER_COLNAME));//, Boox.getLedgerCurrency(databaseName, rs.getString("ledger")));
+                   Ledger.getLedger(enterprise, rs.getString(LEDGER_COLNAME));
                    this.createAccounts=rs.getBoolean(ACCOUNTS_COLNAME);
                    this.createLedgers=rs.getBoolean(LEDGERS_COLNAME);
                    this.createClerks=rs.getBoolean(CLERKS_COLNAME);
@@ -181,6 +178,7 @@ public  class Clerk {
                 groups.add(group);
                 names.add(group.getName());
             }
+            clerks.put(name, this);
         }catch(SQLException sqx){
             try{connection.close();}catch(Exception x){}
             throw new BooxException("problem with result set creating clerk", sqx);
@@ -341,14 +339,11 @@ public  class Clerk {
     }
 
      private boolean hasPermission(Enterprise enterprise, Ledger ledger, Permission permission,  boolean cascades){
-    	 
-    	 String casc; if (cascades){casc="cascading";}else{casc="direct";}//debug code
-        Connection connection;
+    	Connection connection;
         String databaseName = enterprise.getDatabaseName();
         try{
             connection=ConnectionSource.getConnection(databaseName);
             Statement statement = connection.createStatement();
-           
             String sqlstring =("SELECT * FROM "+Permission.TABLENAME+" WHERE("+Permission.LEDGER_COLNAME+" = '"+ledger.getFullName()+"')");
           //  logger.log(sqlstring);
             ResultSet rs = statement.executeQuery(sqlstring);
@@ -358,34 +353,46 @@ public  class Clerk {
                        if(cascades){
                             if((rs.getBoolean(permission.getName()))&&(rs.getBoolean(Permission.CASCADES_COLNAME))){
                            //logger.log("CHPx Clerk "+name+" has cascade permission "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
-                                 
+                                rs.close();
+                                statement.close();
+                                connection.close();
                             	return true;
                             }else if((rs.getBoolean(Permission.ALL_COLNAME)&&(rs.getBoolean(Permission.CASCADES_COLNAME)))){
                          	//logger.log("CHPx Clerk "+name+" has all permissions inc "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
-                                
+                            	rs.close();
+                                statement.close();
+                                connection.close();
                                 return true;
                             }
                         }else{
                             if(rs.getBoolean(permission.getName())){
-                            	//logger.log("CHPx Clerk "+name+" has direct permission "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
-                                
-                                return true;
+                            	logger.log("CHPx Clerk "+name+" has direct permission "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
+                            	rs.close();
+                                statement.close();
+                                connection.close();
+                            	return true;
                             }else if(rs.getBoolean(Permission.ALL_COLNAME)){
-                            	//logger.log("CHPx Clerk "+name+" has all permissions inc "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
-                                
-                                return true;
+                            	logger.log("CHPx Clerk "+name+" has all permissions inc "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
+                            	rs.close();
+                                statement.close();
+                                connection.close();
+                            	return true;
                             }
                         }
                    }//
                 }//done cycling names
              }
             logger.log("FALSE: "+name+" permission "+permission.getName()+" on ledger "+ledger.getName()+" in enterprise "+enterprise.getName());
-              return false;
+            rs.close();
+            statement.close();
+            connection.close();
+            return false;
 
         }catch(Exception x){
             logger.log("Clerk permissions checking error", x);
-
         }
+       
+        
         return false;
     }
     /**
@@ -423,12 +430,22 @@ public  class Clerk {
     public String getDatabaseName(){
         return databaseName;
     }
+    public static Clerk getClerk(Enterprise enterprise, String sysname){
+    	if(clerks.containsKey(sysname)){
+    		return clerks.get(sysname);
+    	}else{
+    		return new Clerk(enterprise, sysname, false, false, false);
+    	}
+    }
+    
+    
     /**
      * This returns a List of the names of those Clerks who report to the given supervisor.
      * It just returns their names, nothing more.
      * @param supervisor
      * @return a List of the names of those Clerks reporting to supervisor
      */
+
     public static List<String> getClerkNames(String databaseName, Clerk supervisor){
         List<String> clerks = new ArrayList<String>();
         
@@ -555,4 +572,5 @@ public  class Clerk {
             return null;
         }
     }
+
 }

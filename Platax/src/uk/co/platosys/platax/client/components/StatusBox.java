@@ -3,6 +3,7 @@ package uk.co.platosys.platax.client.components;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
+import uk.co.platosys.platax.client.constants.Styles;
 import uk.co.platosys.platax.client.widgets.labels.StatusLabel;
 
 import com.google.gwt.user.client.ui.Composite;
@@ -19,15 +20,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 
 public class StatusBox extends Composite {
-	private String enterpriseName="PLATAX";
-    private StatusLabel statusLabel=new StatusLabel(LabelText.NOT_LOGGED_IN);
-    private StatusLabel nameLabel=new StatusLabel(LabelText.ANONYMOUS);
+	private StatusLabel statusLabel=new StatusLabel();
+    private StatusLabel nameLabel=new StatusLabel(LabelText.NOT_LOGGED_IN);
     private Button logoutButton= new Button(LabelText.LOGOUT);
 	public StatusBox(final Platax platax) {
 		
 		FlowPanel mainPanel = new FlowPanel();
 		initWidget(mainPanel);
-		//mainPanel.setSize("10%", "100%");
+		setStyleName(Styles.STATUS_BOX);
 		
 		
 		mainPanel.add(statusLabel);
@@ -44,13 +44,15 @@ public class StatusBox extends Composite {
 		});
 	}
    public void login(String username){
-	   statusLabel.setText(LabelText.LOGGED_IN_AS);
+	   //statusLabel.setText(LabelText.LOGGED_IN_AS);
+	   nameLabel.setStyleName(Styles.STATUS_LOGGEDIN);
 	   nameLabel.setText(username);
 	   logoutButton.setEnabled(true);
    }
    public void logout(){
-	   statusLabel.setText(LabelText.NOT_LOGGED_IN);
-	   nameLabel.setText(LabelText.ANONYMOUS);
+	  // statusLabel.setText(LabelText.NOT_LOGGED_IN);
+	   nameLabel.setStyleName(Styles.STATUS_LOGGEDOUT);
+	   nameLabel.setText(LabelText.NOT_LOGGED_IN);
 	   logoutButton.setEnabled(false);
    }
 }

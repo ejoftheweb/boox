@@ -4,6 +4,12 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class QuantityBox extends TextBox {
 
+	public QuantityBox (){}
+	public QuantityBox(float itemQty) {
+		super();
+		setValue(Float.toString(itemQty));
+	}
+
 	public float getQuantity() {
 		try{// TODO Auto-generated method stub
 			return Float.parseFloat(getValue());
