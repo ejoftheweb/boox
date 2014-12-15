@@ -5,6 +5,10 @@ import java.io.Serializable;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class GWTContact implements Serializable, IsSerializable{
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 protected String name;
 protected String sysname;
 protected String legalName;

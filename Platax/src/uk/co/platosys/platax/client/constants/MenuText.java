@@ -21,7 +21,7 @@ public class MenuText {
 public static final SafeHtml CAPITAL_MENU_NAME= new StringHTML("Capital");	
 public static final SafeHtml INCOME_MENU_NAME= new StringHTML("Income");
 public static final SafeHtml SPENDING_MENU_NAME= new StringHTML("Expenditure");
-public static final SafeHtml BANKING_MENU_NAME= new StringHTML("Banking");
+public static final SafeHtml BANKING_MENU_NAME= new StringHTML("Money");
 public static final SafeHtml ASSETS_MENU_NAME= new StringHTML("Assets");
 public static final SafeHtml BUDGET_MENU_NAME= new StringHTML("Budget");
 public static final SafeHtml STAFF_MENU_NAME= new StringHTML("Staff");
@@ -39,6 +39,11 @@ public static final SafeHtml CASH_LABEL= new StringHTML("Cash Sales");
 public static final SafeHtml CUSTOMERS_LABEL= new StringHTML("Customers");
 public static final SafeHtml PRODUCTS_LABEL= new StringHTML("Products");
 
+public static final SafeHtml CASHUP= new StringHTML("Cash Up");
+public static final SafeHtml NEW_REGISTER= new StringHTML("New Cash Register");
+public static final SafeHtml NEW_CASHIER= new StringHTML("New Cashier");
+
+
 //spending menu item labels
 public static final SafeHtml BILLS_LABEL= new StringHTML("Bills");
 public static final SafeHtml CASH_PURCHASES_LABEL= new StringHTML("Cash Purchases");
@@ -51,9 +56,15 @@ public static final SafeHtml RENT_LABEL= new StringHTML("Rent and Rates");
 public static final SafeHtml INSURANCE_LABEL= new StringHTML("Insurance");
 public static final SafeHtml GENERAL_LABEL= new StringHTML("Other");
 
-//banking menu item labels
-public static final SafeHtml ACCOUNTS_LABEL= new StringHTML("Accounts");
-public static final SafeHtml ADD_ACCOUNT_LABEL= new StringHTML("Add Account...");
+//money menu item labels
+public static final SafeHtml BANKACCOUNTS_LABEL= new StringHTML("Bank Accounts");
+public static final SafeHtml ADD_BANKACCOUNT_LABEL= new StringHTML("Add Bank Account...");
+public static final SafeHtml PETTYCASH_LABEL= new StringHTML("Petty Cash");
+public static final SafeHtml ADD_PETTYCASH_LABEL= new StringHTML("Add Petty Cash Account...");
+public static final SafeHtml CARD_LABEL= new StringHTML("Charge Cards");
+public static final SafeHtml ADD_CARD_LABEL= new StringHTML("Add Charge Card Account...");
+public static final SafeHtml MERCHANT_LABEL= new StringHTML("Cards Accepted");
+public static final SafeHtml ADD_MERCHANT_LABEL= new StringHTML("Add Card Merchant Account...");
 
 //assets menu item labels
 public static final SafeHtml ASSET_REGISTER_LABEL= new StringHTML("List");

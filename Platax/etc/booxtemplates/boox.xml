@@ -18,11 +18,11 @@ The segment attribute "selection" determines whether single or multiple selectio
  -->
  <boox xmlns="http://www.platosys.co.uk/boox">
      <!-- Segment definitions -->
-     <segment name="capital" selection="single"/>
-     <segment name="vat" selection="single"/>
-     <segment name="operations" selection="multiple"/>
-     <segment name="overhead" selection="multiple"/>
-     <segment name="sector" selection="multiple"/>
+     <segment name="capital" selection="single" description="Capital Structure" instructions="Please select the capital structure"/>
+     <segment name="vat" selection="single" description="VAT" instructions="Please select if your business is (or will be)VAT registered"/>
+     <segment name="operations" selection="multiple" description="How you Operate" instructions="Please tick all the ways you will be carrying out business"/>
+     <segment name="overhead" selection="multiple" description="Your Overheads" instructions="Please tick the types of overhead you will incur" />
+     <segment name="sector" selection="multiple" description="Your sectors of operation" instructions="Please tick the sectors in which you will operate"/>
      <!-- modules in the capital segment -->
 	 <module name="shares" description="For-profit Company" segment="capital" selection="single" file="shares.xml"/>
 	 <module name="guarantee" description="Not-for-profit Company" segment="capital" selection="single" file="guarantee.xml"/>

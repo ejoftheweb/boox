@@ -22,4 +22,5 @@ public class ButtonText {
  public static final String LOGOUT = "Log Out";
  public static final String NEXT="Next >";
  public static final String BACK="< Back";
+ public static final String SUBMIT="Submit";
 }

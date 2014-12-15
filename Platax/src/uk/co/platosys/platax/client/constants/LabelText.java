@@ -1,5 +1,8 @@
 package uk.co.platosys.platax.client.constants;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+
 public class LabelText {
 	
 	
@@ -32,7 +35,7 @@ public class LabelText {
 	public static final String NEW_ENTERPRISE_PAGE_HEAD="Enroll a new business on PLATAX";
 	public static final String NEW_ENTERPRISE_PAGE_SUB_HEAD="Please enter your business details";
 	public static final String NEW_ENTERPRISE_PAGE2_HEAD="Tell us more about ";
-	public static final String NEW_ENTERPRISE_PAGE2_SUB_HEAD="Please select your business's sectors and operations";
+	public static final String NEW_ENTERPRISE_PAGE2_SUB_HEAD="The choices you make on this page will set up your system with an appropriate set of ledgers and accounts";
 	
 	public static final String NEW_ENTERPRISE="New Business";
 	public static final String ENTERPRISE_NAME = "Enterprise Name";
@@ -160,6 +163,7 @@ public class LabelText {
     
     //labels used on the Cash register pages
     public static final String CASHUP="Cash Up";
+    public static final String CASHUP_SUBHEADER="Cashing-up at the end of a shift";
     public static final String CASH_REGISTER_NAME="Which cash register?";
     public static final String CASH_REGISTER_NAME_INFO="Select the cash register you are cashing-up";
     public static final String CASHIER_NAME="Cashier Name";
@@ -167,9 +171,20 @@ public class LabelText {
     public static final String ZREPORT_NUMBER = "Z-report number";
     public static final String ZREPORT_NUMBER_INFO="Enter the Z-report number";
     public static final String GT_AMOUNT="GT (Grand Total) amount";
-    public static final String GT_AMOUNT_INFO="Enter the grand total amount printed on your Z-report";
+    public static final String GT_AMOUNT_INFO="Enter the rolling grand total amount printed on your Z-report";
+    public static final String PO_AMOUNT="PO (Paid Out) amount";
+    public static final String PO_AMOUNT_INFO="Enter the PO (Paid-Out) amount printed on your Z-report";
+    
+    public static final String PO_POPUP_Q="will be debited to the Petty Cash account \n you will need to balance it with petty cash receipts. \n Do you want to do this now?";
     public static final String CASH_AMOUNT_INFO="Enter the total cash counted in the till, including the float";
     public static final String CASH_AMOUNT="Cash in Till";
     public static final String BANK_AMOUNT="Cash Banked";
-    public static final String BANK_AMOUNT_INFO="Enter the cash you will deposit in the bank";
+    public static final String BANK_AMOUNT_INFO="Enter the cash you are depositing in the bank";
+    
+    //labels used on the Petty Cash page
+    public static final String PETTY_CASH="Petty Cash";
+    //labels used on the staff pages
+    public static final String HIRE_STAFF="Hire";
+    public static final String FIRE_STAFF="Fire";
+    
 }

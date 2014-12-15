@@ -31,11 +31,13 @@ import org.jdom2.Element;
 public class Segment {
 	private String name;
 	private String description;
+	private String instructions;
 	private List<Module> modules;
 	private boolean multipleselection;
 	public static final String ELEMENT_NAME="segment";
 	public static final String NAME_ATTNAME="name";
 	public static final String DESC_ATTNAME="description";
+	public static final String INSTR_ATTNAME="instructions";
 	public static final String SEL_ATTNAME="selection";
 	public static final String SEL_ATTVALUE="single";
 
@@ -43,7 +45,8 @@ public class Segment {
 		this.modules=new ArrayList<Module>();
 		this.name=segmentElement.getAttributeValue(NAME_ATTNAME);
 		this.description=segmentElement.getAttributeValue(DESC_ATTNAME);
-		if (segmentElement.getAttributeValue(SEL_ATTNAME).equals(SEL_ATTVALUE)){
+		this.instructions=segmentElement.getAttributeValue(INSTR_ATTNAME);
+		 if (segmentElement.getAttributeValue(SEL_ATTNAME).equals(SEL_ATTVALUE)){
 			this.multipleselection=false;
 		}else{
 			this.multipleselection=true;
@@ -68,4 +71,10 @@ public class Segment {
     	return modules;
     
     }
+
+	public String getInstructions() {
+		return instructions;
+	}
+
+	
 }

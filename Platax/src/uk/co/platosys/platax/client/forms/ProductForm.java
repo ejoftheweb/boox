@@ -46,7 +46,7 @@ public class ProductForm extends AbstractForm {
     final TextArea productDescBox= new TextArea();
     FieldLabel productPrice = new FieldLabel(StringText.PRODUCT_PRICE);
   	FieldInfoLabel productPriceInfo = new FieldInfoLabel(StringText.PRODUCT_PRICE_INFO);
-    final MoneyBox productPriceBox= new MoneyBox();
+    final MoneyBox productPriceBox= new MoneyBox("GBP");
     FieldLabel productTax = new FieldLabel(StringText.PRODUCT_TAX);
   	FieldInfoLabel productTaxInfo = new FieldInfoLabel(StringText.PRODUCT_TAX_INFO);
     final TaxBandChooser productTaxChooser= new TaxBandChooser("tbc");
@@ -109,7 +109,7 @@ public class ProductForm extends AbstractForm {
 				productService.addProduct(enterprise.getSysname(), 
 						productNameBox.getValue(), 
 						productDescBox.getValue(), 
-						productPriceBox.getMoney(), 
+						productPriceBox.getMoney().getAmount(), 
 						productTaxChooser.getTaxBand(), 
 						taxInclusiveBox.getValue(), finalCallback);
 			}
@@ -128,7 +128,7 @@ public class ProductForm extends AbstractForm {
 		setSubTitle(StringText.NEW_PRODUCT_INFO);
 		 productNameBox.setValue(null);
 		 productDescBox.setValue(null);
-		 productPriceBox.setValue(null);
+		 productPriceBox.setAmount(0);
 	}
 	/**
 	 * closes the page and returns focus to the calling tab;

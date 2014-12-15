@@ -1,14 +1,30 @@
 package uk.co.platosys.platax.client.forms.tasks;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.SubmitButton;
+import com.google.gwt.user.client.ui.IntegerBox;
+
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
+import uk.co.platosys.platax.client.constants.StringText;
+import uk.co.platosys.platax.client.services.CashServiceAsync;
+import uk.co.platosys.platax.client.services.ProductService;
+import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.platax.client.widgets.MoneyBox;
+import uk.co.platosys.platax.client.widgets.PListBox;
 import uk.co.platosys.platax.client.widgets.QuantityBox;
+import uk.co.platosys.platax.client.widgets.buttons.SubmitButton;
 import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
 import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
+import uk.co.platosys.platax.shared.boox.GWTCash;
+import uk.co.platosys.platax.shared.boox.GWTItem;
+import uk.co.platosys.platax.shared.boox.GWTMoney;
 
 /**
  * This form is for recording the cash taken from a simple cash register, with one running total. 
@@ -22,41 +38,68 @@ import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 
 public class SimpleCashRegister extends BasicTask {
 	//Declare Variables
-	
+	//services
+		final CashServiceAsync cashService = (CashServiceAsync) GWT.create(ProductService.class);
+		
 	//select the cash register being done
-	final ListBox registerList = new ListBox();
+	final PListBox registerList = new PListBox();
 	final FieldLabel registerListLabel=new FieldLabel(LabelText.CASH_REGISTER_NAME);			
 	final FieldInfoLabel registerListInfoLabel=new FieldInfoLabel(LabelText.CASH_REGISTER_NAME_INFO);
 	//select the cashier name
-	final ListBox cashierList = new ListBox();
+	final PListBox cashierList = new PListBox();
 	final FieldLabel cashierListLabel=new FieldLabel(LabelText.CASHIER_NAME);			
 	final FieldInfoLabel cashierListInfoLabel=new FieldInfoLabel(LabelText.CASHIER_NAME_INFO);
 	//select the cash register being done
-	final QuantityBox reportBox = new QuantityBox();
+	final IntegerBox reportBox = new IntegerBox();
 	final FieldLabel reportBoxLabel=new FieldLabel(LabelText.ZREPORT_NUMBER);			
 	final FieldInfoLabel reportBoxInfoLabel=new FieldInfoLabel(LabelText.ZREPORT_NUMBER_INFO);
 	//Enter the grand total
-	final MoneyBox gtBox = new MoneyBox();
+	final MoneyBox gtBox = new MoneyBox("GBP");
 	final FieldLabel gtBoxLabel=new FieldLabel(LabelText.GT_AMOUNT);			
 	final FieldInfoLabel gtBoxInfoLabel=new FieldInfoLabel(LabelText.GT_AMOUNT_INFO);
+	
+	final MoneyBox poBox = new MoneyBox("GBP");
+	final FieldLabel poBoxLabel=new FieldLabel(LabelText.PO_AMOUNT);			
+	final FieldInfoLabel poBoxInfoLabel=new FieldInfoLabel(LabelText.PO_AMOUNT_INFO);
 	//select the cash register being done
-	final MoneyBox cashBox = new MoneyBox();
+	final MoneyBox cashBox = new MoneyBox("GBP");
 	final FieldLabel cashBoxLabel=new FieldLabel(LabelText.CASH_AMOUNT);			
 	final FieldInfoLabel cashBoxInfoLabel=new FieldInfoLabel(LabelText.CASH_AMOUNT_INFO);
 	//select the cash register being done
-	final MoneyBox bankingBox = new MoneyBox();
+	final MoneyBox bankingBox = new MoneyBox("GBP");
 	final FieldLabel bankingLabel=new FieldLabel(LabelText.BANK_AMOUNT);			
 	final FieldInfoLabel bankingInfoLabel=new FieldInfoLabel(LabelText.BANK_AMOUNT_INFO);
 	
 	final Button submitButton=new SubmitButton();
 	final FieldLabel submitInfoLabel=new FieldLabel("");
 	final FieldInfoLabel submitLabel=new FieldInfoLabel(LabelText.ENTERPRISE_REGISTER);
+	
+	GWTCash cashmc;
+	
 	//callbacks
-	//selectMachine callback: retrieves the last Z-no, float and GT values for the m/c
+	//Get registers callback: populates the registerList
+	
+	//get cashiers callback: populates the cashierList
+	
+	//selectMachine callback: retrieves a GWTCash instance representing this register
+	final AsyncCallback<GWTCash> machineCallback=new AsyncCallback<GWTCash>(){
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert(StringText.SERVER_ERROR+"SCR0");
+			}
+			@Override
+			public void onSuccess(GWTCash result) {
+				if(result==null){Window.alert(StringText.SERVER_ERROR+"SCR0A");}
+				setCash(result);
+			}
+	};
 	//final callback
+	
 	
 	public SimpleCashRegister(Platax parent, String header) {
 		super(parent, header);
+		setTitle(LabelText.CASHUP);
+		setSubTitle(LabelText.CASHUP_SUBHEADER);
 		table.setWidget(0,0, registerListLabel  );
 		table.setWidget(0,1, registerList);
 		table.setWidget(0,2, registerListInfoLabel);
@@ -69,20 +112,86 @@ public class SimpleCashRegister extends BasicTask {
 		table.setWidget(3,0, gtBoxLabel);
 		table.setWidget(3,1, gtBox);
 		table.setWidget(3,2, gtBoxInfoLabel);
-		table.setWidget(4,0, cashBoxLabel);
-		table.setWidget(4,1, cashBox);
-		table.setWidget(4,2, cashBoxInfoLabel);
-		table.setWidget(5,0, bankingLabel);
-		table.setWidget(5,1, bankingBox);
-		table.setWidget(5,2, bankingInfoLabel);
-		table.setWidget(6,1, submitButton);
+		table.setWidget(4,0, poBoxLabel);
+		table.setWidget(4,1, poBox);
+		table.setWidget(4,2, poBoxInfoLabel);
+		table.setWidget(5,0, cashBoxLabel);
+		table.setWidget(5,1, cashBox);
+		table.setWidget(5,2, cashBoxInfoLabel);
+		table.setWidget(6,0, bankingLabel);
+		table.setWidget(6,1, bankingBox);
+		table.setWidget(6,2, bankingInfoLabel);
+		table.setWidget(7,1, submitButton);
 		
-	}
+		
+		reportBox.addChangeHandler(new ChangeHandler(){
+			@Override
+			public void onChange(ChangeEvent event) {
+				int reportNo=reportBox.getValue();
+				if(!checkReportSequence(reportNo)){
+					Window.alert("Z Report Number is Out of Sequence");
+				}
+			}
+		});
+		poBox.addChangeHandler(new ChangeHandler(){
+			@Override
+			public void onChange(ChangeEvent event) {
+				GWTMoney pos = poBox.getMoney();
+				if (Window.confirm(pos.toPrefixedString()+" "+LabelText.PO_POPUP_Q)){
+					
+				}
+			}
+		});
+		submitButton.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				GWTMoney gt=gtBox.getMoney();
+				GWTMoney pos = poBox.getMoney();
+				GWTMoney cash= cashBox.getMoney();
+				GWTMoney banking=bankingBox.getMoney();
+				if(checkSums(gt, pos, cash, banking)){
+					//submit the details
+				}
+			}
+		});
+}
 
 	@Override
 	public void refresh() {
 		// TODO Auto-generated method stub
 
 	}
-
+    
+	private void setCash(GWTCash cashmc){
+    	this.cashmc=cashmc;
+    }
+	
+	private boolean checkReportSequence(int reportNo){
+		return(reportNo==cashmc.getSeqno()+1);
+    }
+	private boolean checkSums(GWTMoney gt, GWTMoney pos, GWTMoney cash, GWTMoney banking){
+		try{
+			GWTMoney registered = gt.subtract(cashmc.getRunningTotal());
+			GWTMoney taken=(cash.add(pos)).subtract(cashmc.getFloatbal());
+			GWTMoney diff=taken.subtract(registered);
+			GWTMoney newFloat=cash.subtract(banking);
+			if (diff.nonZero()){
+				if (diff.credit()){
+					Window.alert("Short by:"+diff.toPrefixedString());
+				}else{
+					Window.alert("Over by:"+diff.toPrefixedString());
+				}
+			}else{
+				Window.alert("Congratulations! to the penny");
+			}
+			return (Window.confirm("Shift Takings: "+taken.toPrefixedString()+"\n"
+					               +"Over/Short: "+diff.toPlainString()+"\n"
+					               +"Paid Out: "+pos.toPrefixedString()+"\n"
+					               +"To be banked: "+banking.toPrefixedString()+"\n"
+					               +"Float left in Till:"+newFloat.toPrefixedString()
+					));
+		}catch(Exception xt){
+			return false;
+		}
+	}
 }

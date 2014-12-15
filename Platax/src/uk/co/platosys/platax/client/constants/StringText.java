@@ -50,4 +50,21 @@ public class StringText {
 	public static final String PRODUCT_TAX_INFO="The tax rate applicable to this product";
 	public static final String TAX_INCLUSIVE="Price includes tax?";
 	public static final String TAX_INCLUSIVE_INFO="Check if the list price shown includes VAT";
+	
+	public static final String NEW_STAFF="Hire a new staff member";
+	public static final String NEW_STAFF_INFO="Provide all the following information about your new employee";
+	public static final String GIVEN_NAME="Given name";
+	public static final String FAMILY_NAME="Family name";
+	public static final String GIVEN_NAME_INFO="First or given name";
+	public static final String FAMILY_NAME_INFO="Last or family name";
+	public static final String PHONE_NO="Phone Number";
+	public static final String PHONE_NO_INFO="Personal (mobile) phone number";
+	public static final String NAT_INS="NI Number";
+	public static final String NAT_INS_INFO="National Insurance Number";
+	public static final String DOB="DOB";
+	public static final String DOB_INFO="Date of Birth";
+	public static final String NATIONALITY="Nationality";
+	public static final String NATIONALITY_INFO="Select a nationality";
+	public static final String CAN_WORK="Can work?";
+	public static final String CAN_WORK_INFO="Enter the proof of eligibility to work in the EU";
 }

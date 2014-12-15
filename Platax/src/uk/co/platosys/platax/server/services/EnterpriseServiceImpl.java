@@ -244,6 +244,7 @@ static Logger logger = Logger.getLogger("platax");
 				GWTSegment gSegment = new GWTSegment();
 				gSegment.setName(segment.getName());
 				gSegment.setDescription(segment.getDescription());
+				gSegment.setInstructions(segment.getInstructions());
 				for(Module module:segment.getModules()){
 					gSegment.addModule(getGWTModule(module));
 				}

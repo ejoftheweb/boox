@@ -14,10 +14,11 @@ import com.google.gwt.i18n.client.NumberFormat;
 		 * 
 		 */
 		private static final long serialVersionUID = -4819616457277822696L;
-		private static final String NUL = "NUL";
+		public static final String NUL = "NUL";
 		private double amount=0;
 	    private String currency=NUL;
 	    private static final String PATTERN="#,##0.00";//be smarter localising this!
+	    
 	    
 	  /**
 	   * null constructor for GWT compliance. Call this constructor for a Zero instance.
@@ -111,6 +112,14 @@ import com.google.gwt.i18n.client.NumberFormat;
 	        }else{
 	            return false;
 	        }
+	    }
+	    /**
+	     * returns true if this Money is non-zero.
+	     * @return
+	     */
+	    public boolean nonZero(){
+	    	if (amount==0){return false;}
+	    	else{return true;}
 	    }
 	   public String getCurrencyTLA(){
 		   return currency;
