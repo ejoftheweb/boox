@@ -1,6 +1,7 @@
 package uk.co.platosys.platax.server.services;
 
 import uk.co.platosys.platax.client.services.LoginService;
+import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.server.core.PlataxUser;
 import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.exceptions.LoginException;
@@ -9,7 +10,7 @@ import uk.co.platosys.xservlets.Xservlet;
 import uk.co.platosys.xuser.XuserCredentialsException;
 
 
-public class LoginServiceImpl extends Xservlet implements LoginService {
+public class LoginServiceImpl extends Booxlet implements LoginService {
 	
 	
 	/**

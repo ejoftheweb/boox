@@ -1,0 +1,2 @@
+serviceClass: uk.co.platosys.platax.client.services.CashService
+path: 461EEFC1267C2B62F091DB6955B341B3.gwt.rpc

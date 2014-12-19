@@ -5,6 +5,9 @@ import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
+import uk.co.platosys.platax.client.forms.popups.AddCRDeptPopupForm;
+import uk.co.platosys.platax.client.services.CashService;
+import uk.co.platosys.platax.client.services.CashServiceAsync;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.widgets.MoneyBox;
@@ -13,11 +16,14 @@ import uk.co.platosys.platax.client.widgets.TaxBandChooser;
 import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
 import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.PXUser;
+import uk.co.platosys.platax.shared.boox.GWTCash;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTItem;
 import uk.co.platosys.platax.shared.exceptions.LoginException;
+import uk.co.platosys.platax.shared.exceptions.PlataxException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -36,34 +42,42 @@ public class CashRegisterForm extends AbstractForm {
 	//declare variables
 	
 	//services
-	final ProductServiceAsync productService = (ProductServiceAsync) GWT.create(ProductService.class);
+	final CashServiceAsync cashService = (CashServiceAsync) GWT.create(CashService.class);
 	//widgets
-	FieldLabel productName = new FieldLabel(StringText.PRODUCT_NAME);
-	FieldInfoLabel productNameInfo = new FieldInfoLabel(StringText.PRODUCT_NAME_INFO);
-    final TextBox productNameBox= new TextBox();
-    FieldLabel productDesc = new FieldLabel(StringText.PRODUCT_DESC);
-	FieldInfoLabel productDescInfo = new FieldInfoLabel(StringText.PRODUCT_DESC_INFO);
-    final TextArea productDescBox= new TextArea();
-    FieldLabel productPrice = new FieldLabel(StringText.PRODUCT_PRICE);
-  	FieldInfoLabel productPriceInfo = new FieldInfoLabel(StringText.PRODUCT_PRICE_INFO);
-    final MoneyBox productPriceBox= new MoneyBox("GBP");
-    FieldLabel productTax = new FieldLabel(StringText.PRODUCT_TAX);
-  	FieldInfoLabel productTaxInfo = new FieldInfoLabel(StringText.PRODUCT_TAX_INFO);
-    final TaxBandChooser productTaxChooser= new TaxBandChooser("tbc");
-    FieldLabel taxInclusive = new FieldLabel(StringText.TAX_INCLUSIVE);
-  	FieldInfoLabel taxInclusiveInfo = new FieldInfoLabel(StringText.TAX_INCLUSIVE_INFO);
-    final CheckBox taxInclusiveBox= new CheckBox();
+	FieldLabel machineName = new FieldLabel(StringText.MACHINE_NAME);
+	FieldInfoLabel machineNameInfo = new FieldInfoLabel(StringText.MACHINE_NAME_INFO);
+    final TextBox machineNameBox= new TextBox();
+    FieldLabel machineDesc = new FieldLabel(StringText.MACHINE_DESC);
+	FieldInfoLabel machineDescInfo = new FieldInfoLabel(StringText.MACHINE_DESC_INFO);
+    final TextBox machineDescBox= new TextBox();
+    FieldLabel deptsNo = new FieldLabel(StringText.MACHINE_DESC);
+   	FieldInfoLabel deptsInfo = new FieldInfoLabel(StringText.MACHINE_DESC_INFO);
+    final IntegerBox deptsBox= new IntegerBox();
+       
+    FieldLabel machineFloat = new FieldLabel(StringText.MACHINE_FLOAT);
+  	FieldInfoLabel machineFloatInfo = new FieldInfoLabel(StringText.MACHINE_FLOAT_INFO);
+    final MoneyBox machineFloatBox= new MoneyBox("GBP");
+    FieldLabel machineGT = new FieldLabel(StringText.MACHINE_GT);
+  	FieldInfoLabel machineGTInfo = new FieldInfoLabel(StringText.MACHINE_GT_INFO);
+    final MoneyBox machineGTBox= new MoneyBox("GBP");
+    FieldLabel reportno = new FieldLabel(StringText.MACHINE_REPORTNO);
+  	FieldInfoLabel reportnoInfo = new FieldInfoLabel(StringText.MACHINE_REPORTNO_INFO);
+    final IntegerBox reportnoBox= new IntegerBox();
     Button submitButton = new Button(ButtonText.CONFIRM);
     final Platax platax;
+    GWTCash register=new GWTCash();
+    int deptsDone=0;
+    int deptsToDo;
     PTab callingTab;
   //callbacks
-  		final AsyncCallback<GWTItem> finalCallback=new AsyncCallback<GWTItem>(){
+  		final AsyncCallback<GWTCash> finalCallback=new AsyncCallback<GWTCash>(){
   			@Override
   			public void onFailure(Throwable caught) {
   				Window.alert(StringText.SERVER_ERROR+"PF0");
   			}
   			@Override
-  			public void onSuccess(GWTItem result) {
+  			public void onSuccess(GWTCash result) {
+  				setRegister(result);
   				String name = result.getName();
   				if (Window.confirm (name+ StringText.SUCCESS_ANOTHER)){
   					pageReset();
@@ -79,39 +93,58 @@ public class CashRegisterForm extends AbstractForm {
 		setTitle(StringText.NEW_PRODUCT);
 		setSubTitle(StringText.NEW_PRODUCT_INFO);
 		//layout page
-	    table.setWidget(0,0, productName);
-	    table.setWidget(0,1, productNameBox);
-	    table.setWidget(0,2, productNameInfo);
-	    table.setWidget(1,0, productDesc);
-	    table.setWidget(1,1, productDescBox);
-	    table.setWidget(1,2, productDescInfo);
-	    table.setWidget(2,0, productPrice);
-	    table.setWidget(2,1, productPriceBox);
-	    table.setWidget(2,2, productPriceInfo);
-	    table.setWidget(3,0, productTax);
-	    table.setWidget(3,1, productTaxChooser);
-	    table.setWidget(3,2, productTaxInfo);
-	    table.setWidget(4,0, taxInclusive);
-	    table.setWidget(4,1, taxInclusiveBox);
-	    table.setWidget(4,2, taxInclusiveInfo);
+	    table.setWidget(0,0, machineName);
+	    table.setWidget(0,1, machineNameBox);
+	    table.setWidget(0,2, machineNameInfo);
+	    table.setWidget(1,0, machineDesc);
+	    table.setWidget(1,1, machineDescBox);
+	    table.setWidget(1,2, machineDescInfo);
+	    table.setWidget(2,0, deptsNo);
+	    table.setWidget(2,1, deptsBox);
+	    table.setWidget(2,2, deptsInfo);
+	  
+	    
+	    
+	    table.setWidget(3,0, reportno);
+	    table.setWidget(3,1, reportnoBox);
+	    table.setWidget(3,2, reportnoInfo);
+	    table.setWidget(4,0, machineFloat);
+	    table.setWidget(4,1, machineFloatBox);
+	    table.setWidget(4,2, machineFloatInfo);
+	    table.setWidget(5,0, machineGT);
+	    table.setWidget(5,1, machineGTBox);
+	    table.setWidget(5,2, machineGTInfo);
 	    table.setWidget(5,1, submitButton);
 	    //add change handlers
-	    productNameBox.addChangeHandler(new ChangeHandler(){
+	    machineNameBox.addChangeHandler(new ChangeHandler(){
 	    	@Override
 			public void onChange(ChangeEvent event) {
-				setTitle(productNameBox.getValue());
-				//do a server check for this product name.
+				setTitle(machineNameBox.getValue());
+				register.setName(machineNameBox.getValue());
+	    		
+			}
+	     });
+	    deptsBox.addChangeHandler(new ChangeHandler(){
+	    	@Override
+			public void onChange(ChangeEvent event) {
+				deptsToDo=deptsBox.getValue();
+				new AddCRDeptPopupForm(CashRegisterForm.this, deptsToDo, enterprise).show();
 			}
 	     });
 	     submitButton.addClickHandler(new ClickHandler(){
 	    	@Override
 			public void onClick(ClickEvent event) {
-				productService.addProduct(enterprise.getSysname(), 
-						productNameBox.getValue(), 
-						productDescBox.getValue(), 
-						productPriceBox.getMoney().getAmount(), 
-						productTaxChooser.getTaxBand(), 
-						taxInclusiveBox.getValue(), finalCallback);
+				GWTCash register= new GWTCash();
+				register.setName(machineNameBox.getValue());
+	    		register.setModel(machineDescBox.getValue());
+	    		register.setSeqno(reportnoBox.getValue());
+	    		register.setFloatbal(machineFloatBox.getMoney());
+	    		register.setRunningTotal(machineGTBox.getMoney());
+	    		try {
+					cashService.addCashRegister(register, enterprise.getSysname(), finalCallback);
+				} catch (PlataxException e) {
+					Window.alert("csACR error:"+e.getMessage());
+				}
 			}
 	     });
 	}
@@ -126,9 +159,7 @@ public class CashRegisterForm extends AbstractForm {
 	protected void pageReset() {
 		setTitle(StringText.NEW_PRODUCT);
 		setSubTitle(StringText.NEW_PRODUCT_INFO);
-		 productNameBox.setValue(null);
-		 productDescBox.setValue(null);
-		 productPriceBox.setAmount(0);
+		 
 	}
 	/**
 	 * closes the page and returns focus to the calling tab;
@@ -143,6 +174,12 @@ public class CashRegisterForm extends AbstractForm {
 	@Override
 	public void refresh() {
 		pageReset();
+	}
+	public GWTCash getRegister() {
+		return register;
+	}
+	public void setRegister(GWTCash register) {
+		this.register = register;
 	}
 	
 	

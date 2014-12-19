@@ -1,0 +1,1214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<countries>
+	<country countryCode="AD" countryName="Andorra" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="AE" countryName="United Arab Emirates" currencyCode="AED" continentName="Asia" />
+	<country countryCode="AF" countryName="Afghanistan" currencyCode="AFN" continentName="Asia" />
+	<country countryCode="AG" countryName="Antigua and Barbuda" currencyCode="XCD" continentName="North America" />
+	<country countryCode="AI" countryName="Anguilla" currencyCode="XCD" continentName="North America" />
+	<country countryCode="AL" countryName="Albania" currencyCode="ALL" continentName="Europe" />
+	<country countryCode="AM" countryName="Armenia" currencyCode="AMD" continentName="Asia" />
+	<country countryCode="AO" countryName="Angola" currencyCode="AOA" continentName="Africa" />
+	<country countryCode="AQ" countryName="Antarctica" currencyCode="" continentName="Antarctica" />
+	<country countryCode="AR" countryName="Argentina" currencyCode="ARS" continentName="South America" />
+	<country countryCode="AS" countryName="American Samoa" currencyCode="USD" continentName="Oceania" />
+	<country countryCode="AT" countryName="Austria" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="AU" countryName="Australia" currencyCode="AUD" continentName="Oceania" />
+	<country countryCode="AW" countryName="Aruba" currencyCode="AWG" continentName="North America" />
+	<country countryCode="AX" countryName="Åland" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="AZ" countryName="Azerbaijan" currencyCode="AZN" continentName="Asia" />
+	<country countryCode="BA" countryName="Bosnia and Herzegovina" currencyCode="BAM" continentName="Europe" />
+	<country countryCode="BB" countryName="Barbados" currencyCode="BBD" continentName="North America" />
+	<country countryCode="BD" countryName="Bangladesh" currencyCode="BDT" continentName="Asia" />
+	<country countryCode="BE" countryName="Belgium" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="BF" countryName="Burkina Faso" currencyCode="XOF" continentName="Africa" />
+	<country countryCode="BG" countryName="Bulgaria" currencyCode="BGN" continentName="Europe" />
+	<country countryCode="BH" countryName="Bahrain" currencyCode="BHD" continentName="Asia" />
+	<country countryCode="BI" countryName="Burundi" currencyCode="BIF" continentName="Africa" />
+	<country countryCode="BJ" countryName="Benin" currencyCode="XOF" continentName="Africa" />
+	<country countryCode="BL" countryName="Saint Barthélemy" currencyCode="EUR" continentName="North America" />
+	<country countryCode="BM" countryName="Bermuda" currencyCode="BMD" continentName="North America" />
+	<country countryCode="BN" countryName="Brunei" currencyCode="BND" continentName="Asia" />
+	<country countryCode="BO" countryName="Bolivia" currencyCode="BOB" continentName="South America" />
+	<country countryCode="BQ" countryName="Bonaire" currencyCode="USD" continentName="North America" />
+	<country countryCode="BR" countryName="Brazil" currencyCode="BRL" continentName="South America" />
+	<country countryCode="BS" countryName="Bahamas" currencyCode="BSD" continentName="North America" />
+	<country countryCode="BT" countryName="Bhutan" currencyCode="BTN" continentName="Asia" />
+	<country countryCode="BV" countryName="Bouvet Island" currencyCode="NOK" continentName="Antarctica" />
+	<country countryCode="BW" countryName="Botswana" currencyCode="BWP" continentName="Africa" />
+	<country countryCode="BY" countryName="Belarus" currencyCode="BYR" continentName="Europe" />
+	<country countryCode="BZ" countryName="Belize" currencyCode="BZD" continentName="North America" />
+	<country countryCode="CA" countryName="Canada" currencyCode="CAD" continentName="North America" />
+	<country countryCode="CC" countryName="Cocos [Keeling] Islands" currencyCode="AUD" continentName="Asia" />
+	<country countryCode="CD" countryName="Democratic Republic of the Congo" currencyCode="CDF" continentName="Africa" />
+	<country countryCode="CF" countryName="Central African Republic" currencyCode="XAF" continentName="Africa" />
+	<country countryCode="CG" countryName="Republic of the Congo" currencyCode="XAF" continentName="Africa" />
+	<country countryCode="CH" countryName="Switzerland" currencyCode="CHF" continentName="Europe" />
+	<country countryCode="CI" countryName="Ivory Coast" currencyCode="XOF" continentName="Africa" />
+	<country countryCode="CK" countryName="Cook Islands" currencyCode="NZD" continentName="Oceania" />
+	<country countryCode="CL" countryName="Chile" currencyCode="CLP" continentName="South America" />
+	<country countryCode="CM" countryName="Cameroon" currencyCode="XAF" continentName="Africa" />
+	<country countryCode="CN" countryName="China" currencyCode="CNY" continentName="Asia" />
+	<country countryCode="CO" countryName="Colombia" currencyCode="COP" continentName="South America" />
+	<country countryCode="CR" countryName="Costa Rica" currencyCode="CRC" continentName="North America" />
+	<country countryCode="CU" countryName="Cuba" currencyCode="CUP" continentName="North America" />
+	<country countryCode="CV" countryName="Cape Verde" currencyCode="CVE" continentName="Africa" />
+	<country countryCode="CW" countryName="Curacao" currencyCode="ANG" continentName="North America" />
+	<country countryCode="CX" countryName="Christmas Island" currencyCode="AUD" continentName="Asia" />
+	<country countryCode="CY" countryName="Cyprus" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="CZ" countryName="Czech Republic" currencyCode="CZK" continentName="Europe" />
+	<country countryCode="DE" countryName="Germany" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="DJ" countryName="Djibouti" currencyCode="DJF" continentName="Africa" />
+	<country countryCode="DK" countryName="Denmark" currencyCode="DKK" continentName="Europe" />
+	<country countryCode="DM" countryName="Dominica" currencyCode="XCD" continentName="North America" />
+	<country countryCode="DO" countryName="Dominican Republic" currencyCode="DOP" continentName="North America" />
+	<country countryCode="DZ" countryName="Algeria" currencyCode="DZD" continentName="Africa" />
+	<country countryCode="EC" countryName="Ecuador" currencyCode="USD" continentName="South America" />
+	<country countryCode="EE" countryName="Estonia" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="EG" countryName="Egypt" currencyCode="EGP" continentName="Africa" />
+	<country countryCode="EH" countryName="Western Sahara" currencyCode="MAD" continentName="Africa" />
+	<country countryCode="ER" countryName="Eritrea" currencyCode="ERN" continentName="Africa" />
+	<country countryCode="ES" countryName="Spain" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="ET" countryName="Ethiopia" currencyCode="ETB" continentName="Africa" />
+	<country countryCode="FI" countryName="Finland" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="FJ" countryName="Fiji" currencyCode="FJD" continentName="Oceania" />
+	<country countryCode="FK" countryName="Falkland Islands" currencyCode="FKP" continentName="South America" />
+	<country countryCode="FM" countryName="Micronesia" currencyCode="USD" continentName="Oceania" />
+	<country countryCode="FO" countryName="Faroe Islands" currencyCode="DKK" continentName="Europe" />
+	<country countryCode="FR" countryName="France" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="GA" countryName="Gabon" currencyCode="XAF" continentName="Africa" />
+	<country countryCode="GB" countryName="United Kingdom" currencyCode="GBP" continentName="Europe" />
+	<country countryCode="GD" countryName="Grenada" currencyCode="XCD" continentName="North America" />
+	<country countryCode="GE" countryName="Georgia" currencyCode="GEL" continentName="Asia" />
+	<country countryCode="GF" countryName="French Guiana" currencyCode="EUR" continentName="South America" />
+	<country countryCode="GG" countryName="Guernsey" currencyCode="GBP" continentName="Europe" />
+	<country countryCode="GH" countryName="Ghana" currencyCode="GHS" continentName="Africa" />
+	<country countryCode="GI" countryName="Gibraltar" currencyCode="GIP" continentName="Europe" />
+	<country countryCode="GL" countryName="Greenland" currencyCode="DKK" continentName="North America" />
+	<country countryCode="GM" countryName="Gambia" currencyCode="GMD" continentName="Africa" />
+	<country countryCode="GN" countryName="Guinea" currencyCode="GNF" continentName="Africa" />
+	<country countryCode="GP" countryName="Guadeloupe" currencyCode="EUR" continentName="North America" />
+	<country countryCode="GQ" countryName="Equatorial Guinea" currencyCode="XAF" continentName="Africa" />
+	<country countryCode="GR" countryName="Greece" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="GS" countryName="South Georgia and the South Sandwich Islands" currencyCode="GBP" continentName="Antarctica" />
+	<country countryCode="GT" countryName="Guatemala" currencyCode="GTQ" continentName="North America" />
+	<country countryCode="GU" countryName="Guam" currencyCode="USD" continentName="Oceania" />
+	<country countryCode="GW" countryName="Guinea-Bissau" currencyCode="XOF" continentName="Africa" />
+	<country countryCode="GY" countryName="Guyana" currencyCode="GYD" continentName="South America" />
+	<country countryCode="HK" countryName="Hong Kong" currencyCode="HKD" continentName="Asia" />
+	<country countryCode="HM" countryName="Heard Island and McDonald Islands" currencyCode="AUD" continentName="Antarctica" />
+	<country countryCode="HN" countryName="Honduras" currencyCode="HNL" continentName="North America" />
+	<country countryCode="HR" countryName="Croatia" currencyCode="HRK" continentName="Europe" />
+	<country countryCode="HT" countryName="Haiti" currencyCode="HTG" continentName="North America" />
+	<country countryCode="HU" countryName="Hungary" currencyCode="HUF" continentName="Europe" />
+	<country countryCode="ID" countryName="Indonesia" currencyCode="IDR" continentName="Asia" />
+	<country countryCode="IE" countryName="Ireland" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="IL" countryName="Israel" currencyCode="ILS" continentName="Asia" />
+	<country countryCode="IM" countryName="Isle of Man" currencyCode="GBP" continentName="Europe" />
+	<country countryCode="IN" countryName="India" currencyCode="INR" continentName="Asia" />
+	<country countryCode="IO" countryName="British Indian Ocean Territory" currencyCode="USD" continentName="Asia" />
+	<country countryCode="IQ" countryName="Iraq" currencyCode="IQD" continentName="Asia" />
+	<country countryCode="IR" countryName="Iran" currencyCode="IRR" continentName="Asia" />
+	<country countryCode="IS" countryName="Iceland" currencyCode="ISK" continentName="Europe" />
+	<country countryCode="IT" countryName="Italy" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="JE" countryName="Jersey" currencyCode="GBP" continentName="Europe" />
+	<country countryCode="JM" countryName="Jamaica" currencyCode="JMD" continentName="North America" />
+	<country countryCode="JO" countryName="Jordan" currencyCode="JOD" continentName="Asia" />
+	<country countryCode="JP" countryName="Japan" currencyCode="JPY" continentName="Asia" />
+	<country countryCode="KE" countryName="Kenya" currencyCode="KES" continentName="Africa" />
+	<country countryCode="KG" countryName="Kyrgyzstan" currencyCode="KGS" continentName="Asia" />
+	<country countryCode="KH" countryName="Cambodia" currencyCode="KHR" continentName="Asia" />
+	<country countryCode="KI" countryName="Kiribati" currencyCode="AUD" continentName="Oceania" />
+	<country countryCode="KM" countryName="Comoros" currencyCode="KMF" continentName="Africa" />
+	<country countryCode="KN" countryName="Saint Kitts and Nevis" currencyCode="XCD" continentName="North America" />
+	<country countryCode="KP" countryName="North Korea" currencyCode="KPW" continentName="Asia" />
+	<country countryCode="KR" countryName="South Korea" currencyCode="KRW" continentName="Asia" />
+	<country countryCode="KW" countryName="Kuwait" currencyCode="KWD" continentName="Asia" />
+	<country countryCode="KY" countryName="Cayman Islands" currencyCode="KYD" continentName="North America" />
+	<country countryCode="KZ" countryName="Kazakhstan" currencyCode="KZT" continentName="Asia" />
+	<country countryCode="LA" countryName="Laos" currencyCode="LAK" continentName="Asia" />
+	<country countryCode="LB" countryName="Lebanon" currencyCode="LBP" continentName="Asia" />
+	<country countryCode="LC" countryName="Saint Lucia" currencyCode="XCD" continentName="North America" />
+	<country countryCode="LI" countryName="Liechtenstein" currencyCode="CHF" continentName="Europe" />
+	<country countryCode="LK" countryName="Sri Lanka" currencyCode="LKR" continentName="Asia" />
+	<country countryCode="LR" countryName="Liberia" currencyCode="LRD" continentName="Africa" />
+	<country countryCode="LS" countryName="Lesotho" currencyCode="LSL" continentName="Africa" />
+	<country countryCode="LT" countryName="Lithuania" currencyCode="LTL" continentName="Europe" />
+	<country countryCode="LU" countryName="Luxembourg" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="LV" countryName="Latvia" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="LY" countryName="Libya" currencyCode="LYD" continentName="Africa" />
+	<country countryCode="MA" countryName="Morocco" currencyCode="MAD" continentName="Africa" />
+	<country countryCode="MC" countryName="Monaco" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="MD" countryName="Moldova" currencyCode="MDL" continentName="Europe" />
+	<country countryCode="ME" countryName="Montenegro" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="MF" countryName="Saint Martin" currencyCode="EUR" continentName="North America" />
+	<country countryCode="MG" countryName="Madagascar" currencyCode="MGA" continentName="Africa" />
+	<country countryCode="MH" countryName="Marshall Islands" currencyCode="USD" continentName="Oceania" />
+	<country countryCode="MK" countryName="Macedonia" currencyCode="MKD" continentName="Europe" />
+	<country countryCode="ML" countryName="Mali" currencyCode="XOF" continentName="Africa" />
+	<country countryCode="MM" countryName="Myanmar [Burma]" currencyCode="MMK" continentName="Asia" />
+	<country countryCode="MN" countryName="Mongolia" currencyCode="MNT" continentName="Asia" />
+	<country countryCode="MO" countryName="Macao" currencyCode="MOP" continentName="Asia" />
+	<country countryCode="MP" countryName="Northern Mariana Islands" currencyCode="USD" continentName="Oceania" />
+	<country countryCode="MQ" countryName="Martinique" currencyCode="EUR" continentName="North America" />
+	<country countryCode="MR" countryName="Mauritania" currencyCode="MRO" continentName="Africa" />
+	<country countryCode="MS" countryName="Montserrat" currencyCode="XCD" continentName="North America" />
+	<country countryCode="MT" countryName="Malta" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="MU" countryName="Mauritius" currencyCode="MUR" continentName="Africa" />
+	<country countryCode="MV" countryName="Maldives" currencyCode="MVR" continentName="Asia" />
+	<country countryCode="MW" countryName="Malawi" currencyCode="MWK" continentName="Africa" />
+	<country countryCode="MX" countryName="Mexico" currencyCode="MXN" continentName="North America" />
+	<country countryCode="MY" countryName="Malaysia" currencyCode="MYR" continentName="Asia" />
+	<country countryCode="MZ" countryName="Mozambique" currencyCode="MZN" continentName="Africa" />
+	<country countryCode="NA" countryName="Namibia" currencyCode="NAD" continentName="Africa" />
+	<country countryCode="NC" countryName="New Caledonia" currencyCode="XPF" continentName="Oceania" />
+	<country countryCode="NE" countryName="Niger" currencyCode="XOF" continentName="Africa" />
+	<country countryCode="NF" countryName="Norfolk Island" currencyCode="AUD" continentName="Oceania" />
+	<country countryCode="NG" countryName="Nigeria" currencyCode="NGN" continentName="Africa" />
+	<country countryCode="NI" countryName="Nicaragua" currencyCode="NIO" continentName="North America" />
+	<country countryCode="NL" countryName="Netherlands" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="NO" countryName="Norway" currencyCode="NOK" continentName="Europe" />
+	<country countryCode="NP" countryName="Nepal" currencyCode="NPR" continentName="Asia" />
+	<country countryCode="NR" countryName="Nauru" currencyCode="AUD" continentName="Oceania" />
+	<country countryCode="NU" countryName="Niue" currencyCode="NZD" continentName="Oceania" />
+	<country countryCode="NZ" countryName="New Zealand" currencyCode="NZD" continentName="Oceania" />
+	<country countryCode="OM" countryName="Oman" currencyCode="OMR" continentName="Asia" />
+	<country countryCode="PA" countryName="Panama" currencyCode="PAB" continentName="North America" />
+	<country countryCode="PE" countryName="Peru" currencyCode="PEN" continentName="South America" />
+	<country countryCode="PF" countryName="French Polynesia" currencyCode="XPF" continentName="Oceania" />
+	<country countryCode="PG" countryName="Papua New Guinea" currencyCode="PGK" continentName="Oceania" />
+	<country countryCode="PH" countryName="Philippines" currencyCode="PHP" continentName="Asia" />
+	<country countryCode="PK" countryName="Pakistan" currencyCode="PKR" continentName="Asia" />
+	<country countryCode="PL" countryName="Poland" currencyCode="PLN" continentName="Europe" />
+	<country countryCode="PM" countryName="Saint Pierre and Miquelon" currencyCode="EUR" continentName="North America" />
+	<country countryCode="PN" countryName="Pitcairn Islands" currencyCode="NZD" continentName="Oceania" />
+	<country countryCode="PR" countryName="Puerto Rico" currencyCode="USD" continentName="North America" />
+	<country countryCode="PS" countryName="Palestine" currencyCode="ILS" continentName="Asia" />
+	<country countryCode="PT" countryName="Portugal" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="PW" countryName="Palau" currencyCode="USD" continentName="Oceania" />
+	<country countryCode="PY" countryName="Paraguay" currencyCode="PYG" continentName="South America" />
+	<country countryCode="QA" countryName="Qatar" currencyCode="QAR" continentName="Asia" />
+	<country countryCode="RE" countryName="Réunion" currencyCode="EUR" continentName="Africa" />
+	<country countryCode="RO" countryName="Romania" currencyCode="RON" continentName="Europe" />
+	<country countryCode="RS" countryName="Serbia" currencyCode="RSD" continentName="Europe" />
+	<country countryCode="RU" countryName="Russia" currencyCode="RUB" continentName="Europe" />
+	<country countryCode="RW" countryName="Rwanda" currencyCode="RWF" continentName="Africa" />
+	<country countryCode="SA" countryName="Saudi Arabia" currencyCode="SAR" continentName="Asia" />
+	<country countryCode="SB" countryName="Solomon Islands" currencyCode="SBD" continentName="Oceania" />
+	<country countryCode="SC" countryName="Seychelles" currencyCode="SCR" continentName="Africa" />
+	<country countryCode="SD" countryName="Sudan" currencyCode="SDG" continentName="Africa" />
+	<country countryCode="SE" countryName="Sweden" currencyCode="SEK" continentName="Europe" />
+	<country countryCode="SG" countryName="Singapore" currencyCode="SGD" continentName="Asia" />
+	<country countryCode="SH" countryName="Saint Helena" currencyCode="SHP" continentName="Africa" />
+	<country countryCode="SI" countryName="Slovenia" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="SJ" countryName="Svalbard and Jan Mayen" currencyCode="NOK" continentName="Europe" />
+	<country countryCode="SK" countryName="Slovakia" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="SL" countryName="Sierra Leone" currencyCode="SLL" continentName="Africa" />
+	<country countryCode="SM" countryName="San Marino" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="SN" countryName="Senegal" currencyCode="XOF" continentName="Africa" />
+	<country countryCode="SO" countryName="Somalia" currencyCode="SOS" continentName="Africa" />
+	<country countryCode="SR" countryName="Suriname" currencyCode="SRD" continentName="South America" />
+	<country countryCode="SS" countryName="South Sudan" currencyCode="SSP" continentName="Africa" />
+	<country countryCode="ST" countryName="São Tomé and Príncipe" currencyCode="STD" continentName="Africa" />
+	<country countryCode="SV" countryName="El Salvador" currencyCode="USD" continentName="North America" />
+	<country countryCode="SX" countryName="Sint Maarten" currencyCode="ANG" continentName="North America" />
+	<country countryCode="SY" countryName="Syria" currencyCode="SYP" continentName="Asia" />
+	<country countryCode="SZ" countryName="Swaziland" currencyCode="SZL" continentName="Africa" />
+	<country countryCode="TC" countryName="Turks and Caicos Islands" currencyCode="USD" continentName="North America" />
+	<country countryCode="TD" countryName="Chad" currencyCode="XAF" continentName="Africa" />
+	<country countryCode="TF" countryName="French Southern Territories" currencyCode="EUR" continentName="Antarctica" />
+	<country countryCode="TG" countryName="Togo" currencyCode="XOF" continentName="Africa" />
+	<country countryCode="TH" countryName="Thailand" currencyCode="THB" continentName="Asia" />
+	<country countryCode="TJ" countryName="Tajikistan" currencyCode="TJS" continentName="Asia" />
+	<country countryCode="TK" countryName="Tokelau" currencyCode="NZD" continentName="Oceania" />
+	<country countryCode="TL" countryName="East Timor" currencyCode="USD" continentName="Oceania" />
+	<country countryCode="TM" countryName="Turkmenistan" currencyCode="TMT" continentName="Asia" />
+	<country countryCode="TN" countryName="Tunisia" currencyCode="TND" continentName="Africa" />
+	<country countryCode="TO" countryName="Tonga" currencyCode="TOP" continentName="Oceania" />
+	<country countryCode="TR" countryName="Turkey" currencyCode="TRY" continentName="Asia" />
+	<country countryCode="TT" countryName="Trinidad and Tobago" currencyCode="TTD" continentName="North America" />
+	<country countryCode="TV" countryName="Tuvalu" currencyCode="AUD" continentName="Oceania" />
+	<country countryCode="TW" countryName="Taiwan" currencyCode="TWD" continentName="Asia" />
+	<country countryCode="TZ" countryName="Tanzania" currencyCode="TZS" continentName="Africa" />
+	<country countryCode="UA" countryName="Ukraine" currencyCode="UAH" continentName="Europe" />
+	<country countryCode="UG" countryName="Uganda" currencyCode="UGX" continentName="Africa" />
+	<country countryCode="UM" countryName="U.S. Minor Outlying Islands" currencyCode="USD" continentName="Oceania" />
+	<country countryCode="US" countryName="United States" currencyCode="USD" continentName="North America" />
+	<country countryCode="UY" countryName="Uruguay" currencyCode="UYU" continentName="South America" />
+	<country countryCode="UZ" countryName="Uzbekistan" currencyCode="UZS" continentName="Asia" />
+	<country countryCode="VA" countryName="Vatican City" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="VC" countryName="Saint Vincent and the Grenadines" currencyCode="XCD" continentName="North America" />
+	<country countryCode="VE" countryName="Venezuela" currencyCode="VEF" continentName="South America" />
+	<country countryCode="VG" countryName="British Virgin Islands" currencyCode="USD" continentName="North America" />
+	<country countryCode="VI" countryName="U.S. Virgin Islands" currencyCode="USD" continentName="North America" />
+	<country countryCode="VN" countryName="Vietnam" currencyCode="VND" continentName="Asia" />
+	<country countryCode="VU" countryName="Vanuatu" currencyCode="VUV" continentName="Oceania" />
+	<country countryCode="WF" countryName="Wallis and Futuna" currencyCode="XPF" continentName="Oceania" />
+	<country countryCode="WS" countryName="Samoa" currencyCode="WST" continentName="Oceania" />
+	<country countryCode="XK" countryName="Kosovo" currencyCode="EUR" continentName="Europe" />
+	<country countryCode="YE" countryName="Yemen" currencyCode="YER" continentName="Asia" />
+	<country countryCode="YT" countryName="Mayotte" currencyCode="EUR" continentName="Africa" />
+	<country countryCode="ZA" countryName="South Africa" currencyCode="ZAR" continentName="Africa" />
+	<country countryCode="ZM" countryName="Zambia" currencyCode="ZMW" continentName="Africa" />
+	<country countryCode="ZW" countryName="Zimbabwe" currencyCode="ZWL" continentName="Africa" />
+</countries>
+<array>
+        <item>
+                <key>AF</key>
+                <value>Afghan</value>
+        </item>
+        <item>
+                <key>AL</key>
+                <value>Albanian</value>
+        </item>
+        <item>
+                <key>DZ</key>
+                <value>Algerian</value>
+        </item>
+        <item>
+                <key>US</key>
+                <value>American</value>
+        </item>
+        <item>
+                <key>AS</key>
+                <value>American Samoan</value>
+        </item>
+        <item>
+                <key>AD</key>
+                <value>Andorran</value>
+        </item>
+        <item>
+                <key>AO</key>
+                <value>Angolan</value>
+        </item>
+        <item>
+                <key>AI</key>
+                <value>Anguillan</value>
+        </item>
+        <item>
+                <key>AQ</key>
+                <value>Antarctican</value>
+        </item>
+        <item>
+                <key>AG</key>
+                <value>Antigua and Barbuda national</value>
+        </item>
+        <item>
+                <key>AN</key>
+                <value>Antillean</value>
+        </item>
+        <item>
+                <key>AR</key>
+                <value>Argentinian</value>
+        </item>
+        <item>
+                <key>AM</key>
+                <value>Armenian</value>
+        </item>
+        <item>
+                <key>AW</key>
+                <value>Aruban</value>
+        </item>
+        <item>
+                <key>AU</key>
+                <value>Australian</value>
+        </item>
+        <item>
+                <key>AT</key>
+                <value>Austrian</value>
+        </item>
+        <item>
+                <key>AZ</key>
+                <value>Azerbaijani</value>
+        </item>
+        <item>
+                <key>BS</key>
+                <value>Bahamian</value>
+        </item>
+        <item>
+                <key>BH</key>
+                <value>Bahraini</value>
+        </item>
+        <item>
+                <key>BD</key>
+                <value>Bangladeshi</value>
+        </item>
+        <item>
+                <key>BB</key>
+                <value>Barbadian</value>
+        </item>
+        <item>
+                <key>LS</key>
+                <value>Basotho</value>
+        </item>
+        <item>
+                <key>BY</key>
+                <value>Belarusian</value>
+        </item>
+        <item>
+                <key>BE</key>
+                <value>Belgian</value>
+        </item>
+        <item>
+                <key>BZ</key>
+                <value>Belizean</value>
+        </item>
+        <item>
+                <key>BJ</key>
+                <value>Beninese</value>
+        </item>
+        <item>
+                <key>BM</key>
+                <value>Bermudian</value>
+        </item>
+        <item>
+                <key>BT</key>
+                <value>Bhutanese</value>
+        </item>
+        <item>
+                <key>BO</key>
+                <value>Bolivian</value>
+        </item>
+        <item>
+                <key>BA</key>
+                <value>Bosnia and Herzegovina national</value>
+        </item>
+        <item>
+                <key>BW</key>
+                <value>Botswanan</value>
+        </item>
+        <item>
+                <key>BV</key>
+                <value>Bouvet Island</value>
+        </item>
+        <item>
+                <key>BR</key>
+                <value>Brazilian</value>
+        </item>
+        <item>
+                <key>IO</key>
+                <value>British Indian Ocean Territory</value>
+        </item>
+        <item>
+                <key>VG</key>
+                <value>British Virgin Islander</value>
+        </item>
+        <item>
+                <key>UK</key>
+                <value>Briton</value>
+        </item>
+        <item>
+                <key>BN</key>
+                <value>Bruneian</value>
+        </item>
+        <item>
+                <key>BG</key>
+                <value>Bulgarian</value>
+        </item>
+        <item>
+                <key>BF</key>
+                <value>Burkinabe</value>
+        </item>
+        <item>
+                <key>MM</key>
+                <value>Burmese</value>
+        </item>
+        <item>
+                <key>BI</key>
+                <value>Burundian</value>
+        </item>
+        <item>
+                <key>KH</key>
+                <value>Cambodian</value>
+        </item>
+        <item>
+                <key>CM</key>
+                <value>Cameroonian</value>
+        </item>
+        <item>
+                <key>CA</key>
+                <value>Canadian</value>
+        </item>
+        <item>
+                <key>CV</key>
+                <value>Cape Verdean</value>
+        </item>
+        <item>
+                <key>KY</key>
+                <value>Caymanian</value>
+        </item>
+        <item>
+                <key>CF</key>
+                <value>Central African</value>
+        </item>
+        <item>
+                <key>TD</key>
+                <value>Chadian</value>
+        </item>
+        <item>
+                <key>CL</key>
+                <value>Chilean</value>
+        </item>
+        <item>
+                <key>CN</key>
+                <value>Chinese</value>
+        </item>
+        <item>
+                <key>CX</key>
+                <value>Christmas Islander</value>
+        </item>
+        <item>
+                <key>CC</key>
+                <value>Cocos Islander</value>
+        </item>
+        <item>
+                <key>CO</key>
+                <value>Colombian</value>
+        </item>
+        <item>
+                <key>KM</key>
+                <value>Comorian</value>
+        </item>
+        <item>
+                <key>CG</key>
+                <value>Congolese</value>
+        </item>
+        <item>
+                <key>CD</key>
+                <value>Congolese</value>
+        </item>
+        <item>
+                <key>CK</key>
+                <value>Cook Islander</value>
+        </item>
+        <item>
+                <key>CR</key>
+                <value>Costa Rican</value>
+        </item>
+        <item>
+                <key>HR</key>
+                <value>Croat</value>
+        </item>
+        <item>
+                <key>CU</key>
+                <value>Cuban</value>
+        </item>
+        <item>
+                <key>CY</key>
+                <value>Cypriot</value>
+        </item>
+        <item>
+                <key>CZ</key>
+                <value>Czech</value>
+        </item>
+        <item>
+                <key>DK</key>
+                <value>Dane</value>
+        </item>
+        <item>
+                <key>DJ</key>
+                <value>Djiboutian</value>
+        </item>
+        <item>
+                <key>DO</key>
+                <value>Dominican</value>
+        </item>
+        <item>
+                <key>TL</key>
+                <value>East Timorese</value>
+        </item>
+        <item>
+                <key>EC</key>
+                <value>Ecuadorian</value>
+        </item>
+        <item>
+                <key>EG</key>
+                <value>Egyptian</value>
+        </item>
+        <item>
+                <key>AE</key>
+                <value>Emirian</value>
+        </item>
+        <item>
+                <key>GQ</key>
+                <value>Equatorial Guinean</value>
+        </item>
+        <item>
+                <key>ER</key>
+                <value>Eritrean</value>
+        </item>
+        <item>
+                <key>EE</key>
+                <value>Estonian</value>
+        </item>
+        <item>
+                <key>ET</key>
+                <value>Ethiopian</value>
+        </item>
+        <item>
+                <key>FO</key>
+                <value>Faeroese</value>
+        </item>
+        <item>
+                <key>FK</key>
+                <value>Falkland Islander</value>
+        </item>
+        <item>
+                <key>FJ</key>
+                <value>Fiji Islander</value>
+        </item>
+        <item>
+                <key>PH</key>
+                <value>Filipino</value>
+        </item>
+        <item>
+                <key>FI</key>
+                <value>Finn</value>
+        </item>
+        <item>
+                <key>FR</key>
+                <value>French</value>
+        </item>
+        <item>
+                <key>TF</key>
+                <value>French Southern Territories</value>
+        </item>
+        <item>
+                <key>GA</key>
+                <value>Gabonese</value>
+        </item>
+        <item>
+                <key>GM</key>
+                <value>Gambian</value>
+        </item>
+        <item>
+                <key>GE</key>
+                <value>Georgian</value>
+        </item>
+        <item>
+                <key>DE</key>
+                <value>German</value>
+        </item>
+        <item>
+                <key>GH</key>
+                <value>Ghanaian</value>
+        </item>
+        <item>
+                <key>GI</key>
+                <value>Gibraltarian</value>
+        </item>
+        <item>
+                <key>GR</key>
+                <value>Greek</value>
+        </item>
+        <item>
+                <key>GL</key>
+                <value>Greenlander</value>
+        </item>
+        <item>
+                <key>GD</key>
+                <value>Grenadian</value>
+        </item>
+        <item>
+                <key>GP</key>
+                <value>Guadeloupean</value>
+        </item>
+        <item>
+                <key>GU</key>
+                <value>Guamanian</value>
+        </item>
+        <item>
+                <key>GT</key>
+                <value>Guatemalan</value>
+        </item>
+        <item>
+                <key>GF</key>
+                <value>Guianese</value>
+        </item>
+        <item>
+                <key>GW</key>
+                <value>Guinea-Bissau national</value>
+        </item>
+        <item>
+                <key>GN</key>
+                <value>Guinean</value>
+        </item>
+        <item>
+                <key>GY</key>
+                <value>Guyanese</value>
+        </item>
+        <item>
+                <key>HT</key>
+                <value>Haitian</value>
+        </item>
+        <item>
+                <key>HM</key>
+                <value>Heard Island and McDonald Islands</value>
+        </item>
+        <item>
+                <key>HN</key>
+                <value>Honduran</value>
+        </item>
+        <item>
+                <key>HK</key>
+                <value>Hong Kong Chinese</value>
+        </item>
+        <item>
+                <key>HU</key>
+                <value>Hungarian</value>
+        </item>
+        <item>
+                <key>IS</key>
+                <value>Icelander</value>
+        </item>
+        <item>
+                <key>IN</key>
+                <value>Indian</value>
+        </item>
+        <item>
+                <key>ID</key>
+                <value>Indonesian</value>
+        </item>
+        <item>
+                <key>IR</key>
+                <value>Iranian</value>
+        </item>
+        <item>
+                <key>IQ</key>
+                <value>Iraqi</value>
+        </item>
+        <item>
+                <key>IE</key>
+                <value>Irish</value>
+        </item>
+        <item>
+                <key>IL</key>
+                <value>Israeli</value>
+        </item>
+        <item>
+                <key>IT</key>
+                <value>Italian</value>
+        </item>
+        <item>
+                <key>CI</key>
+                <value>Ivorian</value>
+        </item>
+        <item>
+                <key>JM</key>
+                <value>Jamaican</value>
+        </item>
+        <item>
+                <key>JP</key>
+                <value>Japanese</value>
+        </item>
+        <item>
+                <key>JO</key>
+                <value>Jordanian</value>
+        </item>
+        <item>
+                <key>KZ</key>
+                <value>Kazakh</value>
+        </item>
+        <item>
+                <key>KE</key>
+                <value>Kenyan</value>
+        </item>
+        <item>
+                <key>KI</key>
+                <value>Kiribatian</value>
+        </item>
+        <item>
+                <key>KW</key>
+                <value>Kuwaiti</value>
+        </item>
+        <item>
+                <key>KG</key>
+                <value>Kyrgyz</value>
+        </item>
+        <item>
+                <key>LA</key>
+                <value>Lao</value>
+        </item>
+        <item>
+                <key>LV</key>
+                <value>Latvian</value>
+        </item>
+        <item>
+                <key>LB</key>
+                <value>Lebanese</value>
+        </item>
+        <item>
+                <key>LR</key>
+                <value>Liberian</value>
+        </item>
+        <item>
+                <key>LY</key>
+                <value>Libyan</value>
+        </item>
+        <item>
+                <key>LI</key>
+                <value>Liechtensteiner</value>
+        </item>
+        <item>
+                <key>LT</key>
+                <value>Lithuanian</value>
+        </item>
+        <item>
+                <key>LU</key>
+                <value>Luxembourger</value>
+        </item>
+        <item>
+                <key>MO</key>
+                <value>Macanese</value>
+        </item>
+        <item>
+                <key>MK</key>
+                <value>Macedonian</value>
+        </item>
+        <item>
+                <key>YT</key>
+                <value>Mahorais</value>
+        </item>
+        <item>
+                <key>MG</key>
+                <value>Malagasy</value>
+        </item>
+        <item>
+                <key>MW</key>
+                <value>Malawian</value>
+        </item>
+        <item>
+                <key>MY</key>
+                <value>Malaysian</value>
+        </item>
+        <item>
+                <key>MV</key>
+                <value>Maldivian</value>
+        </item>
+        <item>
+                <key>ML</key>
+                <value>Malian</value>
+        </item>
+        <item>
+                <key>MT</key>
+                <value>Maltese</value>
+        </item>
+        <item>
+                <key>MH</key>
+                <value>Marshallese</value>
+        </item>
+        <item>
+                <key>MQ</key>
+                <value>Martinican</value>
+        </item>
+        <item>
+                <key>MR</key>
+                <value>Mauritanian</value>
+        </item>
+        <item>
+                <key>MU</key>
+                <value>Mauritian</value>
+        </item>
+        <item>
+                <key>MX</key>
+                <value>Mexican</value>
+        </item>
+        <item>
+                <key>FM</key>
+                <value>Micronesian</value>
+        </item>
+        <item>
+                <key>MD</key>
+                <value>Moldovan</value>
+        </item>
+        <item>
+                <key>MC</key>
+                <value>Monegasque</value>
+        </item>
+        <item>
+                <key>MN</key>
+                <value>Mongolian</value>
+        </item>
+        <item>
+                <key>ME</key>
+                <value>Montenegrian</value>
+        </item>
+        <item>
+                <key>MS</key>
+                <value>Montserratian</value>
+        </item>
+        <item>
+                <key>MA</key>
+                <value>Moroccan</value>
+        </item>
+        <item>
+                <key>MZ</key>
+                <value>Mozambican</value>
+        </item>
+        <item>
+                <key>NA</key>
+                <value>Namibian</value>
+        </item>
+        <item>
+                <key>NR</key>
+                <value>Nauruan</value>
+        </item>
+        <item>
+                <key>NP</key>
+                <value>Nepalese</value>
+        </item>
+        <item>
+                <key>NL</key>
+                <value>Dutch</value>
+        </item>
+        <item>
+                <key>NC</key>
+                <value>New Caledonian</value>
+        </item>
+        <item>
+                <key>NZ</key>
+                <value>New Zealander</value>
+        </item>
+        <item>
+                <key>NI</key>
+                <value>Nicaraguan</value>
+        </item>
+        <item>
+                <key>NG</key>
+                <value>Nigerian</value>
+        </item>
+        <item>
+                <key>NE</key>
+                <value>Nigerien</value>
+        </item>
+        <item>
+                <key>NU</key>
+                <value>Niuean</value>
+        </item>
+        <item>
+                <key>NF</key>
+                <value>Norfolk Islander</value>
+        </item>
+        <item>
+                <key>KP</key>
+                <value>North Korean</value>
+        </item>
+        <item>
+                <key>MP</key>
+                <value>Northern Mariana Islander</value>
+        </item>
+        <item>
+                <key>NO</key>
+                <value>Norwegian</value>
+        </item>
+        <item>
+                <key>OM</key>
+                <value>Omani</value>
+        </item>
+        <item>
+                <key>PK</key>
+                <value>Pakistani</value>
+        </item>
+        <item>
+                <key>PW</key>
+                <value>Palauan</value>
+        </item>
+        <item>
+                <key>PA</key>
+                <value>Panamanian</value>
+        </item>
+        <item>
+                <key>PG</key>
+                <value>Papua New Guinean</value>
+        </item>
+        <item>
+                <key>PY</key>
+                <value>Paraguayan</value>
+        </item>
+        <item>
+                <key>PE</key>
+                <value>Peruvian</value>
+        </item>
+        <item>
+                <key>PN</key>
+                <value>Pitcairner</value>
+        </item>
+        <item>
+                <key>PL</key>
+                <value>Pole</value>
+        </item>
+        <item>
+                <key>PF</key>
+                <value>Polynesian</value>
+        </item>
+        <item>
+                <key>PT</key>
+                <value>Portuguese</value>
+        </item>
+        <item>
+                <key>PR</key>
+                <value>Puerto Rican</value>
+        </item>
+        <item>
+                <key>QA</key>
+                <value>Qatari</value>
+        </item>
+        <item>
+                <key>RE</key>
+                <value>Reunionese</value>
+        </item>
+        <item>
+                <key>RO</key>
+                <value>Romanian</value>
+        </item>
+        <item>
+                <key>RU</key>
+                <value>Russian</value>
+        </item>
+        <item>
+                <key>RW</key>
+                <value>Rwandan</value>
+        </item>
+        <item>
+                <key>EH</key>
+                <value>Sahrawi</value>
+        </item>
+        <item>
+                <key>SH</key>
+                <value>Saint Helenian</value>
+        </item>
+        <item>
+                <key>KN</key>
+                <value>Saint Kitts and Nevis national</value>
+        </item>
+        <item>
+                <key>LC</key>
+                <value>Saint Lucian</value>
+        </item>
+        <item>
+                <key>PM</key>
+                <value>Saint Pierre and Miquelon national</value>
+        </item>
+        <item>
+                <key>SV</key>
+                <value>Salvadorian</value>
+        </item>
+        <item>
+                <key>WS</key>
+                <value>Samoan</value>
+        </item>
+        <item>
+                <key>SM</key>
+                <value>San Marinese</value>
+        </item>
+        <item>
+                <key>ST</key>
+                <value>São Toméan</value>
+        </item>
+        <item>
+                <key>SA</key>
+                <value>Saudi Arabian</value>
+        </item>
+        <item>
+                <key>SN</key>
+                <value>Senegalese</value>
+        </item>
+        <item>
+                <key>RS</key>
+                <value>Serbian</value>
+        </item>
+        <item>
+                <key>SC</key>
+                <value>Seychellois</value>
+        </item>
+        <item>
+                <key>SL</key>
+                <value>Sierra Leonean</value>
+        </item>
+        <item>
+                <key>SG</key>
+                <value>Singaporean</value>
+        </item>
+        <item>
+                <key>SK</key>
+                <value>Slovak</value>
+        </item>
+        <item>
+                <key>SI</key>
+                <value>Slovene</value>
+        </item>
+        <item>
+                <key>SB</key>
+                <value>Solomon Islander</value>
+        </item>
+        <item>
+                <key>SO</key>
+                <value>Somali</value>
+        </item>
+        <item>
+                <key>ZA</key>
+                <value>South African</value>
+        </item>
+        <item>
+                <key>GS</key>
+                <value>South Georgia and the South Sandwich Islands</value>
+        </item>
+        <item>
+                <key>KR</key>
+                <value>South Korean</value>
+        </item>
+        <item>
+                <key>ES</key>
+                <value>Spaniard</value>
+        </item>
+        <item>
+                <key>LK</key>
+                <value>Sri Lankan</value>
+        </item>
+        <item>
+                <key>SD</key>
+                <value>Sudanese</value>
+        </item>
+        <item>
+                <key>SR</key>
+                <value>Surinamer</value>
+        </item>
+        <item>
+                <key>SJ</key>
+                <value>Svalbard and Jan Mayen</value>
+        </item>
+        <item>
+                <key>SZ</key>
+                <value>Swazi</value>
+        </item>
+        <item>
+                <key>SE</key>
+                <value>Swede</value>
+        </item>
+        <item>
+                <key>CH</key>
+                <value>Swiss</value>
+        </item>
+        <item>
+                <key>SY</key>
+                <value>Syrian</value>
+        </item>
+        <item>
+                <key>TW</key>
+                <value>Taiwanese</value>
+        </item>
+        <item>
+                <key>TJ</key>
+                <value>Tajik</value>
+        </item>
+        <item>
+                <key>TZ</key>
+                <value>Tanzanian</value>
+        </item>
+        <item>
+                <key>TH</key>
+                <value>Thai</value>
+        </item>
+        <item>
+                <key>TG</key>
+                <value>Togolese</value>
+        </item>
+        <item>
+                <key>TK</key>
+                <value>Tokelauan</value>
+        </item>
+        <item>
+                <key>TO</key>
+                <value>Tongan</value>
+        </item>
+        <item>
+                <key>TT</key>
+                <value>Trinidad and Tobago national</value>
+        </item>
+        <item>
+                <key>TN</key>
+                <value>Tunisian</value>
+        </item>
+        <item>
+                <key>TR</key>
+                <value>Turk</value>
+        </item>
+        <item>
+                <key>TM</key>
+                <value>Turkmen</value>
+        </item>
+        <item>
+                <key>TC</key>
+                <value>Turks and Caicos Islander</value>
+        </item>
+        <item>
+                <key>TV</key>
+                <value>Tuvaluan</value>
+        </item>
+        <item>
+                <key>UG</key>
+                <value>Ugandan</value>
+        </item>
+        <item>
+                <key>UA</key>
+                <value>Ukrainian</value>
+        </item>
+        <item>
+                <key>UM</key>
+                <value>United States Minor Outlying Islands</value>
+        </item>
+        <item>
+                <key>UY</key>
+                <value>Uruguayan</value>
+        </item>
+        <item>
+                <key>VI</key>
+                <value>US Virgin Islander</value>
+        </item>
+        <item>
+                <key>UZ</key>
+                <value>Uzbek</value>
+        </item>
+        <item>
+                <key>VU</key>
+                <value>Vanuatuan</value>
+        </item>
+        <item>
+                <key>VA</key>
+                <value>Vatican</value>
+        </item>
+        <item>
+                <key>VE</key>
+                <value>Venezuelan</value>
+        </item>
+        <item>
+                <key>VN</key>
+                <value>Vietnamese</value>
+        </item>
+        <item>
+                <key>VC</key>
+                <value>Vincentian</value>
+        </item>
+        <item>
+                <key>WF</key>
+                <value>Wallis and Futuna Islander</value>
+        </item>
+        <item>
+                <key>YE</key>
+                <value>Yemeni</value>
+        </item>
+        <item>
+                <key>ZM</key>
+                <value>Zambian</value>
+        </item>
+        <item>
+                <key>ZW</key>
+                <value>Zimbabwean</value>
+        </item>
+        <item>
+                <key>AX</key>
+                <value>Åland Islander</value>
+        </item>
+</array>
+
+</root>

@@ -1,8 +1,10 @@
 package uk.co.platosys.platax.client.forms.tasks;
 
-import java.util.Locale;
+
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -22,6 +24,8 @@ import uk.co.platosys.platax.client.widgets.PTab;
 import uk.co.platosys.platax.client.widgets.TaxBandChooser;
 import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
 import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
+import uk.co.platosys.platax.shared.FieldVerifier;
+import uk.co.platosys.util.Nations;
 
 public class HireStaff extends BasicTask {
 	
@@ -61,6 +65,15 @@ public class HireStaff extends BasicTask {
 			this.platax=platax;
 		setTitle(StringText.NEW_STAFF);
 		setSubTitle(StringText.NEW_STAFF_INFO);
+		nationalityBox.addItems(Nations.getNationalities());
+		familyNameBox.setEnabled(false);
+		emailBox.setEnabled(false);
+		phoneNoBox.setEnabled(false);
+		natInsuranceBox.setEnabled(false);
+		dobBox.setEnabled(false);
+		nationalityBox.setEnabled(false);
+		 canWorkBox.setEnabled(false);
+		    
 		//layout page
 	    table.setWidget(0,0, givenName);
 	    table.setWidget(0,1, givenNameBox);
@@ -86,13 +99,45 @@ public class HireStaff extends BasicTask {
 	    table.setWidget(7,0, canWork);
 	    table.setWidget(7,1, canWorkBox);
 	    table.setWidget(7,2, canWorkInfo);
-	    
 	    table.setWidget(8,1, submitButton);
-	    String [] locales = Locale.getISOCountries();
-	    for (String locale:locales){
-	    	nationalityBox.addItem(locale);
-	    }
-	}
+	    givenNameBox.addChangeHandler(new ChangeHandler(){
+	    	@Override
+			public void onChange(ChangeEvent event) {
+				 familyNameBox.setEnabled(true);
+				 familyNameBox.setFocus(true);
+			}
+	    });
+	    familyNameBox.addChangeHandler(new ChangeHandler(){
+	    	@Override
+			public void onChange(ChangeEvent event) {
+	    		
+				 emailBox.setEnabled(true);
+				 emailBox.setFocus(true);
+			}
+	    });
+	    emailBox.addChangeHandler(new ChangeHandler(){
+	    	@Override
+			public void onChange(ChangeEvent event) {
+				if (FieldVerifier.isValidEmail(emailBox.getValue())){
+					natInsuranceBox.setEnabled(true);
+					natInsuranceBox.setFocus(true);
+				}else{
+					emailInfo.setText(LabelText.BAD_EMAIL);
+				}
+			}
+	    });
+	   natInsuranceBox.addChangeHandler(new ChangeHandler(){
+	    	@Override
+			public void onChange(ChangeEvent event) {
+				if (FieldVerifier.isValidNI(natInsuranceBox.getValue())){
+					dobBox.setEnabled(true);
+					dobBox.setFocus(true);
+				}else{
+					natInsuranceInfo.setText(StringText.BAD_NAT_INS);
+				}
+			}
+	    });
+	 }
 
 	@Override
 	public void refresh() {

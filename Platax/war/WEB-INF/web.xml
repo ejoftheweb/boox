@@ -9,7 +9,7 @@
   
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>Platax.html</welcome-file>
+    <welcome-file>lucadi.html</welcome-file>
   </welcome-file-list>
    <servlet>
     <servlet-name>AddressServiceImpl</servlet-name>
@@ -73,8 +73,8 @@
     <servlet-name>LoginServiceImpl</servlet-name>
     <url-pattern>/platax/loginService</url-pattern>
   </servlet-mapping>
-  
-  <servlet>
+  <!-- 
+   <servlet>
     <servlet-name>StaffServiceImpl</servlet-name>
     <servlet-class>uk.co.platosys.platax.server.services.StaffServiceImpl</servlet-class>
   </servlet>
@@ -82,7 +82,7 @@
     <servlet-name>StaffServiceImpl</servlet-name>
     <url-pattern>/platax/staffService</url-pattern>
   </servlet-mapping>
- 
+ -->
   <servlet>
     <servlet-name>UserServiceImpl</servlet-name>
     <servlet-class>uk.co.platosys.platax.server.services.UserServiceImpl</servlet-class>
@@ -91,11 +91,8 @@
     <servlet-name>UserServiceImpl</servlet-name>
     <url-pattern>/platax/userService</url-pattern>
   </servlet-mapping>
-  
  
-  
- 
-   <servlet>
+  <servlet>
     <servlet-name>ConfirmationServlet</servlet-name>
     <servlet-class>uk.co.platosys.xuser.ConfirmationServlet</servlet-class>
   </servlet>

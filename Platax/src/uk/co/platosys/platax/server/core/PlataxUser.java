@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import uk.co.platosys.boox.core.Clerk;
@@ -52,6 +53,7 @@ public class PlataxUser extends Xuser {
 	public static final String PX_CLERKNAME_COLNAME="clerkname";
 	public static final String PX_PWD_COLNAME="pwd";
 	public static final String PX_STATUS_COLNAME="status";
+	public static final String SESSION_ATTNAME="PlataxUser";
 	private PXUser pxuser;
 	private Map<String, Enterprise> enterprises = new HashMap<String, Enterprise>();
 	private Map<String, Invoice> invoices = new HashMap<String, Invoice>();

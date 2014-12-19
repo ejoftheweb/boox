@@ -1,6 +1,7 @@
 package uk.co.platosys.platax.client.widgets;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
@@ -34,9 +35,17 @@ public class PListBox extends ListBox implements HasMultiValues {
 	}
 
 	public void addItem(GWTSelectable selectable) {
-		this.addItem(selectable.getDescription(), selectable.getName());
-		
+		this.addItem(selectable.getName(), selectable.getSysname());
 	}
-
+	public void addItems(ArrayList<GWTSelectable> selectables) {
+		for(GWTSelectable selectable:selectables){
+			this.addItem(selectable.getName(), selectable.getSysname());
+		}
+	}
+	public void addItems(Map<String, String> items){
+		for(String key:items.keySet()){
+			this.addItem(items.get(key), key);
+		}
+	}
 }
 

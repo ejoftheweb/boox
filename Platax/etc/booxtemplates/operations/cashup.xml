@@ -67,6 +67,9 @@
     <Ledger name="Current" isPrivate="false">
     	<Ledger name="Assets" isPrivate="false">
         	<Ledger name="Cash" isPrivate="false">
+        	    <Ledger name="Registers" isPrivate="false">
+        	        <!-- Ledger name="Differences" isPrivate="false"/-->
+        	    </Ledger>
         	    <!-- 
             	<Account name="PettyCash" fullName="Petty Cash" description="Petty Cash Account"/>
             	<Account name="BankCurrent" fullName="Bank Current Account" description="Bank Current Account"/>

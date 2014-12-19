@@ -7,6 +7,7 @@ public class GWTModule implements Serializable, GWTSelectable {
 	 */
 	private static final long serialVersionUID = -472981090717729594L;
 private String name;
+private String sysname;
 private String description;
 private boolean isMultiSelect;
 private String segment;
@@ -44,5 +45,16 @@ private boolean isSelected;
 	public void setSelected(boolean isSelected) {
 		this.isSelected = isSelected;
 	}
+	@Override
+	public String getSysname() {
+		return sysname;
+	}
+	
+	@Override
+	public void setSysname(String sysname) {
+		this.sysname=sysname;
+		
+	}
+	
 
 }

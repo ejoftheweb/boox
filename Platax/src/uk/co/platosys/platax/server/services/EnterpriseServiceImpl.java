@@ -31,6 +31,7 @@ import uk.co.platosys.boox.stock.Product;
 import uk.co.platosys.boox.trade.Customer;
 import uk.co.platosys.platax.client.services.EnterpriseService;
 import uk.co.platosys.platax.client.services.UserService;
+import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.server.core.PXConstants;
 import uk.co.platosys.platax.server.core.PlataxServer;
 import uk.co.platosys.platax.server.core.PlataxUser;
@@ -56,7 +57,7 @@ import uk.co.platosys.xuser.XuserException;
 import uk.co.platosys.xuser.XuserExistsException;
 
 
-public class EnterpriseServiceImpl extends Xservlet implements EnterpriseService {
+public class EnterpriseServiceImpl extends Booxlet implements EnterpriseService {
 /**
 	 * 
 	 */

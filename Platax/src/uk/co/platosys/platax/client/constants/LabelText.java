@@ -4,15 +4,17 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 
 public class LabelText {
-	
+	//appname
+	public static final String APPNAME="LUCADI";
 	
 	//generic labels used around the system
 	public static final String OK="OK";
 	public static final String MORE="more...";
 	public static final String EMAIL="Email";
-	public static final String EMAIL_INFO="Your email address";
+	public static final String EMAIL_INFO="Email address";
 	public static final String BAD_EMAIL="Sorry, that doesn't seem to be a valid email address. Please try again";
 	public static final String DO_YOU_MEAN="Do you mean...";
+	public static final String OF="Of: ";
 	
 	//Status labels
 	public static final String NOT_LOGGED_IN="Not Logged In";
@@ -32,7 +34,7 @@ public class LabelText {
 	//Labels used on the  Enterprise pages
 	public static final String NAME_OK="OK";
 	public static final String NAME_NOT_OK="Sorry, that name isn't available. Please choose another";
-	public static final String NEW_ENTERPRISE_PAGE_HEAD="Enroll a new business on PLATAX";
+	public static final String NEW_ENTERPRISE_PAGE_HEAD="Enroll a new business on "+APPNAME;
 	public static final String NEW_ENTERPRISE_PAGE_SUB_HEAD="Please enter your business details";
 	public static final String NEW_ENTERPRISE_PAGE2_HEAD="Tell us more about ";
 	public static final String NEW_ENTERPRISE_PAGE2_SUB_HEAD="The choices you make on this page will set up your system with an appropriate set of ledgers and accounts";
@@ -105,7 +107,7 @@ public class LabelText {
 	public static final String PASSWORD="Password";
 	public static final String REMEMBER_ME="Remember Me";
 	public static final String USER_START = "Please login or sign up to continue";
-	public static final String USER_SUMMARY="This is your PLATAX User Account Summary";
+	public static final String USER_SUMMARY="This is your "+APPNAME+" User Account Summary";
 	public static final String USER_HI="Hi, ";
 	public static final String LAST_LOGIN = "Last Login:";
 	public static final String FROM = "from";
@@ -113,6 +115,12 @@ public class LabelText {
 	public static final String WELCOME="Welcome, ";
 	public static final String DOMORELATER="You can add more detail on the edit page";
 	
+	//labels used on the CRDept Popup
+	public static final String ADD_CRDEPT="Add a Cash-register Department";
+	public static final String CRDEPT_NO="Dept. No.";
+	public static final String CRDEPT_NAME="Dept. Name";
+	public static final String CRDEPT_TAX="Tax Rate";
+	public static final String CRDEPT_NAME_INFO="A unique name for this department";
 	
 	
 	

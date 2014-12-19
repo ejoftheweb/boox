@@ -66,8 +66,7 @@ public class RegisterUser extends AbstractForm {
 		final FieldLabel familynameLabel= new FieldLabel(LabelText.FAMILYNAME);
 		final FieldInfoLabel familynameInfoLabel=new FieldInfoLabel(LabelText.FAMILYNAME_INFO);
 		familynameBox.setEnabled(false);
-		
-		
+				
 		//password box
 		final PasswordTextBox passwordBox = new PasswordTextBox();
 		final FieldLabel passwordLabel= new FieldLabel(LabelText.PASSWORD);
@@ -82,9 +81,6 @@ public class RegisterUser extends AbstractForm {
 		final CheckBox investorBox = new CheckBox("investor");
 		
 		final FieldInfoLabel investorInfoLabel = new FieldInfoLabel(LabelText.INVESTOR);
-		
-		
-		
 		final UserServiceAsync userService = (UserServiceAsync) GWT.create(UserService.class);
 		final AsyncCallback<String> callback = new AsyncCallback<String>(){
 			public void onSuccess(String result){
@@ -163,9 +159,9 @@ public class RegisterUser extends AbstractForm {
 					emailBox.setFocus(true);
 					emailInfoLabel.setText(LabelText.BAD_EMAIL);
 				}
-				
 			}
 		});
+		
 		usernameBox.addChangeHandler(new ChangeHandler(){
 			public void onChange(ChangeEvent event){
 				String username = usernameBox.getValue();
@@ -179,9 +175,9 @@ public class RegisterUser extends AbstractForm {
 					usernameBox.setFocus(true);
 					usernameInfoLabel.setText(LabelText.BAD_USERNAME);
 				}
-				
 			}
 		});
+		
 		givennameBox.addChangeHandler(new ChangeHandler(){
 			public void onChange(ChangeEvent event){
 				String givenname = givennameBox.getValue();
@@ -195,9 +191,9 @@ public class RegisterUser extends AbstractForm {
 					givennameBox.setFocus(true);
 					givennameInfoLabel.setText(LabelText.BAD_NAME);
 				}
-				
 			}
 		});
+		
 		familynameBox.addChangeHandler(new ChangeHandler(){
 			public void onChange(ChangeEvent event){
 				String familyname = familynameBox.getValue();
@@ -231,6 +227,7 @@ public class RegisterUser extends AbstractForm {
 				
 			}
 		});
+		
 		confirmBox.addChangeHandler(new ChangeHandler(){
 			public void onChange(ChangeEvent event){
 				String confirm = confirmBox.getValue();

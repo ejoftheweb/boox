@@ -118,7 +118,7 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 		for (String key: content.keySet()){
 			GWTSelectable module = content.get(key);
 			String desc=module.getDescription();
-			String name=module.getName();
+			String name=module.getSysname();
 			panel.addItem(name, desc);
 		}
 	}

@@ -19,7 +19,11 @@ public class FileClean {
 				while ((line = br.readLine()) != null) {
 					linno++;
 					String [] fields = line.split(",");
-					if ((fields[17]!=null)&&(Integer.parseInt(fields[17])>0)){
+					int qty=0;
+					try{
+						qty=Integer.parseInt(fields[17]);
+					}catch(Exception x){}
+					if (qty>0){
 						bw.append(line);
 						bw.newLine();
 						lc++;

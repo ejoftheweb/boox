@@ -4,9 +4,10 @@ import uk.co.platosys.platax.client.services.AddressService;
 import uk.co.platosys.xservlets.Xservlet;
 import uk.co.platosys.xuser.Xaddress;
 import uk.co.platosys.xuser.XuserException;
+import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.shared.*;
 
-public class AddressServiceImpl extends Xservlet implements AddressService {
+public class AddressServiceImpl extends Booxlet implements AddressService {
 
 	/**
 	 * 

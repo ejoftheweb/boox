@@ -1,6 +1,7 @@
 package uk.co.platosys.platax.server.services;
 
 import uk.co.platosys.platax.client.services.UserService;
+import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.server.core.PlataxUser;
 import uk.co.platosys.platax.shared.Constants;
 import uk.co.platosys.platax.shared.FieldVerifier;
@@ -10,7 +11,7 @@ import uk.co.platosys.xuser.XuserException;
 import uk.co.platosys.xuser.XuserExistsException;
 
 
-public class UserServiceImpl extends Xservlet implements
+public class UserServiceImpl extends Booxlet implements
 		UserService {
 /**
 	 * 

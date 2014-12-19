@@ -51,6 +51,24 @@ public class StringText {
 	public static final String TAX_INCLUSIVE="Price includes tax?";
 	public static final String TAX_INCLUSIVE_INFO="Check if the list price shown includes VAT";
 	
+	public static final String NEW_MACHINE="New Cash Register";
+	public static final String NEW_MACHINE_INFO="Enter details about the new cash register";
+	public static final String MACHINE_NAME="Machine name";
+	public static final String MACHINE_NAME_INFO="A name you'll know this machine by";
+	public static final String MACHINE_DESC="Model";
+	public static final String MACHINE_DESC_INFO="Make and model details";
+	public static final String MACHINE_DEPTS="Departments";
+	public static final String MACHINE_DEPTS_INFO="Number of departments";
+	
+	public static final String MACHINE_FLOAT="Initial Float";
+	public static final String MACHINE_FLOAT_INFO="The starting float for this machine";
+	public static final String MACHINE_GT="Initial Reading";
+	public static final String MACHINE_GT_INFO="The initial reading of the running-total counter";
+	public static final String MACHINE_REPORTNO="Z-report No";
+	public static final String MACHINE_REPORTNO_INFO="The number of the initial (zero) Z-report";
+	
+	
+	
 	public static final String NEW_STAFF="Hire a new staff member";
 	public static final String NEW_STAFF_INFO="Provide all the following information about your new employee";
 	public static final String GIVEN_NAME="Given name";
@@ -60,6 +78,7 @@ public class StringText {
 	public static final String PHONE_NO="Phone Number";
 	public static final String PHONE_NO_INFO="Personal (mobile) phone number";
 	public static final String NAT_INS="NI Number";
+	public static final String BAD_NAT_INS="That's not a valid NI number. Please try again";
 	public static final String NAT_INS_INFO="National Insurance Number";
 	public static final String DOB="DOB";
 	public static final String DOB_INFO="Date of Birth";

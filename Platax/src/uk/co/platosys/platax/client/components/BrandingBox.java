@@ -1,5 +1,6 @@
 package uk.co.platosys.platax.client.components;
 
+import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.constants.Styles;
 
@@ -7,7 +8,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
 public class BrandingBox extends FlowPanel {
-	private String enterpriseName="PACIOLI";
+	private String enterpriseName=LabelText.APPNAME;
 
 	public BrandingBox() {
 		setStyleName(Styles.BRANDING_BOX);

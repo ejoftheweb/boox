@@ -30,6 +30,7 @@ import uk.co.platosys.boox.core.exceptions.BooxException;
 import uk.co.platosys.boox.core.exceptions.PermissionsException;
 import uk.co.platosys.boox.money.Money;
 import uk.co.platosys.platax.client.services.LedgerService;
+import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.server.core.PXConstants;
 import uk.co.platosys.platax.server.core.PlataxUser;
 import uk.co.platosys.platax.shared.boox.GWTAuditLine;
@@ -43,7 +44,7 @@ import uk.co.platosys.xservlets.Xservlet;
  *
  * @author edward
  */
-public class LedgerServiceImpl extends Xservlet implements LedgerService {
+public class LedgerServiceImpl extends Booxlet implements LedgerService {
    
     /**
 	 * 

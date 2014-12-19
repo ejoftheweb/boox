@@ -9,6 +9,7 @@ public class GWTSegment implements GWTSelectable {
 	 */
 	private static final long serialVersionUID = 1L;
 String name;
+String sysname;
    String description;
    String instructions;
    List<GWTModule> modules=new ArrayList<GWTModule>();
@@ -67,6 +68,16 @@ String name;
 
 	public void setRowIndex(int rowIndex) {
 		this.rowIndex = rowIndex;
+	}
+
+	@Override
+	public String getSysname() {
+		return sysname;
+	}
+
+	@Override
+	public void setSysname(String sysname) {
+		this.sysname=sysname;
 	}
    
 	 

@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.MenuText;
+import uk.co.platosys.platax.client.forms.CashRegisterForm;
 import uk.co.platosys.platax.client.forms.CustomerForm;
 import uk.co.platosys.platax.client.forms.ProductForm;
 import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
@@ -148,15 +149,15 @@ public class EnterpriseMenu extends MenuBar {
 		registerCash.setScheduledCommand(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
-				SimpleCashRegister scr = new SimpleCashRegister(platax, LabelText.CASHUP);
+				SimpleCashRegister scr = new SimpleCashRegister(platax, enterprise);
 				platax.addTab(scr);
 			}
 		});
 		newRegister.setScheduledCommand(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
-				//SimpleCashRegister scr = new SimpleCashRegister(platax, LabelText.CASHUP);
-				//platax.addTab(scr);
+				CashRegisterForm scr = new CashRegisterForm(platax, enterprise);
+				platax.addTab(scr);
 			}
 		});
 		newCashier.setScheduledCommand(new Scheduler.ScheduledCommand() {

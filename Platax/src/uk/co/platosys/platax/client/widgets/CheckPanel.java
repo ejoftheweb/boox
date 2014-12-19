@@ -33,7 +33,7 @@ public class CheckPanel extends FlowPanel implements HasMultiValues {
      * @param item
      */
     public void addItem(GWTSelectable item){
-    	addItem(item.getName(), item.getDescription());
+    	addItem(item.getSysname(), item.getName());
     }
     /**
      * add a Collection of items

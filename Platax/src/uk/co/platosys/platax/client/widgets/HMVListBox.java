@@ -32,7 +32,7 @@ public class HMVListBox extends ListBox implements HasMultiValues {
 	}
 
 	public void addItem(GWTSelectable selectable) {
-		this.addItem(selectable.getDescription(), selectable.getName());
+		this.addItem(selectable.getDescription(), selectable.getSysname());
 		
 	}
 

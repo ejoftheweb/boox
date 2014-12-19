@@ -7,13 +7,13 @@ import uk.co.platosys.boox.core.AuditLine;
 import uk.co.platosys.boox.core.Clerk;
 import uk.co.platosys.boox.core.Enterprise;
 import uk.co.platosys.boox.core.exceptions.PermissionsException;
+import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.server.core.PlataxServer;
-
 import uk.co.platosys.platax.shared.boox.GWTAuditElement;
 import uk.co.platosys.platax.shared.boox.GWTAuditLine;
 import uk.co.platosys.util.ISODate;
 import uk.co.platosys.xservlets.Xservlet;
-public class AuditServiceImpl extends Xservlet {
+public class AuditServiceImpl extends Booxlet {
 
 	public AuditServiceImpl() {
 		 

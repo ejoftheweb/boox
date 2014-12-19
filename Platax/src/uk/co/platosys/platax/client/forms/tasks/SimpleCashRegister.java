@@ -1,5 +1,7 @@
 package uk.co.platosys.platax.client.forms.tasks;
 
+import java.util.ArrayList;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -13,6 +15,7 @@ import com.google.gwt.user.client.ui.IntegerBox;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
+import uk.co.platosys.platax.client.services.CashService;
 import uk.co.platosys.platax.client.services.CashServiceAsync;
 import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
@@ -23,14 +26,14 @@ import uk.co.platosys.platax.client.widgets.buttons.SubmitButton;
 import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
 import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.boox.GWTCash;
+import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTItem;
 import uk.co.platosys.platax.shared.boox.GWTMoney;
+import uk.co.platosys.platax.shared.boox.GWTSelectable;
 
 /**
- * This form is for recording the cash taken from a simple cash register, with one running total. 
- * Most cash registers nowadays offer more information.
- * but often a simple business needs simply to record only the total cash takings for the day. For multi-department machines, with hundreds
- * of departments,  the data entry task can become overwhelming.
+ * This form is for use when cashing-up. it should perhaps be accessible separately? via an iPad or similar?
+ * for use by shift supervisor at cashup time. 
  *  
  * @author edward
  *
@@ -39,7 +42,7 @@ import uk.co.platosys.platax.shared.boox.GWTMoney;
 public class SimpleCashRegister extends BasicTask {
 	//Declare Variables
 	//services
-		final CashServiceAsync cashService = (CashServiceAsync) GWT.create(ProductService.class);
+		final CashServiceAsync cashService = (CashServiceAsync) GWT.create(CashService.class);
 		
 	//select the cash register being done
 	final PListBox registerList = new PListBox();
@@ -49,7 +52,7 @@ public class SimpleCashRegister extends BasicTask {
 	final PListBox cashierList = new PListBox();
 	final FieldLabel cashierListLabel=new FieldLabel(LabelText.CASHIER_NAME);			
 	final FieldInfoLabel cashierListInfoLabel=new FieldInfoLabel(LabelText.CASHIER_NAME_INFO);
-	//select the cash register being done
+	//ensures reports are in sequence
 	final IntegerBox reportBox = new IntegerBox();
 	final FieldLabel reportBoxLabel=new FieldLabel(LabelText.ZREPORT_NUMBER);			
 	final FieldInfoLabel reportBoxInfoLabel=new FieldInfoLabel(LabelText.ZREPORT_NUMBER_INFO);
@@ -57,15 +60,25 @@ public class SimpleCashRegister extends BasicTask {
 	final MoneyBox gtBox = new MoneyBox("GBP");
 	final FieldLabel gtBoxLabel=new FieldLabel(LabelText.GT_AMOUNT);			
 	final FieldInfoLabel gtBoxInfoLabel=new FieldInfoLabel(LabelText.GT_AMOUNT_INFO);
+	// here do the Departments using popups:
 	
+	
+	//
 	final MoneyBox poBox = new MoneyBox("GBP");
 	final FieldLabel poBoxLabel=new FieldLabel(LabelText.PO_AMOUNT);			
 	final FieldInfoLabel poBoxInfoLabel=new FieldInfoLabel(LabelText.PO_AMOUNT_INFO);
-	//select the cash register being done
+	//pdq data
+	//just three figures: total number of transactions; plus total value on PDQ report, total value on Z-report
+	
+	//vouchers/paper Brixton Pounds
+	
+	//Electronic Brixton Pounds?
+	
+	//the cash in the till
 	final MoneyBox cashBox = new MoneyBox("GBP");
 	final FieldLabel cashBoxLabel=new FieldLabel(LabelText.CASH_AMOUNT);			
 	final FieldInfoLabel cashBoxInfoLabel=new FieldInfoLabel(LabelText.CASH_AMOUNT_INFO);
-	//select the cash register being done
+	//the amount to be banked
 	final MoneyBox bankingBox = new MoneyBox("GBP");
 	final FieldLabel bankingLabel=new FieldLabel(LabelText.BANK_AMOUNT);			
 	final FieldInfoLabel bankingInfoLabel=new FieldInfoLabel(LabelText.BANK_AMOUNT_INFO);
@@ -78,28 +91,61 @@ public class SimpleCashRegister extends BasicTask {
 	
 	//callbacks
 	//Get registers callback: populates the registerList
-	
+	final AsyncCallback<ArrayList<GWTSelectable>> registersCallback=new AsyncCallback<ArrayList<GWTSelectable>>(){
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert(StringText.SERVER_ERROR+"SCR0");
+		}
+		@Override
+		public void onSuccess(ArrayList<GWTSelectable> result) {
+			if(result==null){Window.alert(StringText.SERVER_ERROR+"SCR0A");}
+			registerList.addItems(result);
+		}
+	};
 	//get cashiers callback: populates the cashierList
-	
+	final AsyncCallback<ArrayList<GWTSelectable>> cashiersCallback=new AsyncCallback<ArrayList<GWTSelectable>>(){
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert(StringText.SERVER_ERROR+"SCR1");
+		}
+		@Override
+		public void onSuccess(ArrayList<GWTSelectable> result) {
+			if(result==null){Window.alert(StringText.SERVER_ERROR+"SCR1A");}
+			cashierList.addItems(result);
+		}
+	};
 	//selectMachine callback: retrieves a GWTCash instance representing this register
 	final AsyncCallback<GWTCash> machineCallback=new AsyncCallback<GWTCash>(){
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert(StringText.SERVER_ERROR+"SCR0");
+				Window.alert(StringText.SERVER_ERROR+"SCR2");
 			}
 			@Override
 			public void onSuccess(GWTCash result) {
-				if(result==null){Window.alert(StringText.SERVER_ERROR+"SCR0A");}
+				if(result==null){Window.alert(StringText.SERVER_ERROR+"SCR2A");}
 				setCash(result);
 			}
 	};
 	//final callback
+	final AsyncCallback<Boolean> finalCallback=new AsyncCallback<Boolean>(){
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert(StringText.SERVER_ERROR+"SCR2");
+		}
+		@Override
+		public void onSuccess(Boolean result) {
+			if(result){Window.alert(StringText.SUCCESS_ANOTHER);}
+			else{Window.alert(StringText.SERVER_ERROR+"SCR2A");}
+		}
+	};
 	
-	
-	public SimpleCashRegister(Platax parent, String header) {
-		super(parent, header);
+	public SimpleCashRegister(Platax parent, GWTEnterprise enterprise) {
+		super(parent, LabelText.CASHUP);
 		setTitle(LabelText.CASHUP);
 		setSubTitle(LabelText.CASHUP_SUBHEADER);
+		cashService.getCashRegisters(enterprise.getSysname(), registersCallback);
+		cashService.getCashiers(enterprise.getSysname(), cashiersCallback);
 		table.setWidget(0,0, registerListLabel  );
 		table.setWidget(0,1, registerList);
 		table.setWidget(0,2, registerListInfoLabel);

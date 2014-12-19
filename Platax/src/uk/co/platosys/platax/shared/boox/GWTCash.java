@@ -7,10 +7,12 @@ import java.util.Map;
  * Class to wrap details about a cash account, particularly cash registers, but also for 
  * petty cash tins.
  * 
+ * GWTCash isn't an exact analogue of ..boox.cash.Cash. 
+ * 
  * @author edward
  *
  */
-public class GWTCash implements Serializable {
+public class GWTCash implements Serializable, GWTSelectable {
 	/**
 	 * 
 	 */
@@ -19,9 +21,13 @@ public class GWTCash implements Serializable {
 	GWTMoney floatbal;
 	GWTMoney paidouts;
 	GWTMoney runningTotal;
+	int depts;
 	String name;
+	String sysname;
+	String description;
+	String model;
 	int seqno;
-	Map<String, GWTMoney> depts;
+	Map<String, GWTMoney> deptsMap;
 	
 	public GWTCash(){}
 
@@ -73,11 +79,52 @@ public class GWTCash implements Serializable {
 		this.seqno = seqno;
 	}
 
-	public Map<String, GWTMoney> getDepts() {
+	public Map<String, GWTMoney> getDeptsMap() {
+		return deptsMap;
+	}
+
+	public void setDeptsMap(Map<String, GWTMoney> depts) {
+		this.deptsMap = depts;
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+	
+	@Override
+	public boolean isMultiSelect() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getSysname() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setSysname(String sysname) {
+		this.sysname = sysname;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public int getDepts() {
 		return depts;
 	}
 
-	public void setDepts(Map<String, GWTMoney> depts) {
+	public void setDepts(int depts) {
 		this.depts = depts;
 	}
 

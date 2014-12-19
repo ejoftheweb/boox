@@ -14,6 +14,7 @@ import uk.co.platosys.boox.money.CurrencyException;
 import uk.co.platosys.boox.trade.Customer;
 import uk.co.platosys.db.PlatosysDBException;
 import uk.co.platosys.platax.client.services.CustomerService;
+import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.server.core.PXConstants;
 import uk.co.platosys.platax.server.core.PlataxServer;
 import uk.co.platosys.platax.server.core.PlataxUser;
@@ -23,7 +24,7 @@ import uk.co.platosys.platax.shared.exceptions.PlataxException;
 import uk.co.platosys.util.Logger;
 import uk.co.platosys.xservlets.Xservlet;
 
-public class CustomerServiceImpl extends Xservlet implements CustomerService {
+public class CustomerServiceImpl extends Booxlet implements CustomerService {
 static Logger logger = Logger.getLogger("platax");
 	/**
 	 * 

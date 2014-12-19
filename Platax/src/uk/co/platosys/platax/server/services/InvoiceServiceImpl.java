@@ -19,6 +19,7 @@ import uk.co.platosys.boox.trade.Customer;
 import uk.co.platosys.boox.trade.Invoice;
 import uk.co.platosys.boox.trade.InvoiceItem;
 import uk.co.platosys.platax.client.services.InvoiceService;
+import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.server.core.PXConstants;
 import uk.co.platosys.platax.server.core.PlataxServer;
 import uk.co.platosys.platax.server.core.PlataxUser;
@@ -32,7 +33,7 @@ import uk.co.platosys.platax.shared.boox.GWTInvoiceList;
 import uk.co.platosys.platax.shared.exceptions.PlataxException;
 import uk.co.platosys.xservlets.Xservlet;
 
-public class InvoiceServiceImpl extends Xservlet implements InvoiceService {
+public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 
 	/**
 	 * 
@@ -263,16 +264,10 @@ public class InvoiceServiceImpl extends Xservlet implements InvoiceService {
 		//TODO
 		return null;
 	}
-    private Enterprise getEnterprise(String enterpriseID) throws PlataxException{
-    	PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
-		return pxuser.getEnterprise(enterpriseID);
-    }
+    
     private Invoice getInvoice(String sin) throws PlataxException{
     	PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
 		return pxuser.getInvoice(sin);
     }
-    private Clerk getClerk(Enterprise enterprise) throws PlataxException{
-    	PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
-    	return pxuser.getClerk(enterprise);
-    }
+    
 }

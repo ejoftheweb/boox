@@ -34,7 +34,7 @@ public class CheckList extends VerticalPanel implements HasMultiValues {
      * @param item
      */
     public void addItem(GWTSelectable item){
-    	addItem(item.getName(), item.getDescription());
+    	addItem(item.getSysname(), item.getDescription());
     }
     /**
      * add a Collection of items
