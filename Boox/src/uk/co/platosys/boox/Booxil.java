@@ -7,4 +7,5 @@ public abstract class Booxil {
 	public abstract Table createTable(String[] colnames, String coltypes[]);
 	public abstract void doStuff();
 	
+	
 }

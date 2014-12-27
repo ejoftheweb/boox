@@ -13,17 +13,18 @@ import uk.co.platosys.util.Logger;
 import uk.co.platosys.util.RandomString;
 
 /**Xaddress is a class for handling and storing geographical {postal} addresses 
- * 
+ *  The field names and structures are geared towards UK-style addresses should work for most other address styles.
+ *  all fields can be null but we can set postcode to be not null
  * @author edward
  *
  **XaddressID
- **building
- **street
- **district
- **town
- **county
- **postcode
- **country
+ **building: including number in building 23 International House
+ **street: including number in street 52 Rodean Road
+ **district Blickarly
+ **town LITTLEHAMPTON - maps to us City
+ **county snants
+ **postcode LH34 0BD
+ **country UK
  **
  * usage: collect data and create an XaID; store XaID in a JDBCTable with another ID and an XaddressType
  *to retrieve an address, instantiate an Xaddress with the XaID constructor then call a suitable method.
@@ -32,8 +33,10 @@ public class Xaddress {
 	private String XaddressID;
 	private Row row;
 	private static String databaseName = XuserConstants.DATABASE_NAME;
-	public static final String[] fieldNames = {"building","street","district","town","county","postcode"};
- 	private String[] fieldValues=new String[fieldNames.length];
+	public static final String[] FIELD_NAMES = {"building","street","district","town","county","postcode"};
+	public static final String TABLENAME="xaddress";
+	public static final String XAID_COLNAME="xaddressid";
+ 	private String[] fieldValues=new String[FIELD_NAMES.length];
 	private static Logger logger = Logger.getLogger(XuserConstants.APPLICATION_NAME);
  	private static JDBCTable xaddressTable=initTable();
 
@@ -47,8 +50,8 @@ public class Xaddress {
 				xaddressTable=initTable();
 			}
 			this.row = xaddressTable.getRow(xaddressID);
-			for(int i=0; i<fieldNames.length; i++){
-				fieldValues[i]=row.getString(fieldNames[i]);
+			for(int i=0; i<FIELD_NAMES.length; i++){
+				fieldValues[i]=row.getString(FIELD_NAMES[i]);
 			}
 			
 		}catch(Exception x){
@@ -63,14 +66,14 @@ public class Xaddress {
 	 */
 	public Xaddress (String[] vals) throws XuserException {
 		logger.log("creating a new xaddress");
-		if(vals.length!=fieldNames.length){
+		if(vals.length!=FIELD_NAMES.length){
 			throw new XuserException("xaddress values array wrong size");
 		}
 		this.fieldValues=vals;
 		try{
 		XaddressID = RandomString.getRandomKey();
 		for (int i=0; i<vals.length; i++){
-			xaddressTable.amend(XaddressID, fieldNames[i],vals[i]);
+			xaddressTable.amend(XaddressID, FIELD_NAMES[i],vals[i]);
 		}
 		this.row=xaddressTable.getRow(XaddressID);
 		}catch(Exception x){
@@ -125,8 +128,8 @@ public class Xaddress {
 	public String getAddress(boolean oneline) throws XuserException{
 		String address="";
 		try{
-		for(int i=0; i<fieldNames.length; i++){
-		    String val=row.getString(fieldNames[i]);
+		for(int i=0; i<FIELD_NAMES.length; i++){
+		    String val=row.getString(FIELD_NAMES[i]);
 		    if(!val.equals("")||val==null){
 		    	address=address+val;
 		        if(oneline){
@@ -146,20 +149,20 @@ public class Xaddress {
 	private static JDBCTable initTable(){
 		logger.log("database name is "+databaseName);
 		JDBCTable addressTable=null;
-		if(!JDBCTable.tableExists(databaseName, "xaddress")){
+		if(!JDBCTable.tableExists(databaseName, TABLENAME)){
 			try {
-				addressTable=JDBCTable.createTable(databaseName, "xaddress", "xaddressid",JDBCTable.TEXT_COLUMN);
+				addressTable=JDBCTable.createTable(databaseName, TABLENAME, XAID_COLNAME,JDBCTable.TEXT_COLUMN);
 			} catch (PlatosysDBException e) {
 				logger.log("problem creating xaddress JDBCTable", e);
 				
 			}
-			for(int i=0; i<fieldNames.length; i++){
-				addressTable.addColumn(fieldNames[i], JDBCTable.TEXT_COLUMN);
+			for(int i=0; i<FIELD_NAMES.length; i++){
+				addressTable.addColumn(FIELD_NAMES[i], JDBCTable.TEXT_COLUMN);
 			}
 			return addressTable;
 		}else{
 			try {
-				addressTable=new JDBCTable(databaseName,"xaddress", "xaddressid");
+				addressTable=new JDBCTable(databaseName,TABLENAME, XAID_COLNAME);
 			} catch (PlatosysDBException e) {
 				logger.log("problem initialising xaddress JDBCTable",e);
 			}

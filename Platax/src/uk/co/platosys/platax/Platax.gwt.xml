@@ -18,7 +18,7 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
-
+  <!--   <inherits name="uk.co.platosys.gwutils.Nations"/>-->
   <!-- Specify the app entry point class.                         -->
   <entry-point class="uk.co.platosys.platax.client.Platax"/>
   <!-- Specify the paths for translatable code                    -->

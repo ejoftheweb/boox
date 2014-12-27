@@ -1,9 +1,14 @@
 package uk.co.platosys.platax.client.forms;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -17,6 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
+import uk.co.platosys.platax.client.forms.fields.AbstractFormField;
 import uk.co.platosys.platax.client.widgets.CheckPanel;
 import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.client.widgets.buttons.CancelButton;
@@ -44,8 +50,8 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 	protected int pageNumber;
 	private final FormHeaderLabel topLabel = new FormHeaderLabel();//"About your enterprise");
     private final FormSubHeaderLabel subHeader = new FormSubHeaderLabel();//"Please fill in as much as you can"
-    
-	public AbstractForm(Platax platax) {
+    private SortedMap<Integer, AbstractFormField> fields = new TreeMap<Integer, AbstractFormField>(); 
+    public AbstractForm(Platax platax) {
 		super(platax);
 		form.setWidth("100%");
 		form.add(topLabel);
@@ -151,4 +157,34 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 	public Iterator<Widget> iterator(){return null;}
 	public boolean remove(Widget widget){return false;}
 	public abstract void refresh();
+	public int addField(AbstractFormField<?> field) throws Exception {
+		Integer finx = new Integer(field.getPosition());
+		if (fields.containsKey(finx)){
+			Window.alert("form already contains a field at position "+finx.toString());
+			throw new Exception("form already contains a field at position "+finx.toString());
+		} 
+		else{
+			fields.put(finx, field);
+		    return finx;
+		}
+	}
+	
+	public AbstractFormField getNextField(AbstractFormField currentField){
+		return null;
+	}
+	public boolean removeField(AbstractFormField<?> field) throws Exception {
+		//TODO
+		return false;
+	}
+	public void render(){
+		int i=0;
+		for (Integer key:fields.keySet()){
+		    Window.alert("there are "+fields.size()+" fields");
+			table.setWidget(i,0, fields.get(key).getLabel());
+			table.setWidget(i,1, fields.get(key).getWidget());
+			table.setWidget(i,2, fields.get(key).getInfoLabel());
+			i++;
+		}
+		fields.get(fields.firstKey()).setEnabled(true);
+	}
 }

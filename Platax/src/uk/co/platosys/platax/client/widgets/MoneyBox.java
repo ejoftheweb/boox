@@ -6,8 +6,9 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ValueBoxBase;
 
-public class MoneyBox extends FlowPanel {
+public class MoneyBox extends ValueBoxBase {
 	private String currency=GWTMoney.NUL; 
     private TextBox textBox=new TextBox();
     private InlineLabel curLabel = new InlineLabel();

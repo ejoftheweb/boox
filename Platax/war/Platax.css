@@ -48,7 +48,8 @@
 }
 
 .px_ptab_content {
-	background: #e9c067;
+	/*background: #e9c067; BUFF */
+	background: #ddd;
 }
 
 .px_ptab_head {

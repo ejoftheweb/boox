@@ -14,6 +14,7 @@ import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.MenuText;
 import uk.co.platosys.platax.client.forms.CashRegisterForm;
+import uk.co.platosys.platax.client.forms.CashierForm;
 import uk.co.platosys.platax.client.forms.CustomerForm;
 import uk.co.platosys.platax.client.forms.ProductForm;
 import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
@@ -163,8 +164,8 @@ public class EnterpriseMenu extends MenuBar {
 		newCashier.setScheduledCommand(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
-				//SimpleCashRegister scr = new SimpleCashRegister(platax, LabelText.CASHUP);
-				//platax.addTab(scr);
+				CashierForm scr = new CashierForm(platax, enterprise);
+				platax.addTab(scr);
 			}
 		});
 		//Items on the Invoice Menu (submenu of the income menu)
