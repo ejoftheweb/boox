@@ -46,11 +46,11 @@ public class HireStaff extends BasicTask {
 		TextField familyName= new TextField (FieldText.FAMILY_NAME, 2000, this);
 		TextField email= new TextField (FieldText.EMAIL, 3000, this);
 		TextField phoneNo= new TextField (FieldText.PHONE, 4000, this);
-		AbstractFormField address= new AbstractFormField (StringText.PHONE_NO, StringText.PHONE_NO_INFO, new TextBox(), 5000, this);
-		AbstractFormField natInsNo= new AbstractFormField (StringText.NAT_INS, StringText.NAT_INS_INFO, new TextBox(), 6000, this);
-		AbstractFormField dob= new AbstractFormField (StringText.DOB, StringText.DOB_INFO, new TextBox(), 7000, this);
-		AbstractFormField nationality= new AbstractFormField (StringText.NATIONALITY, StringText.NATIONALITY_INFO, new TextBox(), 8000, this);
-		AbstractFormField canWork= new AbstractFormField (StringText.CAN_WORK, StringText.CAN_WORK_INFO, new TextBox(), 9000, this);
+		//AbstractFormField address= new AbstractFormField (StringText.PHONE_NO, StringText.PHONE_NO_INFO, new TextBox(), 5000, this);
+		//AbstractFormField natInsNo= new AbstractFormField (StringText.NAT_INS, StringText.NAT_INS_INFO, new TextBox(), 6000, this);
+		//AbstractFormField dob= new AbstractFormField (StringText.DOB, StringText.DOB_INFO, new TextBox(), 7000, this);
+		//AbstractFormField nationality= new AbstractFormField (StringText.NATIONALITY, StringText.NATIONALITY_INFO, new TextBox(), 8000, this);
+		//AbstractFormField canWork= new AbstractFormField (StringText.CAN_WORK, StringText.CAN_WORK_INFO, new TextBox(), 9000, this);
 	 Button submitButton = new Button(ButtonText.CONFIRM);
 	    
 		

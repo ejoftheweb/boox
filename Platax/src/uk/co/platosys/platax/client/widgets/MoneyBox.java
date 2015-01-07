@@ -1,19 +1,27 @@
 package uk.co.platosys.platax.client.widgets;
 
+import uk.co.platosys.platax.client.forms.fields.AbstractValueField;
+import uk.co.platosys.platax.client.forms.fields.IsFieldValue;
+import uk.co.platosys.platax.client.forms.fields.HasFieldValue;
 import uk.co.platosys.platax.shared.boox.GWTMoney;
 
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ValueBox;
 import com.google.gwt.user.client.ui.ValueBoxBase;
 
-public class MoneyBox extends ValueBoxBase {
+public class MoneyBox extends AbstractValueField<GWTMoney> {
 	private String currency=GWTMoney.NUL; 
-    private TextBox textBox=new TextBox();
+    private DoubleBox textBox=new DoubleBox();
     private InlineLabel curLabel = new InlineLabel();
     public MoneyBox(){
-    	init();
+    	 init();
     }
     
     public MoneyBox(String currency){
@@ -22,16 +30,16 @@ public class MoneyBox extends ValueBoxBase {
     }
     public MoneyBox(GWTMoney money){
     	this.currency=money.getCurrencyTLA();
-    	textBox.setValue(money.toPlainString());
+    	textBox.setValue(money.getAmount());
     	init();
     }
     public void setAmount(double amount){
-    	textBox.setValue(Double.toString(amount));
+    	textBox.setValue(amount);
     }
     
 	public double getAmount() {
-		try{// TODO Auto-generated method stub
-			return Double.parseDouble(textBox.getValue());
+		try{
+			return textBox.getValue();
 		}catch(Exception x){
 			//there will be a parse exception here, we need to stop these things happening
 			return 0;
@@ -61,8 +69,40 @@ public String getCurrency() {
 	return currency;
 }
 
-public void addChangeHandler(ChangeHandler changeHandler) {
-	textBox.addChangeHandler(changeHandler);
+
+
+@Override
+public IsFieldValue<GWTMoney> getValue() {
+	// TODO Auto-generated method stub
+	return getMoney();
+}
+
+
+
+@Override
+public void setFocus(boolean focused) {
+	textBox.setFocus(focused);
 	
 }
+
+@Override
+public boolean isEnabled() {
+	 
+	return textBox.isEnabled();
 }
+
+@Override
+public void setEnabled(boolean enabled) {
+	textBox.setEnabled(enabled);
+	
+}
+
+@Override
+public HandlerRegistration addValueChangeHandler(
+		ValueChangeHandler handler) {
+	return textBox.addValueChangeHandler((ValueChangeHandler<Double>) handler);
+}
+
+
+}
+

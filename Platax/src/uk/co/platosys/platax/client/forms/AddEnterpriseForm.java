@@ -92,7 +92,7 @@ public class AddEnterpriseForm extends AbstractForm {
 				final FieldLabel isStartupLabel=new FieldLabel(LabelText.IS_STARTUP);
 				final FieldInfoLabel isStartupInfoLabel = new FieldInfoLabel(LabelText.IS_STARTUP_INFO);
 				//Reference date picker
-				final DateBox startDateBox = new PDateBox();
+				//final DateBox startDateBox = new PDateBox();
 				final FieldLabel startDateLabel = new FieldLabel(LabelText.START_DATE);
 				final FieldInfoLabel startDateInfoLabel = new FieldInfoLabel(LabelText.START_DATE_INFO);
 				//Agree terms?
@@ -244,7 +244,7 @@ public class AddEnterpriseForm extends AbstractForm {
 				orgTypeList.addItem(StringText.PLEASE_SELECT, StringText.NULL);
 				roleList.addItem(StringText.PLEASE_SELECT, StringText.NULL);
 				submitButton.setEnabled(false);
-				startDateBox.setVisible(true);
+				//startDateBox.setVisible(true);
 				//namecheck callback
 				
 			enterpriseService.getSegments(segmentCallback);
@@ -274,7 +274,7 @@ public class AddEnterpriseForm extends AbstractForm {
 			table.setWidget(4,2, isStartupInfoLabel);
 			
 			table.setWidget(5,0, startDateLabel);
-			table.setWidget(5,1, startDateBox);
+			//table.setWidget(5,1, startDateBox);
 			table.setWidget(5,2, startDateInfoLabel);
 			
 			table.setWidget(6,0, termsLabel);
@@ -365,9 +365,9 @@ public class AddEnterpriseForm extends AbstractForm {
 					String orgtype=orgTypeList.getValue(orgTypeList.getSelectedIndex());
 					String role=roleList.getValue(roleList.getSelectedIndex());
 					boolean isStartup = isStartupCheckBox.getValue();
-					Date startDate = startDateBox.getValue();
+					//Date startDate = startDateBox.getValue();
 					
-					enterpriseService.registerEnterprise(name, legalname, orgtype, role, isStartup, startDate, callback1);
+					enterpriseService.registerEnterprise(name, legalname, orgtype, role, isStartup, new Date(), callback1);
 					setTitle(StringText.THANKYOU);
 					setSubTitle(StringText.WAIT_FOR_SERVER);
 					form.remove(table);

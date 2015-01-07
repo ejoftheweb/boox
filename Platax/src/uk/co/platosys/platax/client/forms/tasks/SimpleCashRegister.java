@@ -7,6 +7,8 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -179,9 +181,9 @@ public class SimpleCashRegister extends BasicTask {
 				}
 			}
 		});
-		poBox.addChangeHandler(new ChangeHandler(){
+		poBox.addValueChangeHandler(new ValueChangeHandler(){
 			@Override
-			public void onChange(ChangeEvent event) {
+			public void onValueChange(ValueChangeEvent event) {
 				GWTMoney pos = poBox.getMoney();
 				if (Window.confirm(pos.toPrefixedString()+" "+LabelText.PO_POPUP_Q)){
 					

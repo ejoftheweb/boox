@@ -1,10 +1,9 @@
 package uk.co.platosys.platax.client.forms.fields;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.user.client.ui.FocusWidget;
-import com.google.gwt.user.client.ui.ValueBoxBase;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasEnabled;
+import com.google.gwt.user.client.ui.IsWidget;
 
 import uk.co.platosys.platax.client.forms.AbstractForm;
 import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
@@ -28,12 +27,12 @@ import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 
 
 
-public abstract class AbstractFormField<T> {
+public abstract class AbstractFormField<T> implements HasEnabled {
     
 	FieldLabel label=new FieldLabel();
 	FieldInfoLabel infoLabel = new FieldInfoLabel();
 	AbstractForm parent;
-	ValueBoxBase<T> widget;
+	AbstractValueField<T> widget;
 	int position=0;
 	String errorInfoLabel="";
 	String validationRegex;
@@ -44,21 +43,25 @@ public abstract class AbstractFormField<T> {
 	 * The position parameter sets the ordering. It's good practice to
 	 * start forms using 100 or 1000 steps, then it's easy to put intermediate fields in
 	 * later on without a painful renumbering. Remember how you did line numbers in BASIC? 
+	 * 
+	 * This constructor is deprecated, use the version that takes a string array argument.
+	 * 
 	 * @param labelText
 	 * @param infoText
 	 * @param widget
 	 * @param index
 	 */
-	public AbstractFormField (String labelText, String infoText, ValueBoxBase<T> widget, int position, AbstractForm parent){
+	@Deprecated
+	public AbstractFormField (String labelText, String infoText, AbstractValueField<T> widget, int position, AbstractForm parent){
 		label.setText(labelText);
 		infoLabel.setText(infoText);
 		this.widget=widget;
 		this.position=position;
 		this.parent=parent;
 		widget.setEnabled(enabled);
-		widget.addChangeHandler(new ChangeHandler(){
+		widget.addValueChangeHandler(new ValueChangeHandler<T>(){
 			@Override
-			public void onChange(ChangeEvent event) {
+			public void onValueChange(ValueChangeEvent<T> event) {
 				validate();
 			}
 			
@@ -82,7 +85,7 @@ public abstract class AbstractFormField<T> {
 	 * @param widget
 	 * @param index
 	 */
-	public AbstractFormField (String[] labelText, ValueBoxBase<T> widget, int position, AbstractForm parent) throws IllegalArgumentException{
+	public AbstractFormField (String[] labelText, AbstractValueField<T> widget, int position, AbstractForm parent) throws IllegalArgumentException{
 		if(labelText.length!=4){throw new IllegalArgumentException("label array must be size 4");}
 		label.setText(labelText[0]);
 		infoLabel.setText(labelText[1]);
@@ -92,9 +95,9 @@ public abstract class AbstractFormField<T> {
 		this.position=position;
 		this.parent=parent;
 		widget.setEnabled(enabled);
-		widget.addChangeHandler(new ChangeHandler(){
+		widget.addValueChangeHandler(new ValueChangeHandler<T>(){
 			@Override
-			public void onChange(ChangeEvent event) {
+			public void onValueChange(ValueChangeEvent<T> event) {
 				validate();
 			}
 			
@@ -112,7 +115,11 @@ public abstract class AbstractFormField<T> {
 	 * start forms using 100 or 1000 steps, then it's easy to put intermediate fields in
 	 * later on without a painful renumbering. Remember how you did line numbers in BASIC? 
 	 * 
-	 * This constructor takes a String array argument for the labels and validation regex. 
+	 * This package-protected constructor takes a String array argument for the labels and validation regex. 
+	 * 
+	 * It doesn't have a widget argument; subclasses must set their own widget (which, actually, needs to 
+	 * extend AbstractValueField). 
+	 * 
 	 * @param labelText
 	 *
 	 * @param widget
@@ -127,9 +134,9 @@ public abstract class AbstractFormField<T> {
 		this.position=position;
 		this.parent=parent;
 		widget.setEnabled(enabled);
-		widget.addChangeHandler(new ChangeHandler(){
+		widget.addValueChangeHandler(new ValueChangeHandler<T>(){
 			@Override
-			public void onChange(ChangeEvent event) {
+			public void onValueChange(ValueChangeEvent<T> event) {
 				validate();
 			}
 			
@@ -159,7 +166,7 @@ public abstract class AbstractFormField<T> {
 	/**
 	 * @return the widget*/
 	
-	public Widget getWidget() {
+	public IsWidget getWidget() {
 		return widget;
 	}
 	
@@ -203,7 +210,7 @@ public abstract class AbstractFormField<T> {
 	/**
 	 * @param widget the widget to set*/
 	
-	public void setWidget(ValueBoxBase<T> widget) {
+	public void setWidget(AbstractValueField<T>widget) {
 		this.widget = widget;
 	}
 
@@ -222,15 +229,13 @@ public abstract class AbstractFormField<T> {
 	 * 
 	 * @return
 	 */
-    private boolean validate(){
-    	return true;
-    }
+    public abstract boolean validate();
 
 
 	/**
 	 * @return the enabled*/
 	
-	public boolean isEnabled() {
+	public  boolean isEnabled() {
 		return enabled;
 	}
 

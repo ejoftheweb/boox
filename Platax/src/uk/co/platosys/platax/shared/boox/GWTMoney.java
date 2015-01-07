@@ -7,9 +7,12 @@ import java.io.Serializable;
 
 
 
+
+import uk.co.platosys.platax.client.forms.fields.IsFieldValue;
+
 import com.google.gwt.i18n.client.NumberFormat;
 
-	public final class GWTMoney implements Serializable {
+	public final class GWTMoney  implements Serializable, IsFieldValue<GWTMoney> {
 	    /**
 		 * 
 		 */
