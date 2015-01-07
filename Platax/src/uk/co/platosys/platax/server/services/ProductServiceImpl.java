@@ -23,7 +23,7 @@ import uk.co.platosys.platax.server.core.PlataxUser;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTItem;
-import uk.co.platosys.platax.shared.boox.GWTMoney;
+import uk.co.platosys.pws.values.GWTMoney;
 import uk.co.platosys.xservlets.Xservlet;
 
 public class ProductServiceImpl extends Booxlet implements ProductService {

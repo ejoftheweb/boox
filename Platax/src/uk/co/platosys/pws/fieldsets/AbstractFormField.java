@@ -1,4 +1,4 @@
-package uk.co.platosys.platax.client.forms.fields;
+package uk.co.platosys.pws.fieldsets;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import uk.co.platosys.platax.client.forms.AbstractForm;
 import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
 import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
+import uk.co.platosys.pws.inputfields.AbstractValueField;
 
 /**
  * A generic class that covers all form fields treated as triples: label/widget/infolabel, normally 

@@ -7,10 +7,11 @@ import java.util.List;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
 import uk.co.platosys.platax.shared.boox.GWTLineItem;
-import uk.co.platosys.platax.shared.boox.GWTMoney;
 import uk.co.platosys.platax.shared.boox.GWTInvoiceList;
 
 
+
+import uk.co.platosys.pws.values.GWTMoney;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;

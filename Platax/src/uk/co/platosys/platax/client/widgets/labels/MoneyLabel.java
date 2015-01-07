@@ -1,7 +1,7 @@
 package uk.co.platosys.platax.client.widgets.labels;
 
 import uk.co.platosys.platax.client.constants.Styles;
-import uk.co.platosys.platax.shared.boox.GWTMoney;
+import uk.co.platosys.pws.values.GWTMoney;
 
 import com.google.gwt.user.client.ui.Label;
 

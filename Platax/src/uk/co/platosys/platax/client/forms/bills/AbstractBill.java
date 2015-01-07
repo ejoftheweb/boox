@@ -20,7 +20,7 @@ import uk.co.platosys.platax.shared.boox.GWTBill;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
-import uk.co.platosys.platax.shared.boox.GWTMoney;
+import uk.co.platosys.pws.values.GWTMoney;
 
 import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.FlexTable;

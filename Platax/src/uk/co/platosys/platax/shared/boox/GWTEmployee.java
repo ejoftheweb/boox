@@ -2,6 +2,8 @@ package uk.co.platosys.platax.shared.boox;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import uk.co.platosys.pws.values.GWTMoney;
 /**
  * Class to wrap employee details.
  * 

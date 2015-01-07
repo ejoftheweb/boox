@@ -1,4 +1,4 @@
-package uk.co.platosys.platax.shared.boox;
+package uk.co.platosys.pws.values;
 
 import java.io.Serializable;
 
@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 
 
-import uk.co.platosys.platax.client.forms.fields.IsFieldValue;
+
 
 import com.google.gwt.i18n.client.NumberFormat;
 

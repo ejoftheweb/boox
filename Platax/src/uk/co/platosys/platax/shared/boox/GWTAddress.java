@@ -2,7 +2,7 @@ package uk.co.platosys.platax.shared.boox;
 
 import java.io.Serializable;
 
-import uk.co.platosys.platax.client.forms.fields.IsFieldValue;
+import uk.co.platosys.pws.values.IsFieldValue;
 
 /**
  * Class to wrap a geographical address

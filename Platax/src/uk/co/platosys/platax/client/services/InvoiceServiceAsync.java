@@ -8,7 +8,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
 import uk.co.platosys.platax.shared.boox.GWTLineItem;
-import uk.co.platosys.platax.shared.boox.GWTMoney;
+import uk.co.platosys.pws.values.GWTMoney;
 import uk.co.platosys.util.ISODate;
 
 public interface InvoiceServiceAsync {

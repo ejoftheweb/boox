@@ -1,12 +1,11 @@
-package uk.co.platosys.platax.client.widgets;
+package uk.co.platosys.pws.inputfields;
 
 import java.util.Date;
 
 import uk.co.platosys.platax.client.constants.DateFormats;
-import uk.co.platosys.platax.client.forms.fields.AbstractFormField;
-import uk.co.platosys.platax.client.forms.fields.AbstractValueField;
-import uk.co.platosys.platax.client.forms.fields.IsFieldValue;
-import uk.co.platosys.platax.shared.boox.GWTDate;
+import uk.co.platosys.pws.fieldsets.AbstractFormField;
+import uk.co.platosys.pws.values.GWTDate;
+import uk.co.platosys.pws.values.IsFieldValue;
 
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;

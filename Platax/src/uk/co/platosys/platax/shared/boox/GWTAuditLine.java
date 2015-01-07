@@ -2,6 +2,9 @@ package uk.co.platosys.platax.shared.boox;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import uk.co.platosys.pws.values.GWTMoney;
+
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.view.client.AbstractDataProvider;

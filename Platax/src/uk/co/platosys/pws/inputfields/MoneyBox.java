@@ -1,9 +1,7 @@
-package uk.co.platosys.platax.client.widgets;
+package uk.co.platosys.pws.inputfields;
 
-import uk.co.platosys.platax.client.forms.fields.AbstractValueField;
-import uk.co.platosys.platax.client.forms.fields.IsFieldValue;
-import uk.co.platosys.platax.client.forms.fields.HasFieldValue;
-import uk.co.platosys.platax.shared.boox.GWTMoney;
+import uk.co.platosys.pws.values.GWTMoney;
+import uk.co.platosys.pws.values.IsFieldValue;
 
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.FocusHandler;

@@ -14,7 +14,7 @@ import uk.co.platosys.platax.client.cells.MoneyCell;
 import uk.co.platosys.platax.client.cells.PXDateCell;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
 import uk.co.platosys.platax.shared.boox.GWTInvoiceList;
-import uk.co.platosys.platax.shared.boox.GWTMoney;
+import uk.co.platosys.pws.values.GWTMoney;
 
 public class InvoiceListTable extends CellTable<GWTInvoice> {
 

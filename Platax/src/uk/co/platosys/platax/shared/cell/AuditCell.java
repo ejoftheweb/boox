@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import uk.co.platosys.platax.shared.boox.GWTAuditable;
-import uk.co.platosys.platax.shared.boox.GWTMoney;
 import uk.co.platosys.platax.shared.cell.MoneyCell.Templates;
+import uk.co.platosys.pws.values.GWTMoney;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;

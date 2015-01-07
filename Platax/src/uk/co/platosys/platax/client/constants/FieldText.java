@@ -1,4 +1,4 @@
-package uk.co.platosys.platax.client.forms.fields;
+package uk.co.platosys.platax.client.constants;
 
 import uk.co.platosys.platax.shared.FieldVerifier;
 

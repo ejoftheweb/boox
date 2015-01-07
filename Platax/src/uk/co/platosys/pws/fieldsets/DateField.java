@@ -1,9 +1,9 @@
-package uk.co.platosys.platax.client.forms.fields;
+package uk.co.platosys.pws.fieldsets;
 
 import java.util.Date;
 
 import uk.co.platosys.platax.client.forms.AbstractForm;
-import uk.co.platosys.platax.client.widgets.PDateBox;
+import uk.co.platosys.pws.inputfields.PDateBox;
 
 import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.google.gwt.user.datepicker.client.DateBox;

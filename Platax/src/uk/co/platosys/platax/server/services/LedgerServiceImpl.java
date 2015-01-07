@@ -36,8 +36,8 @@ import uk.co.platosys.platax.server.core.PlataxUser;
 import uk.co.platosys.platax.shared.boox.GWTAuditLine;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTLedger;
-import uk.co.platosys.platax.shared.boox.GWTMoney;
 import uk.co.platosys.platax.shared.exceptions.PlataxException;
+import uk.co.platosys.pws.values.GWTMoney;
 import uk.co.platosys.xservlets.Xservlet;
 
 /**

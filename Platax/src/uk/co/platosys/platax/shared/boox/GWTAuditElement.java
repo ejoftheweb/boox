@@ -2,6 +2,8 @@ package uk.co.platosys.platax.shared.boox;
 
 import java.util.Date;
 
+import uk.co.platosys.pws.values.GWTMoney;
+
 import com.google.gwt.view.client.ProvidesKey;
 
 

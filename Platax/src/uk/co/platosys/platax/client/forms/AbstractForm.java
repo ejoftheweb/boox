@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.Widget;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
-import uk.co.platosys.platax.client.forms.fields.AbstractFormField;
 import uk.co.platosys.platax.client.widgets.CheckPanel;
 import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.client.widgets.buttons.CancelButton;
@@ -31,6 +30,7 @@ import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.FormSubHeaderLabel;
 import uk.co.platosys.platax.shared.boox.GWTSelectable;
+import uk.co.platosys.pws.fieldsets.AbstractFormField;
 
 /**
  *  AbstractForm extends PTab; in Platax forms are always PTabs (unless they're popups).

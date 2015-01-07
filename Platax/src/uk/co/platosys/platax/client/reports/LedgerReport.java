@@ -3,12 +3,10 @@ package uk.co.platosys.platax.client.reports;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
-
 
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.widgets.PTab;
@@ -16,7 +14,7 @@ import uk.co.platosys.platax.client.forms.AbstractForm;
 import uk.co.platosys.platax.client.services.LedgerService;
 import uk.co.platosys.platax.client.services.LedgerServiceAsync;
 import uk.co.platosys.platax.shared.boox.GWTAuditLine;
-import uk.co.platosys.platax.shared.boox.GWTMoney;
+import uk.co.platosys.pws.values.GWTMoney;
 
 
 public class LedgerReport extends AbstractForm {

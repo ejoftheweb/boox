@@ -1,7 +1,7 @@
-package uk.co.platosys.platax.client.forms.fields;
+package uk.co.platosys.pws.fieldsets;
 
 import uk.co.platosys.platax.client.forms.AbstractForm;
-import uk.co.platosys.platax.client.widgets.PTextBox;
+import uk.co.platosys.pws.inputfields.PTextBox;
 
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueBoxBase;

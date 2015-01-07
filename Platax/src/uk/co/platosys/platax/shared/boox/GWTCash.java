@@ -3,6 +3,8 @@ package uk.co.platosys.platax.shared.boox;
 import java.io.Serializable;
 import java.util.Map;
 
+import uk.co.platosys.pws.values.GWTMoney;
+
 /**
  * Class to wrap details about a cash account, particularly cash registers, but also for 
  * petty cash tins.

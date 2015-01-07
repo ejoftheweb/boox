@@ -1,8 +1,8 @@
-package uk.co.platosys.platax.client.forms.fields;
+package uk.co.platosys.pws.fieldsets;
 
 import uk.co.platosys.platax.client.forms.AbstractForm;
-import uk.co.platosys.platax.client.widgets.MoneyBox;
-import uk.co.platosys.platax.shared.boox.GWTMoney;
+import uk.co.platosys.pws.inputfields.MoneyBox;
+import uk.co.platosys.pws.values.GWTMoney;
 
 public class MoneyField extends AbstractFormField<GWTMoney> {
 

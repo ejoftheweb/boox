@@ -5,9 +5,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
-
 import com.google.gwt.user.client.rpc.IsSerializable;
+
 import java.io.Serializable;
+
+import uk.co.platosys.pws.values.GWTMoney;
 
 
 public class GWTInvoice extends GWTBill implements Serializable, IsSerializable {

@@ -21,7 +21,6 @@ import uk.co.platosys.platax.client.widgets.AddressWidget;
 import uk.co.platosys.platax.client.widgets.CheckList;
 import uk.co.platosys.platax.client.widgets.CheckPanel;
 import uk.co.platosys.platax.client.widgets.HMVListBox;
-import uk.co.platosys.platax.client.widgets.PDateBox;
 import uk.co.platosys.platax.client.widgets.buttons.CancelButton;
 import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
 import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
@@ -31,6 +30,7 @@ import uk.co.platosys.platax.shared.boox.GWTRatio;
 import uk.co.platosys.platax.shared.boox.GWTRole;
 import uk.co.platosys.platax.shared.boox.GWTSegment;
 import uk.co.platosys.platax.shared.boox.GWTSelectable;
+import uk.co.platosys.pws.inputfields.PDateBox;
 
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.cell.client.DatePickerCell;

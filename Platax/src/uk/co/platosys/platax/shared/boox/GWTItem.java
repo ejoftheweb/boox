@@ -2,6 +2,8 @@ package uk.co.platosys.platax.shared.boox;
 
 import java.io.Serializable;
 
+import uk.co.platosys.pws.values.GWTMoney;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class GWTItem implements Serializable, IsSerializable{

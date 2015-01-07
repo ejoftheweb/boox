@@ -16,11 +16,9 @@ import com.google.gwt.user.datepicker.client.DateBox;
 
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
+import uk.co.platosys.platax.client.constants.FieldText;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
-import uk.co.platosys.platax.client.forms.fields.FieldText;
-import uk.co.platosys.platax.client.forms.fields.AbstractFormField;
-import uk.co.platosys.platax.client.forms.fields.TextField;
 import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.platax.client.utils.Nations;
@@ -29,6 +27,8 @@ import uk.co.platosys.platax.client.widgets.PTab;
 import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
 import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.FieldVerifier;
+import uk.co.platosys.pws.fieldsets.AbstractFormField;
+import uk.co.platosys.pws.fieldsets.TextField;
 
 public class HireStaff extends BasicTask {
 	

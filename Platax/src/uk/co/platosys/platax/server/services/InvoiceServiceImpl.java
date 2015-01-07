@@ -28,9 +28,9 @@ import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
 import uk.co.platosys.platax.shared.boox.GWTItem;
 import uk.co.platosys.platax.shared.boox.GWTLineItem;
-import uk.co.platosys.platax.shared.boox.GWTMoney;
 import uk.co.platosys.platax.shared.boox.GWTInvoiceList;
 import uk.co.platosys.platax.shared.exceptions.PlataxException;
+import uk.co.platosys.pws.values.GWTMoney;
 import uk.co.platosys.xservlets.Xservlet;
 
 public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
