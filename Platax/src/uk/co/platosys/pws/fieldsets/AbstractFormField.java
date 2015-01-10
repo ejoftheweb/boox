@@ -1,17 +1,24 @@
 package uk.co.platosys.pws.fieldsets;
 
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.IsWidget;
 
-import uk.co.platosys.platax.client.forms.AbstractForm;
-import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
-import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
+import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.inputfields.AbstractValueField;
+import uk.co.platosys.pws.labels.FieldInfoLabel;
+import uk.co.platosys.pws.labels.FieldLabel;
+
 
 /**
- * A generic class that covers all form fields treated as triples: label/widget/infolabel, normally 
+ * This is the base class that covers all PWS form field triples: label/widget/infolabel, normally 
  * arranged in a vertical form layout and completed sequentially.
  * In a parent that extends abstract form these fields are disabled by default and enabled when the preceding
  * field is successfully completed.
@@ -28,52 +35,17 @@ import uk.co.platosys.pws.inputfields.AbstractValueField;
 
 
 
-public abstract class AbstractFormField<T> implements HasEnabled {
+public abstract class AbstractFormField<T> implements FormField<T>, HasEnabled, Focusable {
     
 	FieldLabel label=new FieldLabel();
 	FieldInfoLabel infoLabel = new FieldInfoLabel();
-	AbstractForm parent;
+	Form parent;
 	AbstractValueField<T> widget;
 	int position=0;
 	String errorInfoLabel="";
 	String validationRegex;
 	boolean enabled=false;
-	
-	/**
-	 * These triples - label, Widget, infolabel - go into tables that make up a Form.
-	 * The position parameter sets the ordering. It's good practice to
-	 * start forms using 100 or 1000 steps, then it's easy to put intermediate fields in
-	 * later on without a painful renumbering. Remember how you did line numbers in BASIC? 
-	 * 
-	 * This constructor is deprecated, use the version that takes a string array argument.
-	 * 
-	 * @param labelText
-	 * @param infoText
-	 * @param widget
-	 * @param index
-	 */
-	@Deprecated
-	public AbstractFormField (String labelText, String infoText, AbstractValueField<T> widget, int position, AbstractForm parent){
-		label.setText(labelText);
-		infoLabel.setText(infoText);
-		this.widget=widget;
-		this.position=position;
-		this.parent=parent;
-		widget.setEnabled(enabled);
-		widget.addValueChangeHandler(new ValueChangeHandler<T>(){
-			@Override
-			public void onValueChange(ValueChangeEvent<T> event) {
-				validate();
-			}
-			
-		});
-		try {
-			parent.addField(this);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//logger.log("error:",e);
-		}
-	}
+	boolean required=true;
 	/**
 	 * These triples - label, Widget, infolabel - go into tables that make up a Form.
 	 * The position parameter sets the ordering. It's good practice to
@@ -86,7 +58,8 @@ public abstract class AbstractFormField<T> implements HasEnabled {
 	 * @param widget
 	 * @param index
 	 */
-	public AbstractFormField (String[] labelText, AbstractValueField<T> widget, int position, AbstractForm parent) throws IllegalArgumentException{
+	@Deprecated
+	public AbstractFormField (String[] labelText, AbstractValueField<T> widget, int position, Form parent, boolean required) throws IllegalArgumentException{
 		if(labelText.length!=4){throw new IllegalArgumentException("label array must be size 4");}
 		label.setText(labelText[0]);
 		infoLabel.setText(labelText[1]);
@@ -95,20 +68,8 @@ public abstract class AbstractFormField<T> implements HasEnabled {
 		this.widget=widget;
 		this.position=position;
 		this.parent=parent;
-		widget.setEnabled(enabled);
-		widget.addValueChangeHandler(new ValueChangeHandler<T>(){
-			@Override
-			public void onValueChange(ValueChangeEvent<T> event) {
-				validate();
-			}
-			
-		});
-		try {
-			parent.addField(this);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//logger.log("error:",e);
-		}
+		this.required=required;
+		start();
 	}
 	/**
 	 * These triples - label, Widget, infolabel - go into tables that make up a Form.
@@ -126,28 +87,54 @@ public abstract class AbstractFormField<T> implements HasEnabled {
 	 * @param widget
 	 * @param index
 	 */
-	protected AbstractFormField (String[] labelText,  int position, AbstractForm parent) throws IllegalArgumentException{
+	protected AbstractFormField (String[] labelText,  int position, Form parent, boolean required) throws IllegalArgumentException{
 		if(labelText.length!=4){throw new IllegalArgumentException("label array must be size 4");}
 		label.setText(labelText[0]);
 		infoLabel.setText(labelText[1]);
 		this.errorInfoLabel=(labelText[3]);
+		infoLabel.setErrorText(errorInfoLabel);
 		this.validationRegex=labelText[2];
 		this.position=position;
 		this.parent=parent;
+		this.required=required;
+	}
+	protected void start(){
 		widget.setEnabled(enabled);
 		widget.addValueChangeHandler(new ValueChangeHandler<T>(){
 			@Override
 			public void onValueChange(ValueChangeEvent<T> event) {
-				validate();
+				if(validate()){
+					setOK(true);
+					moveNext();
+				}else{
+					//Window.alert("failed");
+				   setOK(false);
+				};
 			}
 			
 		});
+		if(!required){
+			widget.addKeyDownHandler(new KeyDownHandler(){
+				@Override
+				public void onKeyDown(KeyDownEvent event) {
+					if((event.getNativeKeyCode()==KeyCodes.KEY_ENTER)||(event.getNativeKeyCode()==KeyCodes.KEY_TAB)){
+						moveNext();
+					}
+				}
+			});
+		}
 		try {
 			parent.addField(this);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//logger.log("error:",e);
+			
 		}
+	}
+	public void moveNext(){
+		@SuppressWarnings("rawtypes")
+		FormField nextField = parent.getNextField(this);
+		//Window.alert("next field position="+nextField.getPosition());
+		nextField.setEnabled(true);
+		nextField.setFocus(true);
 	}
 
 	/**
@@ -172,7 +159,10 @@ public abstract class AbstractFormField<T> implements HasEnabled {
 	}
 	
 
-
+    public void setFocus(boolean focus){
+    	widget.setFocus(focus);
+    }
+  
 	
 	/**
 	 * @return the position*/
@@ -187,7 +177,7 @@ public abstract class AbstractFormField<T> implements HasEnabled {
 	public void setPosition(int position) {
 		this.position = position;
 	}
-	public Object getValue(){
+	public T getValue(){
 		return widget.getValue();
 	}
 
@@ -211,11 +201,15 @@ public abstract class AbstractFormField<T> implements HasEnabled {
 	/**
 	 * @param widget the widget to set*/
 	
-	public void setWidget(AbstractValueField<T>widget) {
+	protected void setWidget(AbstractValueField<T>widget) {
 		this.widget = widget;
 	}
-
-
+     protected String getLabelText(){
+    	 return label.getText();
+     }
+     protected String getLabelInfoText(){
+    	 return infoLabel.getText();
+     }
 	
 	/**
 	 * FormField carries out browser-side validation
@@ -240,12 +234,43 @@ public abstract class AbstractFormField<T> implements HasEnabled {
 		return enabled;
 	}
 
-
+/**
+ * 
+ */
+	public void setOK(boolean OK){
+		infoLabel.setOK(OK);
+	}
 	/**
 	 * @param enabled the enabled to set*/
 	
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 		widget.setEnabled(enabled);
+	}
+	/**
+	 * unless overridden in a subclass, this method will always return 0
+	 */
+	@Override
+	public int getTabIndex() {return 0;}
+	/**
+	 * unless overriden in a subclass, this method does nothing
+	 */
+	@Override
+	public void setAccessKey(char key) {}
+	/**
+	 * unless overridden in a subclass, this method does nothing
+	 */
+	@Override
+	public void setTabIndex(int index) {}
+	@Override
+	public abstract HandlerRegistration addValueChangeHandler(ValueChangeHandler<T> handler) ;		 
+	public void setValue(T value){
+		
+	}
+
+	@Override
+	public void setValue(T value, boolean fireEvents) {
+		// TODO Auto-generated method stub
+		
 	}
 }

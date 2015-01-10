@@ -1,18 +1,13 @@
 package uk.co.platosys.pws.inputfields;
 
 import uk.co.platosys.pws.values.GWTMoney;
-import uk.co.platosys.pws.values.IsFieldValue;
 
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.FocusHandler;
+
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.DoubleBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.ValueBox;
-import com.google.gwt.user.client.ui.ValueBoxBase;
 
 public class MoneyBox extends AbstractValueField<GWTMoney> {
 	private String currency=GWTMoney.NUL; 
@@ -70,7 +65,7 @@ public String getCurrency() {
 
 
 @Override
-public IsFieldValue<GWTMoney> getValue() {
+public GWTMoney getValue() {
 	// TODO Auto-generated method stub
 	return getMoney();
 }
@@ -100,6 +95,14 @@ public HandlerRegistration addValueChangeHandler(
 		ValueChangeHandler handler) {
 	return textBox.addValueChangeHandler((ValueChangeHandler<Double>) handler);
 }
+
+@Override
+public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+	// TODO Auto-generated method stub
+	return textBox.addKeyDownHandler(handler);
+}
+
+
 
 
 }

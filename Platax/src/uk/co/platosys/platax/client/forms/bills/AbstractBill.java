@@ -94,13 +94,13 @@ public AbstractBill(Platax parent, String header) {
 				cpartyPanel.add(cpartyNamePanel);
 				cpartyNamePanel.setWidget(new Label("HalloHalloHallo"));
 
-		form.add(headPanel);
-		form.add(cpartyPanel);
-		form.add(lineEntryPanel);
+		panel.add(headPanel);
+		panel.add(cpartyPanel);
+		panel.add(lineEntryPanel);
 		tablePanel.add(table);
 		tablePanel.setAlwaysShowScrollBars(true);
-		form.add(tablePanel);
-		form.add(submitButtonPanel);
+		panel.add(tablePanel);
+		panel.add(submitButtonPanel);
 		submitButtonPanel.add(billNet);
 		submitButtonPanel.add(billTax);
 		submitButtonPanel.add(billGross);

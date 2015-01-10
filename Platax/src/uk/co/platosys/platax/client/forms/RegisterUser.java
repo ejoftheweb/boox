@@ -8,10 +8,10 @@ import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.services.UserService;
 import uk.co.platosys.platax.client.services.UserServiceAsync;
-import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
-import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.Constants;
 import uk.co.platosys.platax.shared.FieldVerifier;
+import uk.co.platosys.pws.labels.FieldInfoLabel;
+import uk.co.platosys.pws.labels.FieldLabel;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -91,7 +91,7 @@ public class RegisterUser extends AbstractForm {
 					if(Window.confirm(StringText.USER_EXISTS)){
 						//reset password page;
 					}else{
-						form.add(table);
+						formPanel.add(table);
 					}
 				}else{
 					setTitle(result);
@@ -140,7 +140,7 @@ public class RegisterUser extends AbstractForm {
 		table.setWidget(7,0, submitLabel);
 		table.setWidget(7,1, submitButton);
 		table.setWidget(7,2, submitInfoLabel);
-		form.add(table);
+		formPanel.add(table);
 		//vpanel.add(form);
 		//this.add(vpanel);
 		//Add handlers
@@ -262,7 +262,7 @@ public class RegisterUser extends AbstractForm {
 				userService.registerUser(email, username, name, password, confirm, true, investor, callback);
 				setTitle(StringText.THANKYOU);
 				setSubTitle(StringText.WAIT_FOR_SIGNUP);
-				form.remove(table);
+				formPanel.remove(table);
 			}
 		});
 		

@@ -1,6 +1,6 @@
 package uk.co.platosys.platax.client.forms.popups;
 
-import uk.co.platosys.platax.client.widgets.labels.PopupHeaderLabel;
+import uk.co.platosys.pws.labels.PopupHeaderLabel;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.platosys.platax.shared.boox.GWTVat;
+import uk.co.platosys.pws.values.BasicValuePair;
+import uk.co.platosys.pws.values.ValuePair;
 
 public class TaxBandChooser extends RadioButtonGroup {
 	public static final String ZERO_RATE_LABEL="0%";
@@ -19,14 +21,14 @@ public class TaxBandChooser extends RadioButtonGroup {
 	public static final String UNTAXED_RATE="NOVAT";
 	
 	
-	public static final FieldValue ZERO_VALUE= new FieldValue(ZERO_RATE_LABEL,ZERO_RATE);
-	public static final FieldValue STANDARD_VALUE = new FieldValue(STANDARD_RATE_LABEL, STANDARD_RATE);
-	public static final FieldValue LOW_VALUE=new FieldValue(LOW_RATE_LABEL, LOW_RATE);
-	public static final FieldValue HIGHER_VALUE=new FieldValue(HIGHER_RATE_LABEL, HIGHER_RATE);
-	public static final FieldValue UNTAXED_VALUE=new FieldValue(UNTAXED_LABEL, UNTAXED_RATE);
+	public static final ValuePair ZERO_VALUE= new BasicValuePair(ZERO_RATE_LABEL,ZERO_RATE);
+	public static final ValuePair STANDARD_VALUE = new BasicValuePair(STANDARD_RATE_LABEL, STANDARD_RATE);
+	public static final ValuePair LOW_VALUE=new BasicValuePair(LOW_RATE_LABEL, LOW_RATE);
+	public static final ValuePair HIGHER_VALUE=new BasicValuePair(HIGHER_RATE_LABEL, HIGHER_RATE);
+	public static final ValuePair UNTAXED_VALUE=new BasicValuePair(UNTAXED_LABEL, UNTAXED_RATE);
 	
-	static FieldValue [] rates = {ZERO_VALUE, LOW_VALUE, STANDARD_VALUE, UNTAXED_VALUE};
-    static List<FieldValue> values = setValues();
+	static ValuePair [] rates = {ZERO_VALUE, LOW_VALUE, STANDARD_VALUE, UNTAXED_VALUE};
+    static List<ValuePair> values = setValues();
 	static final String ITEMS_STYLE="tax-chooser";
 	public TaxBandChooser(String radioButtonGroupId, 
 			  String itemsStyle, boolean allowHTML) {
@@ -37,8 +39,8 @@ public class TaxBandChooser extends RadioButtonGroup {
 		super(chooserId, values, "STANDARD", ITEMS_STYLE, true);
 		// TODO Auto-generated constructor stub
 	}
-	private static List<FieldValue> setValues(){
-		List<FieldValue> fvalues= new ArrayList<FieldValue>();
+	private static List<ValuePair> setValues(){
+		List<ValuePair> fvalues= new ArrayList<ValuePair>();
 			for (int i=0; i<rates.length; i++){
 				fvalues.add(rates[i]);
 			}

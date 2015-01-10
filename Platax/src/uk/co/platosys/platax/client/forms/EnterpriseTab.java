@@ -70,7 +70,7 @@ public class EnterpriseTab extends AbstractForm {
 			
 			
 		    EnterpriseMenu eMenu = new EnterpriseMenu(enterprise, platax);
-		    form.add(eMenu);
+		    panel.add(eMenu);
 			//handlers:
 			
 			//The key ratios table
@@ -90,7 +90,7 @@ public class EnterpriseTab extends AbstractForm {
 					rowno++;
 				}
 			}			
-			form.add(table);
+			formPanel.add(table);
 		
 		
 			

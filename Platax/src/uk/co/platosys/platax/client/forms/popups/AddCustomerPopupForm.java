@@ -19,11 +19,11 @@ import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.forms.bills.AbstractBill;
 import uk.co.platosys.platax.client.services.CustomerService;
 import uk.co.platosys.platax.client.services.CustomerServiceAsync;
-import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
-import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
+import uk.co.platosys.pws.labels.FieldInfoLabel;
+import uk.co.platosys.pws.labels.FieldLabel;
 
 public class AddCustomerPopupForm extends AbstractPopupForm  {
 //Logger logger = Logger.getLogger("platax");

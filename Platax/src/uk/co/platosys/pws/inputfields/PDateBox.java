@@ -3,11 +3,9 @@ package uk.co.platosys.pws.inputfields;
 import java.util.Date;
 
 import uk.co.platosys.platax.client.constants.DateFormats;
-import uk.co.platosys.pws.fieldsets.AbstractFormField;
-import uk.co.platosys.pws.values.GWTDate;
-import uk.co.platosys.pws.values.IsFieldValue;
+import uk.co.platosys.pws.widgets.YearDatePicker;
 
-import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -31,6 +29,8 @@ import com.google.gwt.user.datepicker.client.DatePicker;
  * This class formats the date according to DateFormats.MED_DATE_FORMAT which is Wed 26 Nov 2014 in en-GB locale.
  * I can do the i18n just in DateFormats when I'm ready. 
  * 
+ * Also we have to use a custom DatePicker because the standard one won't let you scroll years. Much as I love Google....
+ * 
  * @author edward
  *
  */
@@ -40,7 +40,7 @@ public class PDateBox extends AbstractValueField<Date> {
 	 * creates a new DateBox with no date
 	 */
    public PDateBox(){
-	   dateBox= new DateBox(new DatePicker(), null, new DateBox.DefaultFormat(DateFormats.MED_DATE_FORMAT));
+	   dateBox= new DateBox(new YearDatePicker(), null, new DateBox.DefaultFormat(DateFormats.MED_DATE_FORMAT));
 		   //setFormat(new DateBox.DefaultFormat(DateFormats.MED_DATE_FORMAT));
 	   this.add(dateBox);
    }
@@ -63,8 +63,8 @@ public void setEnabled(boolean enabled) {
 	
 }
 @Override
-public IsFieldValue<Date> getValue() {
-	return new GWTDate(dateBox.getValue());
+public Date getValue() {
+	return dateBox.getValue();
 }
 
 @Override
@@ -77,7 +77,10 @@ public void setFocus(boolean focused) {
 @Override
 public HandlerRegistration addValueChangeHandler(
 		ValueChangeHandler<Date> handler) {
-	// TODO Auto-generated method stub
+	return dateBox.addValueChangeHandler(handler);
+}
+@Override
+public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
 	return null;
 }
 

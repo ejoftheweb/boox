@@ -125,9 +125,9 @@ public class UserTab extends AbstractForm {
 		);
 		
 		
-		form.add(loggedinTable);
+		formPanel.add(loggedinTable);
 		
-		this.add(form);
+		this.add(formPanel);
 		
 		
 	

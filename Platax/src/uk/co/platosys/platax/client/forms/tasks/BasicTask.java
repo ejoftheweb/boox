@@ -9,7 +9,7 @@ public abstract class BasicTask extends AbstractForm {
 
 	public BasicTask(Platax parent, String header) {
 		super(parent, header);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 }

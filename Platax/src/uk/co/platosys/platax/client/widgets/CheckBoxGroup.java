@@ -10,6 +10,9 @@ import java.util.Set;
 
 
 
+
+import uk.co.platosys.pws.values.ValuePair;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -82,7 +85,7 @@ public class CheckBoxGroup extends Composite implements HasClickHandlers, ClickH
      * @param allowHTML allow HTML in the radio buttons labels
      *            
      */
-    public CheckBoxGroup(final String radioButtonGroupId, final List<FieldValue> values, final String initialValue, final String itemsStyle, final boolean allowHTML) {
+    public CheckBoxGroup(final String radioButtonGroupId, final List<ValuePair> values, final String initialValue, final String itemsStyle, final boolean allowHTML) {
         this(radioButtonGroupId, values, initialValue, itemsStyle, allowHTML, false);
     }
     
@@ -97,13 +100,13 @@ public class CheckBoxGroup extends Composite implements HasClickHandlers, ClickH
      * @param isElementOfMultipleWidget indicates if the widget instance is a child of a multiple element
      *            
      */
-    public CheckBoxGroup (final String radioButtonGroupId, final List<FieldValue> values, final String initialValue, final String itemsStyle, final boolean allowHTML, final boolean isElementOfMultipleWidget) {
+    public CheckBoxGroup (final String radioButtonGroupId, final List<ValuePair> values, final String initialValue, final String itemsStyle, final boolean allowHTML, final boolean isElementOfMultipleWidget) {
         this.itemsStyle = itemsStyle;
         this.allowHTML = allowHTML;
         this.isElementOfMultipleWidget = isElementOfMultipleWidget;
         flowPanel = new FlowPanel();
         radioButtonGroupName = getRadioButtonGroupName(radioButtonGroupId);
-         for (final FieldValue value : values) {
+         for (final ValuePair value : values) {
             final RadioButton radioButton = new RadioButton(radioButtonGroupName, value.getLabel(), allowHTML);
             radioButton.addClickHandler(this);
             radioButton.addValueChangeHandler(this);
@@ -186,10 +189,10 @@ public class CheckBoxGroup extends Composite implements HasClickHandlers, ClickH
      * Set the wigdet available values
      * @param availableValues
      */
-    public void setAvailableValues(final List<FieldValue> values, final boolean fireEvents) {
+    public void setAvailableValues(final List<ValuePair> values, final boolean fireEvents) {
         radioButtons.clear();
         flowPanel.clear();
-        for (final FieldValue value : values) {
+        for (final ValuePair value : values) {
             final RadioButton radioButton = new RadioButton(radioButtonGroupName, value.getLabel(), allowHTML);
             radioButton.addClickHandler(this);
             radioButton.addValueChangeHandler(this);

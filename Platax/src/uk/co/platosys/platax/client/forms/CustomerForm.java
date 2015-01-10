@@ -1,28 +1,23 @@
 package uk.co.platosys.platax.client.forms;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
 
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.constants.LabelText;
+import uk.co.platosys.platax.client.constants.FieldText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.services.CustomerService;
 import uk.co.platosys.platax.client.services.CustomerServiceAsync;
-import uk.co.platosys.platax.client.services.InvoiceService;
-import uk.co.platosys.platax.client.services.InvoiceServiceAsync;
-import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
-import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
+import uk.co.platosys.pws.fieldsets.SubmitField;
+import uk.co.platosys.pws.fieldsets.TextField;
+import uk.co.platosys.pws.fieldsets.TickBoxField;
 
 public class CustomerForm extends AbstractForm  {
 
@@ -32,37 +27,13 @@ public class CustomerForm extends AbstractForm  {
 		
 		setTitle(StringText.NEW_CUSTOMER);
 		setSubTitle(StringText.NEW_CUSTOMER_INFO);
+		final TextField customerName = new TextField(FieldText.NAME, 1000, this, true);
+		final TextField customerLegalName= new TextField(FieldText.LEGALNAME, 2000, this, true);
+		final TickBoxField isTrade=new TickBoxField(FieldText.IS_TRADE_CUSTOMER, 3000, this, true);
+		SubmitField sub=new SubmitField(12000, this);
 		
-		final TextBox customerNameBox = new TextBox();
-		FieldLabel customerNameLabel = new FieldLabel(LabelText.CUSTOMER_NAME);
-		FieldInfoLabel customerNameInfoLabel = new FieldInfoLabel(LabelText.CUSTOMER_NAME_INFO);
 		
-		FieldLabel customerLegalnameLabel = new FieldLabel(LabelText.CUSTOMER_LEGALNAME);
-		FieldInfoLabel customerLegalnameInfoLabel = new FieldInfoLabel(LabelText.CUSTOMER_LEGALNAME_INFO);
-		final TextBox customerLegalnameBox = new TextBox();
 		
-		FieldLabel isTradeLabel = new FieldLabel(LabelText.IS_TRADE);
-		FieldInfoLabel isTradeInfoLabel=new FieldInfoLabel(LabelText.IS_TRADE_INFO);
-		final CheckBox isTradeBox = new CheckBox();
-		
-		/*FieldLabel termsLabel = new FieldLabel(LabelText.NORMAL_TERMS);
-		FieldInfoLabel termsInfoLabel= new FieldInfoLabel(LabelText.NORMAL_TERMS_INFO);
-		final Chooser */
-		table.setWidget(0,0, customerNameLabel);
-		table.setWidget(0,1, customerNameBox);
-		table.setWidget(0,2, customerNameInfoLabel);
-		
-		table.setWidget(1,0, customerLegalnameLabel);
-		table.setWidget(1,1, customerLegalnameBox);
-		table.setWidget(1,2, customerLegalnameInfoLabel);
-		
-		table.setWidget(2,0, isTradeLabel);
-		table.setWidget(2,1, isTradeBox);
-		table.setWidget(2,2, isTradeInfoLabel);
-		
-
-		Button button = new Button("submit");
-		table.setWidget(3,2, button);
 		final AsyncCallback<GWTCustomer> checkCallback=new AsyncCallback<GWTCustomer>(){
 			@Override
 			public void onFailure(Throwable cause) {
@@ -78,7 +49,7 @@ public class CustomerForm extends AbstractForm  {
 		   @Override
 			public void onSuccess(GWTCustomer result) {
 				if(result!=null){
-					customerLegalnameBox.setValue(result.getLegalName());
+					//customerLegalnameBox.setValue(result.getLegalName());
 				}
 			}
 	  };
@@ -96,26 +67,28 @@ public class CustomerForm extends AbstractForm  {
 				}
 			}
 	  };
-		customerNameBox.addChangeHandler(new ChangeHandler(){
+		customerName.addValueChangeHandler(new ValueChangeHandler<String>(){
 			@Override
-			public void onChange(ChangeEvent event) {
-				String customerName = customerNameBox.getValue();
-				customerService.checkName(customerName, checkCallback);
-				setTabHeaderText(customerName);
-				setTitle(customerName);
+			public void onValueChange(ValueChangeEvent<String> event) {
+				String customer = customerName.getValue();
+				customerService.checkName(customer, checkCallback);
+				setTabHeaderText(customer);
+				setTitle(customer);
 			}
+		
 		});
 		
 		
 	  
-		button.addClickHandler(new ClickHandler(){
+		sub.addClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {
-				String customerName = customerNameBox.getValue();
-				boolean isTrade = isTradeBox.getValue();
-				customerService.addCustomer(enterprise.getSysname(), customerName, isTrade, finalCallback);
+				String customer = customerName.getValue();
+				boolean trade = isTrade.getValue();
+				customerService.addCustomer(enterprise.getSysname(), customer, trade, finalCallback);
 			}
 		});
+		render();
 	}
 
 	@Override

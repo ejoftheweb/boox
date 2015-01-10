@@ -22,8 +22,6 @@ import uk.co.platosys.platax.client.widgets.CheckList;
 import uk.co.platosys.platax.client.widgets.CheckPanel;
 import uk.co.platosys.platax.client.widgets.HMVListBox;
 import uk.co.platosys.platax.client.widgets.buttons.CancelButton;
-import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
-import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTModule;
 import uk.co.platosys.platax.shared.boox.GWTRatio;
@@ -31,6 +29,8 @@ import uk.co.platosys.platax.shared.boox.GWTRole;
 import uk.co.platosys.platax.shared.boox.GWTSegment;
 import uk.co.platosys.platax.shared.boox.GWTSelectable;
 import uk.co.platosys.pws.inputfields.PDateBox;
+import uk.co.platosys.pws.labels.FieldInfoLabel;
+import uk.co.platosys.pws.labels.FieldLabel;
 
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.cell.client.DatePickerCell;
@@ -370,7 +370,7 @@ public class AddEnterpriseForm extends AbstractForm {
 					enterpriseService.registerEnterprise(name, legalname, orgtype, role, isStartup, new Date(), callback1);
 					setTitle(StringText.THANKYOU);
 					setSubTitle(StringText.WAIT_FOR_SERVER);
-					form.remove(table);
+					formPanel.remove(table);
 				}
 			});
 			
@@ -436,7 +436,7 @@ public class AddEnterpriseForm extends AbstractForm {
 						}
 					}
 				});
-				form.add(table);
+				formPanel.add(table);
 			}
 
 			@Override

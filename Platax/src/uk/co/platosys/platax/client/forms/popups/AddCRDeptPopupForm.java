@@ -26,14 +26,14 @@ import uk.co.platosys.platax.client.services.CustomerServiceAsync;
 import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.platax.client.widgets.TaxBandChooser;
-import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
-import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.FieldVerifier;
 import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.boox.GWTCash;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTItem;
+import uk.co.platosys.pws.labels.FieldInfoLabel;
+import uk.co.platosys.pws.labels.FieldLabel;
 
 public class AddCRDeptPopupForm extends AbstractPopupForm  {
 Logger logger = Logger.getLogger("platax");

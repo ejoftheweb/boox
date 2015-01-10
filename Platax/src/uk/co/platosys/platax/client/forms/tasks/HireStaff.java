@@ -2,32 +2,25 @@ package uk.co.platosys.platax.client.forms.tasks;
 
 
 
-import java.util.Date;
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.FieldText;
 import uk.co.platosys.platax.client.constants.LabelText;
+import uk.co.platosys.platax.client.constants.RadioText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
-import uk.co.platosys.platax.client.utils.Nations;
-import uk.co.platosys.platax.client.widgets.PListBox;
 import uk.co.platosys.platax.client.widgets.PTab;
-import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
-import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
-import uk.co.platosys.platax.shared.FieldVerifier;
-import uk.co.platosys.pws.fieldsets.AbstractFormField;
+import uk.co.platosys.pws.constants.Nations;
+import uk.co.platosys.pws.fieldsets.AddressField;
+import uk.co.platosys.pws.fieldsets.DateField;
+import uk.co.platosys.pws.fieldsets.ListField;
+import uk.co.platosys.pws.fieldsets.MoneyField;
+import uk.co.platosys.pws.fieldsets.RadioField;
+import uk.co.platosys.pws.fieldsets.SubmitField;
 import uk.co.platosys.pws.fieldsets.TextField;
 
 public class HireStaff extends BasicTask {
@@ -41,17 +34,23 @@ public class HireStaff extends BasicTask {
     
     public HireStaff(Platax platax) {
 		super(platax, LabelText.HIRE_STAFF);
+		
+		//note no need to add these fields to the form separately, the field superclass constructor adds them to the parent.
+		
 		//also need: pay rate, pay frequency, bank details
-		TextField givenName= new TextField (FieldText.GIVEN_NAME, 1000, this);
-		TextField familyName= new TextField (FieldText.FAMILY_NAME, 2000, this);
-		TextField email= new TextField (FieldText.EMAIL, 3000, this);
-		TextField phoneNo= new TextField (FieldText.PHONE, 4000, this);
-		//AbstractFormField address= new AbstractFormField (StringText.PHONE_NO, StringText.PHONE_NO_INFO, new TextBox(), 5000, this);
-		//AbstractFormField natInsNo= new AbstractFormField (StringText.NAT_INS, StringText.NAT_INS_INFO, new TextBox(), 6000, this);
-		//AbstractFormField dob= new AbstractFormField (StringText.DOB, StringText.DOB_INFO, new TextBox(), 7000, this);
-		//AbstractFormField nationality= new AbstractFormField (StringText.NATIONALITY, StringText.NATIONALITY_INFO, new TextBox(), 8000, this);
+		TextField givenName= new TextField (FieldText.GIVEN_NAME, 1000, this, true);
+		ListField nationality= new ListField (FieldText.NATIONALITY,  1500, this, true);
+		nationality.addItems(Nations.getNationalitiesByName(), true);
+		TextField familyName= new TextField (FieldText.FAMILY_NAME, 2000, this, true);
+		TextField email= new TextField (FieldText.EMAIL, 3000, this, true);
+		TextField phoneNo= new TextField (FieldText.PHONE, 4000, this, true);
+		AddressField address= new AddressField (FieldText.ADDRESS,  5000, this, true);
+		TextField natInsNo= new TextField (FieldText.NAT_INS,  6000, this, true);
+		DateField dob= new DateField (FieldText.DOB,  7000, this, true);
+		RadioField payFreq = new RadioField("pay", FieldText.PAY_FREQ, RadioText.PAY_PER_LIST, RadioText.PAY_PER_DEFAULT, 8000, this, true);
+		MoneyField rate = new MoneyField(FieldText.PAY_RATE, 9000, this, true);
 		//AbstractFormField canWork= new AbstractFormField (StringText.CAN_WORK, StringText.CAN_WORK_INFO, new TextBox(), 9000, this);
-	 Button submitButton = new Button(ButtonText.CONFIRM);
+		SubmitField sub= new SubmitField(12000, this);
 	    
 		
 	 this.platax=platax;

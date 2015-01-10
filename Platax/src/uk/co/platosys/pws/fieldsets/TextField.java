@@ -1,24 +1,48 @@
 package uk.co.platosys.pws.fieldsets;
 
-import uk.co.platosys.platax.client.forms.AbstractForm;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
+
+import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.inputfields.PTextBox;
 
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.ValueBoxBase;
-
-public class TextField extends AbstractFormField<String> {
-
-	public TextField(String[] labelText, int position, AbstractForm parent)throws IllegalArgumentException {
-		super(labelText, new PTextBox(), position, parent);
-		// TODO Auto-generated constructor stub
+public class TextField extends AbstractFormField<String> implements HasValueChangeHandlers<String>{
+   PTextBox textBox=new PTextBox();
+	public TextField(String[] labelText, int position, Form parent, boolean required)throws IllegalArgumentException {
+		super(labelText, position, parent, required);
+		setWidget(textBox);
+		start();
+	}
+    
+	@Override
+	public boolean validate() {
+		if(validationRegex==null){
+			return true;
+		}else{
+			return (getValue().matches(validationRegex));
+		}
+	}
+	@Override
+	public void fireEvent(GwtEvent<?> event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public boolean validate() {
-		// TODO Auto-generated method stub
-		return false;
+	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+		return textBox.addValueChangeHandler(handler);
+	}
+	public void setValue(String value){
+		textBox.setValue(value);
 	}
 
-	
+	@Override
+	public void setValue(String value, boolean fireEvents) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

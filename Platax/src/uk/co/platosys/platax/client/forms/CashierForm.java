@@ -11,13 +11,13 @@ import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.widgets.PTab;
 import uk.co.platosys.platax.client.widgets.TaxBandChooser;
-import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
-import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTItem;
 import uk.co.platosys.platax.shared.exceptions.LoginException;
 import uk.co.platosys.pws.inputfields.MoneyBox;
+import uk.co.platosys.pws.labels.FieldInfoLabel;
+import uk.co.platosys.pws.labels.FieldLabel;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.PasswordTextBox;

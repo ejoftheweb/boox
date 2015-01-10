@@ -1,10 +1,10 @@
 package uk.co.platosys.pws.inputfields;
 
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.IntegerBox;
 
-import uk.co.platosys.pws.values.IsFieldValue;
 
 
 public class PIntegerBox extends AbstractValueField<Integer> {
@@ -21,7 +21,7 @@ public PIntegerBox(){
 	}
 
 	@Override
-	public IsFieldValue<Integer> getValue() {
+	public Integer getValue() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -42,6 +42,11 @@ public PIntegerBox(){
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+		return intBox.addKeyDownHandler(handler);
 	}
 
 }

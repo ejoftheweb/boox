@@ -24,13 +24,13 @@ import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.platax.client.widgets.PListBox;
 import uk.co.platosys.platax.client.widgets.QuantityBox;
 import uk.co.platosys.platax.client.widgets.buttons.SubmitButton;
-import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
-import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.boox.GWTCash;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTItem;
 import uk.co.platosys.platax.shared.boox.GWTSelectable;
 import uk.co.platosys.pws.inputfields.MoneyBox;
+import uk.co.platosys.pws.labels.FieldInfoLabel;
+import uk.co.platosys.pws.labels.FieldLabel;
 import uk.co.platosys.pws.values.GWTMoney;
 
 /**

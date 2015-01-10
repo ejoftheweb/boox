@@ -1,41 +1,46 @@
 package uk.co.platosys.pws.inputfields;
 
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.TextBox;
 
-import uk.co.platosys.pws.values.IsFieldValue;
 
 public class PTextBox extends AbstractValueField<String> {
-
+    private TextBox textBox = new TextBox();
+    
+    public PTextBox(){
+    	add(textBox);
+    }
 	@Override
-	public HandlerRegistration addValueChangeHandler(
-			ValueChangeHandler<String> handler) {
-		// TODO Auto-generated method stub
-		return null;
+	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+		return textBox.addValueChangeHandler(handler);
 	}
 
 	@Override
-	public IsFieldValue<String> getValue() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getValue() {
+		return textBox.getValue();
 	}
 
 	@Override
 	public void setFocus(boolean focused) {
-		// TODO Auto-generated method stub
-
+		textBox.setFocus(focused);
 	}
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		// TODO Auto-generated method stub
-
+		textBox.setEnabled(enabled);
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return textBox.isEnabled();
 	}
-
+	@Override
+	public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+		return textBox.addKeyDownHandler(handler);
+	}
+    public void setValue(String value){
+    	textBox.setValue(value);
+    }
 }

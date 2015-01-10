@@ -1,13 +1,9 @@
 package uk.co.platosys.platax.client.forms;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
-
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -16,7 +12,6 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import uk.co.platosys.platax.client.Platax;
@@ -25,12 +20,13 @@ import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.widgets.CheckPanel;
 import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.client.widgets.buttons.CancelButton;
-import uk.co.platosys.platax.client.widgets.labels.FieldInfoLabel;
-import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.FormSubHeaderLabel;
 import uk.co.platosys.platax.shared.boox.GWTSelectable;
-import uk.co.platosys.pws.fieldsets.AbstractFormField;
+import uk.co.platosys.pws.Form;
+import uk.co.platosys.pws.fieldsets.FormField;
+import uk.co.platosys.pws.labels.FieldInfoLabel;
+import uk.co.platosys.pws.labels.FieldLabel;
 
 /**
  *  AbstractForm extends PTab; in Platax forms are always PTabs (unless they're popups).
@@ -40,26 +36,29 @@ import uk.co.platosys.pws.fieldsets.AbstractFormField;
  * @author edward
  *
  */
-public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.PTab {
+public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.PTab implements Form {
 	protected FlexTable table=new FlexTable();
-	protected FormPanel formPanel=new FormPanel();
-	protected FlowPanel form=new FlowPanel();
+	private FormPanel forrmPanel=new FormPanel();
+	protected FlowPanel formPanel=new FlowPanel();
+	protected FlowPanel panel=new FlowPanel();
 	private InlineLabel counter;
 	public static PlataxTabPanel parent;
 	protected int totalPages;
 	protected int pageNumber;
 	private final FormHeaderLabel topLabel = new FormHeaderLabel();//"About your enterprise");
     private final FormSubHeaderLabel subHeader = new FormSubHeaderLabel();//"Please fill in as much as you can"
-    private SortedMap<Integer, AbstractFormField> fields = new TreeMap<Integer, AbstractFormField>(); 
+    @SuppressWarnings("rawtypes")
+	private SortedMap<Integer, FormField> fields = new TreeMap<Integer, FormField>(); 
     public AbstractForm(Platax platax) {
 		super(platax);
-		form.setWidth("100%");
-		form.add(topLabel);
-		form.add(subHeader);
-		form.add(table);
+		panel.setWidth("100%");
+		panel.add(topLabel);
+		panel.add(subHeader);
+		panel.add(forrmPanel);
+		forrmPanel.add(formPanel);
+		formPanel.add(table);
 		table.setWidth("100%");
-		formPanel.add(form);
-		this.add(formPanel);
+		this.add(panel);
 		setTabHeaderText("BlankForm");
 	}
 	/**
@@ -71,40 +70,44 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 		super(platax);
 		setCounter(pages);
 		
-		form.setWidth("100%");
-		form.add(topLabel);
-		form.add(subHeader);
-		form.add(table);
+		panel.setWidth("100%");
+		panel.add(topLabel);
+		panel.add(subHeader);
+		panel.add(forrmPanel);
+		forrmPanel.add(formPanel);
+		
+		formPanel.add(table);
 		table.setWidth("100%");
 		
-		formPanel.add(form);
-		this.add(formPanel);
+		this.add(panel);
 		setTabHeaderText("BlankForm");
 	}
     public AbstractForm(Platax platax, String title){
     	super( platax);
-		form.setWidth("100%");
-		form.add(topLabel);
-		form.add(subHeader);
-		form.add(table);
+		panel.setWidth("100%");
+		panel.add(topLabel);
+		panel.add(subHeader);
+		panel.add(forrmPanel);
+		forrmPanel.add(formPanel);
+		
+		formPanel.add(table);
 		table.setWidth("100%");
 		
-		formPanel.add(form);
-		this.add(formPanel);
+		this.add(panel);
 		setTabHeaderText(title);
     }
     public AbstractForm(Platax platax, String title, int pages){
     	super(platax);
     	setCounter(pages);
 		
-		form.setWidth("100%");
-		form.add(topLabel);
-		form.add(subHeader);
-		form.add(table);
+		panel.setWidth("100%");
+		panel.add(topLabel);
+		panel.add(subHeader);
+		panel.add(forrmPanel);
+		forrmPanel.add(formPanel);
+		formPanel.add(table);
 		table.setWidth("100%");
-		
-		formPanel.add(form);
-		this.add(formPanel);
+		this.add(panel);
 		setTabHeaderText(title);
     }
 	public void close(){
@@ -157,11 +160,11 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 	public Iterator<Widget> iterator(){return null;}
 	public boolean remove(Widget widget){return false;}
 	public abstract void refresh();
-	public int addField(AbstractFormField<?> field) throws Exception {
+	public int addField(FormField<?> field) throws Exception {
 		Integer finx = new Integer(field.getPosition());
 		if (fields.containsKey(finx)){
-			Window.alert("form already contains a field at position "+finx.toString());
-			throw new Exception("form already contains a field at position "+finx.toString());
+			Window.alert("panel already contains a field at position "+finx.toString());
+			throw new Exception("panel already contains a field at position "+finx.toString());
 		} 
 		else{
 			fields.put(finx, field);
@@ -169,18 +172,34 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 		}
 	}
 	
-	public AbstractFormField getNextField(AbstractFormField currentField){
-		return null;
+	@SuppressWarnings("rawtypes")
+	public FormField getNextField(FormField currentField){
+		Integer position = currentField.getPosition();
+		//Window.alert("There are "+fields.keySet().size()+" fields to check" );
+        Iterator<Integer> it = fields.keySet().iterator();
+        while(it.hasNext()){
+        	Integer k = it.next();
+        	if(k.equals(position)){
+        		if(it.hasNext()){
+        			//Window.alert("getting next field now");
+        			return fields.get(it.next());
+        		}else{
+        			return currentField;
+        		}
+        	}
+        }
+        return null;//should never get here.
 	}
-	public boolean removeField(AbstractFormField<?> field) throws Exception {
-		//TODO
-		return false;
+	public boolean removeField(FormField<?> field) throws Exception {
+		Integer pos = new Integer(field.getPosition());
+		return(fields.remove(pos)!=null);
 	}
 	public void render(){
+		//Window.alert("there are "+fields.size()+" fields");
+		
 		int i=0;
 		for (Integer key:fields.keySet()){
-		    Window.alert("there are "+fields.size()+" fields");
-			table.setWidget(i,0, fields.get(key).getLabel());
+		    table.setWidget(i,0, fields.get(key).getLabel());
 			table.setWidget(i,1, fields.get(key).getWidget());
 			table.setWidget(i,2, fields.get(key).getInfoLabel());
 			i++;

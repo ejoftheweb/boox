@@ -2,6 +2,8 @@ package uk.co.platosys.platax.shared.boox;
 
 import java.io.Serializable;
 
+import uk.co.platosys.pws.values.GWTAddress;
+
 /**
  * Class to wrap personal information
  * @author edward

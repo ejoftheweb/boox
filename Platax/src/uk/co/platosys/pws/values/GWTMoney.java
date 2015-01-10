@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 import com.google.gwt.i18n.client.NumberFormat;
 
-	public final class GWTMoney  implements Serializable, IsFieldValue<GWTMoney> {
+	public final class GWTMoney  implements Serializable{
 	    /**
 		 * 
 		 */
@@ -159,5 +159,6 @@ import com.google.gwt.i18n.client.NumberFormat;
 	    public GWTMoney times (double multiplier){
 	    	return new GWTMoney(this.getCurrencyTLA(), (this.getAmount()*multiplier));
 	    }
+		
 }
 

@@ -6,9 +6,9 @@ import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.services.LoginService;
 import uk.co.platosys.platax.client.services.LoginServiceAsync;
-import uk.co.platosys.platax.client.widgets.labels.FieldLabel;
 import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.exceptions.LoginException;
+import uk.co.platosys.pws.labels.FieldLabel;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
@@ -66,7 +66,7 @@ public class LoginForm extends AbstractForm {
 					
 				}else{
 					setTitle(StringText.LOGIN_FAILED);
-					form.add(table);
+					formPanel.add(table);
 				}
 			}
 		    public void onFailure(Throwable cause){
@@ -88,7 +88,7 @@ public class LoginForm extends AbstractForm {
 					}
 				try {
 					loginService.login(emailTextBox.getText(), passwordTextBox.getText(), logincallback);
-					form.remove(table);
+					formPanel.remove(table);
 					setTitle(StringText.THANKYOU);
 					setSubTitle(StringText.WAIT_FOR_SERVER);
 					
@@ -122,8 +122,8 @@ public class LoginForm extends AbstractForm {
 		table.setWidget(1, 1, passwordTextBox);
 		table.setWidget(2, 1, chckbxNewCheckBox);
 		table.setWidget(3, 1, loginButton);
-		form.add(table);
-		form.add(registerAnchor);
+		formPanel.add(table);
+		formPanel.add(registerAnchor);
 		
 	    
 	}
