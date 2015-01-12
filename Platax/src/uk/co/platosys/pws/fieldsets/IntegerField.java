@@ -8,10 +8,12 @@ import uk.co.platosys.platax.client.forms.AbstractForm;
 import uk.co.platosys.pws.inputfields.PIntegerBox;
 
 public class IntegerField extends AbstractFormField<Integer> {
-
+PIntegerBox integerBox;
 	protected IntegerField(String[] labelText, int position, AbstractForm parent, boolean required)throws IllegalArgumentException {
-		super(labelText, new PIntegerBox(),  position, parent, required);
-		// TODO Auto-generated constructor stub
+		super(labelText,   position, parent, required);
+		integerBox=new PIntegerBox();
+		setWidget(integerBox);
+		start();
 	}
 
 	@Override
@@ -27,10 +29,8 @@ public class IntegerField extends AbstractFormField<Integer> {
 	}
 
 	@Override
-	public HandlerRegistration addValueChangeHandler(
-			ValueChangeHandler<Integer> handler) {
-		// TODO Auto-generated method stub
-		return null;
+	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Integer> handler) {
+		return integerBox.addValueChangeHandler(handler);
 	}
 
 }

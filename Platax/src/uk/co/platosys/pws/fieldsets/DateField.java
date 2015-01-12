@@ -12,10 +12,12 @@ import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.google.gwt.user.datepicker.client.DateBox;
 
 public class DateField extends AbstractFormField<Date> {
-
+PDateBox dateBox;
 	public DateField(String[] labelText,  int position,	AbstractForm parent, boolean required) throws IllegalArgumentException {
-		super(labelText, new PDateBox(), position, parent, required);
-		
+		super(labelText,  position, parent, required);
+		dateBox=new PDateBox();
+		setWidget(dateBox);
+		start();
 	}
 
 	@Override
@@ -31,10 +33,8 @@ public class DateField extends AbstractFormField<Date> {
 	}
 
 	@Override
-	public HandlerRegistration addValueChangeHandler(
-			ValueChangeHandler<Date> handler) {
-		// TODO Auto-generated method stub
-		return null;
+	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Date> handler) {
+		return dateBox.addValueChangeHandler(handler);
 	}
 
 }

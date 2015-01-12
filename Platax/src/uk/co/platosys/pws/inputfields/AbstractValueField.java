@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -63,7 +64,7 @@ public abstract  class AbstractValueField<T> extends FlowPanel implements  HasVa
 	
 	@Override
 	public void fireEvent(GwtEvent<?> event) {
-		// TODO Auto-generated method stub
+		Window.alert("AVF - fire event called with "+event.getClass().toString());
 		
 	}
 }

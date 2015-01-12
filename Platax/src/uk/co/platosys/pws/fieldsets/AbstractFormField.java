@@ -52,31 +52,6 @@ public abstract class AbstractFormField<T> implements FormField<T>, HasEnabled, 
 	 * start forms using 100 or 1000 steps, then it's easy to put intermediate fields in
 	 * later on without a painful renumbering. Remember how you did line numbers in BASIC? 
 	 * 
-	 * This constructor takes a String array argument for the labels and validation regex. 
-	 * @param labelText
-	 *
-	 * @param widget
-	 * @param index
-	 */
-	@Deprecated
-	public AbstractFormField (String[] labelText, AbstractValueField<T> widget, int position, Form parent, boolean required) throws IllegalArgumentException{
-		if(labelText.length!=4){throw new IllegalArgumentException("label array must be size 4");}
-		label.setText(labelText[0]);
-		infoLabel.setText(labelText[1]);
-		this.errorInfoLabel=(labelText[3]);
-		this.validationRegex=labelText[2];
-		this.widget=widget;
-		this.position=position;
-		this.parent=parent;
-		this.required=required;
-		start();
-	}
-	/**
-	 * These triples - label, Widget, infolabel - go into tables that make up a Form.
-	 * The position parameter sets the ordering. It's good practice to
-	 * start forms using 100 or 1000 steps, then it's easy to put intermediate fields in
-	 * later on without a painful renumbering. Remember how you did line numbers in BASIC? 
-	 * 
 	 * This package-protected constructor takes a String array argument for the labels and validation regex. 
 	 * 
 	 * It doesn't have a widget argument; subclasses must set their own widget (which, actually, needs to 
@@ -107,8 +82,7 @@ public abstract class AbstractFormField<T> implements FormField<T>, HasEnabled, 
 					setOK(true);
 					moveNext();
 				}else{
-					//Window.alert("failed");
-				   setOK(false);
+					setOK(false);
 				};
 			}
 			
@@ -118,6 +92,7 @@ public abstract class AbstractFormField<T> implements FormField<T>, HasEnabled, 
 				@Override
 				public void onKeyDown(KeyDownEvent event) {
 					if((event.getNativeKeyCode()==KeyCodes.KEY_ENTER)||(event.getNativeKeyCode()==KeyCodes.KEY_TAB)){
+						setOK(true);
 						moveNext();
 					}
 				}

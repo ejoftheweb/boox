@@ -35,16 +35,15 @@ public class HireStaff extends BasicTask {
     public HireStaff(Platax platax) {
 		super(platax, LabelText.HIRE_STAFF);
 		
-		//note no need to add these fields to the form separately, the field superclass constructor adds them to the parent.
-		
-		//also need: pay rate, pay frequency, bank details
 		TextField givenName= new TextField (FieldText.GIVEN_NAME, 1000, this, true);
-		ListField nationality= new ListField (FieldText.NATIONALITY,  1500, this, true);
-		nationality.addItems(Nations.getNationalitiesByName(), true);
+		AddressField address= new AddressField (FieldText.ADDRESS,  1500, this, true);
+		
 		TextField familyName= new TextField (FieldText.FAMILY_NAME, 2000, this, true);
 		TextField email= new TextField (FieldText.EMAIL, 3000, this, true);
 		TextField phoneNo= new TextField (FieldText.PHONE, 4000, this, true);
-		AddressField address= new AddressField (FieldText.ADDRESS,  5000, this, true);
+		ListField nationality= new ListField (FieldText.NATIONALITY,  5500, this, true);
+		nationality.addItems(Nations.getNationalitiesByName(), true);
+		
 		TextField natInsNo= new TextField (FieldText.NAT_INS,  6000, this, true);
 		DateField dob= new DateField (FieldText.DOB,  7000, this, true);
 		RadioField payFreq = new RadioField("pay", FieldText.PAY_FREQ, RadioText.PAY_PER_LIST, RadioText.PAY_PER_DEFAULT, 8000, this, true);
