@@ -1,4 +1,4 @@
-/*
+/**
  *  Returns a random string. Note this implementation does 
  *  not do so securely. The getRandomKey method, which returns a 
  *  random long formatted as a hex string, is marginally more 
