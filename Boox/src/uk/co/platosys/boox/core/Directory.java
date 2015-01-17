@@ -118,7 +118,7 @@ public class Directory {
     			   return false;
     		   }else{
     			   ISODate date = row.getISODate(RESERVED_COLNAME);
-    			   if (date.before(ISODate.getDayAgo())){
+    			   if (date.before(ISODate.dayAgo())){
     				   if(reserve){
     	    				namesTable.amend(name, RESERVED_COLNAME, new ISODate());
     	    			}

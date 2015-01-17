@@ -291,7 +291,7 @@ public class Invoice extends Account  {
 	      this.outstanding=getBalance(enterprise, clerk);
 		  if(outstanding.moreThan(Money.zero(currency))){
 			  if(dueDate.before(new ISODate())){setStatus(OVERDUE);}
-			  if(dueDate.before(ISODate.getMonthAgo())){setStatus(DISPUTED);}
+			  if(dueDate.before(ISODate.monthAgo())){setStatus(DISPUTED);}
 		  }
 	}catch (Exception e){
 		// TODO Auto-generated catch block

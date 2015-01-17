@@ -51,13 +51,6 @@ import org.jdom2.Namespace;
 import org.postgresql.util.PSQLException;
 
 
-
-
-
-
-
-
-import uk.co.platosys.boox.compliance.BasicTask;
 import uk.co.platosys.boox.compliance.Role;
 import uk.co.platosys.boox.compliance.Task;
 //import uk.co.platosys.boox.compliance.BasicTask;
@@ -139,7 +132,7 @@ public class Boox {
     
     /**
      *@param databaseName the database holding the accounts
-     
+     TODO: refactor to avoid direct SQL work.
      *
      *This method is called internally if no journal has been set up and it creates the necessary tables on the database.
      */
@@ -542,7 +535,7 @@ public class Boox {
    
    /**
     * This returns a Map of the available Modules, indexed by the module name, reading from the boox.xml config
-    * file which lists them all. 
+    * file which lists them all. It is deprecated in favour of the identical method in the Module class.
     * @return
     */
    @Deprecated
@@ -594,7 +587,13 @@ public class Boox {
 		   return null;
 	   }
    }
-   public static void createTasks(Enterprise enterprise, Clerk clerk, Element tasksElement){
+   /**
+    * This is one of a group of setup/configuration methods.
+    * @param enterprise
+    * @param clerk
+    * @param tasksElement
+    */
+   public static void createTasks(Enterprise enterprise, Clerk clerk, Element tasksElement) throws PermissionsException {
 	   List<Element> taskElements= tasksElement.getChildren(TASK_ELEMENT_NAME, ns);
 	   Map<Ledger, Permission> permissions=new HashMap<Ledger,Permission>();
        for(Element taskElement: taskElements){
@@ -602,12 +601,14 @@ public class Boox {
            String description = "";
            String frequency = "";
            String rolename ="";
+           String formClassName="";
            
            try{
-        	   name = taskElement.getAttributeValue(NAME_ATTRIBUTE_NAME);
-               description=taskElement.getChildText(DESCRIPTION_ELEMENT_NAME, ns);
-        	   frequency = taskElement.getAttributeValue(FREQUENCY_ATTRIBUTE_NAME);
-        	   rolename= taskElement.getAttributeValue(ROLE_ATTRIBUTE_NAME);
+        	   name = taskElement.getAttributeValue(Task.NAME_ATTNAME);
+               description=taskElement.getChildText(Task.TASKDESCRIPTION_ELNAME, ns);
+        	   frequency = taskElement.getAttributeValue(Task.FREQ_ATTNAME);
+        	   rolename= taskElement.getAttributeValue(Task.ROLE_ATTNAME);
+        	   formClassName=taskElement.getAttributeValue(Task.FORM_ATTNAME);
            }catch(Throwable t){
         	   
            }
@@ -633,26 +634,32 @@ public class Boox {
            List<Element> ledgerElements=taskElement.getChildren(Boox.LEDGER_ELEMENT_NAME, ns);
            
            for(Element ledgerElement: ledgerElements){
-        	String permissionName="";
-        	String ledgerName="";
-        	boolean cascades=false;
-        	try{
-        		ledgerName=ledgerElement.getAttributeValue(NAME_ATTRIBUTE_NAME);
-        		permissionName=ledgerElement.getAttributeValue(PERMISSION_ATTRIBUTE_NAME);
-        		cascades=(ledgerElement.getAttributeValue(CASCADES_ATTRIBUTE_NAME).equals("true"));
-        	}catch(Throwable t){
-        		
-        	}
-        	Ledger ledger=Ledger.getLedger(enterprise, ledgerName);
-        	Permission permission;
-        	if (cascades){
-        		permission=CascadingPermission.getPermission(permissionName);
-        	}else{
-        		permission=Permission.getPermission(permissionName);
-        	}
-        	permissions.put(ledger, permission);
+	        	String permissionName="";
+	        	String ledgerName="";
+	        	boolean cascades=false;
+	        	try{
+	        		ledgerName=ledgerElement.getAttributeValue(NAME_ATTRIBUTE_NAME);
+	        		permissionName=ledgerElement.getAttributeValue(PERMISSION_ATTRIBUTE_NAME);
+	        		cascades=(ledgerElement.getAttributeValue(CASCADES_ATTRIBUTE_NAME).equals("true"));
+	        	}catch(Throwable t){
+	        		
+	        	}
+	        	Ledger ledger=Ledger.getLedger(enterprise, ledgerName);
+	        	Permission permission;
+	        	if (cascades){
+	        		permission=CascadingPermission.getPermission(permissionName);
+	        	}else{
+	        		permission=Permission.getPermission(permissionName);
+	        	}
+	        	if (clerk.hasPermission(enterprise, ledger, permission)){
+	        		permissions.put(ledger, permission);
+	        	}else{
+	        		String error = "BX: creating task - permissions error: owning clerk "+clerk.getName()+" does not have "+permission.getName()+" permission on ledger "+ledger.getFullName();
+	        		logger.log(error);
+	        		throw new PermissionsException(error);
+	        	}
            }
-           BasicTask.createTask(enterprise, clerk, name, description, frint, role, permissions);
+           Task.createTask(enterprise, clerk, name, description, frint, role, formClassName, permissions);
        }   
    }
 

@@ -19,6 +19,6 @@ import java.io.Serializable;
  *
  */
 public interface TaskForm extends Serializable {
-	public void setSysname(String sysname);
+	public void setTaskSysname(String taskSysname);
 	public TaskCompleted getResult();
 }
