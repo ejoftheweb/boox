@@ -384,10 +384,10 @@ public class Xuser {
 			throw new XuserException("creating registration email failed", x);
 		}try{
 			logger.log("now sending");
-			xmail.send();
+			//xmail.send();
 			logger.log("Xuser - registration email sent");
 			return true;
-		} catch (EmailException e) {
+		} catch (Exception e) {
 			logger.log("Email exception",e);
 			throw new XuserException("sending registration email failed: check network for smtp connection?");
 		}
@@ -430,7 +430,7 @@ public class Xuser {
 			xmail.prepend("Thank you for registering at "+XuserConstants.INSTALLATION_NAME);
 			
 			xmail.append("You should now be able to log in using "+email+"\n and the password you gave when you registered\n");
-			xmail.send();
+			//xmail.send();
 			
 		} catch (EmailException e) {
 			logger.log("XU confirmation email exception", e);

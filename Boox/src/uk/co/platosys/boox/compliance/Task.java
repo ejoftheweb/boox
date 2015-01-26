@@ -128,6 +128,8 @@ public  class Task {
 	
 	private Task(Enterprise enterprise, Clerk clerk, String sysname) {
 		this.enterprise=enterprise;
+		table=getTasksTable(enterprise);
+		logger.log("getting task with sysname "+sysname);
 		try{
 			Row row =table.getRow(sysname);
 			this.name=row.getString(TASKNAME_COLNAME);
@@ -138,7 +140,7 @@ public  class Task {
 			this.formClassName=row.getString(FORM_COLNAME);
 			this.dueDate=new ISODate(row.getDate(DUE_DATE_COLNAME).getTime());
 		}catch(Exception x){
-			//TODO
+			logger.log("Task-init: error",x);
 		}
 	}
 	/**
@@ -148,7 +150,7 @@ public  class Task {
     	if (taskCompleted.isSuccessful()){
     		Table taskTable = getTasksTable(enterprise);
 	    	try{
-	    		taskTable.amend(taskCompleted.getSysname(), DONE_DATE_COLNAME, taskCompleted.getDate());
+	    		taskTable.amend(taskCompleted.getSysname(), DONE_DATE_COLNAME, new ISODate(taskCompleted.getDate().getTime()));
 	    		taskTable.amend(taskCompleted.getSysname(), DONE_BY_COLNAME, taskCompleted.getClerkSysname());
 	    		//TODO: add the next iteration of this task to the tasks table.
 	    		Date nextDate=new ISODate();
@@ -233,7 +235,22 @@ public  class Task {
      * @param permissions
      * @return*/
 	public static final Task createTask(Enterprise enterprise, Clerk owner, String taskname, String taskdescription, int frequency, Role role, String formClassName, Map<Ledger, Permission> permissions){
-		Date dueDate = ISODate.getEndOfMonth(new ISODate());//Due date defaults to end of current month.
+		Date dueDate=new ISODate();
+		switch(frequency){
+		  case ONCE: dueDate = ISODate.getEndOfMonth(new ISODate());
+		  case Task.DAILY: dueDate= ISODate.dayAhead(); break;
+          case Task.WEEKLY: dueDate=ISODate.weekAhead(); break;
+          case Task.FORTNIGHTLY:dueDate= ISODate.fortnightAhead();break;
+          case Task.FOURWEEKLY:dueDate=ISODate.fourWeeksAhead();break;
+          case Task.MONTHLY:dueDate=ISODate.monthAhead();break;
+          case Task.PERIOD_END:dueDate=ISODate.getEndOfMonth(new ISODate());break;//todo
+          case Task.QUARTERLY:dueDate=ISODate.getEndOfMonth(new ISODate());break;//todo
+          case Task.ANNUAL:dueDate=ISODate.yearAhead();break;
+          case Task.IRREGULAR:break;//todo
+		}
+		
+		
+		
 		return createTask( enterprise,  owner, taskname,  taskdescription,frequency, role,  dueDate,  formClassName,  permissions);
 	}	
 	
@@ -262,8 +279,8 @@ public  class Task {
 		  String[] vals= {sysname, taskname, taskdescription, owner.getName(), role.getName(), formClassName};		  		 
 		  tasksTable.addRow(cols, vals);
 		  tasksTable.amend(sysname, Task.FREQUENCY_COLNAME, frequency);//integer parameter
-		  tasksTable.amend(sysname, Task.DUE_DATE_COLNAME, dueDate);//Due date defaults to end of current month.
-			  //the permissions are stored in a separate table.
+		  tasksTable.amend(sysname, Task.DUE_DATE_COLNAME, new ISODate(dueDate.getTime()));
+		  //the permissions are stored in a separate table.
 		  Table tpTable=getTasksPermissionsTable(enterprise);
 		  String[] ncols={Task.SYSNAME_COLNAME, Task.LEDGER_COLNAME, Task.PERMISSION_COLNAME};
 		  for(Ledger ledger: permissions.keySet()){
@@ -359,5 +376,34 @@ public  class Task {
   			logger.log("problem getting the tasks-permissions table)", ex);
   			return null;
   		}
+  	}
+  	//TODO: Urgent
+  	/*Must introduce a check-out approach to the tasks... once checked out, must be done until checked back in**/
+  	//
+  	
+  	public static List<Task> getTasks(Enterprise enterprise, Clerk clerk){
+  		List<Row> rows = getTasksTable(enterprise).getRows(Task.OWNER_COLNAME, clerk.getName());
+  		logger.log("getting tasks for "+clerk+" for "+enterprise.getName());
+  		List<Task> tasks=new ArrayList<Task>();
+  		try{
+	  		for (Row row:rows){
+	  			tasks.add(new Task(enterprise, clerk, row.getString(Task.SYSNAME_COLNAME)));
+	  		}}catch(Exception ex){
+	  			logger.log("Task problem 1 getting tasks...", ex);
+	  		}
+  		try{
+  			rows=getDelegatesTable(enterprise).getRows(DELEGATE_COLNAME, clerk.getName());
+  		}catch (Exception x){
+  			
+  		}
+  		try{
+  			if(rows!=null){
+	  	  		for (Row row:rows){
+	  	  			tasks.add(new Task(enterprise, clerk, row.getString(Task.SYSNAME_COLNAME)));
+  	  		}}}catch(Exception ex){
+  	  			logger.log("Task problem 2 getting tasks...", ex);
+  	  		}
+  		logger.log("Task returning "+tasks.size()+" tasks");
+  		return tasks;
   	}
 }

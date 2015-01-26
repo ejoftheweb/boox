@@ -57,6 +57,9 @@ public class ISODate extends Date implements Serializable{
         public static final long MONTH_AGO=-(30*ONE_DAY);
         public static final long YEAR_AGO=-(365*ONE_DAY);
         public static final long MONTH_AHEAD=(30*ONE_DAY);
+        public static final long ONE_WEEK=7*ONE_DAY;
+        public static final long FORTNIGHT=14*ONE_DAY;
+        public static final long ONE_YEAR=(365*ONE_DAY);
 	public ISODate(){
 		super();
 		simpleDateFormat = new SimpleDateFormat();
@@ -200,18 +203,62 @@ public class ISODate extends Date implements Serializable{
    public String toString(){
        return dateTimeMs();
    }
-   public static ISODate getDayAgo(){
+   
+	 public static ISODate dayAgo(){
 	   return new ISODate(new ISODate().getTime()+DAY_AGO);
-   }
- public static ISODate getWeekAgo(){
-     return new ISODate(new ISODate().getTime()+WEEK_AGO);
- }
- public static ISODate getMonthAgo(){
-     return new ISODate(new ISODate().getTime()+MONTH_AGO);
- }
- public static ISODate getMonthAhead(){
-	 return new ISODate(new ISODate().getTime()+MONTH_AHEAD);
- }
+	 }
+	 public static ISODate weekAgo(){
+	     return new ISODate(new ISODate().getTime()+WEEK_AGO);
+	 }
+
+	 public static ISODate monthAgo(){
+	     return new ISODate(new ISODate().getTime()+MONTH_AGO);
+	 }
+	 public static ISODate monthAhead(){
+		 return new ISODate(new ISODate().getTime()+MONTH_AHEAD);
+	 }
+	 public static ISODate dayAhead(){
+		 return new ISODate(new ISODate().getTime()+ONE_DAY);
+	 }
+	 public static ISODate weekAhead(){
+		 return new ISODate(new ISODate().getTime()+ONE_WEEK);
+	 }
+	 public static ISODate fortnightAhead(){
+		 return new ISODate(new ISODate().getTime()+FORTNIGHT);
+	 }
+	 public static ISODate fourWeeksAhead(){
+		 return new ISODate(new ISODate().getTime()+(2*FORTNIGHT));
+	 }
+	 public static ISODate yearAhead(){
+		 return new ISODate(new ISODate().getTime()+ONE_YEAR);
+	 }
+	 public  ISODate getDayAgo(){
+	   return new ISODate(getTime()+DAY_AGO);
+	 }
+	 public ISODate getWeekAgo(){
+	     return new ISODate(getTime()+WEEK_AGO);
+	 }
+	 public ISODate getMonthAgo(){
+	     return new ISODate(getTime()+MONTH_AGO);
+	 }
+	 public  ISODate getMonthAhead(){
+		 return new ISODate(getTime()+MONTH_AHEAD);
+	 }
+	 public  ISODate getDayAhead(){
+		 return new ISODate(getTime()+ONE_DAY);
+	 }
+	 public  ISODate getWeekAhead(){
+		 return new ISODate(getTime()+ONE_WEEK);
+	 }
+	 public  ISODate getFortnightAhead(){
+		 return new ISODate(getTime()+FORTNIGHT);
+	 }
+	 public  ISODate getFourWeeksAhead(){
+		 return new ISODate(getTime()+(2*FORTNIGHT));
+	 }
+	 public  ISODate getYearAhead(){
+		 return new ISODate(getTime()+ONE_YEAR);
+	 }
  public static ISODate getEndOfMonth(Date isoDate){
 	 Calendar cal = Calendar.getInstance();
 	 cal.setTime(isoDate);

@@ -112,9 +112,7 @@ public final class Ledger implements Budgetable, Auditable {
         if (enterprise==null) {throw new BooxException("Linit - enterprise cannot be null");}
     	this.databaseName=enterprise.getDatabaseName();
         if (fullname==null){throw new BooxException("ledger name cannot be null");}
-        
         this.fullName=fullname;
-        
         if (full){
             init();
         }

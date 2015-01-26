@@ -175,7 +175,7 @@ public interface Table {
      */
     public boolean addColumn(String columnName, String columnType, boolean unique, boolean notNull);
     
-    public boolean amend(String primaryKeyTest, String columnName, Object value)throws PlatosysDBException, TypeNotSupportedException;;
+    //public boolean amend(String primaryKeyTest, String columnName, Object value)throws PlatosysDBException, TypeNotSupportedException;;
     
     /**
      * allows easy amendments to a database table without the need to construct complex escaped sql strings.

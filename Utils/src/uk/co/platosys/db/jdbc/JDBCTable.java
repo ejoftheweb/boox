@@ -1194,15 +1194,15 @@ public class JDBCTable implements Table {
         	}catch(Exception x){}
         }
     }
-    
+    /*
     public boolean amend(String primaryKeyTest, String columnName, Object value)throws PlatosysDBException, TypeNotSupportedException{
         if (value instanceof String){return amend(primaryKeyTest, columnName, (String)value);}
         else if(value instanceof Long){return amend(primaryKeyTest, columnName, ((Long)value).longValue());}
-       
+        
         else{
             throw new TypeNotSupportedException("what is this type: "+value.getClass().getCanonicalName()+"?");
         }
-    }
+    }*/
     
     /**
      * allows easy amendments to a database table without the need to construct complex escaped sql strings.

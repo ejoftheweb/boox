@@ -112,6 +112,7 @@ public class Directory {
      */
     public static boolean isNameOK(String name, boolean reserve) throws BooxException{
     	try{  
+    		
         	if(namesTable.rowExists(NAME_COLNAME, name)){
     		   Row row = namesTable.getRow(NAME_COLNAME, name);
     		   if(row.getBoolean(MEMBER_COLNAME)){

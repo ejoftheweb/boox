@@ -13,6 +13,7 @@ import uk.co.platosys.db.DBTools;
 import uk.co.platosys.db.PlatosysDBException;
 import uk.co.platosys.db.jdbc.DatabaseProperties;
 import uk.co.platosys.db.jdbc.JDBCTable;
+import uk.co.platosys.util.ISODate;
 import uk.co.platosys.util.Logger;
 import uk.co.platosys.util.ShortHash;
 //import uk.co.platosys.xuser.Xaddress;
@@ -45,7 +46,7 @@ public class Enterprise extends Body {
     private Ledger generalLedger;
     private JDBCTable enterpriseTable;
     private boolean isVatRegistered;
-    
+    private ISODate accountingDate;
     public static Currency DEFAULT_CURRENCY=Currency.getCurrency(Boox.DEFAULT_CURRENCY);
     private static Logger logger=Logger.getLogger("boox");
     /**
@@ -201,6 +202,14 @@ public class Enterprise extends Body {
         }
         
     }
+
+	public ISODate getAccountingDate() {
+		return accountingDate;
+	}
+
+	public void setAccountingDate(ISODate accountingDate) {
+		this.accountingDate = accountingDate;
+	}
     
     
 }
