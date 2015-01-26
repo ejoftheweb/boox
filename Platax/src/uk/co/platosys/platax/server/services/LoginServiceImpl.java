@@ -17,20 +17,14 @@ public class LoginServiceImpl extends Booxlet implements LoginService {
 	 * 
 	 */
 	private static final long serialVersionUID = -738242988901516841L;
-	
+	private static final String USER_ATTNAME= "PlataxUser";
 
 	public PXUser login(String email, String password)  {
 		char[] pwd = password.toCharArray();
 		password="";
 		try {
-			logger.log("login request received");
 			PlataxUser puser = PlataxUser.getPlataxUser(email, pwd, getThreadLocalRequest());
-			logger.log("LISI has got user "+puser.getUsername());
-			getSession().setAttribute("PlataxUser", puser);
-			logger.log("LISI logged "+puser.getUsername()+" in session");
-			logger.log("LISI puser has xuserid "+puser.getXuserID());
-			PXUser pxuser = puser.getPXUser();
-			logger.log("LISI - PXuser is "+ pxuser.getUsername());
+			getSession().setAttribute(USER_ATTNAME, puser);
 			return puser.getPXUser();
 		} catch(XuserCredentialsException xce){
 			 logger.log("credentials exception");
@@ -46,10 +40,10 @@ public class LoginServiceImpl extends Booxlet implements LoginService {
 	@Override
 	public boolean logout() {
 		try{
-			PlataxUser puser = (PlataxUser) getSession().getAttribute("PlataxUser");
+			PlataxUser puser = (PlataxUser) getSession().getAttribute(USER_ATTNAME);
 			puser.setAuthenticated(false);
 			getSession().invalidate();
-			logger.log(puser.getUsername() +" logged out at "+new ISODate());
+			//logger.log(puser.getUsername() +" logged out at "+new ISODate());
 			return true;
 		}catch(Exception e){
 			logger.log("logout exception", e);

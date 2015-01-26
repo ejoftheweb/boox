@@ -23,6 +23,7 @@ private int privileges=0;//this is the level of privilege that the session user 
  private ArrayList<GWTItem> products = new ArrayList<GWTItem>();
  private ArrayList<GWTSupplier> suppliers = new ArrayList<GWTSupplier>();
  private ArrayList<GWTItem> components = new ArrayList<GWTItem>();
+ private ArrayList<GWTSegment> segments = new ArrayList<GWTSegment>();
  private boolean hasOpenTab=false;
  private int openTabIndex=0;
  
@@ -111,5 +112,11 @@ public boolean addCustomer(GWTCustomer customer){
 public void setMenuItemStatus(String menuItem, String status){
 	menu.setItemStatus(menuItem, status);
 }*/
+public ArrayList<GWTSegment> getSegments() {
+	return segments;
+}
+public void setSegments(ArrayList<GWTSegment> segments) {
+	this.segments = segments;
+}
 
 }

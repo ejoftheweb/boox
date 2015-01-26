@@ -51,4 +51,11 @@ public class Styles {
   public static final String POPUP_HEADER="px_popup_header";
   public final static String BODY_NAME_LABEL="px_body_name";
   
+  public static final String TASK_LONG_OVERDUE="px_task_long_overdue";
+  public static final String TASK_OVERDUE="px_task_overdue";
+  public static final String TASK_DUE="px_task_due";
+  public static final String TASK_URGENT="px_task_urgent";
+  public static final String TASK_SOON="px_task_soon";
+  public static final String TASK_WHENEVER="px_task_whenever";
+  
 }

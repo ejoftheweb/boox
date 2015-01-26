@@ -40,13 +40,13 @@
 </Ledgers>
 <!-- The Tasks element specifies the tasks associated with this module -->
 <Tasks>
-    <Task name="VATRegister" freq="once" form="uk.co.platosys.platax.forms.VATRegister"/>
-    <Task name="VATReturn" freq="quarterly" form="uk.co.platosys.platax.forms.VATReturn">
+    <Task name="VATRegister" freq="once" form="VATRegister"/>
+    <Task name="VATReturn" freq="quarterly" form="VATReturn">
         <!-- The Ledger element, when a child of a Task element, specifies the permission needed 
         in respect of each Ledger in order to complete the task in hand -->
-        <Ledger name="InputVAT" permission="Credit"/>
-        <Ledger name="OutputVAT" permission="Debit"/>
-        <Ledger name="Sales" permission="Read"/>
+        <Ledger name="Root:XBX:Current:Liabilities:Tax:VAT:InputVat" permission="Credit"/>
+        <Ledger name="Root:XBX:Current:Liabilities:Tax:VAT:OutputVat" permission="Debit"/>
+        <Ledger name="Root:XBX:Operations:Income:Sales" permission="Read"/>
     </Task>
 </Tasks>
 </root>

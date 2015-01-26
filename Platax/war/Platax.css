@@ -168,6 +168,46 @@
 	padding-left: 2em;
 	padding-right: 1em;
 }
+/**px side panel styles*/
+.px_message_panel_header {
+	font-size: 120%;
+	font-weight: bold;
+	padding: 0.5em;
+	color:#666;
+}
+/**px_task_styles */
+.px_task_long_overdue{
+	padding: 0.5em;
+	font-size: 110%;
+	background: flashing red;
+}
+.px_task_overdue{
+	padding: 0.5em;
+	font-size: 110%;
+	background:  #ff0000;
+}
+.px_task_due{
+	padding: 0.5em;
+	font-size: 110%;
+	background: #ffa500;
+}
+.px_task_urgent{
+	padding: 0.5em;
+	font-size: 110%;
+	background: #efc20c;
+}
+.px_task_soon{
+	padding: 0.5em;
+	font-size: 110%;
+	background: #d8ef0c;
+}
+.px_task_whenever{
+	padding: 0.5em;
+	font-size: 110%;
+	background: #10bb16;
+}
+
+
 /** Example rules used by the template application (remove for your app) */
 h1 {
   font-size: 2em;

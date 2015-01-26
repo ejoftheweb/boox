@@ -47,7 +47,7 @@ ListValueField list;
 	 * add items as a List of <ValuePair>s.
 	 * @param items
 	 */
-	public void addItems(List<ValuePair> items){
+	public void addItems(List<? extends ValuePair> items){
 		list.addItems(items);
 	}
 	public void addItems(Map<String, String> items, boolean reverse){
@@ -74,6 +74,10 @@ ListValueField list;
 	@Override
 	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
 		return list.addValueChangeHandler(handler);
+	}
+	public void addItem(String name, String localisedName) {
+		list.addItem(name, localisedName);
+		
 	}
 
 }

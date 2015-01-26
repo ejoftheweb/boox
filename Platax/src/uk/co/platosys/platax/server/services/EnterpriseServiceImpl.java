@@ -96,11 +96,11 @@ static Logger logger = Logger.getLogger("platax");
 	public static GWTEnterprise convert(Enterprise enterprise, Clerk clerk){
 		try{
 		GWTEnterprise gwtEnterprise = new GWTEnterprise(enterprise.getSysname(), enterprise.getName(), enterprise.getLegalName()) ;
-		logger.log("ESI has created new gwtEnterprise "+enterprise.getName());
 		//set the privileges held by this platax user??
-		//gwtEnterprise = readRatios(enterprise, user, gwtEnterprise);
 		gwtEnterprise.setCustomers(getGWTCustomers(gwtEnterprise, clerk));
-		//gwtEnterprise.setProducts(ProductServiceImpl.listProducts(gwtEnterprise.getEnterpriseID(), 0));
+		gwtEnterprise.setSegments(getSegments(true));
+		logger.log("ESI has converted Enterprise "+enterprise.getName()+" to GWT");
+		
 		return gwtEnterprise;
 		}catch (Exception x){
 			logger.log("ESI convert error", x);
@@ -233,7 +233,7 @@ static Logger logger = Logger.getLogger("platax");
 		return null;
 	}
 	@Override
-	public ArrayList<GWTSegment> getSegments() {
+	public  ArrayList<GWTSegment> getSegments() {
 		try{
 			 logger.log("ESIgm trying to get the segments");
 		 ArrayList<GWTSegment> gSegments = new ArrayList<GWTSegment>();
@@ -260,7 +260,35 @@ static Logger logger = Logger.getLogger("platax");
 			 return null;
 		 }
 	}
-    public GWTModule getGWTModule(Module module){
+	
+	public static ArrayList<GWTSegment> getSegments(boolean test) {
+		try{
+			 logger.log("ESIgm trying to get the segments");
+		 ArrayList<GWTSegment> gSegments = new ArrayList<GWTSegment>();
+			Map<String, Segment> segments = Boox.getSegments();
+			Iterator<Entry<String, Segment>> mit = segments.entrySet().iterator();
+			while (mit.hasNext()){
+				Entry<String, Segment> entry = mit.next();
+				Segment segment = entry.getValue();
+				GWTSegment gSegment = new GWTSegment();
+				gSegment.setName(segment.getName());
+				gSegment.setDescription(segment.getDescription());
+				gSegment.setInstructions(segment.getInstructions());
+				for(Module module:segment.getModules()){
+					gSegment.addModule(getGWTModule(module));
+				}
+				
+				gSegment.setMultiSelect(segment.isMultipleselection());
+				gSegments.add(gSegment);
+			}
+			logger.log("ESIgm returning AL of "+gSegments.size()+" segments");
+			return gSegments;
+		 }catch(Exception x){
+			 logger.log("ESIgm threw exception ", x);
+			 return null;
+		 }
+	}
+    public static GWTModule getGWTModule(Module module){
     	GWTModule gModule = new GWTModule();
     	gModule.setName(module.getName());
     	gModule.setDescription(module.getDescription());
@@ -308,10 +336,10 @@ static Logger logger = Logger.getLogger("platax");
 			return null;
 		}try{	
 		    //STAGE III: create the basic accounts structure
-				accountsTemplateFolder = new File(Constants.SYSTEM_CONFIG_DIR, PXConstants.ACCTS_TEMPLATE_FOLDER);
-				accountsTemplateFile = new File(accountsTemplateFolder, PXConstants.ACCTS_TEMPLATE_FILE );
-				logger.log("RESI now to create LandAcs for enterprise:"+enterprise.getName());
-				Boox.createLedgersAndAccounts(enterprise, supervisor, accountsTemplateFile);
+			accountsTemplateFolder = new File(Constants.SYSTEM_CONFIG_DIR, PXConstants.ACCTS_TEMPLATE_FOLDER);
+			accountsTemplateFile = new File(accountsTemplateFolder, PXConstants.ACCTS_TEMPLATE_FILE );
+			logger.log("RESI now to create LandAcs for enterprise:"+enterprise.getName());
+			Boox.createLedgersAndAccounts(enterprise, supervisor, accountsTemplateFile);
 		}catch(Exception e){
 			logger.log("RESI register enterprise failed at Stage III", e);
 			return null;
@@ -326,6 +354,7 @@ static Logger logger = Logger.getLogger("platax");
 		}try{	
 			//TODO manage the date
 			puser.addEnterprise(enterprise, supervisor, supervisorpassword);
+			logger.log("RESI enterprise "+enterprise.getName()+" created");
 			return convert(enterprise, supervisor);
 		}catch(Exception e){
 			logger.log("RESI problem creating enterprise at stage V", e);

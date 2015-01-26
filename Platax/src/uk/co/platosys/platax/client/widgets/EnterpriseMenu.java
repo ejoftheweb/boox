@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.MenuText;
+import uk.co.platosys.platax.client.forms.ModulesForm;
 import uk.co.platosys.platax.client.forms.CashRegisterForm;
 import uk.co.platosys.platax.client.forms.CashierForm;
 import uk.co.platosys.platax.client.forms.CustomerForm;
@@ -21,7 +22,7 @@ import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
 import uk.co.platosys.platax.client.forms.lists.*;
 import uk.co.platosys.platax.client.forms.tasks.HireStaff;
 import uk.co.platosys.platax.client.forms.tasks.PettyCash;
-import uk.co.platosys.platax.client.forms.tasks.SimpleCashRegister;
+import uk.co.platosys.platax.client.forms.tasks.CashUp;
 import uk.co.platosys.platax.shared.boox.*;
 
 /**
@@ -70,8 +71,17 @@ public class EnterpriseMenu extends MenuBar {
 		static final String MERCHANT_ACCOUNTS="merchantAccounts";
 	static final String ASSETS_MENU="assetsMenu";
 	static final String STAFF_MENU="staffMenu";
+		static final String HIRE_STAFF="hireStaff";
+		static final String FIRE_STAFF="fireStaff";
+		static final String PAYROLL="payroll";
+		static final String TIMESHEETS="timesheets";
 	static final String BUDGET_MENU="budgetMenu";
+		static final String CASHFLOW_PLAN="cashFlowPlan";
+	static final String SETTINGS_MENU="settingsMenu";
+		static final String ADD_MODULES="addModules";
+		static final String CONFIGURE="configure";
 	static final String HELP_MENU="helpMenu";
+	
 	
 	
 	//the hashmap lets is get to each item by its String key
@@ -110,10 +120,20 @@ public class EnterpriseMenu extends MenuBar {
 		
 		MenuBar assetsMenu = new MenuBar(true);  menuItems.put(ASSETS_MENU,assetsMenu);
 		MenuBar staffMenu = new MenuBar(true);  menuItems.put(STAFF_MENU, staffMenu);
+			MenuItem hireStaff = new MenuItem(MenuText.HIRE_LABEL);staffMenu.addItem(hireStaff);menuItems.put(HIRE_STAFF, hireStaff);
+			MenuItem fireStaff = new MenuItem(MenuText.FIRE_LABEL);staffMenu.addItem(fireStaff);menuItems.put(FIRE_STAFF, fireStaff);
+			MenuItem payroll = new MenuItem(MenuText.PAYROLL_LABEL);staffMenu.addItem(payroll);menuItems.put(PAYROLL, payroll);
+			MenuItem timesheets = new MenuItem(MenuText.TIMESHEETS_LABEL);staffMenu.addItem(timesheets);menuItems.put(TIMESHEETS, timesheets);
+			
 		MenuBar budgetMenu = new MenuBar(true);  menuItems.put(BUDGET_MENU, budgetMenu);
+			MenuItem cashFlowPlan = new MenuItem(MenuText.HIRE_LABEL);budgetMenu.addItem(cashFlowPlan);menuItems.put(HIRE_STAFF, hireStaff);
+		
+		MenuBar settingsMenu = new MenuBar(true); menuItems.put(SETTINGS_MENU, settingsMenu);
+			MenuItem addModules=new MenuItem(MenuText.ADD_MODULES);settingsMenu.addItem(addModules);menuItems.put(ADD_MODULES, addModules);
+			MenuItem configure=new MenuItem(MenuText.CONFIGURE);settingsMenu.addItem(configure);menuItems.put(CONFIGURE, configure);
 		MenuBar helpMenu = new MenuBar(true); menuItems.put(HELP_MENU, helpMenu);
 		
-		//so here w
+		//so here we add all the top-level menus.
 		this.addItem(MenuText.CAPITAL_MENU_NAME, capitalMenu);
 		this.addItem(MenuText.INCOME_MENU_NAME, incomeMenu);
 		this.addItem(MenuText.SPENDING_MENU_NAME, spendingMenu);
@@ -121,6 +141,7 @@ public class EnterpriseMenu extends MenuBar {
 		this.addItem(MenuText.ASSETS_MENU_NAME, assetsMenu);
 		this.addItem(MenuText.STAFF_MENU_NAME, staffMenu);
 		this.addItem(MenuText.BUDGET_MENU_NAME, budgetMenu);
+		this.addItem(MenuText.SETTINGS_MENU_NAME, settingsMenu);
 		this.addItem(MenuText.HELP_MENU_NAME, helpMenu);
 		
 		//now we add the commands
@@ -138,19 +159,11 @@ public class EnterpriseMenu extends MenuBar {
 		});
 		
 		
-		/*balanceMenu.setScheduledCommand(new Scheduler.ScheduledCommand() {
-			@Override
-			public void execute() {
-				//TODO add command to show balance sheet
-			}
-		});*/
-		///IncomeMenu and its submenus///
-		//Items on the Cashup Menu
 		
 		registerCash.setScheduledCommand(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
-				SimpleCashRegister scr = new SimpleCashRegister(platax, enterprise);
+				CashUp scr = new CashUp(platax, enterprise);
 				platax.addTab(scr);
 			}
 		});
@@ -235,209 +248,32 @@ public class EnterpriseMenu extends MenuBar {
 				//Window.alert("new invoice menu item selected");
 		  		ProductForm itab = new ProductForm(platax, enterprise);	
 				platax.addTab(itab);
-		}});
-		////
-		///SpendingMenu and its submenus///
-			//Items on the Expenditure Menu
-			MenuBar billMenu = new MenuBar(true);
-			MenuBar supplierMenu = new MenuBar(true);
-			MenuBar materialsMenu = new MenuBar(true);
-			MenuBar overheadsMenu = new MenuBar(true);
-			spendingMenu.addItem(MenuText.BILLS_LABEL, billMenu);
-			spendingMenu.addItem(MenuText.CASH_PURCHASES_LABEL, new Command(){
-				@Override
-				public void execute() {
-					// TODO Open Cash purchases Page Command
-				}
-			});
-			spendingMenu.addItem(MenuText.SUPPLIERS_LABEL, customerMenu);
-			spendingMenu.addItem(MenuText.MATERIALS_LABEL, materialsMenu);
-			spendingMenu.addItem(MenuText.OVERHEADS_LABEL, overheadsMenu);
-				//Items on the Bill Menu (submenu of the spending menu)
-				billMenu.addItem(MenuText.ALL_LABEL, new Command(){
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
-					}
-				});
-				billMenu.addItem(MenuText.PENDING_LABEL, new Command(){
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
-					}
-				});
-				billMenu.addItem(MenuText.PAID_LABEL, new Command(){
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
-					}
-				});
-				billMenu.addItem(MenuText.OVERDUE_LABEL,  new Command(){
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
-					}
-				});
-				billMenu.addItem(MenuText.ADD_NEW_LABEL, new Command(){
-					@Override
-					public void execute() {
-				  		InvoiceForm itab = new InvoiceForm(platax, enterprise);	
-						platax.addTab(itab);
-						//int etabindex = platax.getWidgetIndex(itab);
-						//ptp.selectTab(etabindex);
-					}
-				});
-			/////
-			//items on the SupplierMenu, submenu of Spending menu
-				supplierMenu.addItem(MenuText.ALL_LABEL,  new Command(){
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
-					}
-				});
-				supplierMenu.addItem(MenuText.ADD_NEW_LABEL,  new Command(){
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
-					}
-				});
-			/////
-			//items on the materialssmenu, submenu of Spending menu
-				materialsMenu.addItem(MenuText.ALL_LABEL, new Command(){
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
-					}
-				});
-				materialsMenu.addItem(MenuText.ADD_NEW_LABEL,  new Command(){
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
-					}
-				});
-			////
-			//Items on the overheadsMenu, submenu of Spending menu
-				overheadsMenu.addItem(MenuText.UTILITIES_LABEL, new Command(){
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
-					}
-				});
-				overheadsMenu.addItem(MenuText.RENT_LABEL,  new Command(){
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
-					}
-				});
-				overheadsMenu.addItem(MenuText.INSURANCE_LABEL, new Command(){
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
-					}
-				});
-				overheadsMenu.addItem(MenuText.GENERAL_LABEL,  new Command(){
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
-					}
-				});
-		  //Banking (Money) Menu and its submenus
-				//banking menu item labels
-				bankAccount.setScheduledCommand(new Scheduler.ScheduledCommand() {
-					@Override
-					public void execute() {
-						//SimpleCashRegister scr = new SimpleCashRegister(platax, LabelText.CASHUP);
-						//platax.addTab(scr);
-					}
-				});
-				pettyCash.setScheduledCommand(new Scheduler.ScheduledCommand() {
-					@Override
-					public void execute() {
-						PettyCash pettyCash = new PettyCash(platax);//, LabelText.CASHUP);
-						platax.addTab(pettyCash);
-					}
-				});
-				chargeCard.setScheduledCommand(new Scheduler.ScheduledCommand() {
-					@Override
-					public void execute() {
-						//SimpleCashRegister scr = new SimpleCashRegister(platax, LabelText.CASHUP);
-						//platax.addTab(scr);
-					}
-				});
-				merchantCard.setScheduledCommand(new Scheduler.ScheduledCommand() {
-					@Override
-					public void execute() {
-						//SimpleCashRegister scr = new SimpleCashRegister(platax, LabelText.CASHUP);
-						//platax.addTab(scr);
-					}
-				});
-		  //Assets Menu and its sumbenus
-				assetsMenu.addItem(MenuText.ASSET_REGISTER_LABEL, new Command(){
-					@Override
-					public void execute() {
-						//TODO add command to show the asset register
-					}
-				});
-				assetsMenu.addItem(MenuText.NEW_ASSET_LABEL, new Command(){
-					@Override
-					public void execute() {
-						//TODO add command to add a new asset
-					}
-				});
-	      //Staff Menu and its submenus
-				staffMenu.addItem(MenuText.PAYROLL_LABEL, new Command(){
-					@Override
-					public void execute() {
-						//TODO add command to show payroll
-					}
-				});
-				staffMenu.addItem(MenuText.HIRE_LABEL, new Command(){
-					@Override
-					public void execute() {
-						HireStaff scr = new HireStaff(platax);
-						platax.addTab(scr);
-					}
-				});
-				staffMenu.addItem(MenuText.FIRE_LABEL, new Command(){
-					@Override
-					public void execute() {
-						//TODO add command to terminate staff
-					}
-				});
-		 //Budget Menu and its submenus
-				budgetMenu.addItem(MenuText.CASHFLOW_PLAN, new Command(){
-					@Override
-					public void execute() {
-						//TODO add command to show online help
-					}
-				});
-				budgetMenu.addItem(MenuText.CURRENT_BUDGET, new Command(){
-					@Override
-					public void execute() {
-						//TODO add command to show about
-					}
-				});
-				budgetMenu.addItem(MenuText.NEXT_BUDGET, new Command(){
-					@Override
-					public void execute() {
-						//TODO add command to show about
-					}
-				});
-		 //Help Menu and its submenus
-				//help menu item labels
-				helpMenu.addItem(MenuText.ONLINE_HELP, new Command(){
-					@Override
-					public void execute() {
-						//TODO add command to show online help
-					}
-				});
-				helpMenu.addItem(MenuText.ABOUT_LABEL, new Command(){
-					@Override
-					public void execute() {
-						//TODO add command to show about
-					}
-				});
-		 
+			}
+		});
+		hireStaff.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		hireStaff.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				HireStaff hs = new HireStaff(platax);
+				platax.addTab(hs);
+			}
+		});		
+		addModules.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				//Window.alert("adding modules form");
+				ModulesForm mf = new ModulesForm(platax, enterprise);
+				platax.addTab(mf);
+			}
+		});
+				
+		 		 
 	}
 	public void setItemStatus(String item, String status){
 		 UIObject mitem = menuItems.get(item);

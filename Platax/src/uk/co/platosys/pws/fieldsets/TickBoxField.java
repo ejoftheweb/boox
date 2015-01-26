@@ -7,6 +7,11 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.inputfields.TickBox;
 
+/**
+ * A field that shows a single tick-box
+ * @author edward
+ *
+ */
 public class TickBoxField extends AbstractFormField<Boolean> {
 TickBox tickBox;
 	public TickBoxField(String[] labelText, int position, Form parent, boolean required) throws IllegalArgumentException {

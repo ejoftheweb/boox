@@ -28,6 +28,11 @@ public class LabelText {
 	public static final String USER_MESSAGES="User Messages";
 	public static final String STAFF_MESSAGES="Staff Messages";
 	
+	//Task Centre Labels
+	public static final String TASK_CENTRE="Task List";
+	public static final String TASKS_FOR="Tasks for:";
+	
+	
 	//Labels common to Ptabs:
 	public static final String SHARE="Share";
 	
@@ -36,8 +41,8 @@ public class LabelText {
 	public static final String NAME_NOT_OK="Sorry, that name isn't available. Please choose another";
 	public static final String NEW_ENTERPRISE_PAGE_HEAD="Enroll a new business on "+APPNAME;
 	public static final String NEW_ENTERPRISE_PAGE_SUB_HEAD="Please enter your business details";
-	public static final String NEW_ENTERPRISE_PAGE2_HEAD="Tell us more about ";
-	public static final String NEW_ENTERPRISE_PAGE2_SUB_HEAD="The choices you make on this page will set up your system with an appropriate set of ledgers and accounts";
+	public static final String NEW_ENTERPRISE_PAGE2_HEAD="Adding Modules ";
+	public static final String NEW_ENTERPRISE_PAGE2_SUB_HEAD="The choices you make on this page will set up your system with an appropriate set of ledgers and accounts and configure your tasks";
 	
 	public static final String NEW_ENTERPRISE="New Business";
 	public static final String ENTERPRISE_NAME = "Enterprise Name";
@@ -191,6 +196,7 @@ public class LabelText {
     
     //labels used on the Petty Cash page
     public static final String PETTY_CASH="Petty Cash";
+    public static final String PETTY_CASH_INFO="Clear and balance the petty cash";
     //labels used on the staff pages
     public static final String HIRE_STAFF="Hire";
     public static final String FIRE_STAFF="Fire";

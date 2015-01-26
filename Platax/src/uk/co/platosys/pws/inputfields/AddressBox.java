@@ -74,7 +74,7 @@ public class AddressBox extends AbstractValueField<GWTAddress> implements HasVal
 		this.value=value;
 		textBox.setText(value.getShortAddress());
 		if (fireEvents){
-			fireEvent(ValueChangeEvent.(value));
+			//fireEvent(ValueChangeEvent.(value));
 			ValueChangeEvent.fire(this, value);
 			Window.alert("AB has fired vc event");
 			

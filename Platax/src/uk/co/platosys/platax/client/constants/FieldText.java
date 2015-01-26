@@ -21,9 +21,19 @@ public class FieldText {
 	public static final String[] ADDRESS={"Address", "Home Address", ANYALPHA, ERROR};
 	public static final String[] NATIONALITY={"Nationality", "Nationality", ANYALPHA, ERROR};
 	
+	public static final String[] PETTYCASH={"Cash Tin", "Select which cash tin", ANYALPHA, ERROR};
+	public static final String[] PETTYCASH_BALANCE={"Cash in Tin", "Count the cash remaining", null, ERROR};
 	
 	public static final String[] NAME={"Name", "Handy short name", ANYALPHA, ERROR};
 	public static final String[] LEGALNAME={"Legal Name", "Full legal name", ANYALPHA, ERROR};
+	
+	public static final String[] ENTERPRISE_TYPE={"Capital Structure", "Please select your organisation's capital type", ANYALPHA, ERROR};
+	public static final String[] ENTERPRISE_ROLE={"Your Role in it", "Please select your role in it", ANYALPHA, ERROR};
+	public static final String[] ENTERPRISE_STARTUP={"Startup?", "Please tick if it's a startup", ANYALPHA, ERROR};
+	public static final String[] ENTERPRISE_STARTDATE={"Start date", "Enter the accounting reference date", ANYALPHA, ERROR};
+	
+	
+	
     public static final String[] IS_TRADE_CUSTOMER={"Trade?", "Check if this is a trade customer", ANYALPHA, ERROR};
     
     public static final String[] PAY_RATE={"Starting Pay", "Starting rate of pay", null, ERROR};

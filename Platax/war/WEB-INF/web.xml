@@ -73,6 +73,7 @@
     <servlet-name>LoginServiceImpl</servlet-name>
     <url-pattern>/platax/loginService</url-pattern>
   </servlet-mapping>
+  
   <!-- 
    <servlet>
     <servlet-name>StaffServiceImpl</servlet-name>
@@ -83,6 +84,16 @@
     <url-pattern>/platax/staffService</url-pattern>
   </servlet-mapping>
  -->
+
+   <servlet>
+    <servlet-name>TaskServiceImpl</servlet-name>
+    <servlet-class>uk.co.platosys.platax.server.services.TaskServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TaskServiceImpl</servlet-name>
+    <url-pattern>/platax/taskService</url-pattern>
+  </servlet-mapping>
+
   <servlet>
     <servlet-name>UserServiceImpl</servlet-name>
     <servlet-class>uk.co.platosys.platax.server.services.UserServiceImpl</servlet-class>

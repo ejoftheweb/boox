@@ -1,5 +1,6 @@
 package uk.co.platosys.pws.fieldsets;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -10,9 +11,15 @@ import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.inputfields.RadioBox;
 import uk.co.platosys.pws.values.ValuePair;
 
-public class RadioField extends AbstractFormField<String> {
+
+/**
+ * A field that shows a selection of mutually-exclusive radio buttons
+ * @author edward
+ *
+ */
+public class RadioField extends AbstractFormField<String> implements HasStringValues {
 RadioBox radioBox;
-	public RadioField(String name, String[] labelText,  List<ValuePair> values, String defaultValue, int position, Form parent,	boolean required) throws IllegalArgumentException {
+	public RadioField(String name, String[] labelText,  List<? extends ValuePair> values, ValuePair defaultValue, int position, Form parent,	boolean required) throws IllegalArgumentException {
 		super(labelText, position, parent, required);
 		radioBox = new RadioBox(name,  values, defaultValue);
 		setWidget (radioBox);
@@ -44,6 +51,13 @@ RadioBox radioBox;
 		@Override
 		public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
 			return radioBox.addValueChangeHandler(handler);
+		}
+
+		@Override
+		public List<String> getValues() {
+			ArrayList<String> values= new ArrayList<String>();
+			values.add(radioBox.getValue());
+			return values;
 		}
 
 }

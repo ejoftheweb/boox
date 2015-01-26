@@ -1,7 +1,9 @@
 package uk.co.platosys.platax.shared.boox;
 import java.io.Serializable;
 
-public class GWTModule implements Serializable, GWTSelectable {
+import uk.co.platosys.pws.values.ValuePair;
+
+public class GWTModule implements Serializable, GWTSelectable, ValuePair {
 /**
 	 * 
 	 */
@@ -53,7 +55,18 @@ private boolean isSelected;
 	@Override
 	public void setSysname(String sysname) {
 		this.sysname=sysname;
-		
+	}
+	
+	@Override
+	public String getLabel() {
+		return description;
+	}
+	@Override
+	public void setLabel(String label) {
+	}
+	@Override
+	public String getValue() {
+		return name;
 	}
 	
 

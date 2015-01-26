@@ -9,7 +9,7 @@ import uk.co.platosys.pws.values.ValuePair;
 public class RadioText {
 	public static final String[] PAY_PER_VALUES={"Hour", "Week","Year"};
 	public static final String[] PAY_PER_LABELS=PAY_PER_VALUES;
-    public static final String PAY_PER_DEFAULT="Hour";
+    public static final ValuePair PAY_PER_DEFAULT= new BasicValuePair("Hour", "Hour");
     public static final List<ValuePair> PAY_PER_LIST=fillList(PAY_PER_LABELS, PAY_PER_VALUES);
     
     

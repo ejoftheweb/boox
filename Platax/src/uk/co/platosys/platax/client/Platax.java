@@ -33,7 +33,7 @@ public class Platax implements EntryPoint {
 	DockLayoutPanel topPanel = new DockLayoutPanel(Unit.PCT);
 	BrandingBox brandingBox=new BrandingBox();
 	StatusBox statusBox=new StatusBox(this);
-	TaskPanel taskPanel = new TaskPanel();
+	TaskPanel taskPanel = new TaskPanel(this);
 	MessagePanel messagePanel = new MessagePanel();
 	PlataxTabPanel tabPanel = new PlataxTabPanel(5, Unit.PCT);
 	FlowPanel footPanel=new FlowPanel();
@@ -65,21 +65,11 @@ public class Platax implements EntryPoint {
 		
 		//the message panel
 		dlp.addEast(messagePanel, 25);
-		
-		//the tab panel
-		//At startup, we add only the login panel: 
 		List<PTab> pTabs=new ArrayList<PTab>();
 		pTabs.add(new LoginForm(this));
-		//pTabs.add(new RegisterUser(this));
-	
-	
-		//tabPanel=new PlataxTabPanel(5, Unit.PCT);
 		tabPanel.addTabs(pTabs);		
 		dlp.add(tabPanel);
-		
 		RootLayoutPanel.get().add(dlp);
-		
-		//TODO add handlers!
 	}
 
 
@@ -92,17 +82,12 @@ public class Platax implements EntryPoint {
 		return tabPanel;
 	}
 
-
-
-
 	public void addTab(PTab itab) {
 		tabPanel.addTab(itab);
-		
 	}
 
     public void addTab(PTab itab, boolean select){
     	tabPanel.addTab(itab);
-    	
     }
 
 
@@ -110,25 +95,21 @@ public class Platax implements EntryPoint {
 		pxUser=result;
 		statusBox.login(result.getUsername());
 		tabPanel.addTab(new UserTab(this, result),0);
+		taskPanel.setUser(result);
 	}
 
-
-
-
 	public void removeTab(PTab tab) {
-		
 		tabPanel.remove(tab);
-		
 	}
 
     public void removeAllTabs(){
     	tabPanel.clear();
     }
 
-
 	public void logout() {
 		pxUser=null;
 		tabPanel.clear();
+		taskPanel.clear();
 		tabPanel.addTab(new RegisterUser(this));
 		tabPanel.addTab(new LoginForm(this),0);
 		tabPanel.selectTab(0);

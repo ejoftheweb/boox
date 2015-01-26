@@ -22,13 +22,13 @@ import com.google.gwt.user.client.ui.RadioButton;
 public class RadioBox extends AbstractValueField<String> {
 	Map<RadioButton,String> map = new HashMap<RadioButton, String>();
 	
-	public RadioBox(String name, List<ValuePair> values, String defaultValue) throws IllegalArgumentException{
+	public RadioBox(String name, List<? extends ValuePair> values, ValuePair defaultValue) throws IllegalArgumentException{
 		boolean hasDefault=false;
 		for (ValuePair value:values){
 			RadioButton rb = new RadioButton(name, value.getLabel());
 			rb.setValue(false);
 			map.put(rb, value.getValue());
-			if(value.getValue().equals(defaultValue)){
+			if(value.getValue().equals(defaultValue.getValue())){
 				rb.setValue(true);
 				hasDefault=true;
 			}

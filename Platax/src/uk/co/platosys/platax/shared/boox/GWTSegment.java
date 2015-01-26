@@ -80,7 +80,9 @@ String sysname;
 		this.sysname=sysname;
 	}
    
-	 
+	public GWTModule getDefaultModule(){
+		return modules.get(0);
+	}
 	
 
 }

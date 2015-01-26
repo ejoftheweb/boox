@@ -36,39 +36,18 @@
           		<Ledger name="Labour" isPrivate="false"/>
  				<!-- Expenses covers other variable costs that are neither purchases nor labour -->	         
           </Ledger>
-          <!-- Fixed costs you have to pay regardless of your trade -->
-          <Ledger name="Fixed" isPrivate="false">
-          		<!-- Fixed labour costs (e.g. staff salaries) go here -->
-          		<Ledger name="Labour" isPrivate="false"/>
-         	 		<!-- 
-          			<Ledger name="Salaries" isPrivate="false"/>
-          			-->
-      	  </Ledger>
+          
      </Ledger>
     </Ledger>
-     <!-- the Fixed ledger records the long-term assets and liabilities of the business -->      
-     <Ledger name="Fixed" isPrivate="false">
-        <Ledger name="Liabilities" isPrivate="false">
-            <!-- Capital is money put into the business that you don't expect to pay back -->
-            <Ledger name="Capital" isPrivate="false"/>
-            <!-- Loans are  expected to be repaid -->
-            <Ledger name="Loans"  isPrivate="false"/>
-        </Ledger>
-        <Ledger name="Assets" isPrivate="false">
-        	<Ledger name="Land" isPrivate="false"/> 
-        	<Ledger name="Plant" isPrivate="false">
-        	    <!-- 
-        	    <Ledger name="MotorVehicles" isPrivate="false"/>
-        	    -->
-        	</Ledger>
-    	</Ledger>
-    </Ledger>
+     
     <!-- the Current ledger records the short-term assets and liabilities. Its balance is a good indicator of the business's solvency -->	
     <Ledger name="Current" isPrivate="false">
     	<Ledger name="Assets" isPrivate="false">
         	<Ledger name="Cash" isPrivate="false">
-        	    <!-- 
-            	<Account name="PettyCash" fullName="Petty Cash" description="Petty Cash Account"/>
+        	   <Ledger name="PettyCash" isPrivate="false">
+            		<Account name="PettyCash" fullName="Petty Cash" description="Petty Cash Account"/>
+            	</Ledger>
+            	<!-- 
             	<Account name="BankCurrent" fullName="Bank Current Account" description="Bank Current Account"/>
             	<Account name="BankDeposit" fullName="Bank Deposit Account" description="Bank Deposit Account"/>
             	-->
@@ -115,4 +94,13 @@
     </Ledger><!-- current -->
     </Ledger><!-- XBX -->
 </Ledgers>
+<Tasks>
+    <Task name="Petty Cash" freq="weekly" form="PettyCash">
+        <!-- The Ledger element, when a child of a Task element, specifies the permission needed 
+        in respect of each Ledger in order to complete the task in hand -->
+        <Ledger name="Root:XBX:Operations:Expenditure:Variable:Purchases" permission="Debit"/>
+        <Ledger name="Root:XBX:Operations:Expenditure:Variable" permission="Debit"/>
+        <Ledger name="Root:XBX:Current:Assets:Cash:PettyCash" permission="Credit"/>
+    </Task>
+</Tasks>
 </root>

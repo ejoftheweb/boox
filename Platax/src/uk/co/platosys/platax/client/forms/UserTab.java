@@ -26,6 +26,7 @@ import com.google.gwt.user.client.Window;
 public class UserTab extends AbstractForm {
 	public UserTab(Platax pplatax, PXUser user) {
 		super(pplatax);
+		
     setCloseEnabled(false);
     setStyleName(Styles.PTAB_CONTENT_STYLE);
     setHeadStyleName(Styles.PTABH_STYLE);
@@ -33,9 +34,6 @@ public class UserTab extends AbstractForm {
 	setTabHeaderText(user.getUsername());
     setTitle(LabelText.USER_HI + user.getUsername());
 	setSubTitle(LabelText.USER_SUMMARY);
-	
-	
-	//declare variables
 	final Platax platax = pplatax;
     final PlataxTabPanel ptp = platax.getPtp();
 	final FlexTable loggedinTable = new FlexTable();
@@ -100,10 +98,6 @@ public class UserTab extends AbstractForm {
 						ptp.selectTab(enterprise.getOpenTabIndex());
 					}else{
 						platax.addTab(new EnterpriseTab(platax, enterprise));
-						/*
-						int etabindex = ptp.getWidgetIndex(etab);
-						enterprise.setOpenTabIndex(etabindex);
-						ptp.selectTab(etabindex);*/
 					}
 				}
 			});
@@ -117,24 +111,12 @@ public class UserTab extends AbstractForm {
 			@Override
 			public void onClick(ClickEvent event) {
 					platax.addTab(new AddEnterpriseForm(platax), true);
-					/*
-					int etabindex = ptp.getWidgetIndex(etab);
-					ptp.selectTab(etabindex);*/
 				}
 			}
 		);
-		
-		
 		formPanel.add(loggedinTable);
-		
 		this.add(formPanel);
-		
-		
-	
-		
-		
-		
-	}
+		}
 
 	@Override
 	public void refresh() {

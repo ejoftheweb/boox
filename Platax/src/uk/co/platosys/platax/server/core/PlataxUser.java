@@ -95,7 +95,7 @@ public class PlataxUser extends Xuser {
 			}
 			
 		}catch(Exception x){
-			logger.log("PltaxUser: might have been an issue with the clerkstable", x);
+			logger.log("PlataxUser: might have been an issue with the clerkstable", x);
 		}
 		
 		pxuser = new PXUser();

@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -17,7 +18,6 @@ import com.google.gwt.user.client.ui.Widget;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
-import uk.co.platosys.platax.client.widgets.CheckPanel;
 import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.client.widgets.buttons.CancelButton;
 import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
@@ -25,6 +25,7 @@ import uk.co.platosys.platax.client.widgets.labels.FormSubHeaderLabel;
 import uk.co.platosys.platax.shared.boox.GWTSelectable;
 import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.fieldsets.FormField;
+import uk.co.platosys.pws.inputfields.CheckList;
 import uk.co.platosys.pws.labels.FieldInfoLabel;
 import uk.co.platosys.pws.labels.FieldLabel;
 
@@ -123,7 +124,7 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 		}
 	}
 	
-	public void fillCheckPanel(CheckPanel panel, TreeMap<String, GWTSelectable> content){
+	public void fillCheckPanel(CheckList panel, TreeMap<String, GWTSelectable> content){
 		for (String key: content.keySet()){
 			GWTSelectable module = content.get(key);
 			String desc=module.getDescription();

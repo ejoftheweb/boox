@@ -19,6 +19,7 @@ public class SubmitBox extends AbstractValueField<Boolean> implements HasClickHa
 	   cancelButton.setEnabled(true);
 	   submitButton.setEnabled(false);
    }
+	
 	@Override
 	public HandlerRegistration addValueChangeHandler(
 			ValueChangeHandler<Boolean> handler) {
@@ -35,23 +36,23 @@ public class SubmitBox extends AbstractValueField<Boolean> implements HasClickHa
 	@Override
 	public void setFocus(boolean focused) {
 		submitButton.setFocus(true);
-		
 	}
 
 	@Override
 	public void setEnabled(boolean enabled) {
 		submitButton.setEnabled(true);
-		
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return submitButton.isEnabled();
 	}
+	
 	@Override
 	public HandlerRegistration addClickHandler(ClickHandler handler) {
 		return submitButton.addClickHandler(handler);
 	}
+	
 	@Override
 	public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
 		// TODO Auto-generated method stub

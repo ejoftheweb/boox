@@ -24,7 +24,7 @@ public class ListValueField extends AbstractValueField<String> {
 	 add(listBox);
 	 addItems(items);
  }
- public void addItems(List<ValuePair> items){
+ public void addItems(List<? extends ValuePair> items){
 	 for (ValuePair item:items){
 		 listBox.addItem(item.getLabel(), item.getValue());
 	 }
@@ -62,5 +62,9 @@ public class ListValueField extends AbstractValueField<String> {
 	}
 	public void addItems(Map<String, String> items, boolean reverse){
 		listBox.addItems(items, reverse);
+	}
+	public void addItem(String name, String localisedName) {
+		listBox.addItem(name, localisedName);
+		
 	}
 }

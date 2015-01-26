@@ -13,4 +13,8 @@ public class DateFormats {
         public static final DateTimeFormat MED_DATE_FORMAT=DateTimeFormat.getFormat(MED_DATE_FORMAT_STRING);
         public static final DateTimeFormat LONG_DATE_FORMAT=DateTimeFormat.getFormat(LONG_DATE_FORMAT_STRING);
         
+        public static final long LONG_OVERDUE=-604800000;
+        public static final long DUE=8640000;
+        public static final long URGENT=604800000;
+        public static final long SOON=2419200000L;
 }
