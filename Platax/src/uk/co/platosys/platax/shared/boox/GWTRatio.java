@@ -2,17 +2,29 @@ package uk.co.platosys.platax.shared.boox;
 
 import java.io.Serializable;
 
+import uk.co.platosys.pws.values.GWTMoney;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class GWTRatio implements Serializable,  IsSerializable {
    private String name;
-   private String value;
+   private GWTMoney value;
+   private double percentValue;
+   private boolean percent=false;
+   private double percentTarget;
    private String info;
-   private String target;
+   private GWTMoney target;
+   
+   /**A ratio consists of three, and optionally four, fields:
+    * name and info, which are respectivel short and more discursive labels; 
+    * plus value - the value of the ratio, and optionally target (what we would like the ratio to be, so we can highlight variances).
+    * Value and Target can be set as either money or percentages.
+    * the boolean percent is 
+    */
 	public GWTRatio(){
 	   
    }
-	public GWTRatio(String name, String value, String info){
+	public GWTRatio(String name, GWTMoney value, String info){
 		this.name=name;
 		this.value=value;
 		this.info=info;
@@ -23,10 +35,10 @@ public class GWTRatio implements Serializable,  IsSerializable {
 	public String getName() {
 		return name;
 	}
-	public void setValue(String value) {
+	public void setValue(GWTMoney value) {
 		this.value = value;
 	}
-	public String getValue() {
+	public GWTMoney getValue() {
 		return value;
 	}
 	public void setInfo(String info) {
@@ -35,10 +47,10 @@ public class GWTRatio implements Serializable,  IsSerializable {
 	public String getInfo() {
 		return info;
 	}
-	public void setTarget(String target) {
+	public void setTarget(GWTMoney target) {
 		this.target = target;
 	}
-	public String getTarget() {
+	public GWTMoney getTarget() {
 		return target;
 	}
 }

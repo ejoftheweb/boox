@@ -281,7 +281,7 @@ public  class Clerk {
      */
     public boolean canRead(Enterprise enterprise, Ledger ledger){
         if (authenticated){
-        	logger.log("Clerk:canRead checking started");
+        	//logger.log("Clerk:canRead checking started");
             return hasPermission(enterprise, ledger, Permission.READ);
         }else{
         	logger.log("Clerk:canRead - clerk"+name+" is not authenticated");
@@ -306,7 +306,7 @@ public  class Clerk {
     }
     
     public boolean hasPermission(Enterprise enterprise, Ledger ledger, Permission permission){
-        logger.log("Clerk-HP checking for permission "+permission.getName()+ " on ledger "+ledger.getFullName());
+       // logger.log("Clerk-HP checking for permission "+permission.getName()+ " on ledger "+ledger.getFullName());
         
         //Permission checking Algorithm:
         //First, check to see if the permission is there on the ledger directly.
@@ -366,13 +366,13 @@ public  class Clerk {
                             }
                         }else{
                             if(rs.getBoolean(permission.getName())){
-                            	logger.log("CHPx Clerk "+name+" has direct permission "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
+                            	//logger.log("CHPx Clerk "+name+" has direct permission "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
                             	rs.close();
                                 statement.close();
                                 connection.close();
                             	return true;
                             }else if(rs.getBoolean(Permission.ALL_COLNAME)){
-                            	logger.log("CHPx Clerk "+name+" has all permissions inc "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
+                            	//logger.log("CHPx Clerk "+name+" has all permissions inc "+permission.getName()+" on ledger "+ledger.getFullName()+" in enterprise "+enterprise.getName());
                             	rs.close();
                                 statement.close();
                                 connection.close();

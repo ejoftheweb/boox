@@ -10,7 +10,7 @@
 
 <root xmlns = "http://www.platosys.co.uk/boox">
 <Ledgers>
-    <Ledger name="XBX">
+    <Ledger name="XBX" currency="XBX">
      <Ledger name="Operations"> 
         <Ledger name="Income" isPrivate="false">
            <Ledger name="Sales" isPrivate="false">

@@ -10,7 +10,7 @@
 
 <root xmlns = "http://www.platosys.co.uk/boox">
  <Ledgers>
-    <Ledger name="XBX">
+    <Ledger name="XBX" currency="XBX">
        
      <!-- the balance on the Operations ledger is an approximate proxy for profit -->
         <Ledger name="Operations" isPrivate="false">

@@ -176,6 +176,7 @@ public class Boox {
                 														+ Permission.ACCOUNTS_COLNAME +" boolean,"
                 														+ Permission.CREDIT_COLNAME+" boolean,"
                 														+ Permission.DEBIT_COLNAME+" boolean,"
+                														+ Permission.POST_COLNAME+" boolean,"
                 														+ Permission.BALANCE_COLNAME+" boolean,"
                 														+ Permission.READ_COLNAME+" boolean,"
                 														+ Permission.AUDIT_COLNAME+" boolean,"
@@ -746,9 +747,7 @@ public class Boox {
         debugLogger.log(5, "creating sub-ledgers in ledger "+ledger.getName());
         setLedgerPermissions(enterprise, clerk, element, ledger);
         List<Element> ledgerElements= element.getChildren("Ledger", ns);//use constant!
-        Iterator<Element> lit = ledgerElements.iterator();
-        while(lit.hasNext()){
-            Element ledgerElement = (Element) lit.next();
+        for (Element ledgerElement:ledgerElements){
             String name = ledgerElement.getAttributeValue("name");
             boolean isprivate = false;
             isprivate = Boolean.valueOf(ledgerElement.getAttributeValue("isPrivate"));//use constant
@@ -757,6 +756,7 @@ public class Boox {
                 if (ledgerElement.getAttributeValue("currency")!=null){
                     currency=Currency.getCurrency(ledgerElement.getAttributeValue("currency"));//use constant
                 }
+                logger.log("Bx-CL: ledger "+name+" currency is "+currency.getTLA());
             }catch(Exception e){
                 debugLogger.log("error reading currency attribute for ledger "+name, e);
             }

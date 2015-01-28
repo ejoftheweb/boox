@@ -27,7 +27,7 @@ public class Permission {
     static String DEBIT_COLNAME="debit";
     static String CREDIT_COLNAME="credit";
     static String READ_COLNAME="read";
-    
+    static String POST_COLNAME="post";
     static String ACCOUNTS_COLNAME="createaccounts";
     static String AUDIT_COLNAME="audit";
     static String BALANCE_COLNAME="balance";
@@ -38,6 +38,7 @@ public class Permission {
     
     public static Permission DEBIT=new Permission("debit");
     public static Permission CREDIT=new Permission("credit");
+    public static Permission POST=new Permission("post");
     public static Permission READ=new Permission("read");
     public static Permission ACCOUNTS=new Permission("createaccounts");
     public static Permission AUDIT=new Permission("audit");
@@ -47,6 +48,7 @@ public class Permission {
     public static Permission ALL=new Permission("all");
     public static CascadingPermission CASCADING_DEBIT=new CascadingPermission("debit");
     public static CascadingPermission CASCADING_CREDIT=new CascadingPermission("credit");
+    public static CascadingPermission CASCADING_POST=new CascadingPermission("post");
     public static CascadingPermission CASCADING_READ=new CascadingPermission("read");
     public static CascadingPermission CASCADING_ACCOUNTS=new CascadingPermission("createaccounts");
     public static CascadingPermission CASCADING_AUDIT=new CascadingPermission("audit");

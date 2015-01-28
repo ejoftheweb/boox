@@ -243,9 +243,9 @@ public  class Task {
           case Task.FORTNIGHTLY:dueDate= ISODate.fortnightAhead();break;
           case Task.FOURWEEKLY:dueDate=ISODate.fourWeeksAhead();break;
           case Task.MONTHLY:dueDate=ISODate.monthAhead();break;
-          case Task.PERIOD_END:dueDate=ISODate.getEndOfMonth(new ISODate());break;//todo
-          case Task.QUARTERLY:dueDate=ISODate.getEndOfMonth(new ISODate());break;//todo
-          case Task.ANNUAL:dueDate=ISODate.yearAhead();break;
+          case Task.PERIOD_END:dueDate=ISODate.getMonthAhead(enterprise.getAccountingDate());break;//todo
+          case Task.QUARTERLY:dueDate=ISODate.getQuarterAhead(enterprise.getAccountingDate());break;//todo
+          case Task.ANNUAL:dueDate=ISODate.getYearAhead(enterprise.getAccountingDate());break;
           case Task.IRREGULAR:break;//todo
 		}
 		

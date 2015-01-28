@@ -155,7 +155,7 @@ public class SupplierBill extends AbstractBill {
     	table.setWidget(rows, 1, new Label(itemListBox.getItemText(itemListBox.getSelectedIndex())));
 		table.setWidget(rows, 2, new Label(qtyBox.getText()));
 		final Button voidLineButton = new LineCancelButton();
-		cancelButton.addClickHandler(new ClickHandler(){
+		voidLineButton.addClickHandler(new ClickHandler(){
            @Override
 			public void onClick(ClickEvent event) {
 				invoiceService.voidLine(gwtLineItem, voidLineCallback);

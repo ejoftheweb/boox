@@ -16,8 +16,11 @@ import uk.co.platosys.platax.client.widgets.AddressWidget;
 import uk.co.platosys.platax.client.widgets.EnterpriseMenu;
 import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
+import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTRatio;
+import uk.co.platosys.pws.labels.FieldInfoLabel;
+import uk.co.platosys.pws.labels.FieldLabel;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -70,23 +73,20 @@ public class EnterpriseTab extends AbstractForm {
 			
 			
 		    EnterpriseMenu eMenu = new EnterpriseMenu(enterprise, platax);
-		    panel.add(eMenu);
+		    menuPanel.add(eMenu);
 			//handlers:
 			
 			//The key ratios table
 			if(enterprise!=null){
-				table.setWidget(1,1, new Label(LabelText.KEY_RATIOS_HEADER));
+				table.setWidget(1,1, new FormHeaderLabel(LabelText.KEY_RATIOS_HEADER));
 				List<GWTRatio> ratioList = enterprise.getRatios();
 				Iterator<GWTRatio> rit = ratioList.iterator();
 				int rowno=2;
 				while (rit.hasNext()){
 					GWTRatio ratio = rit.next();
-					table.setWidget(rowno, 0, new Label(ratio.getName()));
-					table.setWidget(rowno, 1, new Label(ratio.getValue()));
-					Anchor anchor = new Anchor(LabelText.MORE);
-					anchor.setTarget(ratio.getTarget());
-					table.setWidget(rowno, 2, anchor);
-					table.setWidget(rowno, 3, new Label(ratio.getInfo()));
+					table.setWidget(rowno, 0, new FieldLabel(ratio.getName()));
+					table.setWidget(rowno, 1, new MoneyLabel(ratio.getValue()));
+					table.setWidget(rowno, 2, new FieldInfoLabel(ratio.getInfo()));
 					rowno++;
 				}
 			}			

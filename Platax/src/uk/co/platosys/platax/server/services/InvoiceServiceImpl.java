@@ -60,10 +60,14 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 				gwtProductList.add(ProductServiceImpl.createGWTItem(item));
 			}
 			Map<Integer, InvoiceItem> invoiceItems = invoice.getInvoiceItems();
+			logger.log("ISI-cI there are "+invoiceItems.size()+" items on the invoice ");
 			for (Integer index:invoiceItems.keySet()){
 				InvoiceItem invitem = invoiceItems.get(index);
-				logger.log("ISI converting item at "+index);
-				logger.log("ISI item name is"+invitem.getProduct().getName());
+				logger.log("ISI-cI converting item at "+index);
+				logger.log("ISI-cI item name is "+invitem.getProduct().getName());
+				logger.log("ISI-cI item qty is "+invitem.getQuantity());
+				logger.log("ISI-cI item price is "+invitem.getUnitPrice().toPlainString());
+				logger.log("ISI-cI item curr is "+invitem.getUnitPrice().getCurrency().getTLA());
 				gwtInvoice.addLineItem(convert(invitem));
 			}
 			gwtInvoice.setProducts(gwtProductList);
@@ -151,7 +155,8 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 			return null;
 		}
 	}
-	@Override	public GWTInvoice raiseInvoice(GWTInvoice gwtInvoice)  {
+	@Override	
+	public GWTInvoice raiseInvoice(GWTInvoice gwtInvoice)  {
 		try{
 			String sysname = gwtInvoice.getSysname();
 		    logger.log("ISIri- raising invoice "+sysname+ "for "+gwtInvoice.getGross().toPlainString());
@@ -269,5 +274,17 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
     	PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
 		return pxuser.getInvoice(sin);
     }
+
+	@Override
+	public GWTInvoice deleteInvoice(GWTInvoice invoice) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GWTInvoice saveInvoice(GWTInvoice invoice) {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 }

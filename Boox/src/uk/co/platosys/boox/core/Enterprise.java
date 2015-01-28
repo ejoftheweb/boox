@@ -4,10 +4,14 @@
  */
 package uk.co.platosys.boox.core;
 
+import java.text.ParseException;
+
 import uk.co.platosys.boox.Body;
 import uk.co.platosys.boox.core.exceptions.BooxException;
 import uk.co.platosys.boox.core.exceptions.CredentialsException;
+import uk.co.platosys.boox.core.exceptions.PermissionsException;
 import uk.co.platosys.boox.money.Currency;
+import uk.co.platosys.boox.money.CurrencyException;
 import uk.co.platosys.boox.money.Money;
 import uk.co.platosys.db.DBTools;
 import uk.co.platosys.db.PlatosysDBException;
@@ -42,6 +46,12 @@ public class Enterprise extends Body {
 	protected static final String TABLENAME="bx_enterprise";
 	static final String KEY_COLNAME="key";
 	static final String VALUE_COLNAME="value";
+	static final String NAME_PARAMNAME="Name";
+	static final String LEGALNAME_PARAMNAME="LegalName";
+	static final String ACCDATE_PARAMNAME="AccDate";
+	static final String CURRENT_LEDGERNAME="Root:XBX:Current";
+	static final String OPERATIONS_LEDGERNAME="Root:XBX:Operations";
+	static final String ASSETS_LEDGERNAME="Root:XBX:Fixed:Assets";
     // private Journal journal;
     private Ledger generalLedger;
     private JDBCTable enterpriseTable;
@@ -49,6 +59,7 @@ public class Enterprise extends Body {
     private ISODate accountingDate;
     public static Currency DEFAULT_CURRENCY=Currency.getCurrency(Boox.DEFAULT_CURRENCY);
     private static Logger logger=Logger.getLogger("boox");
+    private Clerk supervisor;
     /**
      * Instantiates an Enterprise object given its sysname
      * 
@@ -77,6 +88,7 @@ public class Enterprise extends Body {
     }
    
     private void setSupervisor(Clerk supervisor){
+    	this.supervisor=supervisor;
     }
     //this method can only return null atm?
     public Ledger getGeneralLedger(){
@@ -85,6 +97,12 @@ public class Enterprise extends Body {
     public Currency getDefaultCurrency(){
     	return DEFAULT_CURRENCY;
     }
+  
+    /**Deprecated Use setParameter instead
+     * @param key
+     * @param value
+     */
+    @Deprecated
     public void setValue(String key, String value){
         try {
             enterpriseTable.amend(key, "value", value);
@@ -95,14 +113,22 @@ public class Enterprise extends Body {
     public boolean isVatRegistered(){
     	return isVatRegistered;
     }
-    public Money getNetAssetValue(){
-    	//TODO
-    	return null;
-    
+    public Money getNetAssetValue(Clerk clerk) throws PermissionsException, CurrencyException{
+    	Ledger current = Ledger.getLedger(this, CURRENT_LEDGERNAME);
+    	Ledger assets = Ledger.getLedger(this, ASSETS_LEDGERNAME);
+    	Money currentAssets=current.getBalance(this, clerk);
+    	Money fixedAssets = assets.getBalance(this, clerk);
+    	return Money.add(currentAssets, fixedAssets);
     }
   
-    
-    
+    public Money getCurrentProfit(Clerk clerk) throws PermissionsException, CurrencyException{
+    	Ledger ops = Ledger.getLedger(this, OPERATIONS_LEDGERNAME);
+    	return ops.getBalance(this, clerk);
+    }
+    public Money getNetCurrentAssets(Clerk clerk) throws PermissionsException, CurrencyException{
+    	Ledger current = Ledger.getLedger(this, CURRENT_LEDGERNAME);
+    	 return current.getBalance(this, clerk);
+     }
     
     
     
@@ -146,7 +172,7 @@ public class Enterprise extends Body {
      * the Enterprise is listed in the master database, in the enterprises table; it also has its own database (which holds the accounts).
      * 
      */
-    public static Enterprise createEnterprise(String name, String legalName, String databaseName) throws BooxException {
+    public static Enterprise createEnterprise(String name, String legalName, String databaseName, ISODate accDate) throws BooxException {
     	//need to 
     	 logger.log(2, "creating enterprise "+name);
     	
@@ -168,33 +194,28 @@ public class Enterprise extends Body {
 				logger.log("problem creating new database", e);
 				throw new BooxException("could not create new database for enteprise "+name, e);
 			}
+    		 setParameter(databaseName, NAME_PARAMNAME, name);
+             setParameter(databaseName, LEGALNAME_PARAMNAME, legalName);
+             try {
+				Directory.addBody(sysname, name, legalName,databaseName, true);
+			} catch (PlatosysDBException e) {
+				// TODO Auto-generated catch block
+				logger.log("error:",e);
+			}
+         	
     	}
-        
-      
-        JDBCTable enterpriseTable=null;
-         try{
-         if(!(JDBCTable.tableExists(databaseName, Enterprise.TABLENAME))){
-        	    logger.log("creating enterprise table in db "+databaseName);
-                enterpriseTable = JDBCTable.createTable(databaseName, Enterprise.TABLENAME, Enterprise.KEY_COLNAME, JDBCTable.TEXT_COLUMN);
-                enterpriseTable.addColumn(Enterprise.VALUE_COLNAME, JDBCTable.TEXT_COLUMN);
-         }else{
-                enterpriseTable=new JDBCTable(databaseName, Enterprise.TABLENAME, Enterprise.KEY_COLNAME);
-                String[] cols={Enterprise.KEY_COLNAME, Enterprise.VALUE_COLNAME};
-                String[] vals={"Enterprise Name", name};
-                enterpriseTable.addRow(cols, vals);
-                String[] valsw={"Legal Name", legalName};
-                enterpriseTable.addRow(cols, valsw);
-        }
-         Directory.addBody(sysname, name, legalName,databaseName, true);
-        }catch(Exception x){
-        	logger.log("problem initialising enterprise table in its own database", x);
-            throw new BooxException("Couldn't initialise enterprise JDBCTable in its own database",x);
-        }
+         
         Enterprise enterprise = Enterprise.getEnterprise(sysname);
         if (enterprise!=null){
         	logger.log("Enterprise created enterprise:"+enterprise.getName());
         	Boox.createNewJournal(enterprise);
-        	
+        	try{
+        		 enterprise.setParameter(NAME_PARAMNAME, name);
+                 enterprise.setParameter(LEGALNAME_PARAMNAME, legalName);
+            enterprise.setAccountingDate( accDate);
+            }catch(Exception ex){
+        		logger.log("ECE problem setting enterprise parameter or addint to directory", ex);
+        	}
         	return enterprise;
         }else{
         	logger.log(1, "ECE-null enterprise returned from EgetE(ID)");
@@ -202,14 +223,102 @@ public class Enterprise extends Body {
         }
         
     }
-
+    
+    void setParameter(String name, String value) throws BooxException{
+    	 JDBCTable enterpriseTable=null;
+         try{
+         if(!(JDBCTable.tableExists(getDatabaseName(), Enterprise.TABLENAME))){
+        	    logger.log("creating enterprise table in db "+getDatabaseName());
+                enterpriseTable = JDBCTable.createTable(getDatabaseName(), Enterprise.TABLENAME, Enterprise.KEY_COLNAME, JDBCTable.TEXT_COLUMN);
+                enterpriseTable.addColumn(Enterprise.VALUE_COLNAME, JDBCTable.TEXT_COLUMN);
+         }else{
+                enterpriseTable=new JDBCTable(getDatabaseName(), Enterprise.TABLENAME, Enterprise.KEY_COLNAME);
+                String[] cols={Enterprise.KEY_COLNAME, Enterprise.VALUE_COLNAME};
+                String[] vals={name, value};
+                enterpriseTable.addRow(cols, vals);
+                
+        }
+         }catch(Exception x){
+         	logger.log("problem setting parameter in table in its own database", x);
+             throw new BooxException("Couldn't set enterprise parameter in its own database",x);
+         }
+    }
+    static void setParameter(String databaseName, String name, String value) throws BooxException{
+   	 JDBCTable enterpriseTable=null;
+        try{
+        if(!(JDBCTable.tableExists(databaseName, Enterprise.TABLENAME))){
+       	    logger.log("creating enterprise table in db "+databaseName);
+               enterpriseTable = JDBCTable.createTable(databaseName, Enterprise.TABLENAME, Enterprise.KEY_COLNAME, JDBCTable.TEXT_COLUMN);
+               enterpriseTable.addColumn(Enterprise.VALUE_COLNAME, JDBCTable.TEXT_COLUMN);
+        }else{
+               enterpriseTable=new JDBCTable(databaseName, Enterprise.TABLENAME, Enterprise.KEY_COLNAME);
+               String[] cols={Enterprise.KEY_COLNAME, Enterprise.VALUE_COLNAME};
+               String[] vals={name, value};
+               enterpriseTable.addRow(cols, vals);
+               
+       }
+        }catch(Exception x){
+        	logger.log("problem setting parameter in table in its own database", x);
+            throw new BooxException("Couldn't set enterprise parameter in its own database",x);
+        }
+   }
+    
+    /** Returns a parameter from the parameters table
+     * Note this only stores data as key-value pairs, both of which must be Strings. 
+     *  @param name
+     * @return
+     * @throws BooxException 
+     */
+    String getParameter(String name) throws BooxException{
+    	try{
+	    	if(JDBCTable.tableExists(getDatabaseName(), Enterprise.TABLENAME)){
+	    	 enterpriseTable=new JDBCTable(getDatabaseName(), Enterprise.TABLENAME, Enterprise.KEY_COLNAME);
+	         return enterpriseTable.readString(name, Enterprise.VALUE_COLNAME);
+	    	}else{
+	    		throw new BooxException("EgetParam: Parameters table doesn't exist");
+	    	}
+	    }catch(Exception e ){
+    		logger.log("Enterprise issue getting parameter "+name, e);
+    		throw new BooxException("problem getting parameter "+name, e);
+    	}
+    }
+    
+    /**Returns the accounting date.
+     * 
+     * @return
+     * @throws BooxException 
+     */
 	public ISODate getAccountingDate() {
+		
+		if (accountingDate==null){
+			try {
+				String date = getParameter(ACCDATE_PARAMNAME);
+			
+				accountingDate=new ISODate(date);
+			} catch (Exception e) {
+				logger.log("enterprise getAccounting date, date  error:",e);
+			}
+		}
 		return accountingDate;
 	}
 
-	public void setAccountingDate(ISODate accountingDate) {
-		this.accountingDate = accountingDate;
-	}
-    
+	private void setAccountingDate( ISODate accountingDate) throws BooxException {
+        this.accountingDate=accountingDate;
+		setParameter(ACCDATE_PARAMNAME, accountingDate.dateTimeMs());
+    }
+	
+	/**Sets the accounting date. The clerk  must be the authenticated supervisor.
+	 * 	 * @param clerk
+	 * @param accountingDate
+	 * @throws BooxException
+	 * @throws PermissionsException
+	 */
+	public void setAccountingDate( Clerk clerk, ISODate accountingDate) throws BooxException, PermissionsException {
+		if ((clerk.equals(supervisor))&&(clerk.isAuthenticated())){
+		   setAccountingDate(accountingDate);
+		}else{
+			throw new PermissionsException("not authorised to reset accounting date");
+		}
+    }
     
 }

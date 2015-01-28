@@ -40,6 +40,7 @@ import uk.co.platosys.pws.labels.FieldLabel;
 public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.PTab implements Form {
 	protected FlexTable table=new FlexTable();
 	private FormPanel forrmPanel=new FormPanel();
+	protected FlowPanel menuPanel=new FlowPanel();
 	protected FlowPanel formPanel=new FlowPanel();
 	protected FlowPanel panel=new FlowPanel();
 	private InlineLabel counter;
@@ -55,6 +56,7 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 		panel.setWidth("100%");
 		panel.add(topLabel);
 		panel.add(subHeader);
+		panel.add(menuPanel);
 		panel.add(forrmPanel);
 		forrmPanel.add(formPanel);
 		formPanel.add(table);
@@ -74,6 +76,7 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 		panel.setWidth("100%");
 		panel.add(topLabel);
 		panel.add(subHeader);
+		panel.add(menuPanel);
 		panel.add(forrmPanel);
 		forrmPanel.add(formPanel);
 		
@@ -88,6 +91,7 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 		panel.setWidth("100%");
 		panel.add(topLabel);
 		panel.add(subHeader);
+		panel.add(menuPanel);
 		panel.add(forrmPanel);
 		forrmPanel.add(formPanel);
 		
@@ -104,6 +108,7 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 		panel.setWidth("100%");
 		panel.add(topLabel);
 		panel.add(subHeader);
+		panel.add(menuPanel);
 		panel.add(forrmPanel);
 		forrmPanel.add(formPanel);
 		formPanel.add(table);

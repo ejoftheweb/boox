@@ -60,6 +60,7 @@ public class InvoiceForm extends AbstractBill {
 	//widgets
 	final Button newProductButton = new Button(ButtonText.ADD_NEW);
 	final Button newCustomerButton = new Button(ButtonText.ADD_NEW);
+	final Button raiseInvoiceButton = (new Button(ButtonText.RAISE_INVOICE));
 	
 	//services
     final InvoiceServiceAsync invoiceService = (InvoiceServiceAsync) GWT.create(InvoiceService.class);
@@ -78,7 +79,17 @@ public class InvoiceForm extends AbstractBill {
     		else {itemListBox.addItems(result);}
 		}
     };
-    
+    final AsyncCallback<ArrayList<GWTCustomer>> getCustomersCallback = new AsyncCallback<ArrayList<GWTCustomer>>(){
+    	@Override
+		public void onFailure(Throwable caught) {
+			Window.alert(StringText.SERVER_ERROR+"INV4");
+		}
+    	@Override
+		public void onSuccess(ArrayList<GWTCustomer> result) {
+    		if(result==null){Window.alert(StringText.SERVER_ERROR+"INV4A");}
+    		else {contactListBox.addContacts(result);}
+		}
+    };
     final AsyncCallback<GWTInvoice> createInvoiceCallback = new AsyncCallback<GWTInvoice>(){
     	@Override
 		public void onSuccess(GWTInvoice result) {
@@ -90,7 +101,6 @@ public class InvoiceForm extends AbstractBill {
   			Window.alert(StringText.SERVER_ERROR+"INV1");
 		}
     };
-    
     final AsyncCallback<GWTLineItem> postLineCallback = new AsyncCallback<GWTLineItem>(){
     	@Override
 		public void onSuccess(GWTLineItem result) {
@@ -121,7 +131,6 @@ public class InvoiceForm extends AbstractBill {
 			Window.alert(StringText.SERVER_ERROR+"INV2");
 		}
     };
-    
     final AsyncCallback<GWTLineItem> voidLineCallback = new AsyncCallback<GWTLineItem>(){
     	@Override
 		public void onSuccess(GWTLineItem result) {
@@ -140,18 +149,39 @@ public class InvoiceForm extends AbstractBill {
 			Window.alert(StringText.SERVER_ERROR+"INV3");
 		}
     };
-    final AsyncCallback<ArrayList<GWTCustomer>> getCustomersCallback = new AsyncCallback<ArrayList<GWTCustomer>>(){
+    final AsyncCallback<GWTInvoice> saveInvoiceCallback = new AsyncCallback<GWTInvoice>(){
     	@Override
-		public void onFailure(Throwable caught) {
-			Window.alert(StringText.SERVER_ERROR+"INV4");
-		}
-    	@Override
-		public void onSuccess(ArrayList<GWTCustomer> result) {
+		public void onSuccess(GWTInvoice result) {
     		if(result==null){Window.alert(StringText.SERVER_ERROR+"INV4A");}
-    		else {contactListBox.addContacts(result);}
+    		else {setInvoice(result);}
+		}
+  		@Override
+		public void onFailure(Throwable cause) {
+  			Window.alert(StringText.SERVER_ERROR+"INV4");
 		}
     };
-    
+    final AsyncCallback<GWTInvoice> raiseInvoiceCallback = new AsyncCallback<GWTInvoice>(){
+    	@Override
+		public void onSuccess(GWTInvoice result) {
+    		if(result==null){Window.alert(StringText.SERVER_ERROR+"INV5A");}
+    		else {setInvoice(result);}
+		}
+  		@Override
+		public void onFailure(Throwable cause) {
+  			Window.alert(StringText.SERVER_ERROR+"INV5");
+		}
+    };
+    final AsyncCallback<GWTInvoice> deleteInvoiceCallback = new AsyncCallback<GWTInvoice>(){
+    	@Override
+		public void onSuccess(GWTInvoice result) {
+    		if(result==null){Window.alert(StringText.SERVER_ERROR+"INV6A");}
+    		else {setInvoice(result);}
+		}
+  		@Override
+		public void onFailure(Throwable cause) {
+  			Window.alert(StringText.SERVER_ERROR+"INV6");
+		}
+    };
     //constructor
 	/**
 	 * Constructs an invoice form.
@@ -174,7 +204,9 @@ public class InvoiceForm extends AbstractBill {
 		cpartyPanel.insert( new FormSubHeaderLabel(LabelText.CUSTOMER),0);
 		cpartyNamePanel.setWidget(contactListBox);
 		cpartyPanel.add(newCustomerButton);
-		submitButtonPanel.add(new Button(ButtonText.RAISE_INVOICE));
+		//the submit-button panel
+		//cancel and save are in the superclass, abstract bill, we just need raise:
+		submitButtonPanel.add(raiseInvoiceButton);
 		//handlers
 		newCustomerButton.addClickHandler(new ClickHandler(){
 		    @Override
@@ -239,7 +271,28 @@ public class InvoiceForm extends AbstractBill {
 				}
 			}
 		});
-		
+		raiseInvoiceButton.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				if(Window.confirm("Are you sure you want to raise this invoice and send it the customer?")){
+					raiseInvoice();
+				}
+			}
+		});
+		saveButton.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				saveInvoice();
+			}
+		});
+		deleteButton.addClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				if(Window.confirm("Are you sure you want to delete this invoice?")){
+					deleteInvoice();
+				}
+			}
+		});
 	}
 
 	protected void setInvoice(GWTInvoice gwtInvoice) {
@@ -255,7 +308,12 @@ public class InvoiceForm extends AbstractBill {
 		}
 		
 	}
-
+    private void deleteInvoice(){}
+    private void raiseInvoice(){
+    	invoiceService.raiseInvoice(gwtInvoice, raiseInvoiceCallback);
+    }
+    private void saveInvoice(){}
+    
 	 protected void insertLine(final GWTLineItem gwtLineItem) {
 	    	final int rows = table.getRowCount()-1;
 	    	table.setWidget(rows, 1, new Label(gwtLineItem.getItemName()));

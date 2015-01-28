@@ -57,8 +57,7 @@ public static Logger logger  = Logger.getLogger("platax");
  
     public static void createLedgersAndAccounts(Enterprise enterprise, Clerk clerk, Element element, Ledger ledger) throws BooxException, PermissionsException{
         Boox.createLedgersAndAccounts(enterprise, clerk, element, ledger);
-        
-    }
+     }
   
     ///this section has a series of methods to create GWTserializable analogues of Boox accounting objects and the inverse
     public static GWTMoney convert(Money money){
@@ -66,17 +65,14 @@ public static Logger logger  = Logger.getLogger("platax");
     		logger.log("PXServer convert - null money");
     		return new GWTMoney();
     	}
+    	logger.log("PXServer - converting "+money.toPrefixedString());
     	return new GWTMoney(money.getCurrency().getTLA(), money.getAmount().doubleValue());
     }
     public static Money convert(GWTMoney gwtMoney){
     	return new Money(gwtMoney.getCurrencyTLA(), gwtMoney.getAmount());
     }
-   
-  
-
     public static List<GWTItem> getProducts(GWTEnterprise gwtEnterprise, PlataxUser user, GWTCustomer gwtCustomer){
     	List<GWTItem> gwtItems = new ArrayList<GWTItem>();
-    	
     	try{
     		Enterprise enterprise = Enterprise.getEnterprise(gwtEnterprise.getEnterpriseID());
     		Clerk clerk=user.getClerk(enterprise);
@@ -116,34 +112,7 @@ public static Logger logger  = Logger.getLogger("platax");
     
     
     
-    
-    
-    /**
-     * method to get an enterprise to read its current ratios.
-     * @param enterprise
-     * @param user
-     * @param gwtEnterprise
-     * @return
-     */
-    public static GWTEnterprise readRatios (Enterprise enterprise, PlataxUser user, GWTEnterprise gwtEnterprise){
-    	try {
-			Clerk clerk = user.getClerk(enterprise);
-			//Read Net Current Assets:
-			Money currentAssets =Boox.openLedger(enterprise, "CurrentAssets", clerk).getBalance(enterprise, clerk);
-			Money currentLiabilities=Boox.openLedger(enterprise, "CurrentLiabilities", clerk).getBalance(enterprise, clerk);
-			Money netCurrentAssets = currentAssets.subtract(currentLiabilities);
-			gwtEnterprise.addRatio("Net Current Assets", netCurrentAssets.toPrefixedString(), "Shows how solvent the enterprise is");
-			//Read Owner's Capital
-			Money equity = Boox.openLedger(enterprise, "Equity", clerk).getBalance(enterprise, clerk);
-			gwtEnterprise.addRatio("Equity Capital", equity.toPrefixedString(), "Book value of the company");
-			return gwtEnterprise;
-		} catch (Exception e) {
-			logger.log("problem reading ratios for enterprise "+enterprise.getName(), e);
-			e.printStackTrace();
-		}
-		return null;
-        
-    }
+ 
  
 }
 

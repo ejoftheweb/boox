@@ -124,7 +124,7 @@ public class Invoice extends Account  {
    public static final String OVERDUE="OVERDUE";
    public static final String DISPUTED="DISPUTED";
       
-   private static final String INVOICE_TABLENAME="invoice_list";
+   private static final String INVOICE_TABLENAME="invoice_list";//need to change to bx_invoices!
    private static final String INVOICE_NUMBER_COLNAME="invoice_no";
    private static final String INVOICE_SYSNAME_COLNAME="sysname";
    private static final String INVOICE_USERNO_COLNAME="user_invoice_no";
@@ -282,6 +282,7 @@ public class Invoice extends Account  {
 					 item.setProduct(product);
 					 logger.log("Invoice<init3>: item product is "+product.getName());
 					 Money unitPrice = item.getProduct().getSellingPrice(customer);
+					 item.setUnitPrice(unitPrice);
 					 Money amount = new Money(currency, rw.getBigDecimal(Account.AMOUNT_COLNAME));
 					 double qty = Money.divide(amount, unitPrice).doubleValue();
 					 item.setQuantity(qty);
@@ -334,6 +335,7 @@ public class Invoice extends Account  {
     * @param invoiceNumber
     * @return an Invoice */
    public static Invoice openInvoice(Enterprise enterprise, Clerk clerk, String sysname) throws PermissionsException{
+	   logger.log("Invoice: opening invoice "+ sysname);
 	    return new Invoice(enterprise, sysname, clerk);
    }
    
@@ -756,16 +758,15 @@ public static Invoice getInvoice(Enterprise enterprise, Clerk clerk, Customer cu
 	 * If so, we return it.
 	 * Second, if not we return an invoice which is a clone of the last invoice we raised for that customer. */
 	try{
-		Table invoicesTable = getInvoicesTable(enterprise);
-		List<Row> rows = invoicesTable.getRows(INVOICE_CUSTOMER_SYSNAME_COLNAME, customer.getSysname());
+		Table invoicesTable = getInvoicesTable(enterprise);//returns the list of invoices.
+		List<Row> rows = invoicesTable.getRows(INVOICE_CUSTOMER_SYSNAME_COLNAME, customer.getSysname());//retrieves a list of invoices for this customer
 		logger.log("InvoiceGI: found "+rows.size()+"invoices for "+customer.getName());
-		ISODate date = new ISODate(new Long(0));
+		ISODate date = enterprise.getAccountingDate();
 		logger.log("InvoiceGI: starting date for search is"+date.toString());
 		String invSysname=null;
 		String status=null;
-		for (Row row:rows){
-			ISODate invDate;
-				invDate = row.getISODate(INVOICE_CREATED_DATE_COLNAME);
+		for (Row row:rows){ //iterate through the rows for the most recent created-date line.
+			ISODate invDate = row.getISODate(INVOICE_CREATED_DATE_COLNAME);
 			if (invDate.after(date)){
 				logger.log("InvoiceGI: "+invDate.toString()+" is after "+date.toString());
 				date=invDate;
@@ -775,11 +776,11 @@ public static Invoice getInvoice(Enterprise enterprise, Clerk clerk, Customer cu
 				logger.log("InvoiceGI: "+invDate.toString()+" is before "+date.toString());
 			}
 		}
-		if(invSysname==null){
+		if(invSysname==null){ //we didn't find any previous invoice:
 			logger.log("creating first invoice for customer:"+customer.getName());
 			return createInvoice(enterprise, clerk, customer);
 		}else{
-			if(status.equals(PENDING)){
+			if(status.equals(PENDING)){ //if it's pending, we return it.
 				logger.log("opening  latest invoice for customer:"+customer.getName());
 				return openInvoice(enterprise, clerk, invSysname);
 			}else{

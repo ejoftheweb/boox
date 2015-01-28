@@ -15,66 +15,63 @@
 <root xmlns = "http://www.platosys.co.uk/boox">
 <Ledgers> 
     <!-- XBX is the system name for the default currency. -->
-    <Ledger name="XBX">
+    <Ledger name="XBX" currency="XBX">
         <!-- the balance on the Operations ledger is an approximate proxy for profit -->
         <Ledger name="Operations" isPrivate="false">
         <!-- the Income ledger records all income received by the business, whether sales or interest earned -->
-        <Ledger name="Income" isPrivate="false">
-           <Ledger name="Sold" isPrivate="false">
-              <Account name="Sales" fullName="Goods sold" description="General Sales Account"/>
-           </Ledger>
-           <Ledger name="InterestEarned" isPrivate="false"/>    
-       </Ledger>
-      
-      <!--  the Expenditure ledger records outgoings -->
-      <Ledger name="Expenditure" isPrivate="false">
-          <!-- variable costs go up and down with the state of the business -->
-          <Ledger name="Variable" isPrivate="false">
-          		<!-- Purchases are things bought with the intention that they should be resold -->
-          		<Ledger name="Purchases" isPrivate="false"/>
-          		<!-- Labour can be both a fixed and a variable cost. This variable cost is for e.g. casual wages -->
-          		<Ledger name="Labour" isPrivate="false"/>
- 				<!-- Expenses covers other variable costs that are neither purchases nor labour -->	         
-          </Ledger>
-          <!-- Fixed costs you have to pay regardless of your trade -->
-          <Ledger name="Fixed" isPrivate="false">
-          		<!-- Fixed labour costs (e.g. staff salaries) go here -->
-          		<Ledger name="Labour" isPrivate="false"/>
-         	 		<!-- 
-          			<Ledger name="Salaries" isPrivate="false"/>
-          			-->
-      	  </Ledger>
-     </Ledger>
-    </Ledger>
+	      <Ledger name="Income" isPrivate="false">
+	         <Ledger name="Sold" isPrivate="false">
+	            <Account name="Sales" fullName="Goods sold" description="General Sales Account"/>
+	         </Ledger>
+	      </Ledger>
+	      
+	      <!--  the Expenditure ledger records outgoings -->
+	      <Ledger name="Expenditure" isPrivate="false">
+	          <!-- variable costs go up and down with the state of the business -->
+	          <Ledger name="Variable" isPrivate="false">
+	          		<!-- Purchases are things bought with the intention that they should be resold -->
+	          		<Ledger name="Purchases" isPrivate="false"/>
+	          		<!-- Labour can be both a fixed and a variable cost. This variable cost is for e.g. casual wages -->
+	          		<Ledger name="Labour" isPrivate="false"/>
+	 				<!-- Expenses covers other variable costs that are neither purchases nor labour -->	         
+	          </Ledger>
+	          
+	     </Ledger>
+    </Ledger><!-- Operations -->
      <!-- the Fixed ledger records the long-term assets and liabilities of the business -->      
      <Ledger name="Fixed" isPrivate="false">
-        <Ledger name="Liabilities" isPrivate="false">
-            <!-- Capital is money put into the business that you don't expect to pay back -->
-            <Ledger name="Capital" isPrivate="false"/>
-            <!-- Loans are  expected to be repaid -->
-            <Ledger name="Loans"  isPrivate="false"/>
-        </Ledger>
-        <Ledger name="Assets" isPrivate="false">
-        	<Ledger name="Land" isPrivate="false"/> 
+         <Ledger name="Assets" isPrivate="false">
         	<Ledger name="Plant" isPrivate="false">
-        	    <!-- 
-        	    <Ledger name="MotorVehicles" isPrivate="false"/>
-        	    -->
+        	    <Ledger name="AccountingEquipment" isPrivate="false">
+        	    	<Ledger name="PointOfSale" isPrivate="false">
+        	    	    <!-- This ledger records the asset value of the particular machine as a piece of kit -->
+        	    	    <Ledger name="CashRegisters" isPrivate="false"/>
+        	    	</Ledger>    
+        	    </Ledger>	
         	</Ledger>
     	</Ledger>
-    </Ledger>
+    </Ledger><!-- Fixed -->
     <!-- the Current ledger records the short-term assets and liabilities. Its balance is a good indicator of the business's solvency -->	
     <Ledger name="Current" isPrivate="false">
     	<Ledger name="Assets" isPrivate="false">
         	<Ledger name="Cash" isPrivate="false">
         	    <Ledger name="Registers" isPrivate="false">
-        	        <!-- Ledger name="Differences" isPrivate="false"/-->
+        	        <Ledger name="Floats" isPrivate="false"/>
+        	        <!-- must create an account for the register float -->
+        	        <Ledger name = "Registered" isPrivate="false"/>
+        	        <!-- note when we add a cash register we must create accounts for it -->
+        	        <Ledger name="Differences" isPrivate="false"/>
+        	        <!-- must create the differences account when we create the cash register-->
+        	        <Ledger name="PaidOuts" isPrivate="false"/>
+        	        <!-- must create the paidouts account when we create the cash register -->
         	    </Ledger>
-        	    <!-- 
-            	<Account name="PettyCash" fullName="Petty Cash" description="Petty Cash Account"/>
-            	<Account name="BankCurrent" fullName="Bank Current Account" description="Bank Current Account"/>
-            	<Account name="BankDeposit" fullName="Bank Deposit Account" description="Bank Deposit Account"/>
-            	-->
+        	    
+            	<Ledger name="Bank" isPrivate="false">
+            		<Account name="BankCurrent" fullName="Bank Current Account" description="Bank Current Account"/>
+            		<!-- <Account name="BankDeposit" fullName="Bank Deposit Account" description="Bank Deposit Account"/>-->
+            	</Ledger>
+            	
+        	   
         	</Ledger>
         	<Ledger name="Debtors" isPrivate="false">
         		<Ledger name="Customers" isPrivate="false"/>
@@ -88,28 +85,7 @@
     
         <Ledger name="Liabilities" isPrivate="false">
         	<Ledger name="Tax" isPrivate="false">
-        	    <!-- 
-            	<Ledger name="VAT" isPrivate="false">
-                	<Ledger name="OutputVat" isPrivate="false">
-                		<Account name="VATOutputZero" fullName="ZeroRate" description="ZeroRate"/>
-                		<Account name="VATOutputLower" fullName="LowerRate" description="LowerRate"/>
-                		<Account name="VATOutputStandard" fullName="StandardRate" description="StandardRate"/>
-                		<Account name="VATOutputHigher" fullName="HigerRate" description="HigherRate"/>
-                	</Ledger>
-                	<Ledger name="InputVat" isPrivate="false">
-                		<Account name="VATInputZero" fullName="ZeroRate" description="ZeroRate"/>
-                		<Account name="VATInputLower" fullName="LowerRate" description="LowerRate"/>
-                		<Account name="VATInputStandard" fullName="StandardRate" description="StandardRate"/>
-                		<Account name="VATInputHigher" fullName="HigerRate" description="HigherRate"/>
-                	</Ledger>
-            	</Ledger>
-            	-->
-            	<!-- 
-            	<Ledger name="PAYENIC" fullName="PAYE and NIC" description="Employment-related taxes">
-            		<Account name="PAYE" fullName="PAYE" description="PAYE Income Tax for employees"/>
-            		<Account name="NIC" fullName="National Insurance" description="National Insurance Contributions"/>
-        		</Ledger>
-        		-->
+        	   
         	</Ledger><!-- tax -->
        		<Ledger name="Creditors" isPrivate="false">
         		<Ledger name="Suppliers" isPrivate="false"/>
@@ -118,4 +94,26 @@
     </Ledger><!-- current -->
     </Ledger><!-- XBX -->
 </Ledgers>
+<Tasks>
+    <Task name="Cash Up" freq="daily" form="CashUp">
+        <!-- The Ledger element, when a child of a Task element, specifies the permission needed 
+        in respect of each Ledger in order to complete the task in hand -->
+        <Ledger name="Root:XBX:Operations:Expenditure:Variable:Purchases" permission="Debit"/>
+        <Ledger name="Root:XBX:Operations:Expenditure:Variable" permission="Debit"/>
+        <Ledger name="Root:XBX:Current:Assets:Cash:Registers:Registered" permission="Debit"/>
+        <Ledger name="Root:XBX:Current:Assets:Cash:Registers:Differences" permission="Post"/>
+        <Ledger name="Root:XBX:Current:Assets:Cash:Registers:PaidOuts" permission="Post"/>
+        <Ledger name="Root:XBX:Current:Assets:Cash:Registers:Floats" permission="Post"/>
+        
+        <Ledger name="Root:XBX:Current:Assets:Cash:Bank" permission="Debit"/>
+    </Task>
+    <Task name="Add Register" freq="once" form="AddCashRegister">
+        <!-- The Ledger element, when a child of a Task element, specifies the permission needed 
+        in respect of each Ledger in order to complete the task in hand -->
+         <!-- This task involves getting cash from the bank to create the float for the till
+         -->
+        <Ledger name="Root:XBX:Current:Assets:Cash:Registers:Floats" permission="Debit"/>
+        <Ledger name="Root:XBX:Current:Assets:Cash:Bank" permission="Credit"/>
+    </Task>
+</Tasks>
 </root>

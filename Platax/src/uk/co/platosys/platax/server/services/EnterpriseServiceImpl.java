@@ -49,6 +49,7 @@ import uk.co.platosys.platax.shared.boox.GWTRole;
 import uk.co.platosys.platax.shared.boox.GWTSegment;
 import uk.co.platosys.platax.shared.boox.GWTSelectable;
 import uk.co.platosys.platax.shared.exceptions.PlataxException;
+import uk.co.platosys.util.ISODate;
 import uk.co.platosys.util.Logger;
 import uk.co.platosys.util.RandomString;
 import uk.co.platosys.xservlets.Xservlet;
@@ -99,6 +100,7 @@ static Logger logger = Logger.getLogger("platax");
 		//set the privileges held by this platax user??
 		gwtEnterprise.setCustomers(getGWTCustomers(gwtEnterprise, clerk));
 		gwtEnterprise.setSegments(getSegments(true));
+		gwtEnterprise=readRatios(enterprise, clerk, gwtEnterprise);
 		logger.log("ESI has converted Enterprise "+enterprise.getName()+" to GWT");
 		
 		return gwtEnterprise;
@@ -115,17 +117,16 @@ static Logger logger = Logger.getLogger("platax");
 	 * @param gwtEnterprise
 	 * @return
 	 */
-	public static GWTEnterprise readRatios (Enterprise enterprise, PlataxUser user, GWTEnterprise gwtEnterprise){
+	public static GWTEnterprise readRatios (Enterprise enterprise, Clerk clerk, GWTEnterprise gwtEnterprise){
 		try {
-			Clerk clerk = user.getClerk(enterprise);
+			
 			//Read Net Current Assets:
-			Money currentAssets =Boox.openLedger(enterprise, "CurrentAssets", clerk).getBalance(enterprise, clerk);
-			Money currentLiabilities=Boox.openLedger(enterprise, "CurrentLiabilities", clerk).getBalance(enterprise, clerk);
-			Money netCurrentAssets = currentAssets.subtract(currentLiabilities);
-			gwtEnterprise.addRatio("Net Current Assets", netCurrentAssets.toPrefixedString(), "Shows how solvent the enterprise is");
-			//Read Owner's Capital
-			Money equity = Boox.openLedger(enterprise, "Equity", clerk).getBalance(enterprise, clerk);
-			gwtEnterprise.addRatio("Equity Capital", equity.toPrefixedString(), "Book value of the company");
+			Money netAssets = enterprise.getNetAssetValue(clerk);
+			gwtEnterprise.addRatio("Net Assets", PlataxServer.convert(netAssets), "Book value of the enterprise's capital");
+			Money profit = enterprise.getCurrentProfit(clerk);
+			gwtEnterprise.addRatio("Operating Profit", PlataxServer.convert(profit), "Non-adjusted operating profit in the current period");
+			Money currentAssets = enterprise.getNetCurrentAssets(clerk);
+			gwtEnterprise.addRatio("Net Current Assets", PlataxServer.convert(currentAssets), "Approximately how solvent we are");
 			return gwtEnterprise;
 		} catch (Exception e) {
 			PlataxServer.logger.log("problem reading ratios for enterprise "+enterprise.getName(), e);
@@ -323,7 +324,7 @@ static Logger logger = Logger.getLogger("platax");
 				throw new PlataxException("RESI no user in session to create enterprise");
 			}
 			//TODO: Check for Duplicates!
-			enterprise = Enterprise.createEnterprise(name, legalName, null);
+			enterprise = Enterprise.createEnterprise(name, legalName, null, new ISODate(startDate.getTime()));
 		}catch(Exception e){
 			logger.log("RESI register enterprise failed at Stage I", e);
 			return null;

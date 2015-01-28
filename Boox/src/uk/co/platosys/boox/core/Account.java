@@ -173,9 +173,9 @@ public class Account implements Budgetable,  Auditable {
             type=row.getString(Chart.TYPE_COLNAME);
             currency=Currency.getCurrency(row.getString(Chart.CURRENCY_COLNAME));
             description=row.getString(Chart.DESCRIPTION_COLNAME);
-            logger.log(2, "Account "+name+" opened in ledger "+ledger.getName());
+           // logger.log(2, "Account "+name+" opened in ledger "+ledger.getName());
             try{
-            	logger.log(2, "now getting balance for account "+name);
+            	//logger.log(2, "now getting balance for account "+name);
             	balance=getBalance(enterprise, clerk);
             }catch(Exception x){
             	logger.log("Account issue getting balance for account"+name, x);
@@ -425,7 +425,7 @@ public class Account implements Budgetable,  Auditable {
     }
     
     public static Account getAccount(Enterprise enterprise, String sysname, Clerk clerk ) throws PermissionsException {
-    	logger.log("Account getting account "+sysname);
+    	//logger.log("Account getting account "+sysname);
     	return new Account(enterprise, sysname, clerk);
     }
     
@@ -437,7 +437,7 @@ public class Account implements Budgetable,  Auditable {
      * @return
      * @throws PermissionsException*/
     public static Account getAccount(Enterprise enterprise, String sysname, Clerk clerk, Permission permission) throws PermissionsException {
-      logger.log("AccountGA getting account "+sysname);
+      //logger.log("AccountGA getting account "+sysname);
     	Account account = new Account(enterprise, sysname, clerk);
       Ledger ledger=account.getLedger();
       if (clerk.hasPermission(enterprise, ledger, permission)){

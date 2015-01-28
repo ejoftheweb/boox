@@ -45,13 +45,14 @@ import java.util.TreeMap;
 
 import org.postgresql.util.PSQLException;
 
-
 import uk.co.platosys.boox.core.exceptions.BooxException;
 import uk.co.platosys.boox.core.exceptions.PermissionsException;
 import uk.co.platosys.boox.core.exceptions.TimingException;
 import uk.co.platosys.boox.money.Currency;
 import uk.co.platosys.boox.money.CurrencyException;
 import uk.co.platosys.boox.money.Money;
+import uk.co.platosys.db.Row;
+import uk.co.platosys.db.Table;
 import uk.co.platosys.db.jdbc.ConnectionSource;
 import uk.co.platosys.db.jdbc.JDBCTable;
 import uk.co.platosys.util.ISODate;
@@ -110,6 +111,7 @@ public final class Ledger implements Budgetable, Auditable {
      */
     private Ledger (Enterprise enterprise, String fullname, boolean full) throws BooxException {
         if (enterprise==null) {throw new BooxException("Linit - enterprise cannot be null");}
+        this.enterprise=enterprise;
     	this.databaseName=enterprise.getDatabaseName();
         if (fullname==null){throw new BooxException("ledger name cannot be null");}
         this.fullName=fullname;
@@ -136,7 +138,7 @@ public final class Ledger implements Budgetable, Auditable {
                 logger.log(1, "Ledger-Init: couldn\'t find ledger fullname:" +fullName+ " in database "+databaseName);
                 throw new BooxException("couldn\'t find ledger fullname:" +fullName+ " in database "+databaseName);
             }
-         logger.log("ledger "+fullName+" initialised OK");   
+         //logger.log("ledger "+fullName+" initialised OK");   
         }catch(Exception e){
             logger.log( "Ledger-init: had issues ", e);
         }finally{
@@ -211,13 +213,14 @@ public final class Ledger implements Budgetable, Auditable {
      */
     public List <Account> getAccounts(Enterprise enterprise, Clerk clerk){
         List<Account> accountsList = new ArrayList<Account>();
+        
         Connection connection=null;
             try{
                 connection = ConnectionSource.getConnection(enterprise.getDatabaseName());
                 Statement statement = connection.createStatement();
-                ResultSet rs = statement.executeQuery("SELECT * FROM "+Chart.TABLENAME+" WHERE "+Chart.LEDGER_COLNAME+" = \'"+name+"\'");
+                ResultSet rs = statement.executeQuery("SELECT * FROM "+Chart.TABLENAME+" WHERE "+Chart.LEDGER_COLNAME+" = \'"+fullName+"\'");
                 while (rs.next()){
-                    String accountName=(rs.getString(Chart.NAME_COLNAME));
+                    String accountName=(rs.getString(Chart.SYSNAME_COLNAME));
                     Account account = Account.getAccount(enterprise, accountName, clerk, Permission.READ);
                     account.close();
                     accountsList.add(account);
@@ -239,14 +242,12 @@ public final class Ledger implements Budgetable, Auditable {
     public List <String> getLedgerNames(){
         List <String> ledgerNames= new ArrayList<String>();
         try{
-            Connection connection = ConnectionSource.getConnection(databaseName);
-            
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM "+TABLENAME+" WHERE "+PARENT_COLNAME+" = \'"+name+"\'");
-            while (rs.next()){
-                ledgerNames.add(rs.getString(FULLNAME_COLNAME));
-            }
-            connection.close();
+           Table table = JDBCTable.getTable(enterprise.getDatabaseName(), TABLENAME);
+           List<Row> rows = table.getRows(PARENT_COLNAME, fullName);
+        	for (Row row:rows){
+        		ledgerNames.add(row.getString(FULLNAME_COLNAME));
+        	}
+            //logger.log("L-gLN returning "+ledgerNames.size()+"children of "+fullName);
             return ledgerNames;
         }catch(Exception e){
             logger.log("Ledger - getLedgerNames() error" ,e);
@@ -275,11 +276,13 @@ public final class Ledger implements Budgetable, Auditable {
        Money balance= new Money(getCurrency(), BigDecimal.ZERO);
        try{
 	       List<Account> accounts = getAccounts(enterprise, clerk);
+	       //logger.log("Ledger "+name+" has "+accounts.size()+ "accounts");
 	       for (Account account: accounts){
-	            logger.log(5, "account "+account.getName()+ " currency is "+ account.getCurrency().getTLA());
+	            //logger.log(5, "account "+account.getName()+ " currency is "+ account.getCurrency().getTLA());
 	            Money accBal=account.getBalance();
-	            logger.log(5, "debiting ledger "+name+"in "+getCurrency().getTLA()+" with account: "+account.getName()+" in "+accBal.getCurrency().getTLA());
+	            //logger.log(5, "debiting ledger "+name+"in "+getCurrency().getTLA()+" with account: "+account.getName()+" in "+accBal.getCurrency().getTLA());
 	            balance.debit(accBal);
+	            //logger.log("ledger "+name+" balance so far: "+balance.toPlainString());
 	       }
        }catch(Exception e){
            logger.log("Ledger-gLB: getting account balances",e);
@@ -295,20 +298,22 @@ public final class Ledger implements Budgetable, Auditable {
 	                logger.log("Unexpected Boox Exception in getLedgerBalance", bex);
 	            }
 	            Money lbalance=ledger.getLedgerBalance(enterprise, clerk);
-	            //logger.log(5, "debiting ledger "+name+" with ledger: "+ledger.getName());
 	            balance.debit(lbalance);
+	           // logger.log("ledger "+name+" balance so far: "+balance.toPlainString());
 	        }
        }catch(Exception e){
            logger.log("Ledger-gLB: getting subledger balances",e);
        }
+       //logger.log("ledger "+name+"  final balance: "+balance.toPlainString());
         return balance;
     }
     public Money getBalance(Enterprise enterprise, Clerk clerk)throws PermissionsException{
-    	logger.log("Ledger getting balance for "+name);
+    	//logger.log("Ledger getting balance for "+name);
+    	this.enterprise=enterprise;
         if (! clerk.canBalance(enterprise, this)){
              throw new PermissionsException("Clerk "+ clerk.getName()+" does not have balance rights on ledger "+getName());
         }
-        logger.log(5, "LGB: trying to balance ledger "+name);
+        //logger.log(5, "LGB: trying to balance ledger "+name);
         try{
             if(name.equals(enterprise.getName())){
                 //General ledger balance is always zero; this pre-empts the
@@ -316,7 +321,7 @@ public final class Ledger implements Budgetable, Auditable {
                 return Money.zero(Currency.getCurrency(Boox.DEFAULT_CURRENCY));
             }else{
                 Money balance = getLedgerBalance(enterprise, clerk);
-                logger.log(5, "LGB: got balance on ledger "+name);
+               // logger.log(5, "LGB: got balance on ledger "+name);
                 return balance;
             }
         }catch(Exception e){
@@ -529,9 +534,16 @@ public final class Ledger implements Budgetable, Auditable {
               return null;
           }
       }
-	  public static Ledger getAccountLedger(Enterprise enterprise, String accountFullname){
-		  String ledgerName= accountFullname.split("#")[0];
-		  return getLedger(enterprise, ledgerName);
+	  public static Ledger getAccountLedger(Enterprise enterprise, String accountSysname){
+		  try{
+			  Table chart = JDBCTable.getTable(enterprise.getDatabaseName(), Chart.TABLENAME, Chart.SYSNAME_COLNAME);
+			  Row row = chart.getRow(accountSysname);
+			  String ledgerName=row.getString(Chart.LEDGER_COLNAME);
+			  return getLedger(enterprise, ledgerName);
+		  }catch(Exception x){
+			  logger.log("L-gAL: failed to find the ledger for account "+accountSysname, x);
+			  return null;
+		  }
      }
 	 /**
      * Creates a Ledger. If one of the same name, parent, owner and currency already exists,
@@ -548,7 +560,8 @@ public final class Ledger implements Budgetable, Auditable {
      * @throws BooxException
      */
     public static Ledger createLedger(Enterprise enterprise, String name, Ledger parent, Currency currency, Clerk owner, boolean isPrivate) throws BooxException, PermissionsException{
-    	 if (enterprise==null){throw new BooxException("Ledger-CL: enterprise  cannot be null");}
+    	//logger.log("L-cL: creating ledger "+name+" with currency "+currency.getTLA()); 
+    	if (enterprise==null){throw new BooxException("Ledger-CL: enterprise  cannot be null");}
  
     	if(! owner.canCreateLedgers()){
             logger.log(3, "clerk "+owner.getName()+"cannot create ledgers");
@@ -576,7 +589,7 @@ public final class Ledger implements Budgetable, Auditable {
             }
             String sqlString;
             try{
-            logger.log(5, "Boox-cL: creating "+name+" ledger");
+            //logger.log(5, "Boox-cL: creating "+name+" ledger");
             sqlString = ("INSERT INTO "+TABLENAME+" ("
             		+NAME_COLNAME+","
             		+PARENT_COLNAME+","
@@ -585,7 +598,7 @@ public final class Ledger implements Budgetable, Auditable {
             		+OWNER_COLNAME+","
             		+ISPRIVATE_COLNAME+")" +
             				" VALUES (\'"+name+"\',\'"+parentName+"\',\'"+fullName+"\',\'"+currency.getTLA()+"\',\'"+owner.getName()+"\',"+Boolean.toString(isPrivate)+")");
-            logger.log(sqlString);
+            //logger.log(sqlString);
             statement.execute(sqlString);
             }catch (PSQLException psqle){//THIS IS A KLUDGY FIX TO A CONCURRENCY PROBLEM BEST ADDRESSED IN THE db///}
             	
@@ -596,13 +609,14 @@ public final class Ledger implements Budgetable, Auditable {
             		+ Permission.ACCOUNTS_COLNAME+","
             		+ Permission.CREDIT_COLNAME+","
             		+ Permission.DEBIT_COLNAME+","
+            		+ Permission.POST_COLNAME+","
             		+ Permission.BALANCE_COLNAME+","
             		+ Permission.READ_COLNAME+","
             		+ Permission.AUDIT_COLNAME+"," 
             		+ Permission.SET_BUDGET_COLNAME+","
             		+ Permission.GET_BUDGET_COLNAME+")"+
-            				" VALUES(\'"+owner.getName()+"\',\'"+fullName+"\', true, true, true, true, true, true, true, true)");
-            logger.log(sqlString);
+            				" VALUES(\'"+owner.getName()+"\',\'"+fullName+"\', true, true, true, true, true, true, true, true, true)");
+           // logger.log(sqlString);
             statement.execute(sqlString);
             connection.close();
            Ledger ledger = new Ledger(enterprise, fullName, true);

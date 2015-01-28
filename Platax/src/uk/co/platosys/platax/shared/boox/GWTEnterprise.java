@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.platosys.pws.values.GWTMoney;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class GWTEnterprise implements Serializable, IsSerializable {
@@ -59,7 +61,7 @@ public int getPrivileges(){
 public void setPrivileges(int privileges){
 	this.privileges=privileges;
 }
-public void addRatio(String name, String value, String info){
+public void addRatio(String name, GWTMoney value, String info){
 	ratios.add(new GWTRatio(name, value, info));
 }
 public ArrayList<GWTRatio> getRatios() {

@@ -60,8 +60,8 @@ FlowPanel submitButtonPanel=new FlowPanel();
 
 
 public static final int QUANTITY_DIGITS=7;
-Button cancelButton=new ActionButton(ButtonText.EXIT);
-Button confirmButton=new ActionButton(ButtonText.CONFIRM);
+Button deleteButton=new ActionButton(ButtonText.EXIT);
+//Button confirmButton=new ActionButton(ButtonText.CONFIRM);
 Button saveButton=new ActionButton(ButtonText.SAVE);
 Button postButton=new ActionButton(ButtonText.POST);
 
@@ -105,8 +105,8 @@ public AbstractBill(Platax parent, String header) {
 		submitButtonPanel.add(billTax);
 		submitButtonPanel.add(billGross);
 		submitButtonPanel.add(saveButton);
-		submitButtonPanel.add(cancelButton);
-		submitButtonPanel.add(confirmButton);
+		submitButtonPanel.add(deleteButton);
+		//submitButtonPanel.add(confirmButton);
 		
 		qtyBox.setVisibleLength(QUANTITY_DIGITS);
 		dateLabel.setValue(dateBox.getValue());

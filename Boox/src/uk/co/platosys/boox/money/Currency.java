@@ -51,14 +51,16 @@ import uk.co.platosys.util.Logger;
  * @author edward
  */
 public class Currency {
+	private static Map<String, Currency> currencies = new HashMap<String, Currency>();
+
+	public static String DEFAULT_FORMAT="#,###.00";
+	   
     private String symbol;
-    private String format;
+    private String format=DEFAULT_FORMAT;
     private String tla;//a three-letter acronym, e.g. USD or GBP
     private java.util.Currency javaCurrency=null;
-    private static Map<String, Currency> currencies = new HashMap<String, Currency>();
-
     public static Currency DEFAULT_CURRENCY=new Currency("XBX");
-    public static String DEFAULT_FORMAT="#,###.00";
+	
     /** Creates a new instance of Currency */
 
    

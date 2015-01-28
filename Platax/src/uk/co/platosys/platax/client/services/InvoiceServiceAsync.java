@@ -16,5 +16,7 @@ public interface InvoiceServiceAsync {
 	void postLine(GWTLineItem line, AsyncCallback<GWTLineItem> callback);
      void voidLine(GWTLineItem line, AsyncCallback<GWTLineItem> callback);
      void raiseInvoice(GWTInvoice invoice, AsyncCallback<GWTInvoice> invoiceCallBack);
+     void deleteInvoice(GWTInvoice invoice, AsyncCallback<GWTInvoice> invoiceCallBack);
+     void saveInvoice(GWTInvoice invoice, AsyncCallback<GWTInvoice> invoiceCallBack);
      void listInvoices(String enterpriseID, int selection, AsyncCallback<ArrayList<GWTInvoice>> listCallback);
 }   

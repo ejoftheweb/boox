@@ -60,6 +60,7 @@ public class ISODate extends Date implements Serializable{
         public static final long ONE_WEEK=7*ONE_DAY;
         public static final long FORTNIGHT=14*ONE_DAY;
         public static final long ONE_YEAR=(365*ONE_DAY);
+        public static final long ONE_QUARTER=(91*ONE_DAY);
 	public ISODate(){
 		super();
 		simpleDateFormat = new SimpleDateFormat();
@@ -217,6 +218,9 @@ public class ISODate extends Date implements Serializable{
 	 public static ISODate monthAhead(){
 		 return new ISODate(new ISODate().getTime()+MONTH_AHEAD);
 	 }
+	 public static ISODate getMonthAhead(Date date){
+		 return new ISODate(date.getTime()+MONTH_AHEAD);
+	 }
 	 public static ISODate dayAhead(){
 		 return new ISODate(new ISODate().getTime()+ONE_DAY);
 	 }
@@ -256,8 +260,14 @@ public class ISODate extends Date implements Serializable{
 	 public  ISODate getFourWeeksAhead(){
 		 return new ISODate(getTime()+(2*FORTNIGHT));
 	 }
-	 public  ISODate getYearAhead(){
+	 public  static ISODate getYearAhead(Date date){
+		 return new ISODate(date.getTime()+ONE_YEAR);
+	 }
+	 public   ISODate getYearAhead(){
 		 return new ISODate(getTime()+ONE_YEAR);
+	 }
+	 public static ISODate getQuarterAhead(Date date){
+		 return new ISODate(date.getTime()+ONE_QUARTER);
 	 }
  public static ISODate getEndOfMonth(Date isoDate){
 	 Calendar cal = Calendar.getInstance();

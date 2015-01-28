@@ -13,7 +13,7 @@
 <root xmlns = "http://www.platosys.co.uk/boox">
 <Ledgers> 
     <!-- XBX is the system name for the default currency. -->
-    <Ledger name="XBX">
+    <Ledger name="XBX" currency="XBX">
         <!-- the balance on the Operations ledger is an approximate proxy for profit -->
         <Ledger name="Operations" isPrivate="false">
         <!-- the Income ledger records all income received by the business, whether sales or interest earned -->

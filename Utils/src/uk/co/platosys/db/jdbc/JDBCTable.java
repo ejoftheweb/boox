@@ -2157,7 +2157,7 @@ public class JDBCTable implements Table {
                     return string;
                 }catch(Exception e){
                     connection.close();
-                    throw new PlatosysDBException("Column "+columnName+" is not a text column");
+                    throw new PlatosysDBException("Column "+columnName+" is not a text column", e);
                 }
             }else{
                 connection.close();
@@ -2169,7 +2169,7 @@ public class JDBCTable implements Table {
             throw rnfe;
         }catch(Exception e){
             try{connection.close();}catch(Exception ex){}
-            throw new PlatosysDBException("Problem reading table "+tableName);
+            throw new PlatosysDBException("Problem reading table "+tableName, e);
         }finally{
         	try{
         		if (rs!=null){rs.close();}

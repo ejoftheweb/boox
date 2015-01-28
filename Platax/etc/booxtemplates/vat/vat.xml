@@ -14,7 +14,7 @@
 <!-- The Ledgers element contains the specification for the ledgers and accounts -->    
 <Ledgers> 
     <!-- XBX is the system name for the default currency. -->
-    <Ledger name="XBX">
+    <Ledger name="XBX" currency="XBX">
 	    <!-- the Current ledger records the short-term assets and liabilities. Its balance is a good indicator of the business's solvency--> 	
 	    <Ledger name="Current" isPrivate="false">
 	        <Ledger name="Liabilities" isPrivate="false">

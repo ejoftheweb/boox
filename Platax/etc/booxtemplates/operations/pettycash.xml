@@ -47,10 +47,10 @@
         	   <Ledger name="PettyCash" isPrivate="false">
             		<Account name="PettyCash" fullName="Petty Cash" description="Petty Cash Account"/>
             	</Ledger>
-            	<!-- 
-            	<Account name="BankCurrent" fullName="Bank Current Account" description="Bank Current Account"/>
-            	<Account name="BankDeposit" fullName="Bank Deposit Account" description="Bank Deposit Account"/>
-            	-->
+            		<Ledger name="Bank" isPrivate="false">
+            		<Account name="BankCurrent" fullName="Bank Current Account" description="Bank Current Account"/>
+            		<!-- <Account name="BankDeposit" fullName="Bank Deposit Account" description="Bank Deposit Account"/>-->
+            	</Ledger>
         	</Ledger>
         	<Ledger name="Debtors" isPrivate="false">
         		<Ledger name="Customers" isPrivate="false"/>
@@ -95,12 +95,23 @@
     </Ledger><!-- XBX -->
 </Ledgers>
 <Tasks>
-    <Task name="Petty Cash" freq="weekly" form="PettyCash">
+    <Task name="Balance Petty Cash" freq="weekly" form="PettyCash">
         <!-- The Ledger element, when a child of a Task element, specifies the permission needed 
         in respect of each Ledger in order to complete the task in hand -->
+        <!-- This task involves entering the numbers from the bits of paper in the petty-cash tin
+        and allocating them to accounts - basically, small purchases and other small expenditure. 
+         -->
         <Ledger name="Root:XBX:Operations:Expenditure:Variable:Purchases" permission="Debit"/>
         <Ledger name="Root:XBX:Operations:Expenditure:Variable" permission="Debit"/>
         <Ledger name="Root:XBX:Current:Assets:Cash:PettyCash" permission="Credit"/>
+    </Task>
+    <Task name="Top-up Petty Cash" freq="irregular" form="PettyCash">
+        <!-- The Ledger element, when a child of a Task element, specifies the permission needed 
+        in respect of each Ledger in order to complete the task in hand -->
+         <!-- This task involves getting cash from the bank to top up the petty-cash tin. 
+         -->
+        <Ledger name="Root:XBX:Current:Assets:Cash:PettyCash" permission="Debit"/>
+        <Ledger name="Root:XBX:Current:Assets:Cash:Bank" permission="Credit"/>
     </Task>
 </Tasks>
 </root>
