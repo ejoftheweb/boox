@@ -58,7 +58,7 @@ public final class Money implements Serializable {
     public static final Money ZERO = Money.zero();
 	Currency currency=Currency.DEFAULT_CURRENCY;
     static Currency CURRENCY=Currency.DEFAULT_CURRENCY;
-    BigDecimal amount;
+    BigDecimal amount=BigDecimal.ZERO;
     public static MathContext MC = MathContext.DECIMAL128;
     public static NumberFormat NF = NumberFormat.getInstance();
     public static NumberFormat SQLF = NumberFormat.getInstance();
@@ -72,7 +72,9 @@ public final class Money implements Serializable {
     public Money (Currency currency, BigDecimal amount){
         
         this.currency=currency;
-        this.amount=amount;
+        if(amount!=null){
+        	this.amount=amount;
+        }
         //logger.log(5, "new Money created with currency "+this.currency.getTLA());
     }
     /**
@@ -479,7 +481,11 @@ public final class Money implements Serializable {
         amount=amount.multiply(new BigDecimal(quantity));
         return new Money(money.getCurrency(),amount);
     }
-    
+    public static Money multiply(Money money, double quantity){
+        BigDecimal amount = money.getAmount();
+        amount=amount.multiply(new BigDecimal(quantity));
+        return new Money(money.getCurrency(),amount);
+    }
     /**Divides the Money argument by the float divisor argument.
      * @param money
      * @param quantity

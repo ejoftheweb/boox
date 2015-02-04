@@ -23,6 +23,7 @@ public abstract class Body {
 	private Map<String, String> info = new HashMap<String,String>();
 	
 	public Map<String, String> getInfo(){
+		if(info==null){info= new HashMap<String,String>();}
 		return info;
 	}
     public void putInfo(String key, String value){

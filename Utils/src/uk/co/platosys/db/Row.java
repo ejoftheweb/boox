@@ -94,7 +94,7 @@ public interface Row {
      * @throws ClassCastException
      * @throws ColumnNotFoundException
      */
-	@Deprecated
+
 	public double getDouble(String columnName) throws ClassCastException, ColumnNotFoundException;
 	 /**
      * returns a float

@@ -18,5 +18,7 @@ public class QuantityBox extends TextBox {
 			return 0;
 		}
 	}
-
+	public void setQuantity(float quantity) {
+		setValue(Float.toString(quantity));
+	}
 }

@@ -85,7 +85,7 @@ public final class Transaction implements AuditElement {
     private int line=0;
     private boolean isTax;
     boolean posted=false;
-    boolean canPost=false;
+    boolean canPost=true;
     long transactionID;
     Date date;
    Date postingTime;
@@ -123,7 +123,7 @@ public final class Transaction implements AuditElement {
         //this.debitAccount=new Account(databaseName, debit, clerk);
         this.note=note;
         this.currency = money.getCurrency();
-        canPost=checkPostable(enterprise);
+        //canPost=checkPostable(enterprise);
         this.approvals=new HashSet<Clerk>();
         this.requiredApprovals=new HashSet<String>();
     }
@@ -148,7 +148,7 @@ public final class Transaction implements AuditElement {
         this.note=note;
         this.currency = money.getCurrency();
         this.line=lineno;
-        canPost=checkPostable(enterprise);
+        //canPost=checkPostable(enterprise);
         this.approvals=new HashSet<Clerk>();
         this.requiredApprovals=new HashSet<String>();
     }
@@ -189,6 +189,7 @@ public final class Transaction implements AuditElement {
      */
     public long post() throws PermissionsException {
         Connection connection = null;
+        canPost=checkPostable(enterprise);
         if ((!posted)&&(canPost)){
         try{
            transactionID=Journal.assignTransactionID(this);

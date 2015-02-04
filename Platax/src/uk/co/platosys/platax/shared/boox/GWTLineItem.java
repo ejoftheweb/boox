@@ -97,11 +97,11 @@ public class GWTLineItem implements Serializable,  IsSerializable{
 		return gross;
 	}
 	
-	public String getSIN() {
+	public String getInvoiceSysname() {
 		return sIN;
 	}
 
-	public void setSIN(String sIN) {
+	public void setInvoiceSysname(String sIN) {
 		this.sIN = sIN;
 	}
 

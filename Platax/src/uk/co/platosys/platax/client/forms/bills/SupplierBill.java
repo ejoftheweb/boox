@@ -142,7 +142,7 @@ public class SupplierBill extends AbstractBill {
     	final GWTLineItem gwtLineItem = new GWTLineItem();
     	gwtLineItem.setEnterprise(gwtEnterprise);
     	gwtLineItem.setCustomer(gwtCustomer);
-    	gwtLineItem.setSIN(gwtInvoice.getSysname());
+    	gwtLineItem.setInvoiceSysname(gwtInvoice.getSysname());
     	gwtLineItem.setLineNumber(rows);
     	gwtLineItem.setItemSysname(itemListBox.getValue(itemListBox.getSelectedIndex()));
     	try {

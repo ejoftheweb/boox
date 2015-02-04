@@ -128,7 +128,7 @@ public class Account implements Budgetable,  Auditable {
     boolean locked;
     static  Logger logger=Logger.getLogger("boox");
     String databaseName;
-    Enterprise enterprise; //the journal to which this account is attached;
+    Enterprise enterprise; //the enterprise to which this account is attached;
     ISODate date = new ISODate();
     TreeMap<Date, Money> budget=new TreeMap<Date, Money>();
     public static final String CHART_TABLE_NAME=Chart.TABLENAME;//to rename later.
@@ -652,4 +652,17 @@ public class Account implements Budgetable,  Auditable {
 		    logger.log("Account-gAS: "+accountFullname+" = "+taxAccountSysname);
 		    return taxAccountSysname;
 	    }
+	   public Table getTable(Clerk clerk) throws PermissionsException, BooxException{
+		   try{
+		   if(clerk.canRead(enterprise, ledger)){
+			   return table;
+		   }else{
+			   throw new PermissionsException("Clerk needs read rights on account table for "+getName());
+		   }
+		   }catch(PermissionsException x){
+			   throw x;
+		   }catch(Exception x){
+			   throw new BooxException("Problem getting account table", x);
+		   }
+	   }
 }

@@ -1,0 +1,33 @@
+Invoicing
+
+(1) Requirements
+
+(2) Algorithm
+
+Invoice Form > select customer #invoiceService.createInvoice()
+
+Lookup customer in Invoice Table. #Invoice.getInvoice()
+Customer not found
+	Create new Invoice for Customer #Invoice.createInvoice()
+	AddInvoice > to InvoiceTable, set status: pending: return to invoice form.
+		form:addItem > AddItem to DraftInvoiceTable & addItems to Invoice.
+		form:SaveInvoice: DoNothing, all saved already (return invoice number & current total);
+		form:DeleteInvoice:  setStatus: void. Don't need to do anything else.
+		form:RaiseInvoice:
+			create Document; 
+			forEach item in Invoice, 
+				transact on InvoiceAccount, 
+				add item to Document
+		    save document
+		    amend InvoiceTable, set status "Open".
+	    
+Customer found: 
+	Status: pending #Invoice.openInvoice()
+		Open old invoice for Customer
+		Read items from DraftInvoicesTable, addItems to Invoice
+	Status: open #Invoice.cloneInvoice()
+		Create new invoice for customer (with a new number)
+		AddInvoice to InvoiceTable, set status, pending
+		AddItems to DraftInvoiceTable & addItems to Invoice
+	Staust:void #Invoice.createInvoice(). 	
+			

@@ -1,6 +1,8 @@
 package uk.co.platosys.platax.client.forms.bills;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
@@ -20,8 +22,10 @@ import uk.co.platosys.platax.shared.boox.GWTBill;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
+import uk.co.platosys.platax.shared.boox.GWTLineItem;
 import uk.co.platosys.pws.values.GWTMoney;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -47,7 +51,7 @@ Date date = new Date();
 ItemListBox itemListBox=new ItemListBox();
 protected GWTCustomer gwtCustomer=null;
 protected GWTInvoice gwtInvoice=null;
-
+protected GWTBill bill=null;
 GWTEnterprise gwtEnterprise=null;
 String enterpriseName=null;
 String enterpriseID=null;
@@ -55,7 +59,7 @@ QuantityBox qtyBox=new QuantityBox();
 FlowPanel headPanel=new FlowPanel();
 FlowPanel cpartyPanel=new FlowPanel();
 final SimplePanel cpartyNamePanel=new SimplePanel();
-FlowPanel lineEntryPanel=new FlowPanel();
+//FlowPanel lineEntryPanel=new FlowPanel();
 FlowPanel submitButtonPanel=new FlowPanel();
 
 
@@ -66,9 +70,26 @@ Button saveButton=new ActionButton(ButtonText.SAVE);
 Button postButton=new ActionButton(ButtonText.POST);
 
 
-GWTMoney netMoney =new GWTMoney();
-GWTMoney taxMoney = new GWTMoney();
-GWTMoney grossMoney = new GWTMoney();
+int tableRows=0;
+int baseRow=0;
+int currentRow(){
+	return baseRow;
+}
+int finalRow(){
+	return baseRow+2;
+}
+int activeRow(){
+	return baseRow+1; 
+}
+void setRow(int row){
+	if(row>baseRow){baseRow=row;}
+	else{baseRow++;}	
+}
+void resetRow(){
+	baseRow=0;
+}
+
+
 MoneyTotalLabel billNet = new MoneyTotalLabel();
 MoneyTotalLabel billTax = new MoneyTotalLabel();
 MoneyGrandTotalLabel billGross = new MoneyGrandTotalLabel();
@@ -78,6 +99,7 @@ InlineLabel billNumberLabel=new InlineLabel("No:");
 InlineLabel refNumberLabel=new InlineLabel("No");
 final TextBox billNumberBox = new TextBox();
 final TextBox refNumberBox= new TextBox();
+
 	
 public AbstractBill(Platax parent, String header) {
 		super( parent, header);
@@ -96,7 +118,7 @@ public AbstractBill(Platax parent, String header) {
 
 		panel.add(headPanel);
 		panel.add(cpartyPanel);
-		panel.add(lineEntryPanel);
+		//panel.add(lineEntryPanel);
 		tablePanel.add(table);
 		tablePanel.setAlwaysShowScrollBars(true);
 		panel.add(tablePanel);
@@ -119,6 +141,12 @@ public AbstractBill(Platax parent, String header) {
 }
 
 public abstract GWTBill getGWTBill();
+public void clearBill(){
+	billNumberBox.setValue("");
+	refNumberBox.setValue("");
+	table.clear();
+	setBill(null);//could be a problemo.
+}
 
 private void setDate(Date date){
 		this.date=date;
@@ -128,5 +156,11 @@ public ItemListBox getItemListBox() {
 }
 public ContactListBox getContactListBox() {
 		return contactListBox;
+}
+void adjustTotals(GWTLineItem gwtLineItem){
+	bill.adjustTotals(gwtLineItem);
+}
+void setBill(GWTBill bill){
+	this.bill=bill;
 }
 }

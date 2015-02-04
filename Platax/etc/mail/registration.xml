@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmlns="http://www.platosys.co.uk/xmail"/>
- 
+ <root>
     <mail xmlns="http://www.platosys.co.uk/xmail">
         <para>
             <head>Terms and Conditions</head>

@@ -26,8 +26,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 	  /**
 	   * null constructor for GWT compliance. Call this constructor for a Zero instance.
 	   */
-	     public GWTMoney(){
-	    	 
+	     public GWTMoney(){    	 
 	     }
 	    /**
 	     * Creates a new Money object

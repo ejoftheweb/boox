@@ -79,7 +79,7 @@ import uk.co.platosys.db.TypeNotSupportedException;
 public class JDBCTable implements Table {
     public static final String TEXT_COLUMN="text";
     public static final String BOOLEAN_COLUMN="boolean";
-    public static final String NUMERIC_COLUMN="numeric";
+    public static final String NUMERIC_COLUMN="double precision";
     public static final String INTEGER_COLUMN="integer";
     public static final String DATE_COLUMN="timestamp";
     public static final String TIMESTAMP_COLUMN="timestamp";
@@ -2839,5 +2839,26 @@ public class JDBCTable implements Table {
         		if (connection!=null){connection.close();}
         	}catch(Exception x){}
         }
+	}
+	@Override
+	public boolean setUnique(String name, String[] colnames) throws PlatosysDBException {
+		try{
+		Connection connection = ConnectionSource.getConnection(databaseName);
+		 String query = "ALTER TABLE "+tableName+ " ADD CONSTRAINT "+name+" UNIQUE (";
+		 for (String colname:colnames){
+			 query=query+colname+",";
+		 }
+		 query=query.substring(0, query.length()-1);//should chop off the last comma.
+		 query=query+")";
+		 logger.log(query);
+		 Statement statement = connection.createStatement();
+		 boolean done = statement.execute(query);
+		 statement.close();
+		 connection.close();
+		 return done;
+		}catch(Exception ex){
+			logger.log("JDBCTable setUnique threw a problem ", ex);
+			throw new PlatosysDBException("JDBCTable setUnique issue", ex);
+		}
 	}	
 }

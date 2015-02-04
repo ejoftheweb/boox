@@ -35,9 +35,6 @@ Date raisedDate=new Date(0);
 Date createdDate=new Date(0);
 Date paidDate=new Date(0);
 String status="";
-GWTMoney net=new GWTMoney();
-GWTMoney tax=new GWTMoney();
-GWTMoney gross=new GWTMoney();
 String sysname="";
 String userno="";
 
@@ -56,24 +53,6 @@ public void setEnterprise(GWTEnterprise enterprise) {
 	this.enterprise = enterprise;
 }
 
-public GWTMoney getNet() {
-	return net;
-}
-public void setNet(GWTMoney net) {
-	this.net = net;
-}
-public GWTMoney getTax() {
-	return tax;
-}
-public void setTax(GWTMoney tax) {
-	this.tax = tax;
-}
-public GWTMoney getGross() {
-	return gross;
-}
-public void setGross(GWTMoney gross) {
-	this.gross = gross;
-}
 
 public String getSysname() {
 	return sysname;
@@ -92,10 +71,7 @@ public void setLineItems(ArrayList<GWTLineItem> lineItems) {
 }
 
 public void addLineItem(GWTLineItem lineItem) throws Exception{
-	this.net=net.add(lineItem.getNet());
-	this.tax=tax.add(lineItem.getTax());
-	this.gross=gross.add(lineItem.getGross());
-	lineItems.add(lineItem);
+	adjustTotals(lineItem);
 }
 
 public boolean removeLineItem(GWTLineItem lineItem) throws Exception {
@@ -105,9 +81,9 @@ public boolean removeLineItem(GWTLineItem lineItem) throws Exception {
 			 GWTLineItem litem=lit.next();
 			 litem.setLineNumber(lineItems.indexOf(litem)+1);
 		}
-		this.net=net.subtract(lineItem.getNet());
-		this.tax=tax.subtract(lineItem.getTax());
-		this.gross=gross.subtract(lineItem.getGross());
+		setNet(getNet().subtract(lineItem.getNet()));
+		setTax(getTax().subtract(lineItem.getTax()));
+		setGross(getGross().subtract(lineItem.getGross()));
 		return true;
 	}else{
 		return false;

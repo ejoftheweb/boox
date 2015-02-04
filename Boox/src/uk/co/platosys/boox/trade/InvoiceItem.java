@@ -25,6 +25,7 @@ import uk.co.platosys.boox.core.exceptions.PermissionsException;
  * @author edward
  */
 public class InvoiceItem extends TaxedTransaction {
+	private String invoiceSysname=null;
     private String customerRef="0";
     private String catalogueID="0";
     private String description="0";
@@ -93,7 +94,7 @@ public class InvoiceItem extends TaxedTransaction {
      * @param quantity
      * @return */
     
-    public static InvoiceItem getInvoiceItem (Enterprise enterprise, Clerk clerk, Invoice invoice, Product product, float quantity, int lineno) throws PermissionsException{
+    public static InvoiceItem getInvoiceItem (Enterprise enterprise, Clerk clerk, Invoice invoice, Product product, double quantity, int lineno) throws PermissionsException{
     	
     	Money price = product.getSellingPrice(invoice.getCustomer());
     	int taxBand = product.getTaxBand(invoice.getCustomer());
@@ -103,12 +104,14 @@ public class InvoiceItem extends TaxedTransaction {
     	String debitAccountName = invoice.getSysname();
     	logger.log("II says: credit "+creditAccountName+", debit "+debitAccountName);
     	InvoiceItem invoiceItem= new InvoiceItem(enterprise, clerk, amount, creditAccountName, debitAccountName, "", false, taxBand, lineno);
-        invoiceItem.setQuantity(quantity);
+        invoiceItem.setProduct(product);
+    	invoiceItem.setQuantity(quantity);
         invoiceItem.setUnitPrice(price);
         invoiceItem.setDescription(product.getName());
         invoiceItem.setIndex(lineno);//perhaps this should be done somewhere else?
+        invoiceItem.setInvoiceSysname(invoice.getSysname());
         try {
-			invoice.addInvoiceItem(invoiceItem, lineno);
+			//invoice.addInvoiceItem(invoiceItem, lineno);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			logger.log("exception thrown", e);
@@ -197,4 +200,12 @@ public class InvoiceItem extends TaxedTransaction {
 		this.product = product;
 		this.description=product.getDescription();
 		this.catalogueID=product.getSysname();
+	}
+
+	public String getInvoiceSysname() {
+		return invoiceSysname;
+	}
+
+	public void setInvoiceSysname(String invoiceSysname) {
+		this.invoiceSysname = invoiceSysname;
 	}}

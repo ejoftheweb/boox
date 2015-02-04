@@ -175,7 +175,7 @@ public class TaxedTransaction {
                 logger.log("TT threw a currency exception ",cx);
             }
         }
-        logger.log("TT tax done");
+        logger.log("TT tax done: net="+netMoney.toPrefixedString()+"; tax="+taxMoney.toPrefixedString()+"; gross="+total.toPrefixedString());
      //create the split transactions
         valueTransaction=new Transaction(
         		    enterprise,
@@ -229,7 +229,7 @@ public class TaxedTransaction {
     /** Posts the value transaction only.
      * @return true if successful.*/
     private long postValue() throws PermissionsException {
-        if(!valueTransaction.canPost()){return -1;}
+        if(!valueTransaction.canPost()){throw new PermissionsException("TT can't post valtrans, doesn't have permission");}
         valueID=valueTransaction.post();
         if (taxed){
             taxTransaction.setNote("Tax on TID:"+Long.toString(valueID)+" "+valueTransaction.getNote());
@@ -258,6 +258,7 @@ public class TaxedTransaction {
         }
     }
     public long post() throws PermissionsException {
+    	//logger.log("TT posting");
     	if(postValue()>0){
     		return postTax();
     	}else{
@@ -265,11 +266,19 @@ public class TaxedTransaction {
     	}
     }
     public Money getNetMoney() {
+    	if(netMoney!=null){
         return netMoney;
+    	}else{
+    		return Money.ZERO;
+    	}
     }
 
     public Money getTaxMoney() {
-        return taxMoney;
+    	if (taxMoney!=null){
+    		return taxMoney;
+    	}else{
+    		return Money.ZERO;
+    	}
     }
     public Money getTotal(){
         return total;

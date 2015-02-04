@@ -47,6 +47,8 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 			PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
 			Enterprise enterprise= getEnterprise(enterpriseID);
 			Clerk clerk= getClerk(enterprise);
+			GWTEnterprise gEnterprise= EnterpriseServiceImpl.convert(enterprise, clerk);
+			
 			Customer customer= Customer.getCustomer(enterprise, clerk, customerID);
 			logger.log("ISL-cI: got customer, name is:"+customer.getName());
 			
@@ -68,7 +70,11 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 				logger.log("ISI-cI item qty is "+invitem.getQuantity());
 				logger.log("ISI-cI item price is "+invitem.getUnitPrice().toPlainString());
 				logger.log("ISI-cI item curr is "+invitem.getUnitPrice().getCurrency().getTLA());
-				gwtInvoice.addLineItem(convert(invitem));
+				GWTLineItem gItem=convert(index, invitem);
+				gItem.setEnterprise(gEnterprise);
+				gItem.setInvoiceSysname(invoice.getSysname());
+				gItem.setItemSysname(invitem.getProduct().getSysname());
+				gwtInvoice.addLineItem(gItem);
 			}
 			gwtInvoice.setProducts(gwtProductList);
 			gwtInvoice.setCustomer(gwtCustomer);
@@ -91,17 +97,17 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 			PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
 			
 			logger.log("ISIpl:i line no is:"+line.getLineNumber());
-			logger.log("ISIpl:ii sysname is:"+line.getSIN());
+			logger.log("ISIpl:ii SIN is:"+line.getInvoiceSysname());
 			logger.log("ISIpl:iii itemsysname is:"+line.getItemSysname());
 			logger.log("ISIpl:iv itemname is:"+line.getItemName());
 			logger.log("ISIpl:v enterprise is:"+line.getEnterprise().getName());
-			logger.log("ISIpl:vi enterpriseID is:"+line.getEnterprise().getName());
+			logger.log("ISIpl:vi enterpriseID is:"+line.getEnterprise().getSysname());
 		//first, get the product:
 		Enterprise enterprise = Enterprise.getEnterprise(line.getEnterprise().getEnterpriseID());
 		Clerk clerk = pxuser.getClerk(enterprise);
 		Product product = Product.getProduct(enterprise, clerk, line.getItemSysname());
 		    logger.log("ISIpl: product is:"+product.getName());
-		String sin = line.getSIN();
+		String sin = line.getInvoiceSysname();
 		Invoice invoice = pxuser.getInvoice(sin);
 		logger.log("ISIpl: invoice is:"+invoice.getSysname());
 		float quantity = line.getItemQty();
@@ -110,12 +116,8 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 		line.setItemName(invoiceItem.getDescription());
 		Money price = invoiceItem.getUnitPrice();
 		line.setPrice(PlataxServer.convert(price));
-		long tid = invoiceItem.post();
-		if (tid>0){
-			return line;
-		}else{
-			throw new Exception("failed to post invoice item");
-		}
+		invoice.addItem(invoiceItem, line.getLineNumber());
+		return line;
 		}catch(Exception x){
 			logger.log("ISIpl returning null, error",x);
 			return null;
@@ -125,7 +127,7 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 	public GWTLineItem voidLine(GWTLineItem line){
 		logger.log("ISI - call to void line");
 		try{
-			Invoice invoice = getInvoice(line.getSIN());
+			Invoice invoice = getInvoice(line.getInvoiceSysname());
 			Enterprise enterprise = getEnterprise(line.getEnterprise().getEnterpriseID());
 			Clerk clerk = getClerk(enterprise);
 			InvoiceItem item = invoice.getInvoiceItemAt(line.getLineNumber());
@@ -143,6 +145,12 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 			return null;
 		}
 	}
+	public GWTLineItem convert(Integer index, InvoiceItem invitem){
+		GWTLineItem item=convert(invitem);
+		item.setLineNumber(index);
+		return item;
+	}
+	
 	public GWTLineItem convert(InvoiceItem invitem){
 		try{
 			GWTLineItem lineItem = new GWTLineItem();
@@ -159,7 +167,7 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 	public GWTInvoice raiseInvoice(GWTInvoice gwtInvoice)  {
 		try{
 			String sysname = gwtInvoice.getSysname();
-		    logger.log("ISIri- raising invoice "+sysname+ "for "+gwtInvoice.getGross().toPlainString());
+		    logger.log("ISIri- raising invoice "+sysname+ " for "+gwtInvoice.getGross().toPlainString());
 			String enterpriseID = gwtInvoice.getEnterprise().getEnterpriseID();
 			PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
 			Enterprise enterprise= pxuser.getEnterprise(enterpriseID);
@@ -174,12 +182,13 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 			while(lit.hasNext()){
 				postLine(lit.next());
 			}
-			//
-			if(invoice.raise().equals(PlataxServer.convert(gwtInvoice.getGross()))){
+			Money raised=invoice.raise(enterprise);
+			Money gross = PlataxServer.convert(gwtInvoice.getGross());
+			if(raised.equals(gross)){
 				gwtInvoice.setRaisedDate(new Date());
 				return gwtInvoice;
 			}else{
-				logger.log("it were rong innit");
+				logger.log("ISIrI: raised:"+raised.toPrefixedString()+", gross:"+gross.toPrefixedString());
 				return gwtInvoice;
 			}
 		}catch(Exception e){
@@ -276,9 +285,14 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
     }
 
 	@Override
-	public GWTInvoice deleteInvoice(GWTInvoice invoice) {
-		// TODO Auto-generated method stub
-		return null;
+	public GWTInvoice deleteInvoice(GWTInvoice ginvoice) {
+		try{
+			Invoice invoice = getInvoice(ginvoice.getSysname());
+			invoice.voidInvoice();
+			return null;
+		}catch(Exception x){
+			return null;
+		}
 	}
 
 	@Override

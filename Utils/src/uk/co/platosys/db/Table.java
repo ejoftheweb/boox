@@ -455,6 +455,12 @@ public interface Table {
 			throws PlatosysDBException;
 	boolean updateWhere(String[] testColumns, String[] testValues,
 			String columnName, String value) throws PlatosysDBException;
-	boolean amend(long primaryKeyTest, String columnName, BigDecimal value)
-			throws PlatosysDBException;
+	boolean amend(long primaryKeyTest, String columnName, BigDecimal value)	throws PlatosysDBException;
+	/** Adds a table constraint so that the combined values of the given colnames 
+	 * is unique. 
+	 * @param constraintName an arbitrary name for this constraint
+	 * @param colnames
+	 * @return
+	 */
+	public boolean setUnique(String constraintName, String[] colnames)throws PlatosysDBException;
 }
