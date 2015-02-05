@@ -151,6 +151,13 @@ public class JDBCRow implements Row {
                         	}catch(NullPointerException npe){
                         		row.put(colName, null);                    	
                         	}break;
+                      case Types.DOUBLE:
+                        	 try{
+                        		//logger.log("JGR: "+colName+" type is DECIMAL");
+                         		row.put(colName, (rs.getDouble(colName)));
+                         	}catch(NullPointerException npe){
+                         		row.put(colName, null);                    	
+                         	}break;
                      default: throw new TypeNotSupportedException(colName+ " contains a datatype not supported by platosys.db");
                  }
              }

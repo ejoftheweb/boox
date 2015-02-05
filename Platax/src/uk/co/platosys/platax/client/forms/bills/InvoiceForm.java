@@ -94,10 +94,8 @@ public class InvoiceForm extends AbstractBill {
 		}
     };
     final AsyncCallback<GWTInvoice> createInvoiceCallback = new AsyncCallback<GWTInvoice>(){
-
     	@Override
 		public void onSuccess(GWTInvoice result) {
-
     		if(result==null){Window.alert(StringText.SERVER_ERROR+"INV1A");}
     		else {setInvoice(result);}
 		}
@@ -263,7 +261,7 @@ public class InvoiceForm extends AbstractBill {
 	protected void setInvoice(GWTInvoice gwtInvoice) {
 		this.gwtInvoice=gwtInvoice;
 		setBill(gwtInvoice);
-		Window.alert("invoice size" +gwtInvoice.getLineItems().size());
+		Window.alert("invoice size " +gwtInvoice.getLineItems().size());
 		billNumberBox.setValue(gwtInvoice.getUserno());
 		this. itemListBox.addItems(gwtInvoice.getProducts());
 		this.gwtCustomer=gwtInvoice.getCustomer();
@@ -271,6 +269,7 @@ public class InvoiceForm extends AbstractBill {
 		setTabHeaderText(enterpriseName+":"+customerName);
 		for(GWTLineItem lineItem:gwtInvoice.getLineItems()){
 			updateLine(lineItem);
+			baseRow++;
 		}
 		fillActiveRow();
 		fillFinalRow();

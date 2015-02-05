@@ -92,7 +92,7 @@ public class Product extends Item {
     }
     
     private Product(Enterprise enterprise, Clerk clerk, Row row) throws ClassCastException, ColumnNotFoundException, PermissionsException{
-    	logger.log("creating product");
+    	//logger.log("creating product");
     	  this.setId(row.getLong(Catalogue.ITEMID_COLNAME));
     	  try{
     		  Currency currency=Currency.getCurrency(row.getString(Catalogue.ITEMCURRENCY_COLNAME));
@@ -107,7 +107,7 @@ public class Product extends Item {
     	  }
     	  try{
 	      this.name=row.getString(Catalogue.ITEMNAME_COLNAME);
-	      	logger.log("Pinit - name "+name);
+	      	//logger.log("Pinit - name "+name);
 	      this.setSysname(row.getString(Catalogue.ITEMSYSNAME_COLNAME));
 	      this.setTaxBand(row.getInt(Catalogue.ITEMTAXBAND_COLNAME));
 	      this.description=row.getString(Catalogue.ITEMDESC_COLNAME);
@@ -117,7 +117,7 @@ public class Product extends Item {
 		  this.setAddedStockLevel(row.getFloat(Catalogue.ITEMADDEDSTOCK_COLNAME));
 		  this.setOpeningStockLevel(row.getFloat(Catalogue.ITEMOPENINGSTOCKLEVEL_COLNAME));
 		  this.setWastedStockLevel(row.getFloat(Catalogue.ITEMWASTEDSTOCK_COLNAME)); 
-		  logger.log("Pinit: product "+name+" price "+ price.toPlainString());
+		 // logger.log("Pinit: product "+name+" price "+ price.toPlainString());
     	  }catch(Exception x){
     		  logger.log("problem initialising product", x);
     	  }
@@ -216,10 +216,10 @@ public class Product extends Item {
 	    				throw new PlatosysDBException("Catalogue Fault: sysname col not found", e);
 	    			}
 	    		  }else{
-	    			  logger.log("ProductCP: creating the product "+productName );
+	    			 // logger.log("ProductCP: creating the product "+productName );
 	    			  long id = catalogueTable.addSerialRow(Catalogue.ITEMID_COLNAME, Catalogue.ITEMNAME_COLNAME,productName);
 	    		      Product product=new Product();
-	    		      logger.log("ProductCP: "+productName+" allocated ID "+Long.toString(id));
+	    		     // logger.log("ProductCP: "+productName+" allocated ID "+Long.toString(id));
 		    			 
 	    			  product.setId(id);
 	    			  product.setName(productName);
@@ -227,7 +227,7 @@ public class Product extends Item {
 	    			  // make a sysname for it:
 	    			  String sysname = PRODUCT_SYSNAME_PREFIX+ShortHash.hash(enterprise.getName()+productName+Long.toString(id));
 	    			  product.setSysname(sysname);
-	    			  logger.log("ProductCP: "+productName+" sysname is "+product.getSysname());
+	    			 // logger.log("ProductCP: "+productName+" sysname is "+product.getSysname());
 	    			  catalogueTable.amend(id, Catalogue.ITEMSYSNAME_COLNAME, sysname );
 	    			  product.setDescription(description);
 	    			  catalogueTable.amend(id, Catalogue.ITEMDESC_COLNAME, description);
@@ -250,7 +250,7 @@ public class Product extends Item {
 	    			  Account salesaccount = Account.createAccount(enterprise, sysname,  clerk, salesledger, enterprise.getDefaultCurrency(), product.getName(), true);
 	    			  catalogueTable.amend(id, Catalogue.ITEMACCOUNT_COLNAME, salesaccount.getSysname());
 	    			  product.setSalesAccount(salesaccount);
-	    			  logger.log("ProductCP: "+productName+" has account "+salesaccount.getFullName());
+	    			  //logger.log("ProductCP: "+productName+" has account "+salesaccount.getFullName());
 	    			  return product;
 	    		  }  
 	    	   
@@ -330,7 +330,7 @@ public class Product extends Item {
 	    	            catalogueTable.amend(id, Catalogue.ITEMTAXBAND_COLNAME, TaxedTransaction.STANDARD_BAND);
 	    	            //TODO put in ledger and account details for default product.*/
 	    	          
-	      			logger.log(4, "product catalogue created OK");
+	      			//logger.log(4, "product catalogue created OK");
 	    	            return catalogueTable;
     	            }catch(Exception e){
     	            	
@@ -338,7 +338,7 @@ public class Product extends Item {
     	                return null;
     	            }
     	        }else{
-    	            logger.log(3, "PCAT product catalogue exists");
+    	            //logger.log(3, "PCAT product catalogue exists");
     	            catalogueTable=new JDBCSerialTable(databaseName, PRODUCTCATALOGUE_TABLENAME, Catalogue.ITEMID_COLNAME);
     	            return catalogueTable;
     	        }
@@ -431,15 +431,15 @@ public class Product extends Item {
 	 }
  }
 private void setOpeningStockLevel(float openingStockLevel) {
-	logger.log(name+ "OS="+openingStockLevel);
+	//logger.log(name+ "OS="+openingStockLevel);
 	this.openingStockLevel = openingStockLevel;
 }
 private void setWastedStockLevel(float wastedStockLevel) {
-	logger.log(name+ "WS="+wastedStockLevel);
+	//logger.log(name+ "WS="+wastedStockLevel);
 	this.wastedStockLevel = wastedStockLevel;
 }
 private void setAddedStockLevel(float addedStockLevel) {
-	logger.log(name+ "AS="+addedStockLevel);
+	//logger.log(name+ "AS="+addedStockLevel);
 	this.addedStockLevel = addedStockLevel;
 }
 public double getOpeningStockLevel() {
@@ -495,7 +495,7 @@ public float getStockLevel() {
 }
 
 public void setStockLevel(float stockLevel2) {
-	logger.log(name+ "SL="+stockLevel2);
+	//logger.log(name+ "SL="+stockLevel2);
     this.stockLevel = stockLevel2;
 }
 public int getTaxBand() {

@@ -75,6 +75,7 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 				gItem.setInvoiceSysname(invoice.getSysname());
 				gItem.setItemSysname(invitem.getProduct().getSysname());
 				gwtInvoice.addLineItem(gItem);
+				logger.log("ISI-cI - there are now "+gwtInvoice.getLineItems().size() +" lines on the gwInvoice");
 			}
 			gwtInvoice.setProducts(gwtProductList);
 			gwtInvoice.setCustomer(gwtCustomer);

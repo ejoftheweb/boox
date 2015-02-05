@@ -72,6 +72,7 @@ public void setLineItems(ArrayList<GWTLineItem> lineItems) {
 
 public void addLineItem(GWTLineItem lineItem) throws Exception{
 	adjustTotals(lineItem);
+	lineItems.add(lineItem);
 }
 
 public boolean removeLineItem(GWTLineItem lineItem) throws Exception {

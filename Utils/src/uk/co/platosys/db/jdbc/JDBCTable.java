@@ -696,9 +696,8 @@ public class JDBCTable implements Table {
             connection.close();
             return true;
         }catch(Exception e){
-            logger.log("JDBCTable.addRow([][]): error", e);
-            try{connection.close();}catch(Exception cex){}
-            return false;
+        	 logger.log("JDBCTable.addRow([][]): error", e);
+        	 throw new PlatosysDBException("JDBCTable.addRow([][]): error", e);
         }finally{
         	try{
         		if (rs!=null){rs.close();}

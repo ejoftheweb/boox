@@ -323,22 +323,26 @@ public class Invoice  {
 		
 	}
    private void populateRows(String oldsysname, boolean isNewInvoice){
-	   logger.log("now populating rows of new invoice" +sysname+ " from old invoice "+oldsysname);
+	   logger.log("InvPR: now populating rows of new invoice" +sysname+ " from old invoice "+oldsysname);
 	 	List<Row> rows = draftsTable.getRows(DRAFTS_INVSYSNAME_COLNAME,oldsysname );
-	 	logger.log("there are "+rows.size()+ " rows to populate");
+	 	logger.log("InvPR: there are "+rows.size()+ " rows to populate");
+	 	int rw=1;
 		for(Row row:rows){
 			try{
 				Product product = Product.getProduct(enterprise, clerk, row.getString(DRAFTS_PRODUCT_COLNAME));
-				double qty = row.getDouble(DRAFTS_QTY_COLNAME); 
+				float qty = row.getFloat(DRAFTS_QTY_COLNAME); 
 			    Money price = new Money(row.getString(DRAFTS_CURRENCY_COLNAME),row.getBigDecimal(DRAFTS_PRICE_COLNAME));
-			    double tax_rate = row.getDouble(DRAFTS_TAX_COLNAME);
+			    float tax_rate = row.getFloat(DRAFTS_TAX_COLNAME);
 			    int index = row.getInt(DRAFTS_INDEX_COLNAME);
 			    InvoiceItem item = InvoiceItem.getInvoiceItem(enterprise, clerk, this, product, qty, index);
 			    item.setUnitPrice(price);
+			    logger.log("InvPR: about to add item with index "+index );
 			    addInvoiceItem(item, index);
 			    if(isNewInvoice){
 			    	addItemToDraftsTable(item, index);
 			    }
+			    logger.log("InvPR: populated "+rw+ " rows");
+			    rw++;
 			}catch(Exception e){
 				logger.log("exception populating rows", e);
 			}
@@ -426,13 +430,18 @@ public class Invoice  {
   */
  private boolean addItemToDraftsTable(InvoiceItem item, int index) throws PlatosysDBException{
 	Table draftsTable = getDraftInvoicesTable(enterprise);
-	String[] cols= {DRAFTS_INVSYSNAME_COLNAME, DRAFTS_PRODUCT_COLNAME, DRAFTS_CURRENCY_COLNAME};
-	String[] vals = {item.getInvoiceSysname(), item.getProduct().getSysname(), item.getUnitPrice().getCurrency().getTLA()};
-	draftsTable.addRow (cols, vals);
+	String[] cols= {DRAFTS_INVSYSNAME_COLNAME, DRAFTS_INDEX_COLNAME};
+	String[] vals = {item.getInvoiceSysname(), item.getLineNumber()};//item.getProduct().getSysname(), item.getUnitPrice().getCurrency().getTLA()};
+	try{
+		draftsTable.addRow (cols, vals);
+	}catch(PlatosysDBException pdx){
+		logger.log("Inv-aITDT issue adding item to drafts table? possibly duplicate key pair", pdx);
+	}
+	draftsTable.amendWhere(cols, vals, DRAFTS_PRODUCT_COLNAME, item.getProduct().getSysname()); 
+	draftsTable.amendWhere(cols, vals, DRAFTS_CURRENCY_COLNAME, item.getUnitPrice().getCurrency().getTLA()); 
 	draftsTable.amendWhere(cols, vals, DRAFTS_QTY_COLNAME, item.getQuantity());
 	draftsTable.amendWhere(cols, vals, DRAFTS_PRICE_COLNAME, item.getUnitPrice().getAmount());
 	draftsTable.amendWhere(cols, vals, DRAFTS_TAX_COLNAME, item.getTaxRate());
-	draftsTable.amendWhere(cols, vals,  DRAFTS_INDEX_COLNAME, item.getLineNumber());
 	 return true;
  }
  /**amend an item to the invoice at the given index
@@ -700,9 +709,9 @@ private static SerialTable getInvoicesTable(Enterprise enterprise) throws Platos
 				invoicesTable.addColumn(INVOICE_PAID_DATE_COLNAME, JDBCTable.TIMESTAMP_COLUMN);
 				invoicesTable.addColumn(INVOICE_STATUS_COLNAME, JDBCTable.TEXT_COLUMN);
 				invoicesTable.addColumn(INVOICE_DOCUMENT_FILENAME_COLNAME, JDBCTable.TEXT_COLUMN);
-				invoicesTable.addColumn(INVOICE_NET_COLNAME, JDBCTable.NUMERIC_COLUMN);
-				invoicesTable.addColumn(INVOICE_TAX_COLNAME, JDBCTable.NUMERIC_COLUMN);
-				invoicesTable.addColumn(INVOICE_TOTAL_COLNAME, JDBCTable.NUMERIC_COLUMN);
+				invoicesTable.addColumn(INVOICE_NET_COLNAME, JDBCTable.DECIMAL_COLUMN);
+				invoicesTable.addColumn(INVOICE_TAX_COLNAME, JDBCTable.DECIMAL_COLUMN);
+				invoicesTable.addColumn(INVOICE_TOTAL_COLNAME, JDBCTable.DECIMAL_COLUMN);
 				invoicesTable.addColumn(INVOICE_CURRENCY_COLNAME, JDBCTable.TEXT_COLUMN);
 				return invoicesTable;
 			  
@@ -724,9 +733,9 @@ private static Table getDraftInvoicesTable(Enterprise enterprise) throws Platosy
 				Table draftInvoicesTable;
 				draftInvoicesTable=JDBCTable.createTable(enterprise.getDatabaseName(),DRAFTS_TABLENAME, DRAFTS_INVSYSNAME_COLNAME, Table.TEXT_COLUMN, false);
 				draftInvoicesTable.addColumn(DRAFTS_PRODUCT_COLNAME, JDBCTable.TEXT_COLUMN);
-				draftInvoicesTable.addColumn(DRAFTS_QTY_COLNAME, JDBCTable.NUMERIC_COLUMN);
+				draftInvoicesTable.addColumn(DRAFTS_QTY_COLNAME, JDBCTable.REAL_COLUMN);
 				draftInvoicesTable.addColumn(DRAFTS_PRICE_COLNAME, JDBCTable.DECIMAL_COLUMN);
-				draftInvoicesTable.addColumn(DRAFTS_TAX_COLNAME, JDBCTable.TEXT_COLUMN);
+				draftInvoicesTable.addColumn(DRAFTS_TAX_COLNAME, JDBCTable.REAL_COLUMN);
 				draftInvoicesTable.addColumn(DRAFTS_CURRENCY_COLNAME, JDBCTable.TEXT_COLUMN);
 				draftInvoicesTable.addColumn(DRAFTS_INDEX_COLNAME, JDBCTable.INTEGER_COLUMN);
 				String[] uniqueCols = {DRAFTS_INVSYSNAME_COLNAME, DRAFTS_INDEX_COLNAME};
@@ -903,6 +912,7 @@ public static Invoice getInvoice(Enterprise enterprise, Clerk clerk, Customer cu
 	 * 											   case open: cloneInvoice					*/
 	try{
 		Table invoicesTable = getInvoicesTable(enterprise);//returns the list of invoices.
+		logger.log("got invoices table for "+enterprise.getName()+", "+customer.getName());
 		List<Row> rows = invoicesTable.getRows(INVOICE_CUSTOMER_SYSNAME_COLNAME, customer.getSysname());//retrieves a list of invoices for this customer
 		logger.log("InvoiceGI: found "+rows.size()+"invoices for "+customer.getName());
 		ISODate date = enterprise.getAccountingDate();
