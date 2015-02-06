@@ -173,10 +173,8 @@ public class Enterprise extends Body {
      * 
      */
     public static Enterprise createEnterprise(String name, String legalName, String databaseName, ISODate accDate) throws BooxException {
-    	//need to 
-    	 logger.log(2, "creating enterprise "+name);
-    	
-    	 String sysname = ShortHash.hash(name+legalName);
+    	//first we create a database for this enterprise
+    	String sysname = ShortHash.hash(name+legalName);
     	if (databaseName==null){
     		//so we need to create a new database for this enterprise
     		databaseName=DBTools.removeFunnyCharacters(sysname);//ensures it is legal (prepends a letter)
@@ -194,13 +192,15 @@ public class Enterprise extends Body {
 				logger.log("problem creating new database", e);
 				throw new BooxException("could not create new database for enteprise "+name, e);
 			}
-    		 setParameter(databaseName, NAME_PARAMNAME, name);
-             setParameter(databaseName, LEGALNAME_PARAMNAME, legalName);
-             try {
+    		  try {
 				Directory.addBody(sysname, name, legalName,databaseName, true);
 			} catch (PlatosysDBException e) {
-				// TODO Auto-generated catch block
-				logger.log("error:",e);
+				logger.log("Ent.cE error adding details to Directory:",e);
+			}try{
+    			 setParameter(databaseName, NAME_PARAMNAME, name);
+                 setParameter(databaseName, LEGALNAME_PARAMNAME, legalName);
+			}catch(Exception e){
+				logger.log("problem setting parameter", e);
 			}
          	
     	}
@@ -210,9 +210,7 @@ public class Enterprise extends Body {
         	logger.log("Enterprise created enterprise:"+enterprise.getName());
         	Boox.createNewJournal(enterprise);
         	try{
-        		 enterprise.setParameter(NAME_PARAMNAME, name);
-                 enterprise.setParameter(LEGALNAME_PARAMNAME, legalName);
-            enterprise.setAccountingDate( accDate);
+        	    enterprise.setAccountingDate( accDate);
             }catch(Exception ex){
         		logger.log("ECE problem setting enterprise parameter or addint to directory", ex);
         	}
@@ -227,17 +225,17 @@ public class Enterprise extends Body {
     void setParameter(String name, String value) throws BooxException{
     	 JDBCTable enterpriseTable=null;
          try{
-         if(!(JDBCTable.tableExists(getDatabaseName(), Enterprise.TABLENAME))){
-        	    logger.log("creating enterprise table in db "+getDatabaseName());
-                enterpriseTable = JDBCTable.createTable(getDatabaseName(), Enterprise.TABLENAME, Enterprise.KEY_COLNAME, JDBCTable.TEXT_COLUMN);
-                enterpriseTable.addColumn(Enterprise.VALUE_COLNAME, JDBCTable.TEXT_COLUMN);
-         }else{
-                enterpriseTable=new JDBCTable(getDatabaseName(), Enterprise.TABLENAME, Enterprise.KEY_COLNAME);
-                String[] cols={Enterprise.KEY_COLNAME, Enterprise.VALUE_COLNAME};
-                String[] vals={name, value};
-                enterpriseTable.addRow(cols, vals);
-                
-        }
+	         if(!(JDBCTable.tableExists(getDatabaseName(), Enterprise.TABLENAME))){
+	        	    logger.log("creating enterprise table in db "+getDatabaseName());
+	                enterpriseTable = JDBCTable.createTable(getDatabaseName(), Enterprise.TABLENAME, Enterprise.KEY_COLNAME, JDBCTable.TEXT_COLUMN);
+	                enterpriseTable.addColumn(Enterprise.VALUE_COLNAME, JDBCTable.TEXT_COLUMN);
+	         }else{
+	                enterpriseTable=new JDBCTable(getDatabaseName(), Enterprise.TABLENAME, Enterprise.KEY_COLNAME);
+	                String[] cols={Enterprise.KEY_COLNAME, Enterprise.VALUE_COLNAME};
+	                String[] vals={name, value};
+	                enterpriseTable.addRow(cols, vals);
+	         }
+	         logger.log("Ent.sP: set parameter "+name+" = "+value);
          }catch(Exception x){
          	logger.log("problem setting parameter in table in its own database", x);
              throw new BooxException("Couldn't set enterprise parameter in its own database",x);

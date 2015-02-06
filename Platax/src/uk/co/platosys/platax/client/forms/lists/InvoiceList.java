@@ -56,7 +56,7 @@ public class InvoiceList extends AbstractList {
 		 while(gwit.hasNext()){
 			 GWTInvoice gwinvoice = gwit.next();
 			 table.setWidget(row, 0, new InvoiceRefHTML(gwinvoice));
-			 //table.setWidget(row, 1, new CustomerHTML(gwinvoice.getCustomer(), parent));
+			 table.setWidget(row, 1, new Label(gwinvoice.getCustomer().getName()));
 			 table.setWidget(row, 2, new Label(DateFormats.SHORT_DATE_FORMAT.format(gwinvoice.getValueDate())));
 			 table.setWidget(row, 3, new Label(DateFormats.SHORT_DATE_FORMAT.format(gwinvoice.getDueDate())));
 			 table.setWidget(row, 4, new Label(gwinvoice.getStatus()));

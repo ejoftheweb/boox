@@ -10,8 +10,10 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.view.client.ListDataProvider;
  
+
 
 
 import uk.co.platosys.platax.client.Platax;
@@ -37,7 +39,9 @@ public class ProductList extends AbstractList {
 	
 	DataGrid<GWTItem> dataGrid=new DataGrid<GWTItem>();
 	
-	final ListDataProvider<GWTItem> listDataProvider = new ListDataProvider<GWTItem>();
+	final ListDataProvider<GWTItem> listDataProvider = new ListDataProvider<GWTItem>(){
+		
+	};
 	
 	
 	final ProductServiceAsync productService = (ProductServiceAsync) GWT.create(ProductService.class);
@@ -50,7 +54,7 @@ public class ProductList extends AbstractList {
 		 setSubTitle("blah blah");
 		 productService.listProducts(enterprise.getEnterpriseID(), list_selection_type, productListCallBack);
 		 
-		 listDataProvider.addDataDisplay(dataGrid);
+		/* listDataProvider.addDataDisplay(dataGrid);
 		 
 		 //the columns
 		 TextColumn<GWTItem> nameColumn = new TextColumn<GWTItem>(){
@@ -89,8 +93,8 @@ public class ProductList extends AbstractList {
 		 dataGrid.addColumn(wastedStockLevelColumn, "wasted");
 		 dataGrid.addColumn(stockLevelColumn, "current");
 		 this.add(dataGrid);
-		 pager.setDisplay(dataGrid);
-		 /*
+		 pager.setDisplay(dataGrid);*/
+		
 		 //table headers:
 		// table.setWidget(0, 0, new ColumnHeaderLabel(LabelText.LIST_INVOICE_NUMBER_HEADER));
 		 table.getFlexCellFormatter().setRowSpan(0,0,2); 
@@ -111,7 +115,7 @@ public class ProductList extends AbstractList {
 		 table.setWidget(1, 5, new MoneyColumnHeaderLabel(LabelText.LIST_PRODUCT_LAST_HEADER));
 		 table.setWidget(1, 6, new MoneyColumnHeaderLabel(LabelText.LIST_PRODUCT_THIS_HEADER));
 		 table.setWidget(1, 7, new MoneyColumnHeaderLabel(LabelText.LIST_PRODUCT_CHANGE_HEADER));
-		 */
+		
 	}
 	
 	
@@ -125,18 +129,18 @@ public class ProductList extends AbstractList {
 			 GWTItem product = gwit.next();
 			 dataList.add(product);
 			 
-			 /*
+			 
 			 //note that the column numbering is 2 greater than the headers
 			 
 			// table.setWidget(row, 0, new InvoiceRefHTML(gwinvoice));
-			 table.setWidget(row, 1, new ProductHTML(product, parent));
+			 table.setWidget(row, 1, new Label(product.getName()));
 			table.setWidget(row, 8, new MoneyLabel(product.getBalance()));
 			 table.setWidget(row, 6, new NumberLabel(product.getStockLevel()));
 			//table.setWidget(row, 4, new MoneyLabel(customer.getDisputedBalance()));
 			//table.setWidget(row, 5, new Label(customer.getPreviousSales()));
 			// table.setWidget(row, 6, new MoneyLabel(customer.getSales()));
 			//table.setWidget(row, 7, new PercentChangeLabel(customer.getSalesChange()));
-			 row++;*/
+			 row++;
 		 }
 		}
 		

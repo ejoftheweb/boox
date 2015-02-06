@@ -266,7 +266,7 @@ public class InvoiceForm extends AbstractBill {
 		this. itemListBox.addItems(gwtInvoice.getProducts());
 		this.gwtCustomer=gwtInvoice.getCustomer();
 		this.customerName=gwtCustomer.getName();
-		setTabHeaderText(enterpriseName+":"+customerName);
+		//setTabHeaderText(enterpriseName+":"+customerName);
 		for(GWTLineItem lineItem:gwtInvoice.getLineItems()){
 			updateLine(lineItem);
 			baseRow++;
@@ -297,7 +297,7 @@ public class InvoiceForm extends AbstractBill {
 	 protected void insertLine(final GWTLineItem gwtLineItem) {
 	    	int lineNo = gwtLineItem.getLineNumber();
 	    	setRow(lineNo);
-	    	//Window.alert("current row is "+currentRow());
+	    	//Window.alert("inserting line "+currentRow()+"\n price="+gwtLineItem.getPrice().toPlainString()+"\n tax="+gwtLineItem.getTax().toPlainString());
 	    	Label lineNumberLabel=new Label();
 	    	lineNumberLabel.setText(Integer.toString(lineNo));
 	    	table.setWidget(currentRow(), 0, lineNumberLabel);
@@ -327,7 +327,7 @@ public class InvoiceForm extends AbstractBill {
 	 protected void updateLine(final GWTLineItem gwtLineItem) {
 	    	int lineNo = gwtLineItem.getLineNumber();
 	    	adjustTotals(gwtLineItem);
-	    	//Window.alert("updating line "+lineNo);
+	    	//Window.alert("updating line "+lineNo+"\n price="+gwtLineItem.getPrice().toPlainString()+"\n tax="+gwtLineItem.getTax().toPlainString());
 	    	table.setWidget(lineNo, 0, new Label(Integer.toString(lineNo)));
 	    	table.setWidget(lineNo, 1, new Label(gwtLineItem.getItemName()));
 	    	QuantityBox quantityBox=new QuantityBox(gwtLineItem.getItemQty());

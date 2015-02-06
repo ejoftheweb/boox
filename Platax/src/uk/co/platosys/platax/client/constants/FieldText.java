@@ -25,7 +25,7 @@ public class FieldText {
 	public static final String[] PETTYCASH_BALANCE={"Cash in Tin", "Count the cash remaining", null, ERROR};
 	
 	public static final String[] NAME={"Name", "Handy short name", ANYALPHA, ERROR};
-	public static final String[] LEGALNAME={"Legal Name", "Full legal name", ANYALPHA, ERROR};
+	public static final String[] LEGALNAME={"Legal Name", "Full legal name", "^[A-Z]([a-zA-Z0-9]|[- @\\.#&!])*$", ERROR};
 	
 	public static final String[] ENTERPRISE_TYPE={"Capital Structure", "Please select your organisation's capital type", ANYALPHA, ERROR};
 	public static final String[] ENTERPRISE_ROLE={"Your Role in it", "Please select your role in it", ANYALPHA, ERROR};

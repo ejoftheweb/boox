@@ -325,5 +325,14 @@ public class TaxedTransaction {
     protected void setTaxTransaction(Transaction taxTransaction){
     	this.taxTransaction=taxTransaction;
     }
-   
+    public static double getTaxRate(int taxBand){
+    	switch (taxBand) {
+		case TaxedTransaction.HIGHER_BAND:  return TaxedTransaction.HIGHER_RATE;
+		case TaxedTransaction.STANDARD_BAND:return TaxedTransaction.STANDARD_RATE;
+		case TaxedTransaction.LOW_BAND:return TaxedTransaction.LOW_RATE;
+		case TaxedTransaction.ZERO_BAND:return TaxedTransaction.ZERO_RATE;
+		case TaxedTransaction.UNTAXED_BAND:return TaxedTransaction.ZERO_RATE;
+		default: return STANDARD_RATE; 
+	}
+    }
 }

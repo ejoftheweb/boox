@@ -18,6 +18,7 @@ import uk.co.platosys.boox.money.Money;
 import uk.co.platosys.boox.trade.Customer;
 import uk.co.platosys.boox.trade.Invoice;
 import uk.co.platosys.boox.trade.InvoiceItem;
+import uk.co.platosys.boox.trade.TaxedTransaction;
 import uk.co.platosys.platax.client.services.InvoiceService;
 import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.server.core.PXConstants;
@@ -65,11 +66,6 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 			logger.log("ISI-cI there are "+invoiceItems.size()+" items on the invoice ");
 			for (Integer index:invoiceItems.keySet()){
 				InvoiceItem invitem = invoiceItems.get(index);
-				logger.log("ISI-cI converting item at "+index);
-				logger.log("ISI-cI item name is "+invitem.getProduct().getName());
-				logger.log("ISI-cI item qty is "+invitem.getQuantity());
-				logger.log("ISI-cI item price is "+invitem.getUnitPrice().toPlainString());
-				logger.log("ISI-cI item curr is "+invitem.getUnitPrice().getCurrency().getTLA());
 				GWTLineItem gItem=convert(index, invitem);
 				gItem.setEnterprise(gEnterprise);
 				gItem.setInvoiceSysname(invoice.getSysname());
@@ -97,26 +93,19 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 		//we get a line populated with some meagre data, we do the thang and send it back.
 			PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
 			
-			logger.log("ISIpl:i line no is:"+line.getLineNumber());
-			logger.log("ISIpl:ii SIN is:"+line.getInvoiceSysname());
-			logger.log("ISIpl:iii itemsysname is:"+line.getItemSysname());
-			logger.log("ISIpl:iv itemname is:"+line.getItemName());
-			logger.log("ISIpl:v enterprise is:"+line.getEnterprise().getName());
-			logger.log("ISIpl:vi enterpriseID is:"+line.getEnterprise().getSysname());
 		//first, get the product:
 		Enterprise enterprise = Enterprise.getEnterprise(line.getEnterprise().getEnterpriseID());
 		Clerk clerk = pxuser.getClerk(enterprise);
 		Product product = Product.getProduct(enterprise, clerk, line.getItemSysname());
-		    logger.log("ISIpl: product is:"+product.getName());
 		String sin = line.getInvoiceSysname();
 		Invoice invoice = pxuser.getInvoice(sin);
-		logger.log("ISIpl: invoice is:"+invoice.getSysname());
 		float quantity = line.getItemQty();
 		InvoiceItem invoiceItem = InvoiceItem.getInvoiceItem(enterprise, clerk, invoice, product, quantity, line.getLineNumber());
 		logger.log("ISIpl: invoice item taxBand is"+invoiceItem.getTaxBand());
 		line.setItemName(invoiceItem.getDescription());
 		Money price = invoiceItem.getUnitPrice();
 		line.setPrice(PlataxServer.convert(price));
+		line.setTaxrate(TaxedTransaction.getTaxRate(invoiceItem.getTaxBand())/100);
 		invoice.addItem(invoiceItem, line.getLineNumber());
 		return line;
 		}catch(Exception x){
@@ -158,6 +147,7 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 			lineItem.setItemName(invitem.getProduct().getName());
 			lineItem.setItemQty((float) invitem.getQuantity());
 			lineItem.setPrice(PlataxServer.convert(invitem.getUnitPrice()));
+			lineItem.setTaxrate(TaxedTransaction.getTaxRate(invitem.getTaxBand())/100);
 			return lineItem;
 		}catch(Exception x){
 			logger.log("ISI problem converting line item ", x);
@@ -208,23 +198,12 @@ public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 		     int i=0;
 		     List<Invoice> invoices =Invoice.getInvoices(enterprise, clerk, selection);
 			 GWTInvoiceList gwinvoices = new GWTInvoiceList();
-			 Iterator<Invoice> it = invoices.iterator();
-			 while (it.hasNext()){
-				 Invoice invoice = it.next();
-				 logger.log("ISI-listInvoices converting invoice "+invoice.getSystemInvoiceNumber());
+			for (Invoice invoice:invoices){
+				logger.log("ISI-listInvoices converting invoice "+invoice.getSystemInvoiceNumber());
 				 gwinvoices.add(convert(invoice, clerk));
 			 }
 			 logger.log("ISI-lI, the invoice list is now ready and it lists "+gwinvoices.size()+" invoices");
-			 //debugging code
-			 try{
-				 File testdir = new File("/var/platosys/test");
-				 FileOutputStream fout = new FileOutputStream(new File(testdir, enterpriseID)); 
-				 ObjectOutputStream oout= new ObjectOutputStream(fout);
-				 oout.writeObject(gwinvoices);
-				 oout.flush();
-				 oout.close();
-			 }catch(Exception e){}//if the debugging code is broken, don't break everything else.
-			 //end debugging code
+			
 			return gwinvoices;
 		}catch(Exception px){
 			logger.log("ISI propblem getting invoice list", px);

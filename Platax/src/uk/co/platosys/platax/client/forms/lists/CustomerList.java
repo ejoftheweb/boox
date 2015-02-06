@@ -59,8 +59,10 @@ public class CustomerList extends AbstractList {
 	
 	
 	final AsyncCallback<ArrayList<GWTCustomer>> customerListCallBack= new AsyncCallback<ArrayList<GWTCustomer>>(){
+
 		@Override
 		public void onSuccess(ArrayList<GWTCustomer> customers){
+
 		Iterator<GWTCustomer> gwit = customers.iterator();
 		 int row = 2;
 		 while(gwit.hasNext()){
@@ -68,7 +70,7 @@ public class CustomerList extends AbstractList {
 			 //note that the column numbering is 2 greater than the headers
 			 
 			// table.setWidget(row, 0, new InvoiceRefHTML(gwinvoice));
-			 //table.setWidget(row, 1, new CustomerHTML(customer, parent));
+			 table.setWidget(row, 1, new Label(customer.getName()));//, parent));
 			table.setWidget(row, 2, new MoneyLabel(customer.getBalance()));
 			 table.setWidget(row, 3, new MoneyLabel(customer.getOverdueBalance()));
 			table.setWidget(row, 4, new MoneyLabel(customer.getDisputedBalance()));
@@ -98,6 +100,7 @@ public class CustomerList extends AbstractList {
 			Window.alert(error);
 		}
 	};
+	
 	@Override
 	public void refresh() {
 		// TODO Auto-generated method stub

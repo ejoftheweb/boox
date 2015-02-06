@@ -6,12 +6,14 @@
 package uk.co.platosys.boox.trade;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -291,7 +293,7 @@ public class Invoice  {
     * @param enterprise
     * @param clerk
     * @param customer */
-   protected Invoice(Enterprise enterprise, String sysname,Clerk clerk)throws PermissionsException{
+   private Invoice(Enterprise enterprise, String sysname,Clerk clerk)throws PermissionsException{
 	  // super(enterprise,sysname, clerk);
 	   //note we don't use the setters to set field values when reading from the table, because the setters write back to the table.
 	logger.log("I-init: Constructing invoice "+sysname);
@@ -308,12 +310,10 @@ public class Invoice  {
 		this.dueDate=row.getISODate(INVOICE_DUE_DATE_COLNAME);
 		this.valueDate=row.getISODate(INVOICE_VALUE_DATE_COLNAME);
 		this.currency=Currency.getCurrency(row.getString(INVOICE_CURRENCY_COLNAME));
-		logger.log("I-init: currency is "+currency.getTLA());
-		//logger.log("I-init: net money is "+net.toPlainString());
-		this.net=new Money(currency, row.getBigDecimal(INVOICE_NET_COLNAME));
-		logger.log("I-init: actually, net money is: "+net.toPlainString());
-		this.tax=new Money(currency, row.getBigDecimal(INVOICE_TAX_COLNAME));
-		this.total=new Money(currency, row.getBigDecimal(INVOICE_TOTAL_COLNAME));
+		//We initialise the totals with zero! it is added to from the populate rows method.
+		this.net=new Money(currency, BigDecimal.ZERO);
+		this.tax=new Money(currency, BigDecimal.ZERO);
+		this.total=new Money(currency, BigDecimal.ZERO);
 		this.customer=Customer.getCustomer(enterprise, clerk, row.getString(INVOICE_CUSTOMER_SYSNAME_COLNAME));
 		this.status=row.getString(INVOICE_STATUS_COLNAME);
 	}catch(Exception x){
@@ -396,20 +396,16 @@ public class Invoice  {
     * @throws CurrencyException
     * @throws PlatosysDBException  */
  private int addInvoiceItem(InvoiceItem item, int index) throws CurrencyException, PlatosysDBException{
-	 logger.log("Invoice addingInvoiceItem");
 	 Integer lineNo=new Integer(index);
  	 if (invoiceItems.containsKey(lineNo)){
  		 logger.log("invoice already has an item at index "+index);
 		 return 0;
      }else{
-    	 logger.log("net money is "+net.toPrefixedString());
-    	 logger.log("itemnet is" +item.getNetMoney().toPrefixedString());
     	 setNet(Money.add(net, item.getNetMoney()));
     	 setTax(Money.add(tax, item.getTaxMoney()));
     	 setTotal(Money.add(net, tax));
     	 invoiceItems.put(lineNo, item);
-    	 logger.log("there are now "+invoiceItems.size()+" items in the invoice");
-     	 return index;
+    	 return index;
      }
  }
  public int addItem(InvoiceItem item, int index){
@@ -468,7 +464,9 @@ public int amendInvoiceItem(InvoiceItem item, int index) throws CurrencyExceptio
  /**Creates the invoice document
   *  creates the invoice account WHICH HAS THE SAME NAME AS THE INVOICE SYSNAME.
   *  posts the InvoiceItem and adds the invoice item element to the InvoiceDocument 
-    * @return the invoice Document (a jdom Document);
+    * @return the invoice balance;
+    * The invoice document, which is an xml document, is saved in the data folder with the invoice sysname as a name
+    * Before it can be sent to customers it needs to be transformed and emailed. 
     * @throws PermissionsException */
    public Money raise(Enterprise enterprise) throws BooxException, PermissionsException{
 	   logger.log("Invoice: raising invoice "+sysname+" with "+invoiceItems.size()+" items");
@@ -530,6 +528,7 @@ public int amendInvoiceItem(InvoiceItem item, int index) throws CurrencyExceptio
 		    	 DocMan.write(invoiceFile,invoiceDocument);
 		    	setRaisedDate(new ISODate());
 		    	setStatus(OPEN);
+		    	registerTotals();
 		    	logger.log("Invoice-R done, returning "+total.toPrefixedString());
 		    	return total;
 		    
@@ -833,7 +832,6 @@ public Money getTotal() {
 private void setTotal(Money total) throws PlatosysDBException {
 	logger.log("Invoice- setting total to "+total.toPrefixedString());
 	this.total = total;
-	invoicesTable.amend(systemInvoiceNumber, INVOICE_TOTAL_COLNAME, total.getAmount().doubleValue());
 	totals.put("gross", total);
 }
 
@@ -845,7 +843,6 @@ public Money getTax() {
 private void setTax(Money tax) throws PlatosysDBException {
 	logger.log("Invoice- setting tax to "+tax.toPrefixedString());
 	
-	invoicesTable.amend(systemInvoiceNumber, INVOICE_TAX_COLNAME, tax.getAmount().doubleValue());
 	
 	this.tax = tax;
 	totals.put("tax", tax);
@@ -859,10 +856,13 @@ private void setNet(Money net) throws PlatosysDBException {
 	logger.log("Invoice- setting net to "+net.toPrefixedString());
 	
 	this.net = net;
-	invoicesTable.amend(systemInvoiceNumber, INVOICE_NET_COLNAME, net.getAmount().doubleValue());
 	totals.put("net", net);
 }
-
+private void registerTotals() throws PlatosysDBException{
+	invoicesTable.amend(systemInvoiceNumber, INVOICE_NET_COLNAME, net.getAmount().doubleValue());
+	invoicesTable.amend(systemInvoiceNumber, INVOICE_TAX_COLNAME, tax.getAmount().doubleValue());
+	invoicesTable.amend(systemInvoiceNumber, INVOICE_TOTAL_COLNAME, total.getAmount().doubleValue());
+}
 /**
  * @return the status
  */

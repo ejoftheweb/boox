@@ -64,7 +64,7 @@ public class JDBCRow implements Row {
       * 
       */
      protected JDBCRow(ResultSet rs) throws TypeNotSupportedException {
-    	 logger.log("JDBCRow init");
+    	 //logger.log("JDBCRow init");
      	
          this.rowName=""; 
         try{
@@ -189,7 +189,7 @@ public class JDBCRow implements Row {
     protected JDBCRow(long rowNumber, ResultSet rs) throws TypeNotSupportedException {
     	 this(rs);
      	this.rowName=Long.toString(rowNumber); 
-     	logger.log("JDBCRow created with no: "+rowNumber);
+     	//logger.log("JDBCRow created with no: "+rowNumber);
 	}  
     
       

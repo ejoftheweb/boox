@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.UIObject;
 
+import uk.co.platosys.platax.client.Constants;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.MenuText;
@@ -44,8 +45,12 @@ public class EnterpriseMenu extends MenuBar {
 	final GWTEnterprise gwtEnterprise;
 	//We define a String variable to refer programmatically to each menu item. There are lots!
 	static final String CAPITAL_MENU="capitalMenu"; 
+		static final String BALANCE_SHEET="balanceSheet";
 		static final String EQUITY_MENU="equityMenu";
+			static final String ISSUE_EQUITY="issueEquity";
+			static final String SHARE_REGISTER="showShareRegister";
 		static final String BONDS_MENU="bondsMenu";
+			static final String DIRECTORS_LOANS="directorsLoans";		
 	static final String INCOME_MENU="incomeMenu";
 		static final String INVOICE_MENU="invoiceMenu";
 			static final String ALL_INVOICES="allInvoices";
@@ -92,8 +97,11 @@ public class EnterpriseMenu extends MenuBar {
 		this.gwtEnterprise=enterprise;
 		//this little lot defines menu items. Break with all good coding style guides for readability.
 		MenuBar capitalMenu = new MenuBar(true); menuItems.put(CAPITAL_MENU, capitalMenu);
-			MenuItem equityMenu = new MenuItem(MenuText.EQUITY_LABEL);capitalMenu.addItem(equityMenu);menuItems.put(EQUITY_MENU, equityMenu);
-			MenuItem bondsMenu = new MenuItem(MenuText.BONDS_LABEL);capitalMenu.addItem(bondsMenu);menuItems.put(BONDS_MENU, bondsMenu);
+		MenuItem balanceSheet = new MenuItem(MenuText.BALANCE_LABEL);capitalMenu.addItem(balanceSheet);menuItems.put(BALANCE_SHEET, balanceSheet);
+			MenuBar equityMenu = new MenuBar(true);capitalMenu.addItem(MenuText.EQUITY_LABEL, equityMenu);menuItems.put(EQUITY_MENU, equityMenu);
+		
+			Menu equityMenu = new MenuItem(MenuText.EQUITY_LABEL);capitalMenu.addItem(equityMenu);menuItems.put(EQUITY_MENU, equityMenu);
+			MenuBar bondsMenu = new MenuBar(true);(MenuText.BONDS_LABEL);capitalMenu.addItem(bondsMenu);menuItems.put(BONDS_MENU, bondsMenu);
 		MenuBar incomeMenu = new MenuBar(true);	menuItems.put(INCOME_MENU, incomeMenu);
 			MenuBar invoiceMenu = new MenuBar(true);incomeMenu.addItem(MenuText.INVOICES_LABEL, invoiceMenu);menuItems.put(INVOICE_MENU, invoiceMenu);
 				MenuItem allInvoices = new MenuItem(MenuText.ALL_LABEL);invoiceMenu.addItem(allInvoices);menuItems.put(ALL_INVOICES, allInvoices);
@@ -222,7 +230,7 @@ public class EnterpriseMenu extends MenuBar {
 		allCustomers.setScheduledCommand(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
-				CustomerList ctab = new CustomerList(platax, enterprise, 0);
+				CustomerList ctab = new CustomerList(platax, enterprise, Constants.ALL_CUSTOMERS);
 				platax.addTab(ctab);
 			}
 		});
@@ -238,7 +246,7 @@ public class EnterpriseMenu extends MenuBar {
 		allProducts.setScheduledCommand(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
-				ProductList ctab = new ProductList(platax, enterprise, 0);
+				ProductList ctab = new ProductList(platax, enterprise, Constants.ALL_PRODUCTS);
 				platax.addTab(ctab);
 			}
 		});

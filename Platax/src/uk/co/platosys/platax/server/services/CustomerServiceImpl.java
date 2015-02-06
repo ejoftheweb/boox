@@ -13,6 +13,7 @@ import uk.co.platosys.boox.core.exceptions.PermissionsException;
 import uk.co.platosys.boox.money.CurrencyException;
 import uk.co.platosys.boox.trade.Customer;
 import uk.co.platosys.db.PlatosysDBException;
+import uk.co.platosys.platax.client.Constants;
 import uk.co.platosys.platax.client.services.CustomerService;
 import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.server.core.PXConstants;
@@ -121,7 +122,7 @@ static Logger logger = Logger.getLogger("platax");
 			List<Customer> customers = Customer.getCustomers(enterprise, clerk, selection);
 			ArrayList<GWTCustomer> gwcusts = new ArrayList<GWTCustomer>();
 			for(Customer customer:customers){
-				if(selection==0){
+				if(selection==Constants.ALL_CUSTOMERS_NOFIN){
 					//produces a lightweight list with no financial data
 					gwcusts.add(convert(customer));
 				}else{

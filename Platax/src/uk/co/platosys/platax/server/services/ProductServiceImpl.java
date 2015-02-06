@@ -39,16 +39,18 @@ public class ProductServiceImpl extends Booxlet implements ProductService {
 							  String productDescription, 
 							  double dprice, 
 							  int taxBand, 
-							  boolean exclusive) {
+							  boolean taxinclusive) {
 		try{
-			logger.log("PSI-ADD about to add product:"+productName);
 			PlataxUser pxuser =  (PlataxUser) getSession().getAttribute(PXConstants.USER);
 			Enterprise enterprise = pxuser.getEnterprise(enterpriseID);
 			Clerk clerk = pxuser.getClerk(enterprise);
 			Money mprice = new Money(enterprise.getDefaultCurrency(), dprice);
-			logger.log("PSI-ADD about to create product:"+productName);
+			if(taxinclusive){
+				double taxRate = TaxedTransaction.getTaxRate(taxBand);
+				Money[] taxes = mprice.extractTax(taxRate);
+				mprice=taxes[0];
+			}
 			Product product = Product.createProduct(enterprise,  productName, productDescription, mprice, clerk, taxBand,0);
-			logger.log("PSI-ADD has added product)"+product.getName());
 			return ProductServiceImpl.createGWTItem(product);
 		}catch(Exception ex){
 			logger.log("APSI failed to add a product because of error" , ex);
@@ -80,14 +82,7 @@ public class ProductServiceImpl extends Booxlet implements ProductService {
 	public static GWTItem createGWTItem(Item item){
 		GWTItem gwtItem = new GWTItem(item.getName(), item.getSysname(), PlataxServer.convert(item.getPrice()));
 		int taxBand = item.getTaxBand();
-		double taxRate=0;
-		switch(taxBand){
-	        case TaxedTransaction.HIGHER_BAND:taxRate=TaxedTransaction.HIGHER_RATE;break;
-	        case TaxedTransaction.STANDARD_BAND:taxRate=TaxedTransaction.STANDARD_RATE;break;
-	        case TaxedTransaction.LOW_BAND:taxRate=TaxedTransaction.LOW_RATE;break;
-	        case TaxedTransaction.ZERO_BAND:taxRate=TaxedTransaction.ZERO_RATE;break;
-	        default: taxRate=TaxedTransaction.STANDARD_RATE;	
-		}
+		double taxRate=TaxedTransaction.getTaxRate(taxBand);
 		gwtItem.setTaxrate(taxRate/100);
 		return gwtItem;
 	}
