@@ -17,11 +17,13 @@ import java.util.Map;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
+import org.jdom2.ProcessingInstruction;
 
 import uk.co.platosys.util.DocMan;
 import uk.co.platosys.util.ISODate;
 import uk.co.platosys.util.Logger;
 import uk.co.platosys.util.ShortHash;
+import uk.co.platosys.boox.constants.Constants;
 import uk.co.platosys.boox.core.Clerk;
 import uk.co.platosys.boox.stock.Product;
 import uk.co.platosys.boox.money.Currency;
@@ -62,6 +64,8 @@ import uk.co.platosys.db.jdbc.JDBCTable;
  * The process of raising always involves creating a document of record, the invoice document. 
  * This is written and stored as an xml Document (in Boox' own xml schema) so it can be recreated and styled with an
  * xsl stylesheet for despatch to the customer. The styling allows a transformation to a form the customer can use.
+ * The standard xml documents include a reference to an external stylesheet. A basic version (which styles the invoice
+ * as xhtml) is included in the distribution. 
  *  <p>
  * The customer, we hope, will settle their debt. This creates another transaction. Let's assume that the customer also
  * takes a settlement discount. You must raise a credit note for this; a credit note is an invoice with a credit rather than
@@ -160,6 +164,9 @@ public class Invoice  {
    //xml schema names etc
    public static final String ROOT_ELNAME="invoice";
    public static final String INFO_ELNAME="info";
+   public static final String INVOICE_NUMBER_ELNAME="invoice-number";
+   public static final String INVOICE_DATE_ELNAME="invoice-date";
+   public static final String INVOICE_DUE_DATE_ELNAME="due-date";
    public static final String ISSUER_ELNAME="issuer";
    public static final String CUSTOMER_ELNAME="customer";
    public static final String ITEMS_ELNAME="items";
@@ -477,10 +484,23 @@ public int amendInvoiceItem(InvoiceItem item, int index) throws CurrencyExceptio
 		   logger.log("Invoice: account created with name "+account.getName());
 	  
 		    	Document invoiceDocument = new Document();
+		    	//add the stylesheet reference
+		    	Map<String,String> piMap = new HashMap<String, String>();
+		    	piMap.put("type", "text/xsl");
+		    	piMap.put("href", Constants.INVOICE_STYLESHEET_URL );
+		    	ProcessingInstruction xpi = new ProcessingInstruction("xml-stylesheet", piMap);
+		    	invoiceDocument.addContent(xpi);
+		    	//done adding stylesheet
 		    	this.rootElement = new Element(ROOT_ELNAME, ns);
 		    	invoiceDocument.setRootElement(rootElement);
 		    	Element infoElement = new Element(INFO_ELNAME, ns);
 		    	//TODO: populate the infoElement
+		    	Element invoiceNumberElement = new Element(INVOICE_NUMBER_ELNAME, ns);
+		    	invoiceNumberElement.setText(userInvoiceNumber);
+		    	infoElement.addContent(invoiceNumberElement);
+		    	Element invoiceDateElement=new Element(INVOICE_DATE_ELNAME, ns);
+		    	invoiceDateElement.setText(this.raisedDate.dateString());
+		    	infoElement.addContent(invoiceDateElement);
 		    	rootElement.addContent(infoElement);
 		    	Element issuerElement=new Element(ISSUER_ELNAME, ns);
 		    	 Map<String, String> info = enterprise.getInfo();
