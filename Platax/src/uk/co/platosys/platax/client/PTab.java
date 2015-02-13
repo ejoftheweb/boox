@@ -1,12 +1,13 @@
-package uk.co.platosys.platax.client.widgets;
+package uk.co.platosys.platax.client;
 
 import java.util.Iterator;
 
-import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.constants.Styles;
+import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.client.widgets.html.AnchorHTML;
+import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,6 +18,7 @@ import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
@@ -49,6 +51,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 
 public abstract class PTab implements IsWidget, HasWidgets {
+ private String title="blank pTab";	
  private String header="";
  private String content="";
  private PlataxTabPanel parent;
@@ -63,7 +66,18 @@ public abstract class PTab implements IsWidget, HasWidgets {
  private FlowPanel shareCol;
  private DockLayoutPanel panel;
  private int index=-2; //the index of this PTab in its parent. 
- public PTab(final Platax platax){
+ private GWTEnterprise enterprise; 
+ private Platax pPlatax;
+ 
+ public PTab(){
+	 final Platax platax = Platax.getCurrentInstance();
+	 setup(platax);
+ }
+ public  PTab(final Platax platax){
+	 setup(platax);
+ }
+ private void setup(final Platax platax){
+	 this.pPlatax=platax;
 	 tabItem = new FlowPanel();
 	 page=new FlowPanel();
 	 panel=new DockLayoutPanel(Unit.PCT);
@@ -75,10 +89,11 @@ public abstract class PTab implements IsWidget, HasWidgets {
 	 shareCol.setStyleName(Styles.PTAB_SHARE_STYLE);
 	 closeTag.setStyleName(Styles.PTAB_CLOSE_TAG);
 	 shareCol.add(new Label(LabelText.SHARE));
-     tabItemTitle.setText("Blank pTab");
+     tabItemTitle.setText(title);
      tabItem.add(tabItemTitle);
      tabItem.add(counter);
      tabItem.add(closeTag);
+     
      closeTag.addClickHandler(new ClickHandler(){
 
 		@Override
@@ -163,9 +178,15 @@ public int setParent(PlataxTabPanel parent){
 	}
 }
 
+@Deprecated
 public int setTabHeaderText(String header) {
 	this.header = header;
 	tabItemTitle.setText(header);
+	return index;
+}
+public int setTabHead(SafeHtml header) {
+	this.header = header.asString();
+	tabItemTitle.setText(header.asString());
 	return index;
 }
 /**
@@ -196,5 +217,13 @@ public void setStyleName( String styleName){
 public void setHeadStyleName(String styleName){
 	tabItem.setStyleName(styleName);
 }
-
+public GWTEnterprise getEnterprise() {
+	return enterprise;
+}
+public void setEnterprise(GWTEnterprise enterprise) {
+	this.enterprise = enterprise;
+}
+public void select(){
+	pPlatax.setCurrentEnterprise(this.enterprise);
+}
 }

@@ -29,6 +29,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
@@ -57,7 +58,8 @@ String enterpriseName=null;
 String enterpriseID=null;
 QuantityBox qtyBox=new QuantityBox();
 FlowPanel headPanel=new FlowPanel();
-FlowPanel cpartyPanel=new FlowPanel();
+HorizontalPanel cpartyPanel=new HorizontalPanel();
+FlowPanel cpartyRefPanel = new FlowPanel();
 final SimplePanel cpartyNamePanel=new SimplePanel();
 //FlowPanel lineEntryPanel=new FlowPanel();
 FlowPanel submitButtonPanel=new FlowPanel();
@@ -96,7 +98,7 @@ MoneyGrandTotalLabel billGross = new MoneyGrandTotalLabel();
 FormHeaderLabel formHeadLabel=new FormHeaderLabel();
 ScrollPanel tablePanel = new ScrollPanel();
 InlineLabel billNumberLabel=new InlineLabel("No:");
-InlineLabel refNumberLabel=new InlineLabel("No");
+//InlineLabel refNumberLabel=new InlineLabel("No");
 final TextBox billNumberBox = new TextBox();
 final TextBox refNumberBox= new TextBox();
 
@@ -114,6 +116,7 @@ public AbstractBill(Platax parent, String header) {
 				headPanel.setStyleName(Styles.BILL_HEAD_PANEL);
 				cpartyPanel.setStyleName(Styles.BILL_CPARTY_PANEL);
 				cpartyPanel.add(cpartyNamePanel);
+				cpartyPanel.add(cpartyRefPanel);
 				cpartyNamePanel.setWidget(new Label("HalloHalloHallo"));
 
 		panel.add(headPanel);

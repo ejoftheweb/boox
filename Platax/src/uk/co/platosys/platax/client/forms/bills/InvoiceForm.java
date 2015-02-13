@@ -35,6 +35,7 @@ import uk.co.platosys.platax.client.widgets.labels.BodyNameLabel;
 import uk.co.platosys.platax.client.widgets.labels.ColumnHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.FormSubHeaderLabel;
+import uk.co.platosys.platax.client.widgets.labels.InlineLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyColumnHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyGrandTotalLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
@@ -189,6 +190,8 @@ public class InvoiceForm extends AbstractBill {
 		//the counter-party panel
 		cpartyPanel.insert( new FormSubHeaderLabel(LabelText.CUSTOMER),0);
 		cpartyNamePanel.setWidget(contactListBox);
+		cpartyRefPanel.add(new InlineLabel(LabelText.POREF));
+		cpartyRefPanel.add(refNumberBox);
 		//cpartyPanel.add(newCustomerButton);
 		//the submit-button panel
 		//cancel and save are in the superclass, abstract bill, we just need raise:

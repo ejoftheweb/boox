@@ -15,6 +15,7 @@ import uk.co.platosys.platax.client.services.UserServiceAsync;
 import uk.co.platosys.platax.client.widgets.AddressWidget;
 import uk.co.platosys.platax.client.widgets.EnterpriseMenu;
 import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
+import uk.co.platosys.platax.client.widgets.html.StringHTML;
 import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
@@ -29,6 +30,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
@@ -41,6 +43,8 @@ import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * this is the root tab for exploring an enterprise's accounts.
+ * 
+ * 
  * @author edward
  *
  */
@@ -57,8 +61,10 @@ public class EnterpriseTab extends AbstractForm {
 			}
 			
 			private void reset(Platax pplatax, final GWTEnterprise enterprise){
+				
 			final Platax platax=pplatax;
 			final PlataxTabPanel ptp = pplatax.getPtp();	
+			platax.setCurrentEnterprise(enterprise);
 		    String name =  LabelText.ENTERPRISE_NAME;
 		    String legalName=LabelText.ENTERPRISE_LEGAL_NAME;
 		    try{
@@ -68,11 +74,12 @@ public class EnterpriseTab extends AbstractForm {
 		    	
 		    }
 			//Layout Page
-			this.setTabHeaderText(name);
+			this.setTabHead(new StringHTML(name));
 			setTitle(legalName);
 			
 			
 		    EnterpriseMenu eMenu = new EnterpriseMenu(enterprise, platax);
+		    //eMenu.configure(enterprise, pUser user);
 		    menuPanel.add(eMenu);
 			//handlers:
 			

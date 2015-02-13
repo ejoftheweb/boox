@@ -11,6 +11,7 @@ public class GWTModule implements Serializable, GWTSelectable, ValuePair {
 private String name;
 private String sysname;
 private String description;
+ 
 private boolean isMultiSelect;
 private String segment;
 private boolean isSelected;
@@ -51,13 +52,9 @@ private boolean isSelected;
 	public String getSysname() {
 		return sysname;
 	}
-	
-	@Override
 	public void setSysname(String sysname) {
 		this.sysname=sysname;
 	}
-	
-	@Override
 	public String getLabel() {
 		return description;
 	}

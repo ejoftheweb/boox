@@ -1,6 +1,7 @@
 package uk.co.platosys.platax.client.forms;
 
 
+import uk.co.platosys.platax.client.PTab;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.StringText;
@@ -10,7 +11,6 @@ import uk.co.platosys.platax.client.services.CashService;
 import uk.co.platosys.platax.client.services.CashServiceAsync;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.platax.client.services.ProductService;
-import uk.co.platosys.platax.client.widgets.PTab;
 import uk.co.platosys.platax.client.widgets.TaxBandChooser;
 import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.boox.GWTCash;
@@ -40,7 +40,7 @@ import com.google.gwt.user.client.Window;
 
 public class CashRegisterForm extends AbstractForm { 
 	//declare variables
-	
+	GWTEnterprise enterprise;
 	//services
 	final CashServiceAsync cashService = (CashServiceAsync) GWT.create(CashService.class);
 	//widgets
@@ -87,9 +87,10 @@ public class CashRegisterForm extends AbstractForm {
   			}
   		}; 
   	//regular constructor	
-	public CashRegisterForm(Platax platax, final GWTEnterprise enterprise) {
-		super(platax, enterprise.getName());
-		this.platax=platax;
+	public CashRegisterForm() {
+		super();
+		this.platax=Platax.getCurrentInstance();
+		this.enterprise=platax.getCurrentEnterprise();
 		setTitle(StringText.NEW_PRODUCT);
 		setSubTitle(StringText.NEW_PRODUCT_INFO);
 		//layout page
@@ -150,7 +151,7 @@ public class CashRegisterForm extends AbstractForm {
 	}
     //overloaded constructor with reference to calling tab:
 	public CashRegisterForm(Platax platax, final GWTEnterprise enterprise, PTab callingTab) {
-		this(platax, enterprise);
+		this();
 		this.callingTab=callingTab;
 	}
 	/**

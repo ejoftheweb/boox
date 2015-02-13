@@ -4,15 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.UIObject;
 
+import uk.co.platosys.platax.client.Commands;
 import uk.co.platosys.platax.client.Constants;
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.MenuText;
 import uk.co.platosys.platax.client.forms.ModulesForm;
 import uk.co.platosys.platax.client.forms.CashRegisterForm;
@@ -21,8 +20,9 @@ import uk.co.platosys.platax.client.forms.CustomerForm;
 import uk.co.platosys.platax.client.forms.ProductForm;
 import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
 import uk.co.platosys.platax.client.forms.lists.*;
+import uk.co.platosys.platax.client.forms.tasks.DirectorsLoan;
 import uk.co.platosys.platax.client.forms.tasks.HireStaff;
-import uk.co.platosys.platax.client.forms.tasks.PettyCash;
+import uk.co.platosys.platax.client.forms.tasks.IssueEquity;
 import uk.co.platosys.platax.client.forms.tasks.CashUp;
 import uk.co.platosys.platax.shared.boox.*;
 
@@ -45,7 +45,7 @@ public class EnterpriseMenu extends MenuBar {
 	final GWTEnterprise gwtEnterprise;
 	//We define a String variable to refer programmatically to each menu item. There are lots!
 	static final String CAPITAL_MENU="capitalMenu"; 
-		static final String BALANCE_SHEET="balanceSheet";
+		static final String BALANCE_SHEET="directorsLoan";
 		static final String EQUITY_MENU="equityMenu";
 			static final String ISSUE_EQUITY="issueEquity";
 			static final String SHARE_REGISTER="showShareRegister";
@@ -68,7 +68,17 @@ public class EnterpriseMenu extends MenuBar {
 			static final String REGISTER_CASH="registerCash";
 			static final String NEW_REGISTER="newregister";
 			static final String NEW_CASHIER="newcashier";
-	static final String SPENDING_MENU="spendingMenu";
+		static final String SPENDING_MENU="spendingMenu";
+			static final String BILLS="bills";
+			static final String CASH_PURCHASES="cashPurchases";
+			static final String SUPPLIERS="suppliers";
+			static final String MATERIALS="materials";
+			static final String OVERHEADS_MENU="overheadsMenu";
+				static final String UTILITIES="utilities";
+				static final String RENT="rent";
+				static final String INSURANCE="insurance";
+				static final String GENERAL="other";
+		
 	static final String BANKING_MENU="bankingMenu";
 		static final String BANK_ACCOUNTS="bankAccounts";
 		static final String PETTY_CASH="pettyCash";
@@ -85,6 +95,7 @@ public class EnterpriseMenu extends MenuBar {
 	static final String SETTINGS_MENU="settingsMenu";
 		static final String ADD_MODULES="addModules";
 		static final String CONFIGURE="configure";
+		static final String BACKUP="backup";
 	static final String HELP_MENU="helpMenu";
 	
 	
@@ -99,9 +110,11 @@ public class EnterpriseMenu extends MenuBar {
 		MenuBar capitalMenu = new MenuBar(true); menuItems.put(CAPITAL_MENU, capitalMenu);
 		MenuItem balanceSheet = new MenuItem(MenuText.BALANCE_LABEL);capitalMenu.addItem(balanceSheet);menuItems.put(BALANCE_SHEET, balanceSheet);
 			MenuBar equityMenu = new MenuBar(true);capitalMenu.addItem(MenuText.EQUITY_LABEL, equityMenu);menuItems.put(EQUITY_MENU, equityMenu);
-		
-			Menu equityMenu = new MenuItem(MenuText.EQUITY_LABEL);capitalMenu.addItem(equityMenu);menuItems.put(EQUITY_MENU, equityMenu);
-			MenuBar bondsMenu = new MenuBar(true);(MenuText.BONDS_LABEL);capitalMenu.addItem(bondsMenu);menuItems.put(BONDS_MENU, bondsMenu);
+				MenuItem issueEquity = new MenuItem(MenuText.ISSUE_EQUITY_LABEL);equityMenu.addItem(issueEquity);menuItems.put(ISSUE_EQUITY, issueEquity);
+				MenuItem showShareRegister=new MenuItem(MenuText.SHARE_REGISTER_LABEL);equityMenu.addItem(showShareRegister);menuItems.put(SHARE_REGISTER, showShareRegister);
+			MenuBar bondsMenu = new MenuBar(true);capitalMenu.addItem(MenuText.BONDS_LABEL,bondsMenu);menuItems.put(BONDS_MENU, bondsMenu);
+				MenuItem directorsLoans = new MenuItem(MenuText.DIRECTORS_LOANS_LABEL);bondsMenu.addItem(directorsLoans);menuItems.put(DIRECTORS_LOANS, directorsLoans);
+			
 		MenuBar incomeMenu = new MenuBar(true);	menuItems.put(INCOME_MENU, incomeMenu);
 			MenuBar invoiceMenu = new MenuBar(true);incomeMenu.addItem(MenuText.INVOICES_LABEL, invoiceMenu);menuItems.put(INVOICE_MENU, invoiceMenu);
 				MenuItem allInvoices = new MenuItem(MenuText.ALL_LABEL);invoiceMenu.addItem(allInvoices);menuItems.put(ALL_INVOICES, allInvoices);
@@ -120,6 +133,18 @@ public class EnterpriseMenu extends MenuBar {
 				MenuItem newRegister = new MenuItem(MenuText.NEW_REGISTER);cashupMenu.addItem(newRegister);menuItems.put(NEW_REGISTER, newRegister);
 				MenuItem newCashier=new MenuItem(MenuText.NEW_CASHIER);cashupMenu.addItem(newCashier);menuItems.put(NEW_CUSTOMER, newCashier);
 		MenuBar spendingMenu = new MenuBar(true); menuItems.put(SPENDING_MENU,spendingMenu);
+				//MenuItem {}  = new MenuItem(MenuText.{});spendingMenu.addItem({});menuItems.put({}, {});
+			MenuItem bills  = new MenuItem(MenuText.BILLS_LABEL);spendingMenu.addItem(bills);menuItems.put(BILLS, bills);
+			MenuItem cashPurchases  = new MenuItem(MenuText.CASH_PURCHASES_LABEL);spendingMenu.addItem(cashPurchases);menuItems.put(CASH_PURCHASES,cashPurchases);
+			MenuItem suppliers  = new MenuItem(MenuText.SUPPLIERS_LABEL);spendingMenu.addItem(suppliers);menuItems.put(SUPPLIERS, suppliers);
+			MenuItem materials  = new MenuItem(MenuText.MATERIALS_LABEL);spendingMenu.addItem(materials);menuItems.put(MATERIALS, materials);
+				MenuBar overheadsMenu = new MenuBar(true);spendingMenu.addItem(MenuText.OVERHEADS_LABEL, overheadsMenu);menuItems.put(OVERHEADS_MENU, overheadsMenu);
+				//MenuItem {}  = new MenuItem(MenuText.{});overheadsMenu.addItem({});menuItems.put({}, {});
+				MenuItem utilities  = new MenuItem(MenuText.UTILITIES_LABEL);overheadsMenu.addItem(utilities);menuItems.put(UTILITIES, utilities);
+				MenuItem rent  = new MenuItem(MenuText.RENT_LABEL);overheadsMenu.addItem(rent);menuItems.put(RENT, rent);
+				MenuItem insurance  = new MenuItem(MenuText.INSURANCE_LABEL);overheadsMenu.addItem(insurance);menuItems.put(INSURANCE, insurance);
+				MenuItem general = new MenuItem(MenuText.GENERAL_LABEL);overheadsMenu.addItem(general);menuItems.put(GENERAL, general);
+				
 		MenuBar bankingMenu = new MenuBar(true); menuItems.put(BANKING_MENU, bankingMenu);
 			MenuItem bankAccount = new MenuItem(MenuText.BANKACCOUNTS_LABEL);bankingMenu.addItem(bankAccount);menuItems.put(BANK_ACCOUNTS, bankAccount);
 			MenuItem pettyCash=new MenuItem(MenuText.PETTYCASH_LABEL);bankingMenu.addItem(pettyCash);menuItems.put(PETTY_CASH, pettyCash);
@@ -139,6 +164,8 @@ public class EnterpriseMenu extends MenuBar {
 		MenuBar settingsMenu = new MenuBar(true); menuItems.put(SETTINGS_MENU, settingsMenu);
 			MenuItem addModules=new MenuItem(MenuText.ADD_MODULES);settingsMenu.addItem(addModules);menuItems.put(ADD_MODULES, addModules);
 			MenuItem configure=new MenuItem(MenuText.CONFIGURE);settingsMenu.addItem(configure);menuItems.put(CONFIGURE, configure);
+			MenuItem backup  = new MenuItem(MenuText.BACK_UP);settingsMenu.addItem(backup);menuItems.put(BACKUP, backup);
+			
 		MenuBar helpMenu = new MenuBar(true); menuItems.put(HELP_MENU, helpMenu);
 		
 		//so here we add all the top-level menus.
@@ -153,35 +180,12 @@ public class EnterpriseMenu extends MenuBar {
 		this.addItem(MenuText.HELP_MENU_NAME, helpMenu);
 		
 		//now we add the commands
-		equityMenu.setScheduledCommand(new Scheduler.ScheduledCommand() {
-			@Override
-			public void execute() {
-				
-			}
-		});
-		bondsMenu.setScheduledCommand(new Scheduler.ScheduledCommand() {
-			@Override
-			public void execute() {
-				//TODO add command to show loans
-			}
-		});
-		
-		
-		
-		registerCash.setScheduledCommand(new Scheduler.ScheduledCommand() {
-			@Override
-			public void execute() {
-				CashUp scr = new CashUp(platax, enterprise);
-				platax.addTab(scr);
-			}
-		});
-		newRegister.setScheduledCommand(new Scheduler.ScheduledCommand() {
-			@Override
-			public void execute() {
-				CashRegisterForm scr = new CashRegisterForm(platax, enterprise);
-				platax.addTab(scr);
-			}
-		});
+		balanceSheet.setScheduledCommand(Commands.BALANCE_SHEET);
+		issueEquity.setScheduledCommand(Commands.ISSUE_EQUITY);
+		showShareRegister.setScheduledCommand(Commands.SHARE_REGISTER);
+		directorsLoans.setScheduledCommand(Commands.DIRECTORS_LOANS);
+		registerCash.setScheduledCommand(Commands.CASH_UP);
+		newRegister.setScheduledCommand(Commands.NEW_REGISTER);
 		newCashier.setScheduledCommand(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
@@ -258,11 +262,60 @@ public class EnterpriseMenu extends MenuBar {
 				platax.addTab(itab);
 			}
 		});
-		hireStaff.setScheduledCommand(new Scheduler.ScheduledCommand() {
+		bills.setScheduledCommand(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
-				// TODO Auto-generated method stub
-				
+				//TODO
+				Window.alert("Feature not yet implemented");
+			}
+		});
+		cashPurchases.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				//TODO
+				Window.alert("Feature not yet implemented");
+			}
+		});
+		suppliers.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				//TODO
+				Window.alert("Feature not yet implemented");
+			}
+		});
+		materials.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				//TODO
+				Window.alert("Feature not yet implemented");
+			}
+		});
+		utilities.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				//TODO
+				Window.alert("Feature not yet implemented");
+			}
+		});
+		rent.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				//TODO
+				Window.alert("Feature not yet implemented");
+			}
+		});
+		insurance.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				//TODO
+				Window.alert("Feature not yet implemented");
+			}
+		});
+		general.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				//TODO
+				Window.alert("Feature not yet implemented");
 			}
 		});
 		hireStaff.setScheduledCommand(new Scheduler.ScheduledCommand() {
@@ -280,8 +333,20 @@ public class EnterpriseMenu extends MenuBar {
 				platax.addTab(mf);
 			}
 		});
-				
-		 		 
+		configure.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				//TODO
+				Window.alert("Feature not yet implemented");
+			}
+		});		
+		backup.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			@Override
+			public void execute() {
+				//TODO
+				Window.alert("Feature not yet implemented");
+			}
+		}); 		 
 	}
 	public void setItemStatus(String item, String status){
 		 UIObject mitem = menuItems.get(item);
@@ -294,5 +359,16 @@ public class EnterpriseMenu extends MenuBar {
 			 //do nothing, it means nothing.
 		 }
 	} 
+	
+	public void addModule(GWTModule module){
+		//TODO
+		//this method adds a module to the menu. We have to:
+		//1: Add a menu bar to the right part of the top menu
+		//2: Add one or more menu items to the menu bar
+		//3: Add the menu items to the menuItems map
+		//4: Add a ScheduledCommand to each menuItem
+		//5: Set the status of the menuItem according to the task priority
+		
+	}
 	
 }

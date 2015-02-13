@@ -1,13 +1,13 @@
 package uk.co.platosys.platax.client.forms;
 
 
+import uk.co.platosys.platax.client.PTab;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.platax.client.services.ProductService;
-import uk.co.platosys.platax.client.widgets.PTab;
 import uk.co.platosys.platax.client.widgets.TaxBandChooser;
 import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;

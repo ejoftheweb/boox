@@ -37,7 +37,8 @@ import uk.co.platosys.pws.labels.FieldLabel;
  * @author edward
  *
  */
-public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.PTab implements Form {
+public abstract class AbstractForm extends uk.co.platosys.platax.client.PTab implements Form {
+	
 	protected FlexTable table=new FlexTable();
 	private FormPanel forrmPanel=new FormPanel();
 	protected FlowPanel menuPanel=new FlowPanel();
@@ -51,17 +52,14 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
     private final FormSubHeaderLabel subHeader = new FormSubHeaderLabel();//"Please fill in as much as you can"
     @SuppressWarnings("rawtypes")
 	private SortedMap<Integer, FormField> fields = new TreeMap<Integer, FormField>(); 
+    public AbstractForm(){
+    	super();
+    	setup();
+    }
+    
     public AbstractForm(Platax platax) {
 		super(platax);
-		panel.setWidth("100%");
-		panel.add(topLabel);
-		panel.add(subHeader);
-		panel.add(menuPanel);
-		panel.add(forrmPanel);
-		forrmPanel.add(formPanel);
-		formPanel.add(table);
-		table.setWidth("100%");
-		this.add(panel);
+		setup();
 		setTabHeaderText("BlankForm");
 	}
 	/**
@@ -69,43 +67,34 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 	 * it implements a counter
 	 * @param pages
 	 */
+    @Deprecated
 	public AbstractForm(Platax platax, int pages) {
 		super(platax);
 		setCounter(pages);
 		
-		panel.setWidth("100%");
-		panel.add(topLabel);
-		panel.add(subHeader);
-		panel.add(menuPanel);
-		panel.add(forrmPanel);
-		forrmPanel.add(formPanel);
-		
-		formPanel.add(table);
-		table.setWidth("100%");
+		setup();
 		
 		this.add(panel);
 		setTabHeaderText("BlankForm");
 	}
-    public AbstractForm(Platax platax, String title){
+    public AbstractForm(Platax platax, String tabhead){
     	super( platax);
-		panel.setWidth("100%");
-		panel.add(topLabel);
-		panel.add(subHeader);
-		panel.add(menuPanel);
-		panel.add(forrmPanel);
-		forrmPanel.add(formPanel);
-		
-		formPanel.add(table);
-		table.setWidth("100%");
+		setup();
 		
 		this.add(panel);
-		setTabHeaderText(title);
+		setTabHeaderText(tabhead);
     }
-    public AbstractForm(Platax platax, String title, int pages){
+   @Deprecated 
+   public AbstractForm(Platax platax, String title, int pages){
     	super(platax);
     	setCounter(pages);
 		
-		panel.setWidth("100%");
+		setup();
+		setTabHeaderText(title);
+    }
+	
+    private void setup(){
+    	panel.setWidth("100%");
 		panel.add(topLabel);
 		panel.add(subHeader);
 		panel.add(menuPanel);
@@ -114,9 +103,10 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.widgets.
 		formPanel.add(table);
 		table.setWidth("100%");
 		this.add(panel);
-		setTabHeaderText(title);
     }
-	public void close(){
+
+    
+    public void close(){
 		parent.remove(this);
 	}
 	public void fillList(ListBox listBox, TreeMap<String, GWTSelectable> content){

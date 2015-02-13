@@ -25,13 +25,16 @@ public static final SafeHtml BANKING_MENU_NAME= new StringHTML("Money");
 public static final SafeHtml ASSETS_MENU_NAME= new StringHTML("Assets");
 public static final SafeHtml BUDGET_MENU_NAME= new StringHTML("Budget");
 public static final SafeHtml STAFF_MENU_NAME= new StringHTML("Staff");
-public static final SafeHtml SETTINGS_MENU_NAME= new StringHTML("Settings");
+public static final SafeHtml SETTINGS_MENU_NAME= new StringHTML("Admin");
 public static final SafeHtml HELP_MENU_NAME= new StringHTML("Help");
 
 //capital menu item labels
 public static final SafeHtml EQUITY_LABEL= new StringHTML("Equity");
 public static final SafeHtml BONDS_LABEL= new StringHTML("Loans");
 public static final SafeHtml BALANCE_LABEL= new StringHTML("Balance Sheet");
+public static final SafeHtml ISSUE_EQUITY_LABEL= new StringHTML("Issue Shares");
+public static final SafeHtml SHARE_REGISTER_LABEL= new StringHTML("Share Register");
+public static final SafeHtml DIRECTORS_LOANS_LABEL= new StringHTML("Directors Loans");
 
 
 //income menu item labels
@@ -83,6 +86,8 @@ public static final SafeHtml NEXT_BUDGET= new StringHTML("Next");
 //settings menu item labels
 public static final SafeHtml ADD_MODULES= new StringHTML("Add Modules");
 public static final SafeHtml CONFIGURE = new StringHTML("Configure");
+public static final SafeHtml BACK_UP = new StringHTML("Back_Up");
+
 //help menu item labels
 public static final SafeHtml ONLINE_HELP= new StringHTML("Online");
 public static final SafeHtml ABOUT_LABEL= new StringHTML("About");

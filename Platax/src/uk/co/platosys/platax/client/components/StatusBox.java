@@ -5,6 +5,7 @@ import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.constants.Styles;
 import uk.co.platosys.platax.client.widgets.labels.StatusLabel;
+import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -22,6 +23,7 @@ import com.google.gwt.user.client.Window;
 public class StatusBox extends Composite {
 	private StatusLabel statusLabel=new StatusLabel();
     private StatusLabel nameLabel=new StatusLabel(LabelText.NOT_LOGGED_IN);
+    private StatusLabel enterpriseLabel=new StatusLabel(LabelText.NO_ENTERPRISE);
     private Button logoutButton= new Button(LabelText.LOGOUT);
 	public StatusBox(final Platax platax) {
 		
@@ -42,6 +44,7 @@ public class StatusBox extends Composite {
 				}
 			}
 		});
+		mainPanel.add(enterpriseLabel);
 	}
    public void login(String username){
 	   //statusLabel.setText(LabelText.LOGGED_IN_AS);
@@ -54,5 +57,8 @@ public class StatusBox extends Composite {
 	   nameLabel.setStyleName(Styles.STATUS_LOGGEDOUT);
 	   nameLabel.setText(LabelText.NOT_LOGGED_IN);
 	   logoutButton.setEnabled(false);
+   }
+   public void setEnterprise(GWTEnterprise enterprise){
+	   enterpriseLabel.setText(enterprise.getName());
    }
 }

@@ -21,6 +21,7 @@ public class LabelText {
 	public static final String LOGGED_IN_AS="Logged In As:";
 	public static final String LOGOUT="Logout";
 	public static final String ANONYMOUS="Anonymous";
+	public static final String NO_ENTERPRISE="No enterprise selected";
 	
 	//Message Centre labels
 	public static final String MESSAGE_CENTRE="Message Centre";
@@ -138,6 +139,8 @@ public class LabelText {
 	public static final String ITEM_TAX_HEADER="Tax";
 	public static final String ITEM_GROSS_HEADER="Total";
 	public static final String ITEM_LINENO_HEADER="#";
+	
+	public static final String POREF="Order Ref:";
 	
 	public static final String LIST_INVOICE_NUMBER_HEADER="Invoice No";
 	public static final String LIST_INVOICE_CUSTOMER_HEADER="Customer";

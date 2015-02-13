@@ -1,5 +1,6 @@
 package uk.co.platosys.platax.client.widgets;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -8,7 +9,15 @@ import java.util.List;
 
 
 
+
+
+
+
+import uk.co.platosys.platax.client.PTab;
+
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -24,9 +33,18 @@ import com.google.gwt.user.client.ui.Widget;
 
 
 public class PlataxTabPanel extends TabLayoutPanel {
+	List<PTab> tabs = new ArrayList<PTab>();
 	public  PlataxTabPanel(double barHeight, Style.Unit barUnit){
 	super(barHeight, barUnit);
-	
+	addSelectionHandler(new SelectionHandler<Integer>(){
+     	@Override
+		public void onSelection(SelectionEvent<Integer> event) {
+			int selectedIndex = event.getSelectedItem();
+			PTab selectedTab=tabs.get(selectedIndex);
+			selectedTab.select();
+		}
+		
+	});
 	}
 	public void addTabs(List<PTab> content){
 	Iterator<PTab> tit = content.iterator();
@@ -51,12 +69,14 @@ public class PlataxTabPanel extends TabLayoutPanel {
 	 * @param pTab
 	 */
 	public void addTab(PTab pTab){
-		Widget page = pTab.getPage();
-		Widget tabItem = pTab.getTabItem();
-	
-		add(page,tabItem);
-		selectTab(page);
-		pTab.setParent(this);
+		try{
+		tabs.add(pTab);
+		int index=tabs.indexOf(pTab);
+		Window.alert("PTP-at tab added at "+index);
+		addTab(pTab, index);
+		}catch(Exception x){
+			Window.alert("PTP-at "+x.getMessage());
+		}
 	}
 	 /** adds a tab at the end.
 	  * selects it if true
@@ -64,9 +84,7 @@ public class PlataxTabPanel extends TabLayoutPanel {
 	 */
 	public void addTab(PTab pTab, boolean select){
 		Widget page = pTab.getPage();
-		Widget tabItem = pTab.getTabItem();
-	
-		add(page,tabItem);
+		addTab(pTab);
 		if(select){
 			selectTab(page);
 		}

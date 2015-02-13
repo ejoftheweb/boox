@@ -142,12 +142,12 @@ public class CashUp extends BasicTask {
 		}
 	};
 	
-	public CashUp(Platax parent, GWTEnterprise enterprise) {
-		super(parent, LabelText.CASHUP);
+	public CashUp() {
+		super();
 		setTitle(LabelText.CASHUP);
 		setSubTitle(LabelText.CASHUP_SUBHEADER);
-		cashService.getCashRegisters(enterprise.getSysname(), registersCallback);
-		cashService.getCashiers(enterprise.getSysname(), cashiersCallback);
+		cashService.getCashRegisters(getEnterprise().getSysname(), registersCallback);
+		cashService.getCashiers(getEnterprise().getSysname(), cashiersCallback);
 		table.setWidget(0,0, registerListLabel  );
 		table.setWidget(0,1, registerList);
 		table.setWidget(0,2, registerListInfoLabel);
