@@ -16,13 +16,14 @@ import com.google.gwt.view.client.ListDataProvider;
 
 
 
+
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.PTabPanel;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.services.CustomerService;
 import uk.co.platosys.platax.client.services.CustomerServiceAsync;
 import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
-import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.client.widgets.html.CustomerHTML;
 import uk.co.platosys.platax.client.widgets.html.ProductHTML;
 import uk.co.platosys.platax.client.widgets.labels.ColumnHeaderLabel;

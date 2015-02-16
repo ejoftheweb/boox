@@ -1,9 +1,9 @@
 package uk.co.platosys.platax.client.forms.tasks;
 
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.PTabPanel;
 import uk.co.platosys.platax.client.constants.TabTops;
 import uk.co.platosys.platax.client.forms.AbstractForm;
-import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 
 
 public abstract class BasicTask extends AbstractForm {

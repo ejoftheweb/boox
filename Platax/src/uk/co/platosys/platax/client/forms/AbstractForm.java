@@ -16,9 +16,9 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.PTabPanel;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
-import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.client.widgets.buttons.CancelButton;
 import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.FormSubHeaderLabel;
@@ -37,7 +37,7 @@ import uk.co.platosys.pws.labels.FieldLabel;
  * @author edward
  *
  */
-public abstract class AbstractForm extends uk.co.platosys.platax.client.PTab implements Form {
+public abstract class AbstractForm extends uk.co.platosys.platax.client.components.PTab implements Form {
 	
 	protected FlexTable table=new FlexTable();
 	private FormPanel forrmPanel=new FormPanel();
@@ -45,7 +45,7 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.PTab imp
 	protected FlowPanel formPanel=new FlowPanel();
 	protected FlowPanel panel=new FlowPanel();
 	private InlineLabel counter;
-	public static PlataxTabPanel parent;
+	public static PTabPanel parent;
 	protected int totalPages;
 	protected int pageNumber;
 	private final FormHeaderLabel topLabel = new FormHeaderLabel();//"About your enterprise");

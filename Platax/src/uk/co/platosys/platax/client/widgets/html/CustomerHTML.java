@@ -1,8 +1,8 @@
 package uk.co.platosys.platax.client.widgets.html;
 
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.PTabPanel;
 import uk.co.platosys.platax.client.forms.CustomerForm;
-import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 
 import com.google.gwt.event.dom.client.ClickEvent;

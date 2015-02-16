@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.PTabPanel;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.Styles;
 import uk.co.platosys.platax.client.services.LoginService;
 import uk.co.platosys.platax.client.services.LoginServiceAsync;
-import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 
@@ -35,7 +35,7 @@ public class UserTab extends AbstractForm {
     setTitle(LabelText.USER_HI + user.getUsername());
 	setSubTitle(LabelText.USER_SUMMARY);
 	final Platax platax = pplatax;
-    final PlataxTabPanel ptp = platax.getPtp();
+    final PTabPanel ptp = platax.getPtp();
 	final FlexTable loggedinTable = new FlexTable();
 	//final Button logoutButton = new Button(ButtonText.LOGOUT);	
 	

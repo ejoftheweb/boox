@@ -15,6 +15,7 @@ public class LabelText {
 	public static final String BAD_EMAIL="Sorry, that doesn't seem to be a valid email address. Please try again";
 	public static final String DO_YOU_MEAN="Do you mean...";
 	public static final String OF="Of: ";
+	public static final String CLEAR="Clear";
 	
 	//Status labels
 	public static final String NOT_LOGGED_IN="Not Logged In";

@@ -12,11 +12,11 @@ import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.user.client.ui.Label;
 
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.PTabPanel;
 import uk.co.platosys.platax.client.constants.DateFormats;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.services.InvoiceService;
 import uk.co.platosys.platax.client.services.InvoiceServiceAsync;
-import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.client.widgets.html.CustomerHTML;
 import uk.co.platosys.platax.client.widgets.html.InvoiceRefHTML;
 import uk.co.platosys.platax.client.widgets.labels.ColumnHeaderLabel;

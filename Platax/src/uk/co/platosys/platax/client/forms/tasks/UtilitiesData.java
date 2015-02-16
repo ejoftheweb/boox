@@ -5,8 +5,8 @@ package uk.co.platosys.platax.client.forms.tasks;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
 
-import uk.co.platosys.platax.client.PTab;
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.PTab;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.FieldText;
 import uk.co.platosys.platax.client.constants.LabelText;

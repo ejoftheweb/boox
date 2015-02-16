@@ -8,10 +8,11 @@ import uk.co.platosys.platax.client.forms.LoginForm;
 import uk.co.platosys.platax.client.forms.UserTab;
 import uk.co.platosys.platax.client.components.MessagePanel;
 import uk.co.platosys.platax.client.components.BrandingBox;
+import uk.co.platosys.platax.client.components.PTab;
+import uk.co.platosys.platax.client.components.PTabPanel;
 import uk.co.platosys.platax.client.components.StatusBox;
 import uk.co.platosys.platax.client.components.TaskPanel;
 import uk.co.platosys.platax.client.forms.RegisterUser;
-import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 
@@ -43,7 +44,7 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
 	StatusBox statusBox=new StatusBox(this);
 	TaskPanel taskPanel = new TaskPanel(this);
 	MessagePanel messagePanel = new MessagePanel();
-	PlataxTabPanel tabPanel = new PlataxTabPanel(5, Unit.PCT);
+	PTabPanel tabPanel = new PTabPanel(5, Unit.PCT);
 	FlowPanel footPanel=new FlowPanel();
 	PXUser pxUser=null;
 	GWTEnterprise currentEnterprise;
@@ -55,13 +56,13 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
    
 	private Platax(){
 		super(Unit.PCT);
-		Window.alert("Platax constructor called");
+		//Window.alert("Platax constructor called");
 	}
 	
 	
 	
 	public void onModuleLoad() {
-		Window.alert("on module load called");
+		//Window.alert("on module load called");
 		//create panels and components
 		//Top Panel
 		topPanel.addWest(brandingBox, 75 );
@@ -95,7 +96,7 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
 	/**
 	 * @return the tabPanel
 	 */
-	public PlataxTabPanel getPtp() {
+	public PTabPanel getPtp() {
 		return tabPanel;
 	}
 

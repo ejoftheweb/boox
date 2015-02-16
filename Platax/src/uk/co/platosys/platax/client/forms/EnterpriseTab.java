@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.PTabPanel;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.Styles;
@@ -14,7 +15,6 @@ import uk.co.platosys.platax.client.services.UserService;
 import uk.co.platosys.platax.client.services.UserServiceAsync;
 import uk.co.platosys.platax.client.widgets.AddressWidget;
 import uk.co.platosys.platax.client.widgets.EnterpriseMenu;
-import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.client.widgets.html.StringHTML;
 import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
@@ -55,6 +55,7 @@ public class EnterpriseTab extends AbstractForm {
 			
 			public EnterpriseTab(Platax platax, GWTEnterprise enterprise){
 				super(platax, enterprise.getName());
+				setEnterprise(enterprise);
 				setStyleName(Styles.PTAB_ENTERPRISE);
 				setHeadStyleName(Styles.PTABH_ENTERPRISE);
 				reset(platax, enterprise);
@@ -63,7 +64,7 @@ public class EnterpriseTab extends AbstractForm {
 			private void reset(Platax pplatax, final GWTEnterprise enterprise){
 				
 			final Platax platax=pplatax;
-			final PlataxTabPanel ptp = pplatax.getPtp();	
+			final PTabPanel ptp = pplatax.getPtp();	
 			platax.setCurrentEnterprise(enterprise);
 		    String name =  LabelText.ENTERPRISE_NAME;
 		    String legalName=LabelText.ENTERPRISE_LEGAL_NAME;

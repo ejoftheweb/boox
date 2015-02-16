@@ -1,6 +1,7 @@
 package uk.co.platosys.platax.client.components;
 
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.constants.Styles;
@@ -20,22 +21,31 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 
+/**
+ * The status box displays the login status of the session. It shows the username of the logged-in pxuser and the 
+ * usename of the  current enterprise. 
+ * 
+ * @author edward
+ *
+ */
 public class StatusBox extends Composite {
-	private StatusLabel statusLabel=new StatusLabel();
+	//private StatusLabel statusLabel=new StatusLabel();
     private StatusLabel nameLabel=new StatusLabel(LabelText.NOT_LOGGED_IN);
     private StatusLabel enterpriseLabel=new StatusLabel(LabelText.NO_ENTERPRISE);
     private Button logoutButton= new Button(LabelText.LOGOUT);
+    private Button cancelButton = new Button(LabelText.CLEAR);
 	public StatusBox(final Platax platax) {
-		
+		FlowPanel loginPanel = new FlowPanel();
+		FlowPanel enterprisePanel = new FlowPanel();
 		FlowPanel mainPanel = new FlowPanel();
 		initWidget(mainPanel);
 		setStyleName(Styles.STATUS_BOX);
 		
 		
-		mainPanel.add(statusLabel);
-		mainPanel.add(nameLabel);
+		mainPanel.add(loginPanel);
+		loginPanel.add(nameLabel);
 		logoutButton.setEnabled(false);
-		mainPanel.add(logoutButton);
+		loginPanel.add(logoutButton);
 		logoutButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
 				if(Window.confirm(StringText.REALLY_LOGOUT)){
@@ -44,7 +54,9 @@ public class StatusBox extends Composite {
 				}
 			}
 		});
-		mainPanel.add(enterpriseLabel);
+		mainPanel.add(enterprisePanel);
+		enterprisePanel.add(enterpriseLabel);
+		enterprisePanel.add(cancelButton);
 	}
    public void login(String username){
 	   //statusLabel.setText(LabelText.LOGGED_IN_AS);

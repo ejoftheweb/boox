@@ -12,6 +12,9 @@ public class StringText {
 	public static final String SIGNUP_GO="Don't have an account?";
 	public static final String REALLY_LOGOUT="Really logout?";
 	public static final String REALLY_CLOSE_TAB="Really close this tab?";
+	public static final String REALLY_CLOSE_ENTERPRISE1="Close ";
+	public static final String REALLY_CLOSE_ENTERPRISE2="and all associated tabs?";
+	
 	public static final String SERVER_ERROR="Sorry there has been a server error, code:";
 	public static final String PLEASE_SELECT="--Please Select--";
 	public static final String NULL="";

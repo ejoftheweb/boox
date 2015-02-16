@@ -1,11 +1,11 @@
-package uk.co.platosys.platax.client;
+package uk.co.platosys.platax.client.components;
 
 import java.util.Iterator;
 
+import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.constants.Styles;
-import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
 import uk.co.platosys.platax.client.widgets.html.AnchorHTML;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 
@@ -54,7 +54,7 @@ public abstract class PTab implements IsWidget, HasWidgets {
  private String title="blank pTab";	
  private String header="";
  private String content="";
- private PlataxTabPanel parent;
+ private PTabPanel parent;
  private FlowPanel tabItem;
  private InlineLabel tabItemTitle= new InlineLabel();
  private InlineLabel counter=new InlineLabel();
@@ -168,7 +168,7 @@ public abstract class PTab implements IsWidget, HasWidgets {
   * @param parent
   * @return the index it was added at, or -1 if the parent returns an error, or -3 if an error is thrown.
   */
-public int setParent(PlataxTabPanel parent){
+public int setParent(PTabPanel parent){
 	this.parent=parent;
 	try{
 		this.index=parent.getWidgetIndex(this);
@@ -224,6 +224,7 @@ public void setEnterprise(GWTEnterprise enterprise) {
 	this.enterprise = enterprise;
 }
 public void select(){
+	//Window.alert("Ptab select called, enterprise:" +this.enterprise.getName());
 	pPlatax.setCurrentEnterprise(this.enterprise);
 }
 }

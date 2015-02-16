@@ -1,4 +1,4 @@
-package uk.co.platosys.platax.client.widgets;
+package uk.co.platosys.platax.client.components;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,7 +13,6 @@ import java.util.List;
 
 
 
-import uk.co.platosys.platax.client.PTab;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -32,13 +31,14 @@ import com.google.gwt.user.client.ui.Widget;
  */
 
 
-public class PlataxTabPanel extends TabLayoutPanel {
+public class PTabPanel extends TabLayoutPanel {
 	List<PTab> tabs = new ArrayList<PTab>();
-	public  PlataxTabPanel(double barHeight, Style.Unit barUnit){
+	public  PTabPanel(double barHeight, Style.Unit barUnit){
 	super(barHeight, barUnit);
 	addSelectionHandler(new SelectionHandler<Integer>(){
      	@Override
 		public void onSelection(SelectionEvent<Integer> event) {
+     		//Window.alert("Selection event triggered on ptp");
 			int selectedIndex = event.getSelectedItem();
 			PTab selectedTab=tabs.get(selectedIndex);
 			selectedTab.select();
@@ -55,13 +55,14 @@ public class PlataxTabPanel extends TabLayoutPanel {
 	}
 	public void removeTabs(List<PTab> content){
 		Iterator<PTab> tit = content.iterator();
-			while(tit.hasNext()){
-				PTab pTab = tit.next();
-				this.remove(pTab);
-			}
+		while(tit.hasNext()){
+			PTab pTab = tit.next();
+			this.remove(pTab);
 		}
+	}
 	
 	public void remove(PTab pTab) {
+		tabs.remove(pTab);
 		remove(pTab.getPage());
 	}
 	/**
@@ -69,14 +70,16 @@ public class PlataxTabPanel extends TabLayoutPanel {
 	 * @param pTab
 	 */
 	public void addTab(PTab pTab){
+		int index=0;
 		try{
-		tabs.add(pTab);
-		int index=tabs.indexOf(pTab);
-		Window.alert("PTP-at tab added at "+index);
-		addTab(pTab, index);
+			tabs.add(pTab);
+			index=tabs.indexOf(pTab);
+			//Window.alert("PTP-at tab added at "+index);
+			
 		}catch(Exception x){
-			Window.alert("PTP-at "+x.getMessage());
-		}
+			Window.alert("PTP-atp"+x.getMessage());
+		
+		}addTab(pTab, index);
 	}
 	 /** adds a tab at the end.
 	  * selects it if true
@@ -96,9 +99,13 @@ public class PlataxTabPanel extends TabLayoutPanel {
 	 * @param index
 	 */
 	public void addTab(PTab pTab, int index){
+		try{
 		Widget page = pTab.getPage();
 		Widget tabItem = pTab.getTabItem();
 		insert(page,tabItem, index);
 		pTab.setParent(this);
+		}catch(Exception x){
+			Window.alert("PTP-ati "+x.getMessage());
+		}
 	}
 }

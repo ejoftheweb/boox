@@ -1,6 +1,6 @@
 package uk.co.platosys.platax.client.widgets.html;
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.widgets.PlataxTabPanel;
+import uk.co.platosys.platax.client.components.PTabPanel;
 
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
