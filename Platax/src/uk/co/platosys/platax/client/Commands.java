@@ -29,6 +29,9 @@ import com.google.gwt.user.client.Window;
  *  
  *   This class must be edited and updated when we add a new module to the system.
  *   
+ *   Note that because these Commands can be called from anywhere in the system, they cannot
+ *   readily pass in parameters. Tab constructors must look up  authentication and context parameters 
+ *   
  * @author edward
  *
  */
