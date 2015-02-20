@@ -31,30 +31,27 @@ public class Bank extends BasicTask {
 		super();
 		try{
 		setTabHead(TabTops.BANK);
-		//Add form fields (from uk.co.platosys.pws.fieldsets)  here.
-		newBank = new OneButtonField(FieldText.NEW_BANKAC, 1000, this, true);
+		newBank = new OneButtonField(FieldText.NEW_BANKAC, 1000, this, false);
 		newBank.addClickHander(new ClickHandler(){
-
 			@Override
 			public void onClick(ClickEvent event) {
-				Scheduler.ScheduledCommand command = Commands.NEW_BANK_ACCOUNT;
-				command.execute();
-				
+				Window.alert("button clicked");
+				Commands.NEW_BANK_ACCOUNT.execute();
 			}
-			
-		});
+		 });
 		
 		SubmitField sub= new SubmitField(12000, this);
-	    //Add handlers as needed
+	    
 		
 	 	
 		
-		setTitle(StringText.BANK_ACCOUNTS_TITLE);
-		setSubTitle(StringText.BANK_ACCOUNTS_SUBTITLE);
-		render();
+		
 		}catch(Exception x){
 			Window.alert("bank tab problem "+ x.getMessage());
 		}
+		setTitle(StringText.BANK_ACCOUNTS_TITLE);
+		setSubTitle(StringText.BANK_ACCOUNTS_SUBTITLE);
+		render();
     }
 
 	@Override

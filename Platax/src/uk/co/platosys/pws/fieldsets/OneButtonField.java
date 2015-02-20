@@ -21,9 +21,9 @@ ButtonBox buttonBox;
 	public OneButtonField(String[] labelText, int position, Form parent, boolean required) throws IllegalArgumentException {
 		super(labelText, position, parent, required);
 		try{
-		ButtonBox buttonBox = new ButtonBox();
-		setWidget(buttonBox);
-		start();
+			ButtonBox buttonBox = new ButtonBox();
+			setWidget(buttonBox);
+			start();
 		}catch(Exception x){
 			Window.alert("obf error "+x.getMessage());
 		}

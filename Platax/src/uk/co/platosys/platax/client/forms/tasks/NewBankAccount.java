@@ -3,6 +3,7 @@ package uk.co.platosys.platax.client.forms.tasks;
 
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.components.PTab;
@@ -30,6 +31,7 @@ public class NewBankAccount extends BasicTask {
     
     public NewBankAccount() {
     	super();
+    	Window.alert("new bank form started");
 		setTabHead(TabTops.NEW_BANK);
 		accountName=new TextField(FieldText.BANKAC_NAME, 1000, this, true);
 		accountHolder=new TextField(FieldText.BANKAC_HOLDER, 2000, this, true);

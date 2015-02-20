@@ -230,8 +230,10 @@ public class Commands {
 				}
 			};
 			public static Scheduler.ScheduledCommand NEW_BANK_ACCOUNT = new Scheduler.ScheduledCommand() {
+
 				@Override
 				public void execute() {
+					Window.alert("command called");
 					NewBankAccount itab= new NewBankAccount();
 					Platax.addPTab(itab);
 				}

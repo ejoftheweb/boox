@@ -12,6 +12,7 @@ public class ButtonBox extends AbstractValueField<Boolean> {
     
     public ButtonBox(){
     	add(cb);
+    	cb.setText("Click");
     }
 	@Override
 	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Boolean> handler) {
