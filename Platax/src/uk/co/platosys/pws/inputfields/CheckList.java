@@ -6,15 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import uk.co.platosys.platax.client.widgets.HasMultiValues;
-import uk.co.platosys.platax.shared.boox.GWTSelectable;
 import uk.co.platosys.pws.values.ValuePair;
 
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 /**

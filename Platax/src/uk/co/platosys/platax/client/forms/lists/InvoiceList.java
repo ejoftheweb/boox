@@ -2,38 +2,32 @@ package uk.co.platosys.platax.client.forms.lists;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.user.client.ui.Label;
 
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.components.PTabPanel;
 import uk.co.platosys.platax.client.constants.DateFormats;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.services.InvoiceService;
 import uk.co.platosys.platax.client.services.InvoiceServiceAsync;
-import uk.co.platosys.platax.client.widgets.html.CustomerHTML;
 import uk.co.platosys.platax.client.widgets.html.InvoiceRefHTML;
 import uk.co.platosys.platax.client.widgets.labels.ColumnHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyColumnHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
-import uk.co.platosys.platax.shared.boox.GWTInvoiceList;
 
 public class InvoiceList extends AbstractList {
 	 final InvoiceServiceAsync invoiceService = (InvoiceServiceAsync) GWT.create(InvoiceService.class);
 		
-	public InvoiceList(Platax parent, GWTEnterprise gwtEnterprise, int list_selection_type) {
-		super(parent, gwtEnterprise.getName()+":Invoices", list_selection_type);
+	public InvoiceList(int list_selection_type) {
+		super(list_selection_type);
 		setTitle("List of Invoices");
 		 setSubTitle("blah blah");
-		 invoiceService.listInvoices(gwtEnterprise.getEnterpriseID(), list_selection_type, invoiceListCallBack);
+		 invoiceService.listInvoices(Platax.getEnterprise().getEnterpriseID(), list_selection_type, invoiceListCallBack);
 		 
 		 //table headers:
 		 table.setWidget(0, 0, new ColumnHeaderLabel(LabelText.LIST_INVOICE_NUMBER_HEADER));

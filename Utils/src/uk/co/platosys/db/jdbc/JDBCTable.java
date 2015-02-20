@@ -37,8 +37,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
-
 import org.postgresql.util.PSQLException;
 
 import uk.co.platosys.util.ISODate;
@@ -340,6 +338,8 @@ public class JDBCTable implements Table {
              		logger.log("coltype: "+coltype+",name:"+coltypeName);
              		logger.log("declaredColType:"+getType(primaryKeyColumnType)+", name:"+primaryKeyColumnType);
              		if(rsmd.getColumnType(i)!=getType(primaryKeyColumnType)){
+             			rs.close();
+             			statement.close();
              			connection.close();
              			throw new PlatosysDBException("Primary Key Col "+primaryKeyColumnName+" in "+tableName+" is wrong type");
              		}else{
@@ -420,6 +420,7 @@ public class JDBCTable implements Table {
         try{
             statement=connection.createStatement();
             rs=statement.executeQuery("SELECT * FROM "+tableName);
+            statement.close();
             connection.close();
         }catch(Exception e){
             logger.log(2,"TABLE-init: table "+tableName+" does not exist");
@@ -429,6 +430,7 @@ public class JDBCTable implements Table {
                     String sqlString=("CREATE TABLE "+tableName+" ("+primaryKeyColumnName+" text PRIMARY KEY)");
                     logger.log(5, sqlString);
                     statement.execute(sqlString);
+                    statement.close();
                     connection.close();
                 }catch(Exception ex){
                 logger.log("TABLE problem creating table", ex);
@@ -1072,6 +1074,7 @@ public class JDBCTable implements Table {
     	 Connection connection=null;
   		ResultSet rs=null;
   		Statement statement=null;
+  		boolean exists=false;
   		 try{
             connection=ConnectionSource.getConnection(databaseName);
           statement=connection.createStatement();
@@ -1080,11 +1083,12 @@ public class JDBCTable implements Table {
             int noOfColumns=rsmd.getColumnCount();
             for(int i=0; i<noOfColumns; i++){
                 if (rsmd.getColumnName(i).equals(columnName)){
-                    return true;
+                    exists=true;
+                    break;
                 }
             }
             connection.close();
-            return false;
+            return exists;
         }catch(Exception e){
             try{connection.close();}catch(Exception p){}
 
@@ -2505,7 +2509,9 @@ public class JDBCTable implements Table {
                  rs = statement.executeQuery("SELECT tablename FROM pg_tables WHERE schemaname = \'public\'");
                 while(rs.next()){
                     if (rs.getString("tablename").equalsIgnoreCase(tableName)){
-                        connection.close();
+                        rs.close();
+                        statement.close();
+                    	connection.close();
                         return true;
                     }
                 }

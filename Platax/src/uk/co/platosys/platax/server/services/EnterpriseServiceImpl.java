@@ -3,59 +3,40 @@ package uk.co.platosys.platax.server.services;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.jdom2.Element;
-
 import uk.co.platosys.boox.compliance.Role;
 import uk.co.platosys.boox.core.Boox;
 import uk.co.platosys.boox.core.Clerk;
 import uk.co.platosys.boox.core.Enterprise;
-import uk.co.platosys.boox.core.Ledger;
 import uk.co.platosys.boox.core.Module;
 import uk.co.platosys.boox.core.Segment;
-import uk.co.platosys.boox.core.exceptions.BooxException;
-import uk.co.platosys.boox.core.exceptions.PermissionsException;
 import uk.co.platosys.boox.core.Directory;
 import uk.co.platosys.boox.money.Money;
-import uk.co.platosys.boox.stock.Item;
-import uk.co.platosys.boox.stock.Product;
 import uk.co.platosys.boox.trade.Customer;
 import uk.co.platosys.platax.client.services.EnterpriseService;
-import uk.co.platosys.platax.client.services.UserService;
 import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.server.core.PXConstants;
 import uk.co.platosys.platax.server.core.PlataxServer;
 import uk.co.platosys.platax.server.core.PlataxUser;
 import uk.co.platosys.platax.server.core.SystemMessages;
 import uk.co.platosys.platax.shared.Constants;
-import uk.co.platosys.platax.shared.FieldVerifier;
 import uk.co.platosys.platax.shared.Message;
 import uk.co.platosys.platax.shared.boox.GWTBankDetails;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTDirectoryEntry;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
-import uk.co.platosys.platax.shared.boox.GWTItem;
 import uk.co.platosys.platax.shared.boox.GWTModule;
 import uk.co.platosys.platax.shared.boox.GWTRole;
 import uk.co.platosys.platax.shared.boox.GWTSegment;
-import uk.co.platosys.platax.shared.boox.GWTSelectable;
 import uk.co.platosys.platax.shared.exceptions.PlataxException;
 import uk.co.platosys.util.ISODate;
 import uk.co.platosys.util.Logger;
 import uk.co.platosys.util.RandomString;
-import uk.co.platosys.xservlets.Xservlet;
-import uk.co.platosys.xuser.XuserCredentialsException;
-import uk.co.platosys.xuser.XuserException;
-import uk.co.platosys.xuser.XuserExistsException;
 
 
 public class EnterpriseServiceImpl extends Booxlet implements EnterpriseService {

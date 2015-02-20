@@ -2,8 +2,6 @@ package uk.co.platosys.pws.inputfields;
 
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-
 import uk.co.platosys.pws.constants.LabelText;
 import uk.co.platosys.pws.values.ValuePair;
 import uk.co.platosys.pws.widgets.ValueListBox;

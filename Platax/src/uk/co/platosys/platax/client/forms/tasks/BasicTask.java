@@ -8,10 +8,12 @@ import uk.co.platosys.platax.client.forms.AbstractForm;
 
 public abstract class BasicTask extends AbstractForm {
 
+	@Deprecated
 	public BasicTask(Platax parent, String header) {
 		super(parent, header);
 		
 	}
+	@Deprecated
 	public BasicTask(Platax parent) {
 		super(parent);
 		setTabHead(TabTops.BASIC_TASK);

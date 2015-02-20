@@ -11,7 +11,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
 import uk.co.platosys.platax.client.Platax;
@@ -19,9 +18,6 @@ import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.constants.Styles;
-import uk.co.platosys.platax.client.forms.CustomerForm;
-import uk.co.platosys.platax.client.forms.ProductForm;
-import uk.co.platosys.platax.client.forms.popups.AddCustomerPopupForm;
 import uk.co.platosys.platax.client.forms.popups.AddProductPopupForm;
 import uk.co.platosys.platax.client.services.CustomerService;
 import uk.co.platosys.platax.client.services.CustomerServiceAsync;
@@ -33,7 +29,6 @@ import uk.co.platosys.platax.client.widgets.QuantityBox;
 import uk.co.platosys.platax.client.widgets.buttons.LineCancelButton;
 import uk.co.platosys.platax.client.widgets.labels.BodyNameLabel;
 import uk.co.platosys.platax.client.widgets.labels.ColumnHeaderLabel;
-import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.FormSubHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.InlineLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyColumnHeaderLabel;
@@ -41,14 +36,12 @@ import uk.co.platosys.platax.client.widgets.labels.MoneyGrandTotalLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyTotalLabel;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
-import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.boox.GWTBill;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
 import uk.co.platosys.platax.shared.boox.GWTItem;
 import uk.co.platosys.platax.shared.boox.GWTLineItem;
 import uk.co.platosys.pws.values.GWTMoney;
-import uk.co.platosys.util.ISODate;
 /**
  * InvoiceForm is a PTab for use in the central tabbed panel
  * 
@@ -175,13 +168,14 @@ public class InvoiceForm extends AbstractBill {
 	 * @param platax
 	 * @param gwtEnterprise
 	 */
-	public InvoiceForm(final Platax platax, final GWTEnterprise gwtEnterprise) {
-		super(platax, gwtEnterprise.getName()+":"+StringText.INVOICE);
+	public InvoiceForm() {
+		super();
 		setStyleName(Styles.PTAB_INVOICE);
 		setHeadStyleName(Styles.PTABH_INVOICE);
 		setTitle(LabelText.INVOICE);
+		gwtEnterprise = Platax.getEnterprise();
 		setTabHeaderText(gwtEnterprise.getName()+":"+ LabelText.INVOICE);
-		this.gwtEnterprise=gwtEnterprise;
+		
 		this.enterpriseName=gwtEnterprise.getName();
 		this.enterpriseID=gwtEnterprise.getEnterpriseID();
 		qtyBox.setQuantity(DEFAULT_QUANTITY);

@@ -2,7 +2,6 @@ package uk.co.platosys.platax.client.forms.lists;
 
 import java.util.Date;
 
-import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;

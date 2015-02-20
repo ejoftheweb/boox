@@ -5,7 +5,6 @@ import uk.co.platosys.pws.constants.LabelText;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.shared.DirectionEstimator;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 
 public class FieldInfoLabel extends Label {

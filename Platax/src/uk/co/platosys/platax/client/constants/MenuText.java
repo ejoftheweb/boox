@@ -61,6 +61,10 @@ public static final SafeHtml INSURANCE_LABEL= new StringHTML("Insurance");
 public static final SafeHtml GENERAL_LABEL= new StringHTML("Other");
 
 //money menu item labels
+public static final SafeHtml PAYMENTS_LABEL=new StringHTML("Payments");
+public static final SafeHtml PAYMENTSIN_LABEL=new StringHTML("Payments In");
+public static final SafeHtml PAYMENTSOUT_LABEL=new StringHTML("Payments Out");
+
 public static final SafeHtml BANKACCOUNTS_LABEL= new StringHTML("Bank Accounts");
 public static final SafeHtml ADD_BANKACCOUNT_LABEL= new StringHTML("Add Bank Account...");
 public static final SafeHtml PETTYCASH_LABEL= new StringHTML("Petty Cash");

@@ -6,33 +6,20 @@ import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.constants.Styles;
-import uk.co.platosys.platax.client.widgets.html.AnchorHTML;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.HasCloseHandlers;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -41,20 +28,23 @@ import com.google.gwt.user.client.ui.Widget;
  * It consists of two basic components: 
  * the tabItem which is a FlowPanel consisting of a label and an icon that goes in the tab top; and
  * the panel which is a DockLayoutPanel which goes in the page part of the tab. 
- * the panel is split into two parts: the page, which contains the business part of the app; and the shareCol, 
- * which contains the sharing information about the page - who gets to see it. 
+ * the panel is split into two parts: the page, which contains the business part of the app; [and the shareCol, 
+ * which contains the sharing information about the page - who gets to see it. ]
  * 
  * These are set in subclasses.
+ * 
+ * A PTab is not necessarily associated with a single enterprise - e.g. the user tab references all the user's enterprises.
+ * Subclasses, such as AbstractForm, are.
+ * 
  * 
  * @author edward
  *
  */
 
 public abstract class PTab implements IsWidget, HasWidgets {
+ protected Platax platax;
  private String title="blank pTab";	
  private String header="";
- private String content="";
- private PTabPanel parent;
  private FlowPanel tabItem;
  private InlineLabel tabItemTitle= new InlineLabel();
  private InlineLabel counter=new InlineLabel();
@@ -66,23 +56,21 @@ public abstract class PTab implements IsWidget, HasWidgets {
  private FlowPanel shareCol;
  private DockLayoutPanel panel;
  private int index=-2; //the index of this PTab in its parent. 
- private GWTEnterprise enterprise; 
- private Platax pPlatax;
+ 
  
  public PTab(){
-	 final Platax platax = Platax.getCurrentInstance();
+	 platax = Platax.getCurrentInstance();
 	 setup(platax);
  }
- public  PTab(final Platax platax){
+ @Deprecated
+ public  PTab(Platax platax){
 	 setup(platax);
  }
- private void setup(final Platax platax){
-	 this.pPlatax=platax;
+ private void setup(Platax platax){
 	 tabItem = new FlowPanel();
 	 page=new FlowPanel();
 	 panel=new DockLayoutPanel(Unit.PCT);
 	 shareCol=new FlowPanel();
-	
 	 panel.addWest(page, 90);
 	 panel.addEast(shareCol, 9.9);
 	 page.setStyleName(Styles.PTAB_CONTENT_STYLE);
@@ -100,10 +88,10 @@ public abstract class PTab implements IsWidget, HasWidgets {
 		public void onClick(ClickEvent event) {
 			if(closeEnabled){
 			if(!(closeConfirm)){
-				platax.removeTab(PTab.this);
+				remove();
 			}else{
 				if(Window.confirm(closeConfirmMessage)){
-					platax.removeTab(PTab.this);
+				 remove();
 				}
 			}
 		}}
@@ -114,7 +102,9 @@ public abstract class PTab implements IsWidget, HasWidgets {
  public void add(Widget widget){
 	 page.add(widget);
  }
-
+ private void remove(){
+	 platax.removeTab(this);
+ }
  public String getHeader(){
 	 return header;
 	 
@@ -169,7 +159,6 @@ public abstract class PTab implements IsWidget, HasWidgets {
   * @return the index it was added at, or -1 if the parent returns an error, or -3 if an error is thrown.
   */
 public int setParent(PTabPanel parent){
-	this.parent=parent;
 	try{
 		this.index=parent.getWidgetIndex(this);
 		return index;
@@ -217,14 +206,11 @@ public void setStyleName( String styleName){
 public void setHeadStyleName(String styleName){
 	tabItem.setStyleName(styleName);
 }
-public GWTEnterprise getEnterprise() {
-	return enterprise;
-}
-public void setEnterprise(GWTEnterprise enterprise) {
-	this.enterprise = enterprise;
-}
+
+/**This method should be overridden in subclasses.
+ * 
+ */
 public void select(){
-	//Window.alert("Ptab select called, enterprise:" +this.enterprise.getName());
-	pPlatax.setCurrentEnterprise(this.enterprise);
+	platax.setCurrentEnterprise(null);
 }
 }

@@ -69,9 +69,14 @@ public class StringText {
 	public static final String MACHINE_GT_INFO="The initial reading of the running-total counter";
 	public static final String MACHINE_REPORTNO="Z-report No";
 	public static final String MACHINE_REPORTNO_INFO="The number of the initial (zero) Z-report";
+	//PaymentsIn
+	public static final String PAYMENT_IN_HEAD="Money Coming In";
+	public static final String PAYMENT_OUT_HEAD="Money Going Out";
+	public static final String PAYMENT_IN_SUBHEAD="Payments received from customers, etc";
+	public static final String PAYMENT_OUT_SUBHEAD="Payments made to suppliers, etc";
 	
 	
-	
+	//Hire Staff
 	public static final String NEW_STAFF="Hire a new staff member";
 	public static final String NEW_STAFF_INFO="Provide all the following information about your new employee";
 	public static final String GIVEN_NAME="Given name";

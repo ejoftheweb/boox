@@ -8,10 +8,7 @@ import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.fieldsets.FormField;
 import uk.co.platosys.pws.labels.PopupHeaderLabel;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.PopupPanel;

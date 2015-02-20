@@ -38,4 +38,8 @@ public class FieldText {
     
     public static final String[] PAY_RATE={"Starting Pay", "Starting rate of pay", null, ERROR};
     public static final String[] PAY_FREQ={"Paid per", "Payment period", null, ERROR};
+    
+    public static final String[] PAYMENT_FROM={"From", "Source of payment", null, ERROR};
+    public static final String[] PAYMENT_TO={"To", "Destination of payment", null, ERROR};
+    public static final String[] PAYMENT_AMOUNT={"Amount", "Amount paid", null, ERROR};
 }

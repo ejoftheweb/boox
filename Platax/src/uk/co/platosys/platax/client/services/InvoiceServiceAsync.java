@@ -1,15 +1,10 @@
 package uk.co.platosys.platax.client.services;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
 import uk.co.platosys.platax.shared.boox.GWTLineItem;
-import uk.co.platosys.pws.values.GWTMoney;
-import uk.co.platosys.util.ISODate;
 
 public interface InvoiceServiceAsync {
 	void createInvoice(String enterpriseID, String customerID, Date date,  AsyncCallback<GWTInvoice> callback);

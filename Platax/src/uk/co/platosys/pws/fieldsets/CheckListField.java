@@ -2,8 +2,6 @@ package uk.co.platosys.pws.fieldsets;
 
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -11,7 +9,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.inputfields.CheckList;
-import uk.co.platosys.pws.inputfields.ListValueField;
 import uk.co.platosys.pws.values.ValuePair;
 
 

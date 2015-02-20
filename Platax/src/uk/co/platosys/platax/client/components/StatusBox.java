@@ -1,7 +1,6 @@
 package uk.co.platosys.platax.client.components;
 
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.constants.Styles;
@@ -10,12 +9,6 @@ import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;

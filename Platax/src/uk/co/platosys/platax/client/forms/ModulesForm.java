@@ -1,67 +1,24 @@
 package uk.co.platosys.platax.client.forms;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.HashMap;
-
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.constants.ButtonText;
-import uk.co.platosys.platax.client.constants.DateFormats;
-import uk.co.platosys.platax.client.constants.FieldText;
 import uk.co.platosys.platax.client.constants.LabelText;
-import uk.co.platosys.platax.client.constants.MessageText;
 import uk.co.platosys.platax.client.constants.StringText;
-import uk.co.platosys.platax.client.constants.Styles;
 import uk.co.platosys.platax.client.services.EnterpriseService;
 import uk.co.platosys.platax.client.services.EnterpriseServiceAsync;
-import uk.co.platosys.platax.client.services.UserService;
-import uk.co.platosys.platax.client.services.UserServiceAsync;
-import uk.co.platosys.platax.client.widgets.AddressWidget;
-import uk.co.platosys.platax.client.widgets.HMVListBox;
-import uk.co.platosys.platax.client.widgets.buttons.CancelButton;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTModule;
-import uk.co.platosys.platax.shared.boox.GWTRatio;
-import uk.co.platosys.platax.shared.boox.GWTRole;
 import uk.co.platosys.platax.shared.boox.GWTSegment;
-import uk.co.platosys.platax.shared.boox.GWTSelectable;
 import uk.co.platosys.pws.fieldsets.CheckListField;
-import uk.co.platosys.pws.fieldsets.DateField;
 import uk.co.platosys.pws.fieldsets.HasStringValues;
-import uk.co.platosys.pws.fieldsets.ListField;
 import uk.co.platosys.pws.fieldsets.RadioField;
 import uk.co.platosys.pws.fieldsets.SubmitField;
-import uk.co.platosys.pws.fieldsets.TextField;
-import uk.co.platosys.pws.fieldsets.TickBoxField;
-import uk.co.platosys.pws.inputfields.CheckList;
-import uk.co.platosys.pws.inputfields.PDateBox;
-import uk.co.platosys.pws.labels.FieldInfoLabel;
-import uk.co.platosys.pws.labels.FieldLabel;
-import uk.co.platosys.pws.values.ValuePair;
-
-import com.google.gwt.cell.client.DateCell;
-import com.google.gwt.cell.client.DatePickerCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.datepicker.client.DateBox;
-import com.google.gwt.user.datepicker.client.DatePicker;
 
 /**
  * This panel is used to add modules to an enterprise.

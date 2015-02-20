@@ -1,7 +1,6 @@
 package uk.co.platosys.platax.server.services;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import uk.co.platosys.boox.core.Clerk;
@@ -20,10 +19,8 @@ import uk.co.platosys.platax.server.core.PXConstants;
 import uk.co.platosys.platax.server.core.PlataxServer;
 import uk.co.platosys.platax.server.core.PlataxUser;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
-import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.exceptions.PlataxException;
 import uk.co.platosys.util.Logger;
-import uk.co.platosys.xservlets.Xservlet;
 
 public class CustomerServiceImpl extends Booxlet implements CustomerService {
 static Logger logger = Logger.getLogger("platax");

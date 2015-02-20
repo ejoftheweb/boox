@@ -7,13 +7,11 @@ import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.services.LoginService;
 import uk.co.platosys.platax.client.services.LoginServiceAsync;
 import uk.co.platosys.platax.shared.PXUser;
-import uk.co.platosys.platax.shared.exceptions.LoginException;
 import uk.co.platosys.pws.labels.FieldLabel;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.CheckBox;

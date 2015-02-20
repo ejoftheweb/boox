@@ -5,7 +5,6 @@ import java.util.List;
 
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.components.PTabPanel;
-import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.Styles;
 import uk.co.platosys.platax.client.services.LoginService;
@@ -17,7 +16,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;

@@ -4,8 +4,6 @@
  */
 package uk.co.platosys.boox.core;
 
-import java.text.ParseException;
-
 import uk.co.platosys.boox.Body;
 import uk.co.platosys.boox.core.exceptions.BooxException;
 import uk.co.platosys.boox.core.exceptions.CredentialsException;

@@ -2,7 +2,6 @@ package uk.co.platosys.platax.client.widgets;
 
 import java.util.Date;
 
-import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.components.TaskPanel;
 import uk.co.platosys.platax.client.constants.DateFormats;
 import uk.co.platosys.platax.client.constants.Styles;
@@ -13,7 +12,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.TextBox;
 
 public class TaskWidget extends FlowPanel {
   private Date due;

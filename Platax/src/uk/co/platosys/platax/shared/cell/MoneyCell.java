@@ -1,17 +1,10 @@
 package uk.co.platosys.platax.shared.cell;
 
-import java.util.Set;
-
 import uk.co.platosys.platax.shared.boox.GWTAuditable;
 import uk.co.platosys.pws.values.GWTMoney;
 
 import com.google.gwt.cell.client.AbstractCell;
-import com.google.gwt.cell.client.Cell;
-import com.google.gwt.cell.client.CompositeCell;
-import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safecss.shared.SafeStylesUtils;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;

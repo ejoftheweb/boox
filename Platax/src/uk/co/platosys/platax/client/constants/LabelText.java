@@ -1,8 +1,5 @@
 package uk.co.platosys.platax.client.constants;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-
 public class LabelText {
 	//appname
 	public static final String APPNAME="LUCADI";
@@ -204,5 +201,7 @@ public class LabelText {
     //labels used on the staff pages
     public static final String HIRE_STAFF="Hire";
     public static final String FIRE_STAFF="Fire";
+    
+    //tab head labels
     
 }

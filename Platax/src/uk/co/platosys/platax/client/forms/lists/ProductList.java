@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.DataGrid;
-import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
@@ -14,24 +13,15 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.view.client.ListDataProvider;
  
 
-
-
-
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.components.PTabPanel;
 import uk.co.platosys.platax.client.constants.LabelText;
-import uk.co.platosys.platax.client.services.CustomerService;
-import uk.co.platosys.platax.client.services.CustomerServiceAsync;
 import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
-import uk.co.platosys.platax.client.widgets.html.CustomerHTML;
-import uk.co.platosys.platax.client.widgets.html.ProductHTML;
 import uk.co.platosys.platax.client.widgets.labels.ColumnHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.GroupColumnHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyColumnHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
 import uk.co.platosys.platax.client.widgets.labels.NumberLabel;
-import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTItem;
 
@@ -48,11 +38,13 @@ public class ProductList extends AbstractList {
 	final ProductServiceAsync productService = (ProductServiceAsync) GWT.create(ProductService.class);
 	 Platax parent;
 	
-	public ProductList(Platax parent, GWTEnterprise enterprise, int list_selection_type) {
-		super(parent, enterprise.getName()+":Products", list_selection_type);
+	public ProductList(int list_selection_type) {
+		super(list_selection_type);
 		this.parent=parent;
 		 setTitle("List of Products");
 		 setSubTitle("blah blah");
+		 final GWTEnterprise enterprise = Platax.getEnterprise();
+		 
 		 productService.listProducts(enterprise.getEnterpriseID(), list_selection_type, productListCallBack);
 		 
 		/* listDataProvider.addDataDisplay(dataGrid);

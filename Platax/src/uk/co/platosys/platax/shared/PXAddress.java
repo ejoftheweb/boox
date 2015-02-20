@@ -4,12 +4,6 @@ package uk.co.platosys.platax.shared;
  */
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import uk.co.platosys.platax.shared.boox.GWTEnterprise;
-import uk.co.platosys.xuser.XuserException;
-
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class PXAddress implements Serializable, IsSerializable {

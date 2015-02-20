@@ -1,6 +1,5 @@
 package uk.co.platosys.platax.client.forms.popups;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
@@ -17,14 +16,10 @@ import com.google.gwt.user.client.ui.TextBox;
 
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.forms.bills.AbstractBill;
-import uk.co.platosys.platax.client.services.CustomerService;
-import uk.co.platosys.platax.client.services.CustomerServiceAsync;
 import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.platax.client.widgets.TaxBandChooser;
 import uk.co.platosys.platax.shared.FieldVerifier;
-import uk.co.platosys.platax.shared.PXUser;
-import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTItem;
 

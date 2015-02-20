@@ -22,6 +22,7 @@ import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.widgets.buttons.CancelButton;
 import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.FormSubHeaderLabel;
+import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTSelectable;
 import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.fieldsets.FormField;
@@ -52,11 +53,16 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.componen
     private final FormSubHeaderLabel subHeader = new FormSubHeaderLabel();//"Please fill in as much as you can"
     @SuppressWarnings("rawtypes")
 	private SortedMap<Integer, FormField> fields = new TreeMap<Integer, FormField>(); 
+    protected GWTEnterprise enterprise; 
+    
     public AbstractForm(){
     	super();
+    	this.platax=Platax.getCurrentInstance();
+    	this.enterprise=platax.getCurrentEnterprise();
     	setup();
     }
     
+    @Deprecated
     public AbstractForm(Platax platax) {
 		super(platax);
 		setup();
@@ -77,6 +83,7 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.componen
 		this.add(panel);
 		setTabHeaderText("BlankForm");
 	}
+    @Deprecated    
     public AbstractForm(Platax platax, String tabhead){
     	super( platax);
 		setup();
@@ -94,6 +101,7 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.componen
     }
 	
     private void setup(){
+    	//Window.alert("setting up AForm");
     	panel.setWidth("100%");
 		panel.add(topLabel);
 		panel.add(subHeader);
@@ -201,5 +209,17 @@ public abstract class AbstractForm extends uk.co.platosys.platax.client.componen
 			i++;
 		}
 		fields.get(fields.firstKey()).setEnabled(true);
+	}
+	@Override
+	public void select(){
+		platax.setCurrentEnterprise(enterprise);
+	}
+
+	public GWTEnterprise getEnterprise() {
+		return enterprise;
+	}
+
+	public void setEnterprise(GWTEnterprise enterprise) {
+		this.enterprise = enterprise;
 	}
 }

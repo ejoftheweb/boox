@@ -27,20 +27,9 @@
 package uk.co.platosys.db;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
-import java.sql.Types;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
-
-import org.postgresql.util.PSQLException;
-
 import uk.co.platosys.util.ISODate;
-import uk.co.platosys.util.Logger;
 
 /**
  * The purpose of this class is to avoid having to write (and debug) carefully escaped sql strings whenever writing or reading from a sql database.

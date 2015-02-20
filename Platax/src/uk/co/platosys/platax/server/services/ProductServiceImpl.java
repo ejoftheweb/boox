@@ -11,10 +11,7 @@ import uk.co.platosys.boox.core.Enterprise;
 import uk.co.platosys.boox.core.exceptions.PermissionsException;
 import uk.co.platosys.boox.stock.Item;
 import uk.co.platosys.boox.stock.Product;
-import uk.co.platosys.boox.stock.ProductCatalogue;
-import uk.co.platosys.boox.money.CurrencyException;
 import uk.co.platosys.boox.money.Money;
-import uk.co.platosys.db.PlatosysDBException;
 import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.server.core.PXConstants;
@@ -23,8 +20,6 @@ import uk.co.platosys.platax.server.core.PlataxUser;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTItem;
-import uk.co.platosys.pws.values.GWTMoney;
-import uk.co.platosys.xservlets.Xservlet;
 
 public class ProductServiceImpl extends Booxlet implements ProductService {
 

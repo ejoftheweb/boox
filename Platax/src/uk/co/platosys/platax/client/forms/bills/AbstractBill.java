@@ -1,9 +1,6 @@
 package uk.co.platosys.platax.client.forms.bills;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.DateFormats;
@@ -23,23 +20,18 @@ import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
 import uk.co.platosys.platax.shared.boox.GWTLineItem;
-import uk.co.platosys.pws.values.GWTMoney;
-
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DateLabel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.datepicker.client.DateBox;
-import com.google.gwt.user.datepicker.client.DateBox.Format;
 
 public abstract class AbstractBill extends AbstractForm {
 
@@ -103,22 +95,21 @@ final TextBox billNumberBox = new TextBox();
 final TextBox refNumberBox= new TextBox();
 
 	
-public AbstractBill(Platax parent, String header) {
-		super( parent, header);
+public AbstractBill() {
+		super();
 		//hpanel.add( new Label(LabelText.CUSTOMER));
-			headPanel.add(formHeadLabel);
-				headPanel.add(billNumberLabel);
-				headPanel.add(billNumberBox);
-				headPanel.add( new InlineLabel(LabelText.DATE));
-				headPanel.add( dateBox);
-				dateBox.setValue(new Date());
-				dateBox.setFormat((new DateBox.DefaultFormat( DateFormats.MED_DATE_FORMAT)));
-				headPanel.setStyleName(Styles.BILL_HEAD_PANEL);
-				cpartyPanel.setStyleName(Styles.BILL_CPARTY_PANEL);
-				cpartyPanel.add(cpartyNamePanel);
-				cpartyPanel.add(cpartyRefPanel);
-				cpartyNamePanel.setWidget(new Label("HalloHalloHallo"));
-
+		headPanel.add(formHeadLabel);
+		headPanel.add(billNumberLabel);
+		headPanel.add(billNumberBox);
+		headPanel.add( new InlineLabel(LabelText.DATE));
+		headPanel.add( dateBox);
+		dateBox.setValue(new Date());
+		dateBox.setFormat((new DateBox.DefaultFormat( DateFormats.MED_DATE_FORMAT)));
+		headPanel.setStyleName(Styles.BILL_HEAD_PANEL);
+		cpartyPanel.setStyleName(Styles.BILL_CPARTY_PANEL);
+		cpartyPanel.add(cpartyNamePanel);
+		cpartyPanel.add(cpartyRefPanel);
+		cpartyNamePanel.setWidget(new Label("HalloHalloHallo"));
 		panel.add(headPanel);
 		panel.add(cpartyPanel);
 		//panel.add(lineEntryPanel);

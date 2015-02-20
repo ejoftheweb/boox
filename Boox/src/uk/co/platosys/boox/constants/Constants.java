@@ -8,7 +8,6 @@ package uk.co.platosys.boox.constants;
 import java.io.File;
 import java.io.FileInputStream;
 
-import uk.co.platosys.boox.core.Enterprise;
 import uk.co.platosys.util.*;
 /**
  *

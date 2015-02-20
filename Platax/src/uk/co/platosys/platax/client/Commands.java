@@ -13,6 +13,8 @@ import uk.co.platosys.platax.client.forms.tasks.CashUp;
 import uk.co.platosys.platax.client.forms.tasks.DirectorsLoan;
 import uk.co.platosys.platax.client.forms.tasks.HireStaff;
 import uk.co.platosys.platax.client.forms.tasks.IssueEquity;
+import uk.co.platosys.platax.client.forms.tasks.PaymentsIn;
+import uk.co.platosys.platax.client.forms.tasks.PaymentsOut;
 import uk.co.platosys.platax.client.reports.BalanceSheet;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
 
@@ -90,52 +92,54 @@ public class Commands {
 					CashierForm scr = new CashierForm(platax, enterprise);
 					platax.addTab(scr);
 				}
-			});
+			});*/
 			//Items on the Invoice Menu (submenu of the income menu)
-			allInvoices.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			public static Scheduler.ScheduledCommand INVOICES_LIST_ALL = new Scheduler.ScheduledCommand() {
 				@Override
 				public void execute() {
-					InvoiceList itab = new InvoiceList(platax, enterprise, GWTInvoice.SELECTION_ALL);	
-					platax.addTab(itab);
+					InvoiceList itab = new InvoiceList( GWTInvoice.SELECTION_ALL);	
+					Platax.addPTab(itab);
 				}
-			});
-			pendingInvoices.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			};
+			public static Scheduler.ScheduledCommand INVOICES_LIST_PENDING= new Scheduler.ScheduledCommand() {
 				@Override
 				public void execute() {
-					InvoiceList itab = new InvoiceList(platax, enterprise, GWTInvoice.SELECTION_PENDING);	
-					platax.addTab(itab);
+					InvoiceList itab = new InvoiceList(GWTInvoice.SELECTION_PENDING);	
+					Platax.addPTab(itab);
 				}
-			});
-			paidInvoices.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			};
+			public static Scheduler.ScheduledCommand INVOICES_LIST_PAID= new Scheduler.ScheduledCommand() {
 				@Override
 				public void execute() {
-					InvoiceList itab = new InvoiceList(platax, enterprise, GWTInvoice.SELECTION_PAID);	
-					platax.addTab(itab);
+					InvoiceList itab = new InvoiceList(GWTInvoice.SELECTION_PAID);	
+					Platax.addPTab(itab);
 				}
-			});
-			overdueInvoices.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			};
+			public static Scheduler.ScheduledCommand INVOICES_LIST_DUE= new Scheduler.ScheduledCommand() {
 				@Override
 				public void execute() {
-					InvoiceList itab = new InvoiceList(platax, enterprise, GWTInvoice.SELECTION_OVERDUE);	
-					platax.addTab(itab);
+					InvoiceList itab = new InvoiceList(GWTInvoice.SELECTION_OVERDUE);	
+					Platax.addPTab(itab);
 				}
-			});
-			newInvoice.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			};
+			public static Scheduler.ScheduledCommand NEW_INVOICE = new Scheduler.ScheduledCommand() {
 				@Override
 					public void execute() {
-					InvoiceForm itab = new InvoiceForm(platax, enterprise);	
-					platax.addTab(itab);
+					//Window.alert("NI command called");
+					InvoiceForm itab = new InvoiceForm();	
+					Platax.addPTab(itab);
 				}
-			});
+			};
 			/////
+			
 			//items on the CustomerMenu, submenu of Income menu
-			allCustomers.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			public static Scheduler.ScheduledCommand CUSTOMERS_LIST_ALL= new Scheduler.ScheduledCommand() {
 				@Override
 				public void execute() {
-					CustomerList ctab = new CustomerList(platax, enterprise, Constants.ALL_CUSTOMERS);
-					platax.addTab(ctab);
+					CustomerList ctab = new CustomerList( Constants.ALL_CUSTOMERS);
+					Platax.addPTab(ctab);
 				}
-			});
+			};/*
 			newCustomer.setScheduledCommand(new Scheduler.ScheduledCommand() {
 				@Override
 				public void execute() {
@@ -143,15 +147,15 @@ public class Commands {
 			  		CustomerForm itab = new CustomerForm(platax, enterprise);	
 					platax.addTab(itab);
 			}});
-			/////
+			/////*/
 			//items on the productsmenu, submenu of Income menu
-			allProducts.setScheduledCommand(new Scheduler.ScheduledCommand() {
+			public static Scheduler.ScheduledCommand PRODUCTS_LIST_ALL=new Scheduler.ScheduledCommand() {
 				@Override
 				public void execute() {
-					ProductList ctab = new ProductList(platax, enterprise, Constants.ALL_PRODUCTS);
-					platax.addTab(ctab);
+					ProductList ctab = new ProductList( Constants.ALL_PRODUCTS);
+					Platax.addPTab(ctab);
 				}
-			});
+			};/*
 			newProduct.setScheduledCommand(new Scheduler.ScheduledCommand() {
 				@Override
 				public void execute() {
@@ -215,7 +219,22 @@ public class Commands {
 					//TODO
 					Window.alert("Feature not yet implemented");
 				}
-			});
+			});*/
+			public static Scheduler.ScheduledCommand PAYMENTS_IN = new Scheduler.ScheduledCommand() {
+				@Override
+					public void execute() {
+					PaymentsIn itab = new PaymentsIn();	
+					Platax.addPTab(itab);
+				}
+			};
+			public static Scheduler.ScheduledCommand PAYMENTS_OUT = new Scheduler.ScheduledCommand() {
+				@Override
+					public void execute() {
+					PaymentsOut itab = new PaymentsOut();	
+					Platax.addPTab(itab);
+				}
+			};
+			/*
 			hireStaff.setScheduledCommand(new Scheduler.ScheduledCommand() {
 				@Override
 				public void execute() {

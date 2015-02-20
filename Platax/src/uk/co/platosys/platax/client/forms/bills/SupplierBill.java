@@ -45,8 +45,8 @@ public class SupplierBill extends AbstractBill {
 	
 	String customerName;
 	
-	public SupplierBill(Platax parent, final GWTEnterprise gwtEnterprise) {
-		super(parent, gwtEnterprise.getName()+":"+StringText.BILL);
+	public SupplierBill() {
+		super();
 		this.gwtEnterprise=gwtEnterprise;
 		this.enterpriseName=gwtEnterprise.getName();
 		this.enterpriseID=gwtEnterprise.getEnterpriseID();

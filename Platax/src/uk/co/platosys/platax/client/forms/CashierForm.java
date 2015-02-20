@@ -5,33 +5,21 @@ import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.components.PTab;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.StringText;
-import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
 import uk.co.platosys.platax.client.services.CashService;
 import uk.co.platosys.platax.client.services.CashServiceAsync;
-import uk.co.platosys.platax.client.services.ProductServiceAsync;
-import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.widgets.TaxBandChooser;
-import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTItem;
-import uk.co.platosys.platax.shared.exceptions.LoginException;
 import uk.co.platosys.pws.inputfields.MoneyBox;
 import uk.co.platosys.pws.labels.FieldInfoLabel;
 import uk.co.platosys.pws.labels.FieldLabel;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 
 public class CashierForm extends AbstractForm { 

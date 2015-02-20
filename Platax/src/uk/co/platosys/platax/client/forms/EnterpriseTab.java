@@ -3,18 +3,11 @@ package uk.co.platosys.platax.client.forms;
 import java.util.Iterator;
 import java.util.List;
 
+import uk.co.platosys.platax.client.EnterpriseMenu;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.components.PTabPanel;
-import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.Styles;
-import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
-import uk.co.platosys.platax.client.services.EnterpriseService;
-import uk.co.platosys.platax.client.services.EnterpriseServiceAsync;
-import uk.co.platosys.platax.client.services.UserService;
-import uk.co.platosys.platax.client.services.UserServiceAsync;
-import uk.co.platosys.platax.client.widgets.AddressWidget;
-import uk.co.platosys.platax.client.widgets.EnterpriseMenu;
 import uk.co.platosys.platax.client.widgets.html.StringHTML;
 import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
@@ -22,24 +15,6 @@ import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTRatio;
 import uk.co.platosys.pws.labels.FieldInfoLabel;
 import uk.co.platosys.pws.labels.FieldLabel;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * this is the root tab for exploring an enterprise's accounts.

@@ -18,8 +18,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 /**
@@ -99,13 +97,13 @@ public class PTabPanel extends TabLayoutPanel {
 	 * @param index
 	 */
 	public void addTab(PTab pTab, int index){
-		try{
 		Widget page = pTab.getPage();
 		Widget tabItem = pTab.getTabItem();
-		insert(page,tabItem, index);
-		pTab.setParent(this);
+		try{
+			insert(page,tabItem, index);
 		}catch(Exception x){
-			Window.alert("PTP-ati "+x.getMessage());
+			//Window.alert("PTP-ati "+x.getMessage());
 		}
+		pTab.setParent(this);
 	}
 }

@@ -3,7 +3,6 @@ package uk.co.platosys.platax.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.platosys.platax.client.forms.AbstractForm;
 import uk.co.platosys.platax.client.forms.LoginForm;
 import uk.co.platosys.platax.client.forms.UserTab;
 import uk.co.platosys.platax.client.components.MessagePanel;
@@ -21,7 +20,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 //import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -128,7 +126,9 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
     public void removeAllTabs(){
     	tabPanel.clear();
     }
-
+    public GWTEnterprise getCurrentEnterprise() {
+		return currentEnterprise;
+	}
 	public void logout() {
 		pxUser=null;
 		tabPanel.clear();
@@ -142,11 +142,11 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
 		tabPanel.selectTab(tab);
 	}
 
-
-
-	public GWTEnterprise getCurrentEnterprise() {
-		return currentEnterprise;
+	public static GWTEnterprise getEnterprise() {
+		return getCurrentInstance().getCurrentEnterprise();
 	}
+
+	
 
 
 

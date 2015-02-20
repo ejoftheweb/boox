@@ -1,11 +1,9 @@
 package uk.co.platosys.platax.client.widgets.html;
 
-import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 
 public class InvoiceRefHTML extends InlineHTML {

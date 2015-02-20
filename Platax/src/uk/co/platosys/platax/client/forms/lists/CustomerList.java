@@ -4,36 +4,30 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.user.client.ui.Label;
 
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.components.PTabPanel;
-import uk.co.platosys.platax.client.constants.DateFormats;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.services.CustomerService;
 import uk.co.platosys.platax.client.services.CustomerServiceAsync;
-import uk.co.platosys.platax.client.widgets.html.CustomerHTML;
-import uk.co.platosys.platax.client.widgets.html.InvoiceRefHTML;
 import uk.co.platosys.platax.client.widgets.labels.ColumnHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyColumnHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
-import uk.co.platosys.platax.shared.boox.GWTInvoice;
-import uk.co.platosys.platax.shared.boox.GWTInvoiceList;
 
 public class CustomerList extends AbstractList {
 	 final CustomerServiceAsync customerService = (CustomerServiceAsync) GWT.create(CustomerService.class);
 	 Platax parent;
-	public CustomerList(Platax parent, GWTEnterprise enterprise, int list_selection_type) {
-		super(parent, enterprise.getName()+":Customers", list_selection_type);
+	public CustomerList( int list_selection_type) {
+		super( list_selection_type);
 		this.parent=parent;
 		 setTitle("List of Customers");
 		 setSubTitle("blah blah");
+		 final GWTEnterprise enterprise = Platax.getEnterprise();
 		 customerService.listCustomers(enterprise.getEnterpriseID(), list_selection_type, customerListCallBack);
 		 
 		 //table headers:

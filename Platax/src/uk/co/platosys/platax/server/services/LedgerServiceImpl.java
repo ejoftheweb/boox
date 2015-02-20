@@ -15,14 +15,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import uk.co.platosys.boox.core.Account;
 import uk.co.platosys.boox.core.AuditLine;
-import uk.co.platosys.boox.core.Boox;
 import uk.co.platosys.boox.core.Clerk;
 import uk.co.platosys.boox.core.Enterprise;
 import uk.co.platosys.boox.core.Ledger;
@@ -36,9 +34,7 @@ import uk.co.platosys.platax.server.core.PlataxUser;
 import uk.co.platosys.platax.shared.boox.GWTAuditLine;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTLedger;
-import uk.co.platosys.platax.shared.exceptions.PlataxException;
 import uk.co.platosys.pws.values.GWTMoney;
-import uk.co.platosys.xservlets.Xservlet;
 
 /**
  *

@@ -3,7 +3,6 @@ package uk.co.platosys.platax.client.widgets.labels;
 import uk.co.platosys.pws.values.GWTMoney;
 
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.ui.Label;
 
 public class NumberLabel extends InlineLabel {
 

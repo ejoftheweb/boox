@@ -16,7 +16,6 @@ import org.jdom2.Namespace;
 
 import uk.co.platosys.boox.trade.Customer;
 import uk.co.platosys.boox.trade.Supplier;
-import uk.co.platosys.boox.core.Account;
 import uk.co.platosys.boox.core.Boox;
 import uk.co.platosys.boox.core.Clerk;
 import uk.co.platosys.boox.core.Enterprise;
@@ -27,22 +26,12 @@ import uk.co.platosys.boox.stock.Component;
 import uk.co.platosys.boox.stock.Item;
 import uk.co.platosys.boox.stock.Product;
 import uk.co.platosys.boox.money.Money;
-import uk.co.platosys.db.DBTools;
-import uk.co.platosys.db.jdbc.DatabaseCredentials;
-import uk.co.platosys.db.jdbc.DatabaseProperties;
-import uk.co.platosys.db.Table;
-import uk.co.platosys.platax.shared.PXAddress;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTItem;
-import uk.co.platosys.platax.shared.boox.GWTRatio;
 import uk.co.platosys.platax.shared.boox.GWTSupplier;
-import uk.co.platosys.platax.shared.exceptions.PlataxException;
 import uk.co.platosys.pws.values.GWTMoney;
-import uk.co.platosys.util.HashPass;
 import uk.co.platosys.util.Logger;
-import uk.co.platosys.util.RandomString;
-import uk.co.platosys.xuser.Xaddress;
 
 /**
  *

@@ -6,10 +6,7 @@ import java.util.Iterator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Widget;
-
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.components.PTab;
 import uk.co.platosys.platax.client.forms.AbstractForm;
 import uk.co.platosys.platax.client.services.LedgerService;
 import uk.co.platosys.platax.client.services.LedgerServiceAsync;

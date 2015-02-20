@@ -4,8 +4,6 @@ import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Window;
-
 import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.inputfields.PTextBox;
 

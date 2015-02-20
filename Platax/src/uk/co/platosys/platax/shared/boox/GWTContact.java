@@ -2,9 +2,11 @@ package uk.co.platosys.platax.shared.boox;
 
 import java.io.Serializable;
 
+import uk.co.platosys.pws.values.ValuePair;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class GWTContact implements Serializable, IsSerializable{
+public class GWTContact implements ValuePair, Serializable, IsSerializable{
 /**
 	 * 
 	 */
@@ -38,6 +40,21 @@ public String getLegalName() {
 
 public void setLegalName(String legalName) {
 	this.legalName = legalName;
+}
+
+@Override
+public String getLabel() {
+	
+	return getName();
+}
+
+@Override
+public void setLabel(String label) {
+}
+
+@Override
+public String getValue() {
+	return getSysname();
 }
 
 

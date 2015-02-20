@@ -8,8 +8,6 @@ import uk.co.platosys.pws.inputfields.PDateBox;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.ValueBoxBase;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 public class DateField extends AbstractFormField<Date> {
 PDateBox dateBox;

@@ -10,5 +10,6 @@ public class TabTops {
  public static final SafeHtml BASIC_TASK = new StringHTML("Blank task");
  public static final SafeHtml DIRECTORS_LOAN = new StringHTML("Directors Loan");
  public static final SafeHtml  ISSUE_EQUITY= new StringHTML("Share Issue");
- 
+ public static final SafeHtml PAYMENTS_IN= new StringHTML("Payments In");
+ public static final SafeHtml PAYMENTS_OUT= new StringHTML("Payments Out");
 }

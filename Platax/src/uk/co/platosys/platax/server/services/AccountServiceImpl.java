@@ -5,13 +5,11 @@ import java.util.List;
 
 import uk.co.platosys.boox.core.Account;
 import uk.co.platosys.boox.core.AuditElement;
-import uk.co.platosys.boox.core.AuditLine;
 import uk.co.platosys.boox.core.Clerk;
 import uk.co.platosys.boox.core.Enterprise;
 import uk.co.platosys.boox.core.exceptions.PermissionsException;
 import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.shared.boox.GWTAccount;
-import uk.co.platosys.xservlets.Xservlet;
 
 public class AccountServiceImpl extends Booxlet{
 

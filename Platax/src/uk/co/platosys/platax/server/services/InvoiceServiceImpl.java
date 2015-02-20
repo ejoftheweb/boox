@@ -1,8 +1,5 @@
 package uk.co.platosys.platax.server.services;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -13,7 +10,6 @@ import uk.co.platosys.boox.core.Clerk;
 import uk.co.platosys.boox.core.Enterprise;
 import uk.co.platosys.boox.stock.Item;
 import uk.co.platosys.boox.stock.Product;
-import uk.co.platosys.boox.stock.ProductCatalogue;
 import uk.co.platosys.boox.money.Money;
 import uk.co.platosys.boox.trade.Customer;
 import uk.co.platosys.boox.trade.Invoice;
@@ -31,8 +27,6 @@ import uk.co.platosys.platax.shared.boox.GWTItem;
 import uk.co.platosys.platax.shared.boox.GWTLineItem;
 import uk.co.platosys.platax.shared.boox.GWTInvoiceList;
 import uk.co.platosys.platax.shared.exceptions.PlataxException;
-import uk.co.platosys.pws.values.GWTMoney;
-import uk.co.platosys.xservlets.Xservlet;
 
 public class InvoiceServiceImpl extends Booxlet implements InvoiceService {
 
