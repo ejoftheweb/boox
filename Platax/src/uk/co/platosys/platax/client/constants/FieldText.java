@@ -38,8 +38,18 @@ public class FieldText {
     
     public static final String[] PAY_RATE={"Starting Pay", "Starting rate of pay", null, ERROR};
     public static final String[] PAY_FREQ={"Paid per", "Payment period", null, ERROR};
-    
+    //payment form
     public static final String[] PAYMENT_FROM={"From", "Source of payment", null, ERROR};
     public static final String[] PAYMENT_TO={"To", "Destination of payment", null, ERROR};
     public static final String[] PAYMENT_AMOUNT={"Amount", "Amount paid", null, ERROR};
+    //Bank accounts
+    public static final String[] NEW_BANKAC={"Add Account", "Click to add a new bank account", null, ERROR};
+    //new bank account
+    public static final String[] BANKAC_NAME={"Name", "Convenient short name (e.g. Current, Deposit)", ANYALPHA, ERROR};
+    public static final String[] BANKAC_HOLDER={"Holder", "Account holder\'s name", null, ERROR};
+    public static final String[] BANKAC_NUMBER={"Account Number", "Bank account number ", "^(\\d){8}$", "Must be 8 numeric digits, no spaces"};
+    public static final String[] BANCAC_SORTCODE={"Sort Code", "Bank Branch Sort Code", "^(\\d){2}-(\\d){2}-(\\d){2}$", "3 sets of 2 digits separated by hyphens"};
+    public static final String[] BANCAC_IBAN={"IBAN", "International Bank Account Number", "[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}", ERROR};
+    public static final String[] BANKAC_ADDRESS={"Address", "Postal Address", null, ERROR};
+    		
 }

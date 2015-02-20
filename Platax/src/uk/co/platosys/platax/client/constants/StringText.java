@@ -69,12 +69,20 @@ public class StringText {
 	public static final String MACHINE_GT_INFO="The initial reading of the running-total counter";
 	public static final String MACHINE_REPORTNO="Z-report No";
 	public static final String MACHINE_REPORTNO_INFO="The number of the initial (zero) Z-report";
+	
+	//New Bank Account
+		public static final String BANK_ACCOUNTS_TITLE="Your Bank Accounts";
+		public static final String BANK_ACCOUNTS_SUBTITLE="Bank Account Information etc";
+		//New Bank Account
+		public static final String NEW_BANK_ACCOUNT_TITLE="Add a bank account";
+		public static final String NEW_BANK_ACCOUNT_SUBTITLE="Enter the details of your new bank account";
+		
+	
 	//PaymentsIn
 	public static final String PAYMENT_IN_HEAD="Money Coming In";
-	public static final String PAYMENT_OUT_HEAD="Money Going Out";
 	public static final String PAYMENT_IN_SUBHEAD="Payments received from customers, etc";
+	public static final String PAYMENT_OUT_HEAD="Money Going Out";
 	public static final String PAYMENT_OUT_SUBHEAD="Payments made to suppliers, etc";
-	
 	
 	//Hire Staff
 	public static final String NEW_STAFF="Hire a new staff member";
@@ -94,4 +102,5 @@ public class StringText {
 	public static final String NATIONALITY_INFO="Select a nationality";
 	public static final String CAN_WORK="Can work?";
 	public static final String CAN_WORK_INFO="Enter the proof of eligibility to work in the EU";
+	
 }

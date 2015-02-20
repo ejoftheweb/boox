@@ -12,4 +12,6 @@ public class TabTops {
  public static final SafeHtml  ISSUE_EQUITY= new StringHTML("Share Issue");
  public static final SafeHtml PAYMENTS_IN= new StringHTML("Payments In");
  public static final SafeHtml PAYMENTS_OUT= new StringHTML("Payments Out");
+ public static final SafeHtml NEW_BANK=new StringHTML("New Bank Account");
+ public static final SafeHtml BANK=new StringHTML("Bank Accounts");
 }

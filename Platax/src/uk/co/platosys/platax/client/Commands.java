@@ -9,10 +9,12 @@ import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
 import uk.co.platosys.platax.client.forms.lists.CustomerList;
 import uk.co.platosys.platax.client.forms.lists.InvoiceList;
 import uk.co.platosys.platax.client.forms.lists.ProductList;
+import uk.co.platosys.platax.client.forms.tasks.Bank;
 import uk.co.platosys.platax.client.forms.tasks.CashUp;
 import uk.co.platosys.platax.client.forms.tasks.DirectorsLoan;
 import uk.co.platosys.platax.client.forms.tasks.HireStaff;
 import uk.co.platosys.platax.client.forms.tasks.IssueEquity;
+import uk.co.platosys.platax.client.forms.tasks.NewBankAccount;
 import uk.co.platosys.platax.client.forms.tasks.PaymentsIn;
 import uk.co.platosys.platax.client.forms.tasks.PaymentsOut;
 import uk.co.platosys.platax.client.reports.BalanceSheet;
@@ -220,6 +222,20 @@ public class Commands {
 					Window.alert("Feature not yet implemented");
 				}
 			});*/
+			public static Scheduler.ScheduledCommand BANK_ACCOUNTS = new Scheduler.ScheduledCommand() {
+				@Override
+				public void execute() {
+					Bank itab=new Bank();
+					Platax.addPTab(itab);
+				}
+			};
+			public static Scheduler.ScheduledCommand NEW_BANK_ACCOUNT = new Scheduler.ScheduledCommand() {
+				@Override
+				public void execute() {
+					NewBankAccount itab= new NewBankAccount();
+					Platax.addPTab(itab);
+				}
+			};
 			public static Scheduler.ScheduledCommand PAYMENTS_IN = new Scheduler.ScheduledCommand() {
 				@Override
 					public void execute() {

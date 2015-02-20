@@ -273,6 +273,7 @@ public class EnterpriseMenu extends MenuBar {
 				Window.alert("Feature not yet implemented");
 			}
 		});
+		bankAccount.setScheduledCommand(Commands.BANK_ACCOUNTS);
 		paymentsIn.setScheduledCommand(Commands.PAYMENTS_IN);
 		paymentsOut.setScheduledCommand(Commands.PAYMENTS_OUT);
 		
