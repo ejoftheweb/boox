@@ -41,8 +41,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TreeMap;
-
 import org.postgresql.util.PSQLException;
 
 import uk.co.platosys.boox.core.exceptions.BooxException;

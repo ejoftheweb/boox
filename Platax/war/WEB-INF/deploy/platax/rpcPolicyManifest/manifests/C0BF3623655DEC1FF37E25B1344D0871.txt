@@ -1,0 +1,2 @@
+serviceClass: uk.co.platosys.platax.client.services.TaskService
+path: 25D9097A704E6158D862CDBFDAA75BEB.gwt.rpc

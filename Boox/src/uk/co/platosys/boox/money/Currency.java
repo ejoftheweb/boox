@@ -39,9 +39,6 @@ package uk.co.platosys.boox.money;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.co.platosys.boox.core.Boox;
-import uk.co.platosys.util.Logger;
-
 /**
  * The boox currency object escapes the ISO shackles and allows you to make up
  * currencies of your own. However, in a nod to conformity, if an ISO currency 

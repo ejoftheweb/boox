@@ -19,8 +19,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-
 import uk.co.platosys.db.PlatosysDBException;
 import uk.co.platosys.db.Row;
 import uk.co.platosys.db.TimestampedTable;

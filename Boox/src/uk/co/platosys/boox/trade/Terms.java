@@ -1,17 +1,6 @@
 package uk.co.platosys.boox.trade;
 
-import java.util.Calendar;
-
-
-
-
-
-
-
-
-import uk.co.platosys.boox.core.Account;
 import uk.co.platosys.boox.core.Enterprise;
-import uk.co.platosys.boox.core.Ledger;
 import uk.co.platosys.db.ColumnNotFoundException;
 import uk.co.platosys.db.PlatosysDBException;
 import uk.co.platosys.db.Row;
@@ -21,7 +10,6 @@ import uk.co.platosys.db.jdbc.JDBCRow;
 import uk.co.platosys.db.jdbc.JDBCTable;
 import uk.co.platosys.util.ISODate;
 import uk.co.platosys.util.Logger;
-import uk.co.platosys.util.ShortHash;
 
 /**
  * Class encapsulating trade terms

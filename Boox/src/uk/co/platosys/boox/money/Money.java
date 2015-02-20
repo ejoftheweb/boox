@@ -37,7 +37,6 @@ import java.math.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import uk.co.platosys.boox.core.Boox;
 import uk.co.platosys.util.Logger;
 
 

@@ -6,8 +6,6 @@
 package uk.co.platosys.xservlets;
 
 import java.io.*;
-import java.net.*;
-
 import javax.servlet.*;
 import javax.servlet.http.*;
 import uk.co.platosys.xservlets.Xservlet;
@@ -18,7 +16,14 @@ import uk.co.platosys.xservlets.Xservlet;
  */
 public class ClearSessionObjectServlet extends Xservlet {
    
-    /** 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1979723803631795936L;
+
+
+
+	/** 
     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
     * @param request servlet request
     * @param response servlet response

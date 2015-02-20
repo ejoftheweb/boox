@@ -7,7 +7,6 @@ package uk.co.platosys.boox.stock;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import uk.co.platosys.boox.core.Account;

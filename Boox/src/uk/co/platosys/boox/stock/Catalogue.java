@@ -5,19 +5,9 @@
 
 package uk.co.platosys.boox.stock;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.platosys.boox.core.Account;
-import uk.co.platosys.boox.core.Boox;
 import uk.co.platosys.boox.core.Enterprise;
-import uk.co.platosys.boox.core.Ledger;
-import uk.co.platosys.boox.money.Money;
-import uk.co.platosys.db.jdbc.ConnectionSource;
-import uk.co.platosys.db.jdbc.JDBCTable;
 import uk.co.platosys.util.PlatosysProperties;
 import uk.co.platosys.util.Logger;
 

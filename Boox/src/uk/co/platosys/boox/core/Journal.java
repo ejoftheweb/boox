@@ -32,20 +32,13 @@
 
 package uk.co.platosys.boox.core;
 
-import java.math.BigDecimal;
-import java.sql.*;
-
-import uk.co.platosys.boox.money.Currency;
 import uk.co.platosys.boox.money.Money;
 import uk.co.platosys.db.ColumnNotFoundException;
 import uk.co.platosys.db.PlatosysDBException;
 import uk.co.platosys.db.Row;
 import uk.co.platosys.db.RowNotFoundException;
-import uk.co.platosys.db.SerialTable;
-import uk.co.platosys.db.jdbc.ConnectionSource;
 import uk.co.platosys.db.jdbc.JDBCSerialTable;
 import uk.co.platosys.util.Logger;
-import uk.co.platosys.util.PlatosysProperties;
 
 /**
  * The journal is simply a list of transactions.

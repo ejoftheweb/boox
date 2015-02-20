@@ -11,22 +11,14 @@ package uk.co.platosys.xuser;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.Map;
-import java.util.Vector;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import uk.co.platosys.util.Logger;
 import uk.co.platosys.webplates.Webplate;
 import uk.co.platosys.xservlets.AbsentParameterException;
-import uk.co.platosys.xservlets.NoticeBoard;
-import uk.co.platosys.xservlets.ServletErrorPages;
 import uk.co.platosys.xservlets.Xservlet;
-import uk.co.platosys.xservlets.XservletException;
 import uk.co.platosys.xservlets.XservletProperties;
 
 

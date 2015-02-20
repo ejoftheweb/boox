@@ -13,7 +13,6 @@ package uk.co.platosys.xuser;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.ecs.xhtml.form;
 import org.apache.ecs.xhtml.h1;
 import org.apache.ecs.xhtml.p;
 

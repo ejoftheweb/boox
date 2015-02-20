@@ -15,11 +15,8 @@ import java.util.List;
 
 
 import uk.co.platosys.boox.trade.Customer;
-import uk.co.platosys.boox.core.Account;
-import uk.co.platosys.boox.core.Boox;
 import uk.co.platosys.boox.core.Clerk;
 import uk.co.platosys.boox.core.Enterprise;
-import uk.co.platosys.boox.core.Ledger;
 import uk.co.platosys.boox.money.Currency;
 import uk.co.platosys.boox.money.Money;
 import uk.co.platosys.db.PlatosysDBException;

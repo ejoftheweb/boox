@@ -1,11 +1,5 @@
 package uk.co.platosys.xuser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import uk.co.platosys.db.PlatosysDBException;
 import uk.co.platosys.db.Row;
 import uk.co.platosys.db.jdbc.JDBCTable;

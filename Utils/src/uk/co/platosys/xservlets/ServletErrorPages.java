@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.mail.SimpleEmail;
-import org.apache.ecs.xhtml.a;
 import org.apache.ecs.xhtml.h1;
 import org.apache.ecs.xhtml.li;
 import org.apache.ecs.xhtml.p;
