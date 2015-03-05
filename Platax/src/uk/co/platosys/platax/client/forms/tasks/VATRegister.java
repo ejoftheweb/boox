@@ -1,13 +1,13 @@
 package uk.co.platosys.platax.client.forms.tasks;
 
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.forms.AbstractForm;
+
 import uk.co.platosys.platax.shared.boox.GWTTask;
 
-public class VATRegister extends AbstractForm {
+public class VATRegister extends TTab {
 
 	public VATRegister(Platax platax, GWTTask task) {
-		super(platax);
+		super();
 		setTitle("Register for VAT");
 		setSubTitle("Enter your VAT registration details");
 	}

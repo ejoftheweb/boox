@@ -4,12 +4,12 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-import uk.co.platosys.platax.client.forms.AbstractForm;
+import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.inputfields.PIntegerBox;
 
 public class IntegerField extends AbstractFormField<Integer> {
 PIntegerBox integerBox;
-	protected IntegerField(String[] labelText, int position, AbstractForm parent, boolean required)throws IllegalArgumentException {
+	protected IntegerField(String[] labelText, int position, Form parent, boolean required)throws IllegalArgumentException {
 		super(labelText,   position, parent, required);
 		integerBox=new PIntegerBox();
 		setWidget(integerBox);

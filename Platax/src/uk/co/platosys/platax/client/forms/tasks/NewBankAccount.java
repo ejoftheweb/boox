@@ -16,7 +16,7 @@ import uk.co.platosys.pws.fieldsets.AddressField;
 import uk.co.platosys.pws.fieldsets.SubmitField;
 import uk.co.platosys.pws.fieldsets.TextField;
 
-public class NewBankAccount extends BasicTask {
+public class NewBankAccount extends TTab {
 	
 	final ProductServiceAsync productService = (ProductServiceAsync) GWT.create(ProductService.class);
 	//widgets

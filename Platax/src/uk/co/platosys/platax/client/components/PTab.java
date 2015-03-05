@@ -20,21 +20,25 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A PTab is a component tab in a PlataxTabPanel.
  * 
+ * It is the root tab in the in the class hierarchy; all the tabs in the panel inherit from this class.
+ * 
+ * 
  * It consists of two basic components: 
  * the tabItem which is a FlowPanel consisting of a label and an icon that goes in the tab top; and
- * the panel which is a DockLayoutPanel which goes in the page part of the tab. 
- * the panel is split into two parts: the page, which contains the business part of the app; [and the shareCol, 
- * which contains the sharing information about the page - who gets to see it. ]
  * 
- * These are set in subclasses.
+ * the  tabRootPanel panel which is another FlowPanel and which goes in the page part of the tab. 
+ * 
+ * 
+ 
  * 
  * A PTab is not necessarily associated with a single enterprise - e.g. the user tab references all the user's enterprises.
- * Subclasses, such as AbstractForm, are.
+ * 
  * 
  * 
  * @author edward
@@ -52,14 +56,16 @@ public abstract class PTab implements IsWidget, HasWidgets {
  private boolean closeEnabled=true;
  private boolean closeConfirm=true;
  private String closeConfirmMessage=StringText.REALLY_CLOSE_TAB;
- private FlowPanel page;
- private FlowPanel shareCol;
- private DockLayoutPanel panel;
+ protected LayoutPanel tabRootPanel;
  private int index=-2; //the index of this PTab in its parent. 
  
  
  public PTab(){
-	 platax = Platax.getCurrentInstance();
+	 try{
+		 platax = Platax.getCurrentInstance();
+	 }catch(Exception x){
+		 Window.alert(x.getMessage());
+	 }
 	 setup(platax);
  }
  @Deprecated
@@ -68,16 +74,11 @@ public abstract class PTab implements IsWidget, HasWidgets {
  }
  private void setup(Platax platax){
 	 tabItem = new FlowPanel();
-	 page=new FlowPanel();
-	 panel=new DockLayoutPanel(Unit.PCT);
-	 shareCol=new FlowPanel();
-	 panel.addWest(page, 90);
-	 panel.addEast(shareCol, 9.9);
-	 page.setStyleName(Styles.PTAB_CONTENT_STYLE);
-	 shareCol.setStyleName(Styles.PTAB_SHARE_STYLE);
+	 tabItem.setStyleName(Styles.PTAB_TABITEM_PANEL);
+	 tabRootPanel=new LayoutPanel();
+	 tabRootPanel.setStyleName(Styles.PTAB_ROOT_PANEL);
 	 closeTag.setStyleName(Styles.PTAB_CLOSE_TAG);
-	 shareCol.add(new Label(LabelText.SHARE));
-     tabItemTitle.setText(title);
+	 tabItemTitle.setText(title);
      tabItem.add(tabItemTitle);
      tabItem.add(counter);
      tabItem.add(closeTag);
@@ -88,21 +89,22 @@ public abstract class PTab implements IsWidget, HasWidgets {
 		public void onClick(ClickEvent event) {
 			if(closeEnabled){
 			if(!(closeConfirm)){
-				remove();
+				close();
 			}else{
 				if(Window.confirm(closeConfirmMessage)){
-				 remove();
+				 close();
 				}
 			}
 		}}
     	 
      });
+     
 }
 
  public void add(Widget widget){
-	 page.add(widget);
+	 tabRootPanel.add(widget);
  }
- private void remove(){
+ public void close(){
 	 platax.removeTab(this);
  }
  public String getHeader(){
@@ -112,8 +114,8 @@ public abstract class PTab implements IsWidget, HasWidgets {
  public Widget getTabItem(){
 	 return tabItem;
  }
- public Widget getPage(){
-	 return panel;
+ public Widget getTabRootPanel(){
+	 return tabRootPanel;
  }
 /**
  * enables or disables closing the tab from the close icon.
@@ -186,11 +188,15 @@ public int getIndex(){
 	return index;
 }
 
-public Widget asWidget(){return page;}
+public Widget asWidget(){
+	return tabRootPanel;
+}
 
 //if you want these methods to do anything, override them in the subclass.
 public abstract void clear();
-public abstract void add(IsWidget widget);
+public  void add(IsWidget widget){
+	tabRootPanel.add(widget);
+}
 public abstract Iterator<Widget> iterator();
 public abstract boolean remove(Widget widget);
 public abstract void refresh();
@@ -201,7 +207,7 @@ public InlineLabel getCounter(){
 	return counter;
 }
 public void setStyleName( String styleName){
-	page.setStyleName(styleName);
+	tabRootPanel.setStyleName(styleName);
 }
 public void setHeadStyleName(String styleName){
 	tabItem.setStyleName(styleName);

@@ -8,6 +8,7 @@ import uk.co.platosys.pws.values.ValuePair;
 import uk.co.platosys.util.RandomString;
 
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -15,26 +16,33 @@ import com.google.gwt.user.client.ui.RadioButton;
 /**
  * A widget that implements a group of radio buttons.
  * The labels will be displayed and should be I18nised, the values are 
- * programmatic values
+ * programmatic values.
+ * 
+ * Note that it doesn't have a default value, it is initialised with all buttons false.
+ * Clicking a button fires the value change event.
+ * 
  * @author edward
  *
  */
 public class RadioBox extends AbstractValueField<String> {
 	Map<RadioButton,String> map = new HashMap<RadioButton, String>();
 	
-	public RadioBox(String name, List<? extends ValuePair> values, ValuePair defaultValue) throws IllegalArgumentException{
-		boolean hasDefault=false;
-		for (ValuePair value:values){
+	public RadioBox(String name, List<? extends ValuePair> values) throws IllegalArgumentException{
+		for (final ValuePair value:values){
 			RadioButton rb = new RadioButton(name, value.getLabel());
+			rb.addValueChangeHandler(new ValueChangeHandler<Boolean>(){
+				@Override
+				public void onValueChange(ValueChangeEvent<Boolean> event) {
+					RadioBox.this.setValue(value.getValue());
+					ValueChangeEvent.fire(RadioBox.this, getValue());
+				}
+			});
 			rb.setValue(false);
 			map.put(rb, value.getValue());
-			if(value.getValue().equals(defaultValue.getValue())){
-				rb.setValue(true);
-				hasDefault=true;
-			}
+			
 			add(rb);
 		}
-		if(!hasDefault){throw new IllegalArgumentException("RadioBox default value not listed");}
+		
 	}
 
 
@@ -48,8 +56,7 @@ public class RadioBox extends AbstractValueField<String> {
 	@Override
 	public HandlerRegistration addValueChangeHandler(
 			ValueChangeHandler<String> handler) {
-		// TODO Auto-generated method stub
-		return null;
+		return addHandler(handler, ValueChangeEvent.getType());
 	}
 
 

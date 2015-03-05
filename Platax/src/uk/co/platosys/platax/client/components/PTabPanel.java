@@ -61,7 +61,7 @@ public class PTabPanel extends TabLayoutPanel {
 	
 	public void remove(PTab pTab) {
 		tabs.remove(pTab);
-		remove(pTab.getPage());
+		remove(pTab.getTabRootPanel());
 	}
 	/**
 	 * adds a tab at the end.
@@ -72,11 +72,8 @@ public class PTabPanel extends TabLayoutPanel {
 		try{
 			tabs.add(pTab);
 			index=tabs.indexOf(pTab);
-			//Window.alert("PTP-at tab added at "+index);
-			
 		}catch(Exception x){
 			Window.alert("PTP-atp"+x.getMessage());
-		
 		}addTab(pTab, index);
 	}
 	 /** adds a tab at the end.
@@ -84,10 +81,10 @@ public class PTabPanel extends TabLayoutPanel {
 	 * @param pTab
 	 */
 	public void addTab(PTab pTab, boolean select){
-		Widget page = pTab.getPage();
+		Widget tabRootPanel = pTab.getTabRootPanel();
 		addTab(pTab);
 		if(select){
-			selectTab(page);
+			selectTab(tabRootPanel);
 		}
 		pTab.setParent(this);
 	}
@@ -97,7 +94,7 @@ public class PTabPanel extends TabLayoutPanel {
 	 * @param index
 	 */
 	public void addTab(PTab pTab, int index){
-		Widget page = pTab.getPage();
+		Widget page = pTab.getTabRootPanel();
 		Widget tabItem = pTab.getTabItem();
 		try{
 			insert(page,tabItem, index);

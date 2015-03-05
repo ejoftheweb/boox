@@ -1,7 +1,10 @@
 package uk.co.platosys.platax.client.forms;
 
 
+import java.util.Iterator;
+
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.EFTab;
 import uk.co.platosys.platax.client.components.PTab;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.StringText;
@@ -15,14 +18,16 @@ import uk.co.platosys.pws.labels.FieldInfoLabel;
 import uk.co.platosys.pws.labels.FieldLabel;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
-public class CashierForm extends AbstractForm { 
+public class CashierForm extends EFTab { 
 	//declare variables
 	
 	//services
@@ -64,7 +69,7 @@ public class CashierForm extends AbstractForm {
   		}; 
   	//regular constructor	
 	public CashierForm(Platax platax, final GWTEnterprise enterprise) {
-		super(platax, enterprise.getName());
+		super();
 		this.platax=platax;
 		setTitle(StringText.NEW_PRODUCT);
 		setSubTitle(StringText.NEW_PRODUCT_INFO);
@@ -133,6 +138,26 @@ public class CashierForm extends AbstractForm {
 	@Override
 	public void refresh() {
 		pageReset();
+	}
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void add(IsWidget widget) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Iterator<Widget> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public boolean remove(Widget widget) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 	

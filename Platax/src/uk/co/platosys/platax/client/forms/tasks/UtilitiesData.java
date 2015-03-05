@@ -11,7 +11,7 @@ import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.pws.fieldsets.SubmitField;
 
-public class UtilitiesData extends BasicTask {
+public class UtilitiesData extends TTab {
 	
 	final ProductServiceAsync productService = (ProductServiceAsync) GWT.create(ProductService.class);
 	//widgets
@@ -21,7 +21,7 @@ public class UtilitiesData extends BasicTask {
 	
     
     public UtilitiesData(Platax platax) {
-		super(platax, LabelText.HIRE_STAFF);
+		super();
 		
 		//Add form fields (from uk.co.platosys.pws.fieldsets)  here.
 		

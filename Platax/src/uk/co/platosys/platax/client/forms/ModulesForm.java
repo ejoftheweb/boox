@@ -2,7 +2,9 @@ package uk.co.platosys.platax.client.forms;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.EFTab;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.services.EnterpriseService;
@@ -14,6 +16,7 @@ import uk.co.platosys.pws.fieldsets.CheckListField;
 import uk.co.platosys.pws.fieldsets.HasStringValues;
 import uk.co.platosys.pws.fieldsets.RadioField;
 import uk.co.platosys.pws.fieldsets.SubmitField;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -29,7 +32,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 //TODO we should disable any modules it already has.
 
-public class ModulesForm extends AbstractForm {
+public class ModulesForm extends EFTab {
 				static final String CAPITAL_SEGMENT_NAME="capital";
 			    final EnterpriseServiceAsync enterpriseService = (EnterpriseServiceAsync) GWT.create(EnterpriseService.class);
                 ArrayList<GWTSegment> segments;
@@ -56,7 +59,7 @@ public class ModulesForm extends AbstractForm {
 				};	
 			
 			public ModulesForm(Platax platax, final GWTEnterprise enterprise ){
-				super(platax, enterprise.getName());
+				super();
 				this.platax=platax;
 				segments=enterprise.getSegments();
 				int pos=1000;
@@ -70,7 +73,7 @@ public class ModulesForm extends AbstractForm {
 							fields.add(clf);
 						}else{
 							List<GWTModule> vals = segment.getModules();
-							RadioField rf = new RadioField(segment.getName(), segArray, vals,  segment.getDefaultModule(), pos, this, false);
+							RadioField rf = new RadioField(segment.getName(), segArray, vals,  pos, this, false);
 							fields.add(rf);
 						}
 					}

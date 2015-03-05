@@ -2,12 +2,16 @@ package uk.co.platosys.platax.client.forms;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.FTab;
 import uk.co.platosys.platax.client.constants.FieldText;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.services.EnterpriseService;
 import uk.co.platosys.platax.client.services.EnterpriseServiceAsync;
+import uk.co.platosys.platax.client.widgets.html.StringHTML;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTModule;
 import uk.co.platosys.platax.shared.boox.GWTRole;
@@ -25,6 +29,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * This panel is used to add an enterprise to a user's portfolio.
@@ -39,7 +44,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 //TODO manage the delegation from another user...
 
-public class AddEnterpriseForm extends AbstractForm {
+public class AddEnterpriseForm extends FTab {
 				static final String CAPITAL_SEGMENT_NAME="capital";
 			    
 				final EnterpriseServiceAsync enterpriseService = (EnterpriseServiceAsync) GWT.create(EnterpriseService.class);
@@ -68,7 +73,7 @@ public class AddEnterpriseForm extends AbstractForm {
 				};	
 			
 				public AddEnterpriseForm(Platax platax){
-					super(platax, StringText.ADD_NEW, 2);
+					super();
 					final TextField nameField = new TextField(FieldText.NAME, 1000, this, true);
 					final TextField legalNameField = new TextField(FieldText.LEGALNAME, 2000, this, true);
 					final ListField orgTypeField=new ListField(FieldText.ENTERPRISE_TYPE, 3000, this, true);
@@ -92,7 +97,7 @@ public class AddEnterpriseForm extends AbstractForm {
 							if(result==null){Window.alert("Server error-null result for namecheck call");}
 							if (result.booleanValue()){
 								nameField.setOK(true);
-								setTabHeaderText(nameField.getValue());
+								setTabHead(new StringHTML(nameField.getValue()));
 								AddEnterpriseForm.this.setCloseConfirm(true);
 								AddEnterpriseForm.this.setCloseConfirmMessage(StringText.CLOSE_CONFIRM_LOSE_CHANGES);
 								nameField.moveNext();
@@ -158,14 +163,14 @@ public class AddEnterpriseForm extends AbstractForm {
 			enterpriseService.getSegments(segmentCallback);
 			enterpriseService.getRoles(roleCallback);
 			//Layout Page
-			this.setTabHeaderText(LabelText.NEW_ENTERPRISE);
+			this.setTabHead(new StringHTML(LabelText.NEW_ENTERPRISE));
 			
 			
 			
 			
 			nameField.addValueChangeHandler(new ValueChangeHandler<String>(){
 				@Override
-				public void onValueChange(ValueChangeEvent event) {
+				public void onValueChange(ValueChangeEvent<String> event) {
 					enterpriseService.isNameOK(nameField.getValue(), namecheckCallback);
 				}
 			});
@@ -183,7 +188,7 @@ public class AddEnterpriseForm extends AbstractForm {
 					enterpriseService.registerEnterprise(name, legalname, orgtype, role, isStartup, new Date(), callback1);
 					setTitle(StringText.THANKYOU);
 					setSubTitle(StringText.WAIT_FOR_SERVER);
-					formPanel.remove(table);
+					clear();
 				}
 			});
 			render();
@@ -194,5 +199,26 @@ public class AddEnterpriseForm extends AbstractForm {
 			public void refresh() {
 				// TODO Auto-generated method stub
 				
+			}
+
+
+			@Override
+			public void clear() {
+				// TODO Auto-generated method stub
+				
+			}
+
+
+			@Override
+			public Iterator<Widget> iterator() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+
+			@Override
+			public boolean remove(Widget widget) {
+				// TODO Auto-generated method stub
+				return false;
 			}
 }

@@ -36,7 +36,7 @@ import uk.co.platosys.platax.shared.boox.GWTInvoice;
 import uk.co.platosys.platax.shared.boox.GWTLineItem;
 
 
-public class SupplierBill extends AbstractBill {
+public class SupplierBill extends BTab {
 	private GWTCustomer gwtCustomer=null;
 	private GWTInvoice gwtInvoice=null;
 	Button newProductButton;

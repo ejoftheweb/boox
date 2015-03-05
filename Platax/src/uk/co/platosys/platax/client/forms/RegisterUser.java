@@ -3,11 +3,12 @@ package uk.co.platosys.platax.client.forms;
 
 
 
-import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.FTab;
 import uk.co.platosys.platax.client.constants.LabelText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.services.UserService;
 import uk.co.platosys.platax.client.services.UserServiceAsync;
+import uk.co.platosys.platax.client.widgets.html.StringHTML;
 import uk.co.platosys.platax.shared.Constants;
 import uk.co.platosys.platax.shared.FieldVerifier;
 import uk.co.platosys.pws.labels.FieldInfoLabel;
@@ -27,12 +28,12 @@ import com.google.gwt.user.client.ui.TextBox;
 
 //TODO Abstract strings to Constants file.
 
-public class RegisterUser extends AbstractForm {
-	public RegisterUser(final Platax platax){
-		super(platax);
+public class RegisterUser extends FTab {
+	public RegisterUser(){
+		super();
 		setCloseConfirm(false);
 		//PTab/AF fields
-		setTabHeaderText(StringText.SIGNUP);
+		setTabHead(new StringHTML(StringText.SIGNUP));
 		setTitle(StringText.SIGNUP_HEADER);
 		setSubTitle(StringText.SIGNUP_SUBTEXT);
 		
@@ -90,7 +91,7 @@ public class RegisterUser extends AbstractForm {
 					if(Window.confirm(StringText.USER_EXISTS)){
 						//reset password page;
 					}else{
-						formPanel.add(table);
+						add(table);
 					}
 				}else{
 					setTitle(result);
@@ -139,7 +140,7 @@ public class RegisterUser extends AbstractForm {
 		table.setWidget(7,0, submitLabel);
 		table.setWidget(7,1, submitButton);
 		table.setWidget(7,2, submitInfoLabel);
-		formPanel.add(table);
+		add(table);
 		//vpanel.add(form);
 		//this.add(vpanel);
 		//Add handlers
@@ -261,16 +262,12 @@ public class RegisterUser extends AbstractForm {
 				userService.registerUser(email, username, name, password, confirm, true, investor, callback);
 				setTitle(StringText.THANKYOU);
 				setSubTitle(StringText.WAIT_FOR_SIGNUP);
-				formPanel.remove(table);
+				remove(table);
 			}
 		});
 		
 	}
 
-	@Override
-	public void refresh() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 	
 }

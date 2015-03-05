@@ -11,9 +11,10 @@ import com.google.gwt.user.client.ui.ResetButton;
 
 public class SubmitBox extends AbstractValueField<Boolean> implements HasClickHandlers{
    ResetButton cancelButton=new ResetButton("Cancel");
-   Button submitButton=new Button("Submit");
+   Button submitButton=new Button();
   	
-	public SubmitBox(){
+	public SubmitBox(String buttonText){
+	   submitButton.setText(buttonText);
 	   add(cancelButton);
 	   add(submitButton);
 	   cancelButton.setEnabled(true);

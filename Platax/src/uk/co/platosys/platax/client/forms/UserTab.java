@@ -5,35 +5,30 @@ import java.util.List;
 
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.components.PTabPanel;
+import uk.co.platosys.platax.client.components.UTab;
 import uk.co.platosys.platax.client.constants.LabelText;
-import uk.co.platosys.platax.client.constants.Styles;
-import uk.co.platosys.platax.client.services.LoginService;
-import uk.co.platosys.platax.client.services.LoginServiceAsync;
+import uk.co.platosys.platax.client.widgets.html.StringHTML;
 import uk.co.platosys.platax.shared.PXUser;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.user.client.Window;
 
-public class UserTab extends AbstractForm {
-	public UserTab(Platax pplatax, PXUser user) {
-		super(pplatax);
+public class UserTab extends UTab {
+	public UserTab( PXUser user) {
+		super();
 		
     setCloseEnabled(false);
-    setStyleName(Styles.PTAB_CONTENT_STYLE);
-    setHeadStyleName(Styles.PTABH_STYLE);
     //pTab info fields
-	setTabHeaderText(user.getUsername());
+	setTabHead(new StringHTML(user.getUsername()));
     setTitle(LabelText.USER_HI + user.getUsername());
 	setSubTitle(LabelText.USER_SUMMARY);
-	final Platax platax = pplatax;
-    final PTabPanel ptp = platax.getPtp();
+	final PTabPanel ptp = platax.getPtp();
 	final FlexTable loggedinTable = new FlexTable();
 	//final Button logoutButton = new Button(ButtonText.LOGOUT);	
 	
@@ -44,27 +39,9 @@ public class UserTab extends AbstractForm {
 	final Label lastLogin = new Label();
 	final Label lastLoginFrom = new Label();
 	final Label lastLogout = new Label();
-	final LoginServiceAsync loginService = (LoginServiceAsync) GWT.create(LoginService.class);
 	
 	//callback methods
 
-	final AsyncCallback<Boolean> logoutcallback=new AsyncCallback<Boolean>(){
-		public void onSuccess(Boolean result){
-			platax.removeTab(UserTab.this);
-			platax.logout();
-			
-			
-		}
-		public void onFailure(Throwable cause){
-			StackTraceElement[] st = cause.getStackTrace();
-			   String error = "logout failed\n";
-			   error = error+cause.getClass().getName()+"\n";
-			   for (int i=0; i<st.length; i++){
-				   error = error + st[i].toString()+ "\n";
-			   }
-				Window.alert(error);
-		}
-	};
 	//layout page
 	  //create the loggedout table
 		loggedinTable.setWidget(0,0, lastLoginLabel);
@@ -89,13 +66,14 @@ public class UserTab extends AbstractForm {
 			loggedinTable.setWidget(rowno, 1, anchor);
 			
 			anchor.addClickHandler(new ClickHandler(){
-
 				@Override
 				public void onClick(ClickEvent event) {
 					if (enterprise.hasOpenTab()){
 						ptp.selectTab(enterprise.getOpenTabIndex());
 					}else{
-						platax.addTab(new EnterpriseTab(platax, enterprise));
+						//Window.alert("enterprise clicked & no tab open");
+						
+						platax.addTab(new EnterpriseTab(enterprise),true);
 					}
 				}
 			});
@@ -108,18 +86,40 @@ public class UserTab extends AbstractForm {
 
 			@Override
 			public void onClick(ClickEvent event) {
+				try{
 					platax.addTab(new AddEnterpriseForm(platax), true);
+				}catch(Exception x){
+					Window.alert("UT add new enterprise error"+x.getMessage());
+				}
 				}
 			}
 		);
-		formPanel.add(loggedinTable);
-		this.add(formPanel);
+		add(loggedinTable);
+		
 		}
 
 	@Override
 	public void refresh() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Iterator<Widget> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean remove(Widget widget) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

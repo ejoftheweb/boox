@@ -19,7 +19,7 @@ public class AddressForm extends AbstractPopupForm {
 	   district.setValue(address.getDistrict());
 	   final TextField town = new TextField(FieldText.TOWN, 4000, this, true);
 	   town.setValue(address.getTown());
-	   final TextField postcode = new TextField(FieldText.POSTCODE, 5000, this, true);
+	   final TextField postcode = new TextField(FieldText.POSTCODE, 5300, this, true);
 	   postcode.setValue(address.getPostcode());
 	   final TextField county = new TextField(FieldText.COUNTY, 6000, this,false );
 	   county.setValue(address.getCounty());
@@ -28,21 +28,19 @@ public class AddressForm extends AbstractPopupForm {
 	   SubmitField sub=new SubmitField(12000, this);
 	   render();
 	   sub.addClickHandler(new ClickHandler(){
-
-		@Override
-		public void onClick(ClickEvent event) {
-			GWTAddress address=new GWTAddress();
-			address.setBuilding(building.getValue());
-			address.setStreet(street.getValue());
-			address.setDistrict(district.getValue());
-			address.setTown(town.getValue());
-			address.setPostcode(postcode.getValue());
-			address.setCounty(county.getValue());
-			address.setCountry(country.getValue());
-			source.setValue(address, true);
-			AddressForm.this.hide();
-		}
-		   
-	   });
+		   @Override
+			public void onClick(ClickEvent event) {
+				GWTAddress address=new GWTAddress();
+				address.setBuilding(building.getValue());
+				address.setStreet(street.getValue());
+				address.setDistrict(district.getValue());
+				address.setTown(town.getValue());
+				address.setPostcode(postcode.getValue());
+				address.setCounty(county.getValue());
+				address.setCountry(country.getValue());
+				source.setValue(address, true);
+				AddressForm.this.hide();
+			}
+	   	});
    }
 }

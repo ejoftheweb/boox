@@ -19,7 +19,7 @@ import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 
-public class CustomerList extends AbstractList {
+public class CustomerList extends LTab {
 	 final CustomerServiceAsync customerService = (CustomerServiceAsync) GWT.create(CustomerService.class);
 	 Platax parent;
 	public CustomerList( int list_selection_type) {

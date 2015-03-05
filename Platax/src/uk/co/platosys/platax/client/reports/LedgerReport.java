@@ -6,19 +6,21 @@ import java.util.Iterator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
+
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.forms.AbstractForm;
+import uk.co.platosys.platax.client.components.ETab;
+
 import uk.co.platosys.platax.client.services.LedgerService;
 import uk.co.platosys.platax.client.services.LedgerServiceAsync;
 import uk.co.platosys.platax.shared.boox.GWTAuditLine;
 import uk.co.platosys.pws.values.GWTMoney;
 
 
-public class LedgerReport extends AbstractForm {
+public class LedgerReport extends ETab{
 	private LedgerServiceAsync rlsa = GWT.create(LedgerService.class);
 	private FlexTable table;
 	public LedgerReport(Platax platax, String  enterpriseID, String ledgerName){
-		super( platax, ledgerName);
+		super( );
 		 
 		table = new FlexTable();
 		table.setText(0,1, ledgerName);

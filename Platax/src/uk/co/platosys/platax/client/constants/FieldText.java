@@ -12,6 +12,9 @@ public class FieldText {
 	private static final String ERROR="Sorry, that won't do, please try again";
 	private static final String ANYALPHA=FieldVerifier.USERNAME_REGEX;
 	public static final String[] EMAIL={"Email", "Email Address", FieldVerifier.EMAIL_REGEX, "Sorry that's an invalid email address, please try again"};
+	public static final String[] PASSWORD={"Password", "Password", FieldVerifier.PASSWORD_REGEX, ERROR};
+	
+	//general personal labels
 	public static final String[] GIVEN_NAME={"Given Name", "First/Given name", ANYALPHA, ERROR};
 	public static final String[] FAMILY_NAME={"Family Name", "Last/Family name", ANYALPHA, ERROR};
 	public static final String[] PHONE={"Phone", "Phone Number", FieldVerifier.PHONE_REGEX, "Sorry, that's not a valid phone number"};
@@ -24,6 +27,7 @@ public class FieldText {
 	public static final String[] PETTYCASH={"Cash Tin", "Select which cash tin", ANYALPHA, ERROR};
 	public static final String[] PETTYCASH_BALANCE={"Cash in Tin", "Count the cash remaining", null, ERROR};
 	
+	//organisations
 	public static final String[] NAME={"Name", "Handy short name", ANYALPHA, ERROR};
 	public static final String[] LEGALNAME={"Legal Name", "Full legal name", "^[A-Z]([a-zA-Z0-9]|[- @\\.#&!])*$", ERROR};
 	
@@ -36,8 +40,10 @@ public class FieldText {
 	
     public static final String[] IS_TRADE_CUSTOMER={"Trade?", "Check if this is a trade customer", ANYALPHA, ERROR};
     
+    //staff
     public static final String[] PAY_RATE={"Starting Pay", "Starting rate of pay", null, ERROR};
     public static final String[] PAY_FREQ={"Paid per", "Payment period", null, ERROR};
+    public static final String[] CAN_WORK={"Work Papers", "Please upload proof of right to work in the UK", null, ERROR};
     //payment form
     public static final String[] PAYMENT_FROM={"From", "Source of payment", null, ERROR};
     public static final String[] PAYMENT_TO={"To", "Destination of payment", null, ERROR};

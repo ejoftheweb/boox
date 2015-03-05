@@ -19,6 +19,8 @@ public class GWTEmployee extends GWTPerson implements Serializable {
 	Date startDate;
 	Date dob;
 	String taxCode=null;
+	String payFreq;
+	String canWork;
 	GWTMoney payRate;
 	float hours;
 	
@@ -62,5 +64,37 @@ public class GWTEmployee extends GWTPerson implements Serializable {
 
 	public void setTaxCode(String taxCode) {
 		this.taxCode = taxCode;
+	}
+
+	public String getPayFreq() {
+		return payFreq;
+	}
+
+	public void setPayFreq(String payFreq) {
+		this.payFreq = payFreq;
+	}
+
+	public String getCanWork() {
+		return canWork;
+	}
+
+	public void setCanWork(String canWork) {
+		this.canWork = canWork;
+	}
+
+	public GWTMoney getPayRate() {
+		return payRate;
+	}
+
+	public void setPayRate(GWTMoney payRate) {
+		this.payRate = payRate;
+	}
+
+	public float getHours() {
+		return hours;
+	}
+
+	public void setHours(float hours) {
+		this.hours = hours;
 	}
 }

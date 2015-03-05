@@ -9,10 +9,10 @@ import uk.co.platosys.pws.fieldsets.ListField;
 import uk.co.platosys.pws.fieldsets.MoneyField;
 import uk.co.platosys.pws.fieldsets.SubmitField;
 
-public class PettyCash extends BasicTask {
+public class PettyCash extends TTab {
 private Platax platax;
 	public PettyCash(Platax platax, GWTTask task){
-		super(platax, LabelText.PETTY_CASH);
+		super();
 		ListField listField = new ListField(FieldText.PETTYCASH, 1000, this, true);
 		MoneyField balanceField = new MoneyField(FieldText.PETTYCASH_BALANCE, 2000, this, true);
 		SubmitField sub= new SubmitField(12000, this);

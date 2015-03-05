@@ -2,6 +2,7 @@ package uk.co.platosys.platax.client.forms;
 
 
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.EFTab;
 import uk.co.platosys.platax.client.components.PTab;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.StringText;
@@ -26,7 +27,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 
-public class CashRegisterForm extends AbstractForm { 
+public class CashRegisterForm extends EFTab { 
 	//declare variables
 	GWTEnterprise enterprise;
 	//services

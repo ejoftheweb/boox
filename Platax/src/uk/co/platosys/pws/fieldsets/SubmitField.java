@@ -6,14 +6,17 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.constants.FieldText;
 import uk.co.platosys.pws.inputfields.SubmitBox;
 
 public class SubmitField extends AbstractFormField<Boolean> implements HasClickHandlers{
-private SubmitBox sbox=new SubmitBox();
+	private SubmitBox sbox;
 	public SubmitField(int position, Form parent) throws IllegalArgumentException {
 		super(FieldText.SUBMIT, position, parent, true);
+		  sbox=new SubmitBox(ButtonText.SUBMIT);
+
 		setWidget(sbox);
 		start();
 	}

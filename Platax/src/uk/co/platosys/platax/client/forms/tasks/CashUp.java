@@ -41,7 +41,7 @@ import uk.co.platosys.pws.values.GWTMoney;
  *
  */
 
-public class CashUp extends BasicTask {
+public class CashUp extends TTab {
 	//Declare Variables
 	//services
 		final CashServiceAsync cashService = (CashServiceAsync) GWT.create(CashService.class);

@@ -19,9 +19,18 @@ public class Styles {
 	public final static String STATUS_LOGGEDOUT="px_status_loggedout";
 	
 	//Ptab style names (Ptabs are the tabs in the central panel)
-  public final static String PTAB_CONTENT_STYLE="px_ptab_content";
+	public static final String PTAB_TABITEM_PANEL="px_tabitem_panel";
+	public static final String PTAB_ROOT_PANEL="px_ptab_root_panel";
+	public static final String UTAB_ROOT_PANEL="px_utab_root_panel";
+  public final static String PTAB_PAGE_STYLE="px_ptab_page";
   public final static String PTABH_STYLE="px_ptab_head";
   public final static String PTAB_SHARE_STYLE="px_ptab_share";
+  public final static String UTAB_TITLE_PANEL="px_utab_title_panel";
+  public final static String UTAB_TITLES_PANEL="px_utab_titles_panel";
+  public static final String UTAB_CONTENT_PAGE="px_utab_content_page";
+  
+  
+  
   public final static String PTAB_ENTERPRISE="px_ptab_enterprise";
   public final static String PTAB_INVOICE="px_ptab_invoice";
   public final static String PTAB_BILL="px_ptab_bill";

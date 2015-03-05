@@ -29,7 +29,7 @@ import uk.co.platosys.platax.client.widgets.QuantityBox;
 import uk.co.platosys.platax.client.widgets.buttons.LineCancelButton;
 import uk.co.platosys.platax.client.widgets.labels.BodyNameLabel;
 import uk.co.platosys.platax.client.widgets.labels.ColumnHeaderLabel;
-import uk.co.platosys.platax.client.widgets.labels.FormSubHeaderLabel;
+import uk.co.platosys.platax.client.widgets.labels.TabPageSubtitleLabel;
 import uk.co.platosys.platax.client.widgets.labels.InlineLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyColumnHeaderLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyGrandTotalLabel;
@@ -49,7 +49,7 @@ import uk.co.platosys.pws.values.GWTMoney;
  *
  */
 
-public class OrderForm extends AbstractBill {
+public class OrderForm extends BTab {
 	private GWTCustomer gwtCustomer=null;
 	private GWTInvoice gwtInvoice=null;
 	String invoiceSysname;
@@ -181,7 +181,7 @@ public class OrderForm extends AbstractBill {
     	refreshProducts();
 		refreshCustomers();
 		//the counter-party panel
-		cpartyPanel.insert( new FormSubHeaderLabel(LabelText.CUSTOMER),0);
+		cpartyPanel.insert( new TabPageSubtitleLabel(LabelText.CUSTOMER),0);
 		cpartyNamePanel.setWidget(contactListBox);
 		cpartyRefPanel.add(new InlineLabel(LabelText.POREF));
 		cpartyRefPanel.add(refNumberBox);

@@ -39,7 +39,7 @@ AddressBox addressBox=null;
 
 	@Override
 	public void fireEvent(GwtEvent<?> event) {
-		Window.alert("AF event fired");
+		//Window.alert("AF event fired");
 		
 	}
 	@Override
@@ -48,7 +48,7 @@ AddressBox addressBox=null;
 		widget.addValueChangeHandler(new ValueChangeHandler<GWTAddress>(){
 			@Override
 			public void onValueChange(ValueChangeEvent<GWTAddress> event) {
-				Window.alert("vc event received");
+				//Window.alert("vc event received");
 				if(validate()){
 					setOK(true);
 					moveNext();

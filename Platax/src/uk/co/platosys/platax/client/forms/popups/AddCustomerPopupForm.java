@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
 import uk.co.platosys.platax.client.constants.LabelText;
-import uk.co.platosys.platax.client.forms.bills.AbstractBill;
+import uk.co.platosys.platax.client.forms.bills.BTab;
 import uk.co.platosys.platax.client.services.CustomerService;
 import uk.co.platosys.platax.client.services.CustomerServiceAsync;
 import uk.co.platosys.platax.shared.boox.GWTCustomer;
@@ -23,7 +23,7 @@ import uk.co.platosys.pws.labels.FieldLabel;
 
 public class AddCustomerPopupForm extends AbstractPopupForm  {
 //Logger logger = Logger.getLogger("platax");
-	public AddCustomerPopupForm(final AbstractBill parent, final GWTEnterprise enterprise) {
+	public AddCustomerPopupForm(final BTab parent, final GWTEnterprise enterprise) {
 		super(LabelText.ADD_CUSTOMER_HEADER);
 		final CustomerServiceAsync addCustomerService = (CustomerServiceAsync) GWT.create(CustomerService.class);
 		FieldLabel customerNameLabel = new FieldLabel(LabelText.CUSTOMER);

@@ -60,7 +60,12 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
 	
 	
 	public void onModuleLoad() {
-		//Window.alert("on module load called");
+		try{
+			RootLayoutPanel.get().insert(this,0);
+			}catch(Exception e){
+				Window.alert(e.getMessage());
+			}
+		
 		//create panels and components
 		//Top Panel
 		topPanel.addWest(brandingBox, 75 );
@@ -70,7 +75,7 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
 		this.addNorth(topPanel, 10);
 		//footPanel
 		footPanel.add(new Label("footer"));
-		this.addSouth(footPanel, 10);
+		this.addSouth(footPanel, 5);
 		
 		//the task panel (to the left);
 		this.addWest(taskPanel, 15);
@@ -78,14 +83,14 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
 		//the message panel
 		this.addEast(messagePanel, 25);
 		List<PTab> pTabs=new ArrayList<PTab>();
-		pTabs.add(new LoginForm(this));
-		tabPanel.addTabs(pTabs);		
-		this.add(tabPanel);
 		try{
-		RootLayoutPanel.get().insert(this,0);
-		}catch(Exception e){
-			Window.alert(e.getMessage());
+			pTabs.add(new LoginForm());
+			tabPanel.addTabs(pTabs);		
+		}catch(Exception x){
+			Window.alert("PxOML "+x.getMessage());
 		}
+		this.add(tabPanel);
+		
 	}
 
 
@@ -99,6 +104,7 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
 	}
 
 	public void addTab(PTab itab) {
+		//Window.alert("Platax adding tab");
 		tabPanel.addTab(itab);
 	}
     public static void addPTab(PTab itab){
@@ -115,7 +121,7 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
 	public void setUser(PXUser result) {
 		pxUser=result;
 		statusBox.login(result.getUsername());
-		tabPanel.addTab(new UserTab(this, result),0);
+		tabPanel.addTab(new UserTab(result),0);
 		taskPanel.setUser(result);
 	}
 
@@ -133,8 +139,8 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
 		pxUser=null;
 		tabPanel.clear();
 		taskPanel.clear();
-		tabPanel.addTab(new RegisterUser(this));
-		tabPanel.addTab(new LoginForm(this),0);
+		//tabPanel.addTab(new RegisterUser());
+		tabPanel.addTab(new LoginForm(),0);
 		tabPanel.selectTab(0);
 		
 	} 

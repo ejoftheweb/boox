@@ -9,6 +9,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.EFTab;
 import uk.co.platosys.platax.client.constants.FieldText;
 import uk.co.platosys.platax.client.constants.StringText;
 import uk.co.platosys.platax.client.services.CustomerService;
@@ -19,10 +20,10 @@ import uk.co.platosys.pws.fieldsets.SubmitField;
 import uk.co.platosys.pws.fieldsets.TextField;
 import uk.co.platosys.pws.fieldsets.TickBoxField;
 
-public class CustomerForm extends AbstractForm  {
+public class CustomerForm extends EFTab {
 
 	public CustomerForm(final Platax platax, final GWTEnterprise enterprise) {
-		super(platax, enterprise.getName());
+		super();
 		final CustomerServiceAsync customerService = (CustomerServiceAsync) GWT.create(CustomerService.class);
 		
 		setTitle(StringText.NEW_CUSTOMER);
@@ -91,10 +92,6 @@ public class CustomerForm extends AbstractForm  {
 		render();
 	}
 
-	@Override
-	public void refresh() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 }

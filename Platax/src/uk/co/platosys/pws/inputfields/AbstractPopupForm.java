@@ -17,6 +17,7 @@ public class AbstractPopupForm extends PopupPanel implements Form {
 	FormPanel formPanel=new FormPanel();
 	FlexTable table = new FlexTable();
 	PopupHeaderLabel header = new PopupHeaderLabel();
+	@SuppressWarnings("rawtypes")
 	private SortedMap<Integer, FormField> fields = new TreeMap<Integer, FormField>(); 
     
 	public PopupPanel.PositionCallback poscall =(new PopupPanel.PositionCallback() {
@@ -45,6 +46,7 @@ public class AbstractPopupForm extends PopupPanel implements Form {
 		    return finx;
 		}
 	}
+	@SuppressWarnings("rawtypes")
 	@Override
 	public FormField getNextField(FormField currentField) {
 		Integer position = currentField.getPosition();

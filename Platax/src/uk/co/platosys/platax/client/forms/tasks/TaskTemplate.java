@@ -11,7 +11,7 @@ import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.pws.fieldsets.SubmitField;
 
-public class TaskTemplate extends BasicTask {
+public class TaskTemplate extends TTab {
 	
 	final ProductServiceAsync productService = (ProductServiceAsync) GWT.create(ProductService.class);
 	//widgets

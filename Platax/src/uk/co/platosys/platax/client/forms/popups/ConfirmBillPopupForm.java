@@ -8,12 +8,12 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.LabelText;
-import uk.co.platosys.platax.client.forms.bills.AbstractBill;
+import uk.co.platosys.platax.client.forms.bills.BTab;
 import uk.co.platosys.platax.client.forms.bills.InvoiceForm;
 import uk.co.platosys.platax.client.services.InvoiceService;
 import uk.co.platosys.platax.client.services.InvoiceServiceAsync;
 import uk.co.platosys.platax.client.widgets.buttons.ActionButton;
-import uk.co.platosys.platax.client.widgets.labels.FormHeaderLabel;
+import uk.co.platosys.platax.client.widgets.labels.TabPageTitleLabel;
 import uk.co.platosys.platax.client.widgets.labels.InlineLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyGrandTotalLabel;
 import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
@@ -24,7 +24,7 @@ import uk.co.platosys.platax.shared.boox.GWTItem;
 
 public class ConfirmBillPopupForm extends AbstractPopupForm {
 
-	public ConfirmBillPopupForm(final AbstractBill parent) {
+	public ConfirmBillPopupForm(final BTab parent) {
 		super(LabelText.CONFIRM_BILL);
 		GWTBill gwtBill=parent.getGWTBill();
 		ActionButton cancelButton= new ActionButton(ButtonText.CANCEL);
@@ -42,7 +42,7 @@ public class ConfirmBillPopupForm extends AbstractPopupForm {
 		if(gwtBill instanceof GWTInvoice){
 			final InvoiceServiceAsync invoiceService = (InvoiceServiceAsync) GWT.create(InvoiceService.class);
 			final GWTInvoice gwtInvoice = (GWTInvoice) gwtBill;
-			table.setWidget(0, 1,new FormHeaderLabel("Confirm Invoice"));
+			table.setWidget(0, 1,new TabPageTitleLabel("Confirm Invoice"));
 			table.setWidget(1, 0, new InlineLabel(gwtInvoice.getCustomer().getName()));
 			table.setWidget(1, 1, new InlineLabel(gwtInvoice.getCreatedDate().toString()));
 			table.setWidget(2, 2, new InlineLabel(LabelText.ITEM_NET_HEADER));

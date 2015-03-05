@@ -51,6 +51,7 @@ public class PDateBox extends AbstractValueField<Date> {
     */
    public PDateBox(Date date){
 	   dateBox= new DateBox(new DatePicker(), date, new DateBox.DefaultFormat(DateFormats.MED_DATE_FORMAT));
+	   dateBox.setValue(date, false);
 		this.add(dateBox); 
    }
 @Override
@@ -75,8 +76,7 @@ public void setFocus(boolean focused) {
 
 
 @Override
-public HandlerRegistration addValueChangeHandler(
-		ValueChangeHandler<Date> handler) {
+public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Date> handler) {
 	return dateBox.addValueChangeHandler(handler);
 }
 @Override

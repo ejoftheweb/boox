@@ -1,13 +1,12 @@
 package uk.co.platosys.platax.client.forms.tasks;
 
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.forms.AbstractForm;
 import uk.co.platosys.platax.shared.boox.GWTTask;
 
-public class VATReturn extends AbstractForm {
+public class VATReturn extends TTab {
 
 	public VATReturn(Platax platax, GWTTask task) {
-		super(platax);
+		super();
 		//data comes from task description.
 		setTitle("VAT Return for "+task.getEnterprise().getName());
 		setSubTitle("Do your VAT Return");

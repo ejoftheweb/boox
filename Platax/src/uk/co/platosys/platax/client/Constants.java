@@ -1,9 +1,7 @@
 package uk.co.platosys.platax.client;
 
-import java.io.File;
-
 public class Constants {
-	public static final File SYSTEM_CONFIG_DIR=new File("/etc/platosys");
+	//public static final File SYSTEM_CONFIG_DIR=new File("/etc/platosys");
 	
 	public static final int ALL_CUSTOMERS=2;
 	public static final int ALL_CUSTOMERS_NOFIN=0;

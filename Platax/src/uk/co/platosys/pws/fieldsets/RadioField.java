@@ -19,9 +19,9 @@ import uk.co.platosys.pws.values.ValuePair;
  */
 public class RadioField extends AbstractFormField<String> implements HasStringValues {
 RadioBox radioBox;
-	public RadioField(String name, String[] labelText,  List<? extends ValuePair> values, ValuePair defaultValue, int position, Form parent,	boolean required) throws IllegalArgumentException {
+	public RadioField(String name, String[] labelText,  List<? extends ValuePair> values,  int position, Form parent,	boolean required) throws IllegalArgumentException {
 		super(labelText, position, parent, required);
-		radioBox = new RadioBox(name,  values, defaultValue);
+		radioBox = new RadioBox(name,  values);
 		setWidget (radioBox);
 		start();
 	}

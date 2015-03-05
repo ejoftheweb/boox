@@ -1,57 +1,69 @@
 package uk.co.platosys.platax.client.forms;
 
 
+import java.util.Iterator;
+
 import uk.co.platosys.platax.client.Platax;
-import uk.co.platosys.platax.client.constants.LabelText;
+import uk.co.platosys.platax.client.components.FTab;
+import uk.co.platosys.platax.client.constants.FieldText;
 import uk.co.platosys.platax.client.constants.StringText;
+import uk.co.platosys.platax.client.constants.TabTops;
 import uk.co.platosys.platax.client.services.LoginService;
 import uk.co.platosys.platax.client.services.LoginServiceAsync;
 import uk.co.platosys.platax.shared.PXUser;
-import uk.co.platosys.pws.labels.FieldLabel;
+import uk.co.platosys.pws.fieldsets.FormField;
+import uk.co.platosys.pws.fieldsets.LoginField;
+import uk.co.platosys.pws.fieldsets.PasswordField;
+import uk.co.platosys.pws.fieldsets.SubmitField;
+import uk.co.platosys.pws.fieldsets.TextField;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 
-public class LoginForm extends AbstractForm { 
+public class LoginForm extends FTab { 
 	//declare variables
 	//final Label topLabel = new Label(StringText.LOGIN_OR_SIGNUP);
 	
-	final FieldLabel emailLabel = new FieldLabel(LabelText.EMAIL);
-	final TextBox emailTextBox = new TextBox();
-	final FlexTable table = new FlexTable();
-	final FieldLabel passwordLabel=new FieldLabel(LabelText.PASSWORD);
-	final TextBox passwordTextBox= new PasswordTextBox();
-	final CheckBox chckbxNewCheckBox = new CheckBox(LabelText.REMEMBER_ME);
-	final Button loginButton = new Button(StringText.LOGIN);
-	final Anchor registerAnchor=new Anchor(StringText.SIGNUP_GO);
+	
+	
+	//Add form fields (from uk.co.platosys.pws.fieldsets)  here.
+	TextField emailField; 
+	PasswordField passwordField;
+	//Add callbacks to populate lists etc
+	
+	LoginField sub;
+    //Add handlers as needed
 	
 	final LoginServiceAsync loginService = (LoginServiceAsync) GWT.create(LoginService.class);
 
-	public LoginForm(Platax pplatax) {
-		super(pplatax);
+	public LoginForm() {
+		super();
+		//indow.alert("Login form constructor");
+		this.platax=Platax.getCurrentInstance();
+		setTabHead(TabTops.LOGIN);
+		emailField=  new TextField(FieldText.EMAIL, 1000, this, true);
+	    passwordField=   new PasswordField(FieldText.PASSWORD, 2000, this, true);
+	    sub= new LoginField(12000, this);
+	    final Anchor registerAnchor=new Anchor(StringText.SIGNUP_GO);
+		
 		//DEV-CODE only//
-		emailTextBox.setText("edward@copyweb.co.uk");
-		passwordTextBox.setText("P&nNfZ36");
+		emailField.setValue("edward@copyweb.co.uk");
+		passwordField.setValue("P&nNfZ36");
 		//end of dev code//
 		setTitle(StringText.LOGIN);
 		setSubTitle(StringText.LOGIN_OR_SIGNUP);
-		setTabHeaderText(StringText.LOGIN);
 		setCloseEnabled(false);
-		final Platax platax = pplatax;	
 		registerAnchor.addClickHandler(new ClickHandler(){
 			 
 			@Override
 			public void onClick(ClickEvent event) {
-				platax.addTab(new RegisterUser(platax));
+				platax.addTab(new RegisterUser());
 				
 			}
 	    });
@@ -64,7 +76,7 @@ public class LoginForm extends AbstractForm {
 					
 				}else{
 					setTitle(StringText.LOGIN_FAILED);
-					formPanel.add(table);
+					//getFormPanel().add(table);
 				}
 			}
 		    public void onFailure(Throwable cause){
@@ -78,17 +90,15 @@ public class LoginForm extends AbstractForm {
 				
 					  
 		}};
-		loginButton.addClickHandler(new ClickHandler() {
+		sub.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if (emailTextBox.getText().length() == 0
-						|| passwordTextBox.getText().length() == 0) {
-						Window.alert(StringText.EMAIL_EMPTY); 
-					}
+				
 				try {
-					loginService.login(emailTextBox.getText(), passwordTextBox.getText(), logincallback);
-					formPanel.remove(table);
+					loginService.login(emailField.getValue(), passwordField.getValue(), logincallback);
+					//getFormPanel().remove(table);
 					setTitle(StringText.THANKYOU);
 					setSubTitle(StringText.WAIT_FOR_SERVER);
+					LoginForm.this.clear();
 					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -103,35 +113,39 @@ public class LoginForm extends AbstractForm {
 				}
 			}
 		});
-		
-		layout();
-		//vpanel.add(form);
-		//this.add(form);
+		render();
+		add(registerAnchor);
+		//Window.alert("Login form constructor done");
 	}
 	
-	public void layout (){
-	   //this.setHeader(StringText.LOGIN);
-	   	//topLabel.setText(StringText.LOGIN_OR_SIGNUP);
-		//vpanel.add(topLabel);
-		//create the loggedout table
-		table.setWidget(0, 0, emailLabel);
-		table.setWidget(0, 1, emailTextBox);
-		table.setWidget(1, 0, passwordLabel);
-		table.setWidget(1, 1, passwordTextBox);
-		table.setWidget(2, 1, chckbxNewCheckBox);
-		table.setWidget(3, 1, loginButton);
-		formPanel.add(table);
-		formPanel.add(registerAnchor);
-		
-	    
-	}
+	
 
 	@Override
 	public void refresh() {
 		// TODO Auto-generated method stub
 		
 	}
+
 	
+
+	@Override
+	public void add(IsWidget widget) {
+		// TODO Auto-generated method stub
+		
 	}
 
+	@Override
+	public Iterator<Widget> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean remove(Widget widget) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+}
+	
 

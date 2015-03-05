@@ -35,7 +35,7 @@ ListValueField list;
  * @param required
  * @throws IllegalArgumentException
  */
-	public ListField(String[] labelText, int position, Form parent,	boolean required) throws IllegalArgumentException {
+	public ListField(String[] labelText, int position, Form parent,	boolean required)  throws IllegalArgumentException {
 		super(labelText, position, parent, required);
 		this.list=new ListValueField();
 		setWidget(list);

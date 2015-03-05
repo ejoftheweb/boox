@@ -8,11 +8,11 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 
 public class ButtonBox extends AbstractValueField<Boolean> {
-    private Button cb = new Button();
+    private Button button = new Button();
     
     public ButtonBox(){
-    	add(cb);
-    	cb.setText("Click");
+    	add(button);
+    	button.setText("Click");
     }
 	@Override
 	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Boolean> handler) {
@@ -26,24 +26,25 @@ public class ButtonBox extends AbstractValueField<Boolean> {
 
 	@Override
 	public void setFocus(boolean focused) {
-		cb.setFocus(focused);
+		button.setFocus(focused);
 	}
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		cb.setEnabled(enabled);
+		button.setEnabled(enabled);
 		
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return cb.isEnabled();
+		return button.isEnabled();
 	}
 	@Override
 	public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
-		return cb.addKeyDownHandler(handler);
+		//return button.addKeyDownHandler(handler);
+		return null;
 	}
 	public HandlerRegistration addClickHandler(ClickHandler handler){
-		return cb.addClickHandler(handler);
+		return button.addClickHandler(handler);
 	}
 }

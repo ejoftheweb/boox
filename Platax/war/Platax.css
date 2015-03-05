@@ -43,6 +43,10 @@
 	color: #06ab13;
 	font-weight: bold;
 }
+.px_ptab_root_panel{
+	
+}
+
 .px_ptab_share {
 	background: #99dd99;
 }
@@ -51,12 +55,17 @@
 	/*background: #e9c067; BUFF */
 	background: #ddd;
 }
-
+.px_utab_title_panel{
+	
+}
 .px_ptab_head {
 	padding: 2px;
 	background: #ffdd66;
 }
-
+.px_utab_content_page{
+	color: #000;
+	background:#fff;
+}
 .px_field_label {
 	text-align: right;
 	font-weight: bold;

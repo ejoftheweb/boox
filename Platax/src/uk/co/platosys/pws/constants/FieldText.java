@@ -19,4 +19,5 @@ public class FieldText {
 	public static final String[] COUNTY={"County", "County or region", null, ERROR};
 	public static final String[] COUNTRY={"Country", "Country", null,ERROR};
 	public static final String[] SUBMIT={"Submit", "Click Submit when done or Cancel to start again", null, ERROR};
+	public static final String[] LOGIN={"Login", "Click Login to login or Cancel to start again", null, ERROR};
 }

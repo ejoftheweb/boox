@@ -22,7 +22,7 @@ import uk.co.platosys.pws.fieldsets.ListField;
 import uk.co.platosys.pws.fieldsets.MoneyField;
 import uk.co.platosys.pws.fieldsets.SubmitField;
 
-public class PaymentsIn extends BasicTask {
+public class PaymentsIn extends TTab {
 	
 	final ProductServiceAsync productService = (ProductServiceAsync) GWT.create(ProductService.class);
 	final CustomerServiceAsync customerService=(CustomerServiceAsync) GWT.create(CustomerService.class);
@@ -54,13 +54,13 @@ public class PaymentsIn extends BasicTask {
 		amount = new MoneyField(FieldText.PAYMENT_AMOUNT, 3000, this, true);
 		SubmitField sub= new SubmitField(12000, this);
 		this.platax=Platax.getCurrentInstance();
-		this.enterprise=platax.getCurrentEnterprise();
+		this.setEnterprise(platax.getCurrentEnterprise());
 		
 		
 		
 		setTitle(StringText.PAYMENT_IN_HEAD);
 		setSubTitle(StringText.PAYMENT_IN_SUBHEAD);
-		customerService.listCustomers(enterprise.getEnterpriseID(), Constants.ALL_CUSTOMERS, custcallback);
+		customerService.listCustomers(getEnterprise().getEnterpriseID(), Constants.ALL_CUSTOMERS, custcallback);
 		render();
     }
 

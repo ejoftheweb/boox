@@ -11,7 +11,7 @@ public class NationalityField extends ListField {
 		setWidget(list);
 		addItems(Nations.getNationalitiesByName(), true);
 		
-		start();
+		//start();
 	}
 	
 }

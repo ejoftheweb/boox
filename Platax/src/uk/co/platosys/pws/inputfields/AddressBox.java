@@ -19,7 +19,7 @@ public class AddressBox extends AbstractValueField<GWTAddress> implements HasVal
 	GWTAddress value=new GWTAddress();
 	String headlabel;
 	AddressField parent;
-	boolean addressChangedHandlerInitialised=false;
+	//boolean addressChangedHandlerInitialised=false;
     public AddressBox (final String headlabel, AddressField parent){
     	this.headlabel=headlabel;
     	this.parent=parent;
@@ -33,7 +33,6 @@ public class AddressBox extends AbstractValueField<GWTAddress> implements HasVal
     }
 	@Override
 	public GWTAddress getValue() {
-	
 		return value;
 	}
 
@@ -59,26 +58,22 @@ public class AddressBox extends AbstractValueField<GWTAddress> implements HasVal
 
 	@Override
 	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<GWTAddress> handler) {
-		  /*if (!addressChangedHandlerInitialised) {
+		  //if (!addressChangedHandlerInitialised) {
 				textBox.addValueChangeHandler(new ValueChangeHandler<String>() {
 					public void onValueChange(ValueChangeEvent<String> event) {
-						Window.alert("address value changed to "+textBox.getValue());
+						//Window.alert("address value changed to "+textBox.getValue());
 						ValueChangeEvent.fire(AddressBox.this, getValue());
-				}
-			});
-			addressChangedHandlerInitialised = true;
-		}*/
+				}});
+			
+			//addressChangedHandlerInitialised = true;
+		
 		return addHandler(handler, ValueChangeEvent.getType());
 	}
+	@Override
 	public void setValue(GWTAddress value, boolean fireEvents) {
 		this.value=value;
-		textBox.setText(value.getShortAddress());
-		if (fireEvents){
-			//fireEvent(ValueChangeEvent.(value));
-			ValueChangeEvent.fire(this, value);
-			Window.alert("AB has fired vc event");
-			
-		}
+		textBox.setValue(value.getShortAddress(), fireEvents);
+		
 	}
 	@Override
 	public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {

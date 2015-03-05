@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 
 import uk.co.platosys.platax.client.constants.LabelText;
-import uk.co.platosys.platax.client.forms.bills.AbstractBill;
+import uk.co.platosys.platax.client.forms.bills.BTab;
 import uk.co.platosys.platax.client.services.ProductService;
 import uk.co.platosys.platax.client.services.ProductServiceAsync;
 import uk.co.platosys.platax.client.widgets.TaxBandChooser;
@@ -25,7 +25,7 @@ import uk.co.platosys.platax.shared.boox.GWTItem;
 
 public class AddProductPopupForm extends AbstractPopupForm  {
 Logger logger = Logger.getLogger("platax");
-	public AddProductPopupForm(final AbstractBill parent, final String customerName, final GWTEnterprise enterprise) {
+	public AddProductPopupForm(final BTab parent, final String customerName, final GWTEnterprise enterprise) {
 		super(LabelText.ADD_PRODUCT_HEADER);
 		final ProductServiceAsync addProductService = (ProductServiceAsync) GWT.create(ProductService.class);
 			Label productNameLabel = new Label(LabelText.PRODUCT);

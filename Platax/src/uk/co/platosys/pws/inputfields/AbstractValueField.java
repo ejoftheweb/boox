@@ -62,9 +62,5 @@ public abstract  class AbstractValueField<T> extends FlowPanel implements  HasVa
 	}
 
 	
-	@Override
-	public void fireEvent(GwtEvent<?> event) {
-		Window.alert("AVF - fire event called with "+event.getClass().toString());
-		
-	}
+	
 }

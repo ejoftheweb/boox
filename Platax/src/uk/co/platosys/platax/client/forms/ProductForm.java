@@ -2,6 +2,7 @@ package uk.co.platosys.platax.client.forms;
 
 
 import uk.co.platosys.platax.client.Platax;
+import uk.co.platosys.platax.client.components.EFTab;
 import uk.co.platosys.platax.client.components.PTab;
 import uk.co.platosys.platax.client.constants.ButtonText;
 import uk.co.platosys.platax.client.constants.StringText;
@@ -26,7 +27,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 
-public class ProductForm extends AbstractForm { 
+public class ProductForm extends EFTab { 
 	//declare variables
 	
 	//services
@@ -68,7 +69,7 @@ public class ProductForm extends AbstractForm {
   		}; 
   	//regular constructor	
 	public ProductForm(Platax platax, final GWTEnterprise enterprise) {
-		super(platax, enterprise.getName());
+		super();
 		this.platax=platax;
 		setTitle(StringText.NEW_PRODUCT);
 		setSubTitle(StringText.NEW_PRODUCT_INFO);

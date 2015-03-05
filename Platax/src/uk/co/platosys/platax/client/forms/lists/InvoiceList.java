@@ -2,6 +2,7 @@ package uk.co.platosys.platax.client.forms.lists;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -11,6 +12,7 @@ import com.google.gwt.user.client.ui.Label;
 import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.constants.DateFormats;
 import uk.co.platosys.platax.client.constants.LabelText;
+import uk.co.platosys.platax.client.constants.TabTops;
 import uk.co.platosys.platax.client.services.InvoiceService;
 import uk.co.platosys.platax.client.services.InvoiceServiceAsync;
 import uk.co.platosys.platax.client.widgets.html.InvoiceRefHTML;
@@ -20,11 +22,12 @@ import uk.co.platosys.platax.client.widgets.labels.MoneyLabel;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTInvoice;
 
-public class InvoiceList extends AbstractList {
+public class InvoiceList extends LTab {
 	 final InvoiceServiceAsync invoiceService = (InvoiceServiceAsync) GWT.create(InvoiceService.class);
 		
 	public InvoiceList(int list_selection_type) {
 		super(list_selection_type);
+		setTabHead(TabTops.INVOICE_LIST);
 		setTitle("List of Invoices");
 		 setSubTitle("blah blah");
 		 invoiceService.listInvoices(Platax.getEnterprise().getEnterpriseID(), list_selection_type, invoiceListCallBack);

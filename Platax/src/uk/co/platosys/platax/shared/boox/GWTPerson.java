@@ -15,6 +15,7 @@ public class GWTPerson implements Serializable {
 	private String givenName;
 	private String familyName;
 	private String email;
+	private String nationality;
 public GWTPerson (){}
 public String getPhoneNo() {
 	return phoneNo;
@@ -45,5 +46,20 @@ public String getEmail() {
 }
 public void setEmail(String email) {
 	this.email = email;
+}
+/**
+ * @return the nationality*/
+
+public String getNationality() {
+	return nationality;
+}
+/**
+ * @param nationality the nationality to set*/
+
+public void setNationality(String nationality) {
+	this.nationality = nationality;
+}
+public String getName(){
+	return givenName+" "+familyName;
 }
 }

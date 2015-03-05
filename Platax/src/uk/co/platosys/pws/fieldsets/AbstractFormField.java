@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -62,6 +63,7 @@ public abstract class AbstractFormField<T> implements FormField<T>, HasEnabled, 
 	 * @param index
 	 */
 	protected AbstractFormField (String[] labelText,  int position, Form parent, boolean required) throws IllegalArgumentException{
+		//Window.alert("creating field "+labelText[0]);
 		if(labelText.length!=4){throw new IllegalArgumentException("label array must be size 4");}
 		label.setText(labelText[0]);
 		infoLabel.setText(labelText[1]);
@@ -98,10 +100,12 @@ public abstract class AbstractFormField<T> implements FormField<T>, HasEnabled, 
 			});
 		}
 		try {
+			//Window.alert("about to add field to parent");
 			parent.addField(this);
 		} catch (Exception e) {
 			
 		}
+		//Window.alert("finished field start method");
 	}
 	public void moveNext(){
 		@SuppressWarnings("rawtypes")

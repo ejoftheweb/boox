@@ -25,7 +25,7 @@ import uk.co.platosys.platax.client.widgets.labels.NumberLabel;
 import uk.co.platosys.platax.shared.boox.GWTEnterprise;
 import uk.co.platosys.platax.shared.boox.GWTItem;
 
-public class ProductList extends AbstractList {
+public class ProductList extends LTab {
 	
 	
 	DataGrid<GWTItem> dataGrid=new DataGrid<GWTItem>();

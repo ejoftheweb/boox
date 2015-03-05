@@ -19,5 +19,7 @@ public interface StaffService extends RemoteService {
 	public ArrayList<GWTEmployee>getEmployees(String enterpriseName, GWTRole role);
 	public GWTEmployee addEmployee(GWTEmployee employee, String enterpriseName);
 	public GWTEmployee getEmployee(String sysname, String enterpriseName);
+	public GWTEmployee hireEmployee(GWTEmployee employee, String enterpriseName);
+	public GWTEmployee fireEmployee(GWTEmployee employee, String enterpriseName);
 	
 }

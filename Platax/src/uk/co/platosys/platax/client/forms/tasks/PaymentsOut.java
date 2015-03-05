@@ -22,7 +22,7 @@ import uk.co.platosys.pws.fieldsets.RadioField;
 import uk.co.platosys.pws.fieldsets.SubmitField;
 import uk.co.platosys.pws.fieldsets.TextField;
 
-public class PaymentsOut extends BasicTask {
+public class PaymentsOut extends TTab {
 	
 	final ProductServiceAsync productService = (ProductServiceAsync) GWT.create(ProductService.class);
 	//widgets
