@@ -102,5 +102,7 @@ public class StringText {
 	public static final String NATIONALITY_INFO="Select a nationality";
 	public static final String CAN_WORK="Can work?";
 	public static final String CAN_WORK_INFO="Enter the proof of eligibility to work in the EU";
-	
+	//new cashier
+	public static final String NEW_CASHIER_HEAD="New Cashier Form";
+	public static final String NEW_CASHIER_SUBHEAD="Setup a cashier";
 }

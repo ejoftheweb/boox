@@ -42,8 +42,10 @@ import com.google.gwt.user.client.Window;
 public class Commands {
 	 
 			public static Scheduler.ScheduledCommand BALANCE_SHEET = new Scheduler.ScheduledCommand() {
+
 				@Override
 				public void execute() {
+
 					BalanceSheet balanceSheet = new BalanceSheet();//platax, enterprise);
 					Platax.addPTab(balanceSheet);
 				}
@@ -230,10 +232,9 @@ public class Commands {
 				}
 			};
 			public static Scheduler.ScheduledCommand NEW_BANK_ACCOUNT = new Scheduler.ScheduledCommand() {
-
 				@Override
 				public void execute() {
-					Window.alert("command called");
+					//Window.alert("new bank account command started");
 					NewBankAccount itab= new NewBankAccount();
 					Platax.addPTab(itab);
 				}

@@ -38,6 +38,7 @@ import java.util.TreeMap;
 
 import javax.naming.OperationNotSupportedException;
 
+import uk.co.platosys.boox.constants.Prefixes;
 import uk.co.platosys.boox.core.exceptions.BooxException;
 import uk.co.platosys.boox.core.exceptions.PermissionsException;
 import uk.co.platosys.boox.core.exceptions.TimingException;
@@ -142,7 +143,7 @@ public class Account implements Budgetable,  Auditable {
      public static final String LINE_COLNAME="line";
      public static final String TAXED_TID_COLNAME="taxed_tid";
      public static final String IS_TAX_COLNAME="is_tax";
-     public static final String PREFIX="ac"; //ensures legality for the tablename
+     public static final String PREFIX=Prefixes.ACCOUNT; //ensures legality for the tablename
      public static final String DELIMITER="#";
      public static final String BASIC_TYPE="basic";
     //Journal journal;

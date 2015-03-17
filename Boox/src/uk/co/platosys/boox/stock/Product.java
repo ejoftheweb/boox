@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.platosys.boox.constants.Prefixes;
 import uk.co.platosys.boox.core.Account;
 import uk.co.platosys.boox.core.Clerk;
 import uk.co.platosys.boox.core.Enterprise;
@@ -52,7 +53,7 @@ public class Product extends Item {
     public static final String PRODUCTCATALOGUE_TABLENAME = "bx_product_catalogue";
     public static final String PRODUCTS_STOCK_LEDGER_NAME="Root:XBX:Current:Assets:Stock:Products";
     public static final String PRODUCTS_SALES_LEDGER_NAME="Root:XBX:Operations:Income:Sales:Products";
-    public static final String PRODUCT_SYSNAME_PREFIX="p";
+    public static final String PRODUCT_SYSNAME_PREFIX=Prefixes.PRODUCT;
     public static String DEFAULT_PRODUCT_NAME="Misc";
     public static final String DEFAULT_PRODUCT_DESCRIPTION="Miscellaneous Goods and Services";
     public static final Money DEFAULT_PRODUCT_PRICE=Money.zero();

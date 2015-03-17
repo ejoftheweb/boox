@@ -2,18 +2,20 @@ package uk.co.platosys.pws.fieldsets;
 
 import java.util.List;
 import java.util.Map;
+
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 
 import uk.co.platosys.pws.Form;
-import uk.co.platosys.pws.inputfields.CheckList;
+import uk.co.platosys.pws.inputfields.ListValueField;
 import uk.co.platosys.pws.values.ValuePair;
 
 
 /**
- * A field that shows a list of check-boxes none or more of which can be ticked. 
+ * A field that shows a list/combo box. 
  * 
  * Its values are added as ValuePair items, that is, a pair of values and labels. The label is displayed, and the value returned
  * is the corresponding string. You can either implement ValuePair in your code or use the provided base implementation, BasicValuePair. 
@@ -25,8 +27,8 @@ import uk.co.platosys.pws.values.ValuePair;
  * @author edward
  *
  */
-public final class CheckListField extends AbstractFormField <List<String>> implements HasValueChangeHandlers<List<String>>, HasStringValues {
-CheckList list;
+public abstract class AbstractListField extends AbstractFormField<String> implements HasValueChangeHandlers<String> {
+ListValueField list;
 /**
  * 
  * @param labelText 
@@ -35,11 +37,11 @@ CheckList list;
  * @param required
  * @throws IllegalArgumentException
  */
-	public CheckListField(String[] labelText, int position, Form parent,	boolean required) throws IllegalArgumentException {
+	public AbstractListField(String[] labelText, int position, Form parent,	boolean required)  throws IllegalArgumentException {
 		super(labelText, position, parent, required);
-		this.list=new CheckList();
+		this.list=new ListValueField();
 		setWidget(list);
-		start();
+		//
 	}
 	/**
 	 * add items as a List of <ValuePair>s.
@@ -56,11 +58,14 @@ CheckList list;
  	public boolean validate() {
 		  if(required){
 			  if(list.getValue().equals("")){
+				  Window.alert("Please select a valid choice");
 				  return false;
 			  }else{
+				  Window.alert("list field validation true");
 				  return true;
 			  }
 		  }else{
+			  Window.alert("list field not required");
 			  return true;
 		  }
 	}
@@ -69,21 +74,13 @@ CheckList list;
 		// TODO Auto-generated method stub
 		
 	}
-	
+	@Override
+	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+		return list.addValueChangeHandler(handler);
+	}
 	public void addItem(String name, String localisedName) {
 		list.addItem(name, localisedName);
 		
 	}
-	@Override
-	public HandlerRegistration addValueChangeHandler(
-			ValueChangeHandler<List<String>> handler) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public List<String> getValues() {
-		return list.getValue();
-	}
-
 
 }

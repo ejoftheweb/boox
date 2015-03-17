@@ -77,6 +77,7 @@ public class InvoiceForm extends BTab {
 		}
     };
     final AsyncCallback<ArrayList<GWTCustomer>> getCustomersCallback = new AsyncCallback<ArrayList<GWTCustomer>>(){
+
     	@Override
 		public void onFailure(Throwable caught) {
 			Window.alert(StringText.SERVER_ERROR+"INV4");

@@ -6,6 +6,7 @@ import uk.co.platosys.xuser.Xaddress;
 import uk.co.platosys.xuser.XuserException;
 import uk.co.platosys.platax.server.core.Booxlet;
 import uk.co.platosys.platax.shared.*;
+import uk.co.platosys.pws.values.PWSAddress;
 
 public class AddressServiceImpl extends Booxlet implements AddressService {
 
@@ -18,27 +19,32 @@ public class AddressServiceImpl extends Booxlet implements AddressService {
 	 */
 
 	@Override
-	public PXAddress recordAddress(String[] vals) {
+	public PWSAddress recordAddress(PWSAddress pwsAddress) {
 		try {
-			Xaddress xaddress= new Xaddress(vals);
-			PXAddress pxAddress =  new PXAddress(xaddress.getXaddressID(),xaddress.getFieldValues());
+			Xaddress xaddress= new Xaddress(pwsAddress.getVals());
+			PWSAddress pxAddress =  new PWSAddress(xaddress.getXaddressID(),xaddress.getFieldValues());
 		   	return pxAddress;
 		 } catch (XuserException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
+		} catch(Exception e){
+			return null;
 		}
+		
 	}
 	
-	public PXAddress getAddress(String xaddressid){
+	public PWSAddress getAddress(String xaddressid){
 		Xaddress xaddress;
 		try {
 			xaddress = new Xaddress(xaddressid);
-			PXAddress pxAddress =  new PXAddress(xaddress.getXaddressID(),xaddress.getFieldValues());
+			PWSAddress pxAddress =  new PWSAddress(xaddress.getXaddressID(),xaddress.getFieldValues());
 		   	return pxAddress;
 		} catch (XuserException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
+		} catch(Exception e){
 			return null;
 		}
 		

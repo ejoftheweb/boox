@@ -461,52 +461,7 @@ public final class Transaction implements AuditElement {
     }
 
     
-/*
-    public Account getContraAccount(Enterprise enterprise, Account account, Clerk clerk) throws PermissionsException, BooxException{
-        if(account.getName().equals(debitAccountName)){
-            if(creditAccount.getLedger().isPrivate()){
-                throw new PermissionsException("Credit account is in a private ledger");
-            }else if(!clerk.canRead(enterprise, creditAccount.getLedger())){
-                throw new PermissionsException("Credit account ledger" + (creditAccount.getLedger().getName()) +" is not readable by clerk "+clerk.getName());
-            }else{
-                return creditAccount;
-            }
-        }else if(account.getName().equals(creditAccountName)){
-            if(debitAccount.getLedger().isPrivate()){
-                throw new PermissionsException("Debit account is in a private ledger");
-            }else if(!clerk.canRead(enterprise, debitAccount.getLedger())){
-                throw new PermissionsException("Debit account ledger" + (debitAccount.getLedger().getName()) +"  is not readable by clerk "+clerk.getName());
-            }else{
-                return debitAccount;
-            }
-           
-        }else{
-            throw new BooxException(account.getName()+" is not of this Transaction "+transactionID);
-        }
-    }*/
-    
-    /*
-     *use this to get contra account details for audit purposes/creating statements etc.
-     * 
-     */
-   /* public String getContraAccountFullName(Account account, Clerk clerk) throws PermissionsException, BooxException {
-        if(account.getName().equals(debitAccountName)){
-            if(creditAccount.getLedger().isPrivate()){
-                return "Private Ledger";
-            }else{
-                return creditAccount.getFullName();
-            }
-        }else if(account.getName().equals(creditAccountName)) {
-            if(debitAccount.getLedger().isPrivate()){
-                return "Private Ledger";
-            }else{
-                return debitAccount.getFullName();
-            }
 
-        }else{
-            throw new BooxException(account.getName()+" is not of this Transaction "+transactionID);
-        }
-    }*/
      
      public static Transaction getTransaction(Enterprise enterprise, long tid){
     	 return Journal.getTransaction(enterprise, tid);

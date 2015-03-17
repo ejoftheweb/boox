@@ -193,7 +193,7 @@ public class EnterpriseMenu extends MenuBar {
 		newCashier.setScheduledCommand(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
-				CashierForm scr = new CashierForm(platax, enterprise);
+				CashierForm scr = new CashierForm();
 				platax.addTab(scr);
 			}
 		});

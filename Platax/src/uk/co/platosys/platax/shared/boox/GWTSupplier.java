@@ -2,7 +2,7 @@ package uk.co.platosys.platax.shared.boox;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class GWTSupplier implements IsSerializable{
+public class GWTSupplier implements IsSerializable, GWTHasAccount {
 private String name;
 private String contactID;
 private String sysname;

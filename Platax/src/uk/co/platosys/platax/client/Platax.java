@@ -108,13 +108,16 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
 		tabPanel.addTab(itab);
 	}
     public static void addPTab(PTab itab){
-    	getCurrentInstance().addTab(itab);
+    	getCurrentInstance().addTab(itab, true);
     }
     public static Platax getCurrentInstance(){
     	return(Platax) RootLayoutPanel.get().getWidget(0);
     }
     public void addTab(PTab itab, boolean select){
     	tabPanel.addTab(itab);
+    	if (select){
+    		tabPanel.selectTab(itab);
+    	}
     }
 
 
@@ -133,6 +136,9 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
     	tabPanel.clear();
     }
     public GWTEnterprise getCurrentEnterprise() {
+    	if(currentEnterprise==null){
+    		Window.alert("Platax - current enterprise is null?");
+    	}
 		return currentEnterprise;
 	}
 	public void logout() {
@@ -157,6 +163,7 @@ public class Platax  extends DockLayoutPanel implements EntryPoint{
 
 
 	public void setCurrentEnterprise(GWTEnterprise currentEnterprise) {
+		//Window.alert("Platax - enterprise set as "+currentEnterprise.getName());
 		this.currentEnterprise = currentEnterprise;
 		statusBox.setEnterprise(currentEnterprise);
 	}

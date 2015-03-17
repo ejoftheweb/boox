@@ -6,7 +6,7 @@ import uk.co.platosys.pws.values.GWTMoney;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class GWTCustomer extends GWTContact implements Serializable, IsSerializable {
+public class GWTCustomer extends GWTContact implements Serializable, IsSerializable , GWTHasAccount {
 
 	private GWTMoney balance = new GWTMoney();
 	private GWTMoney overdueBalance = new GWTMoney();

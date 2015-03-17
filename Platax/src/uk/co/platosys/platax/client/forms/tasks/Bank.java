@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 
 import uk.co.platosys.platax.client.Commands;
+import uk.co.platosys.platax.client.Platax;
 import uk.co.platosys.platax.client.components.PTab;
 import uk.co.platosys.platax.client.constants.FieldText;
 import uk.co.platosys.platax.client.constants.StringText;
@@ -25,18 +26,19 @@ public class Bank extends TTab {
 		super();
 		setTabHead(TabTops.BANK);
 		newBank = new OneButtonField(FieldText.NEW_BANKAC, 1000, this, false);
-		render();
+		
 		try{
 			newBank.addClickHander(new ClickHandler(){
 				@Override
 				public void onClick(ClickEvent event) {
-					Window.alert("button clicked");
-					Commands.NEW_BANK_ACCOUNT.execute();
+					//Window.alert("button clicked");
+					click();
 				}
 			 });
 		}catch(Exception x){
 			Window.alert("bank tab problem "+ x.getMessage());
 		}
+		render();
 		//SubmitField sub= new SubmitField(12000, this);
 		setTitle(StringText.BANK_ACCOUNTS_TITLE);
 		setSubTitle(StringText.BANK_ACCOUNTS_SUBTITLE);
@@ -48,5 +50,9 @@ public class Bank extends TTab {
 		// TODO Auto-generated method stub
 
 	}
-
+  private void click(){
+	  Platax.getCurrentInstance().setCurrentEnterprise(getEnterprise());
+	 // Window.alert("Enterprise is "+Platax.getCurrentInstance().getEnterprise().getName());
+	  Commands.NEW_BANK_ACCOUNT.execute();
+  }
 }

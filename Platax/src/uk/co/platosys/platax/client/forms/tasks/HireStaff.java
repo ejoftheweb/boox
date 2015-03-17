@@ -36,7 +36,7 @@ public class HireStaff extends TTab {
 	AsyncCallback<GWTEmployee> hireCallback = new AsyncCallback<GWTEmployee>(){
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Oops there was a problem");
+			Window.alert("Oops there was a problem" + caught.getMessage());
 	    }
 		@Override
 		public void onSuccess(GWTEmployee result) {
@@ -97,6 +97,7 @@ public class HireStaff extends TTab {
 		setTitle(StringText.NEW_STAFF);
 		setSubTitle(StringText.NEW_STAFF_INFO);
 		render();
+		//Window.alert(eName+eSysname);
     }
 
 	@Override
@@ -118,7 +119,7 @@ public class HireStaff extends TTab {
 			employee.setPayFreq(payFreq.getValue());
 			employee.setPayRate(rate.getValue());
 			employee.setCanWork(canWork.getValue());
-			staffService.hireEmployee(employee, getEnterprise().getSysname(), hireCallback);
+			staffService.hireEmployee(employee, eSysname, hireCallback);
 			return true;
 		}catch(Exception x){
 			Window.alert("submit error "+x.getMessage());

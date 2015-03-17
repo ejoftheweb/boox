@@ -33,7 +33,11 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.datepicker.client.DateBox;
-
+/**
+ * BTab is the base class for rendering bills - e.g. invoices, supplier bills etc
+ * @author edward
+ *
+ */
 public abstract class BTab extends EFTab {
 
 FlexTable table = new FlexTable();

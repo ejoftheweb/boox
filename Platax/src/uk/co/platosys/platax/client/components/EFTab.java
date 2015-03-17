@@ -42,21 +42,33 @@ public abstract class EFTab extends FTab {
  protected Platax platax;
  private int index=-2; //the index of this PTab in its parent. 
  private GWTEnterprise enterprise;
- 
+ protected String eSysname;
+ protected String eName;
  
  public EFTab(){
+	 super();
+	 try{
 	 platax = Platax.getCurrentInstance();
 	 setup(platax);
+	 //Window.alert("EFTAb Constructor done");
+	 }catch(Exception x){
+		 Window.alert("eftab x"+x.getMessage());
+	 }
  }
  @Deprecated
- public  EFTab(Platax platax){
+ public  EFTab(Platax platax){ 
 	 setup(platax);
  }
  private void setup(Platax platax){
-	 GWTEnterprise enterprise = platax.getCurrentEnterprise();
-	 statusPanel.add(new TabEnterpriseLabel(enterprise.getName()));
+	 try{
+	 enterprise = platax.getCurrentEnterprise();
+	 eName= enterprise.getName();
+	 eSysname=enterprise.getSysname();
+	 statusPanel.add(new TabEnterpriseLabel(eName));
+	 }catch(Exception x){
+		 Window.alert("eftab setup "+x.getMessage());
+	 }
 	 
-	
 }
 
  

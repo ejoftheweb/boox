@@ -27,7 +27,7 @@ public class Xaddress {
 	private String XaddressID;
 	private Row row;
 	private static String databaseName = XuserConstants.DATABASE_NAME;
-	public static final String[] FIELD_NAMES = {"building","street","district","town","county","postcode"};
+	public static final String[] FIELD_NAMES = {"building","street","district","town","postcode","county","country"};
 	public static final String TABLENAME="xaddress";
 	public static final String XAID_COLNAME="xaddressid";
  	private String[] fieldValues=new String[FIELD_NAMES.length];

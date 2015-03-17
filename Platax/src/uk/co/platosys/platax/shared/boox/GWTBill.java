@@ -9,7 +9,7 @@ import uk.co.platosys.pws.values.GWTMoney;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public abstract class GWTBill implements Serializable, IsSerializable{
+public abstract class GWTBill implements Serializable, IsSerializable, GWTHasAccount {
 	private GWTMoney netMoney=new GWTMoney();
 	private GWTMoney taxMoney=new GWTMoney();
 	private GWTMoney grossMoney=new GWTMoney();

@@ -18,4 +18,5 @@ public class TabTops {
  public static final SafeHtml INVOICE_LIST=new StringHTML("Invoice List");
  public static final SafeHtml LIST=new StringHTML("List");
  public static final SafeHtml HIRE=new StringHTML("Hire");
+ public static final SafeHtml NEW_CASHIER=new StringHTML("New Cashier");
 }

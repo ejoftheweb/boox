@@ -10,7 +10,7 @@ import uk.co.platosys.pws.values.GWTMoney;
  * @author edward
  *
  */
-public class GWTEmployee extends GWTPerson implements Serializable {
+public class GWTEmployee extends GWTPerson implements Serializable, GWTHasAccount {
 	
 	
 	private static final long serialVersionUID = 1L;
@@ -22,6 +22,7 @@ public class GWTEmployee extends GWTPerson implements Serializable {
 	String payFreq;
 	String canWork;
 	GWTMoney payRate;
+	String sysname;
 	float hours;
 	
 	public GWTEmployee(){}
@@ -96,5 +97,13 @@ public class GWTEmployee extends GWTPerson implements Serializable {
 
 	public void setHours(float hours) {
 		this.hours = hours;
+	}
+
+	public String getSysname() {
+		return sysname;
+	}
+
+	public void setSysname(String sysname) {
+		this.sysname = sysname;
 	}
 }

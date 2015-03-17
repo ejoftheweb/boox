@@ -81,11 +81,11 @@ import uk.co.platosys.util.ShortHash;
  */
 public class Boox {
    
-    public static String APPLICATION_NAME="boox";
-    public static String DEFAULT_CURRENCY="XBX";
-    public static String APPLICATION_DATABASE="platax";//OK this is a kluj for now
-    public static Namespace NAMESPACE=Namespace.getNamespace("http://www.platosys.co.uk/boox");
-    private static Namespace ns = NAMESPACE;
+    public final static String APPLICATION_NAME="boox";
+    public final static String DEFAULT_CURRENCY="XBX";
+    public final static String APPLICATION_DATABASE="platax";//OK this is a kluj for now
+    public final static Namespace NAMESPACE=Namespace.getNamespace("http://www.platosys.co.uk/boox");
+    private final static Namespace ns = NAMESPACE;
 
     public static int JOURNAL_SIZE=100;//number of journal transactions held in memory
     static Logger  debugLogger=Logger.getLogger("boox");
@@ -541,7 +541,6 @@ public class Boox {
    @Deprecated
    public static Map<String, Module> getModules(){
 	   try{ 
-		   logger.log("Bx-getting the modules");
 		   Map<String, Module> modules = new HashMap<String, Module>();
 		   Document moduleDoc = DocMan.build(Module.MODULE_FILE);
 		   Element rtel = moduleDoc.getRootElement();
@@ -786,9 +785,9 @@ public class Boox {
             Permission.setPermission(enterprise, pclerk, ledger, permission, true);
        }
    }
-   public static void setApplicationName(String applicationName){
+  /** public static void setApplicationName(String applicationName){
        APPLICATION_NAME=applicationName;
-   }
+   }*/
   
   
 }

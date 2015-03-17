@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import uk.co.platosys.boox.Body;
+import uk.co.platosys.boox.constants.Prefixes;
 import uk.co.platosys.boox.core.Account;
 import uk.co.platosys.boox.core.Boox;
 import uk.co.platosys.boox.core.Clerk;
@@ -52,7 +53,7 @@ public class Customer extends CounterParty{
 	public static final String ACCOUNTS_CONTACT_COLNAME="accounts_contact";
 	public static final String TERMS_COLNAME="terms";
 	public static final String TODO_COLNAME="todo";
-	public static final String SYSNAME_PREFIX="c";//configurable
+	public static final String SYSNAME_PREFIX=Prefixes.CUSTOMER;//configurable
 	public static final String CUSTOMERS_LEDGER_NAME="Root:XBX:Current:Assets:Debtors:Customers"; //make configurable from props file?
 	public static final int SELECTION_ALL=0;
 	
@@ -256,6 +257,7 @@ public class Customer extends CounterParty{
    * @throws PermissionsException
    */
   public static List<Customer> getCustomers(Enterprise enterprise, Clerk clerk, int selection) throws PermissionsException{
+
   	List<Customer> customers = new ArrayList<Customer>();
   	try{
 	  	JDBCTable customersTable=JDBCTable.getTable(enterprise.getDatabaseName(), Customer.TABLE_NAME);

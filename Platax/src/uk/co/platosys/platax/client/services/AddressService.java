@@ -1,6 +1,6 @@
 package uk.co.platosys.platax.client.services;
 
-import uk.co.platosys.platax.shared.PXAddress;
+import uk.co.platosys.pws.values.PWSAddress;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -25,7 +25,7 @@ public interface AddressService extends RemoteService {
 	 * @param vals
 	 * @return
 	 */
-	public PXAddress recordAddress(String[] fieldValues);
+	public PWSAddress recordAddress(PWSAddress address);
 	/**
 	 * this method returns the address itself, formatted for
 	 * one or multiple lines.
@@ -33,5 +33,5 @@ public interface AddressService extends RemoteService {
 	 * @param oneline
 	 * @return
 	 */
-	public PXAddress getAddress(String xaddressid);
+	public PWSAddress getAddress(String xaddressid);
 }

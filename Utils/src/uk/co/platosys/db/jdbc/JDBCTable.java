@@ -1131,8 +1131,22 @@ public class JDBCTable implements Table {
         	}catch(Exception x){}
         }
     }
-       /**
-     * Adds a column to a table, of the given type, referencing another table
+    /**Adds several columns to the table. The colnames and coltypes arrays must be of the same 
+        * length, obvs - otherwise it will throw an illegal argument exception
+        * 
+        * 
+        *
+    */
+    public boolean addColumns (String[] colnames, String [] coltypes) throws IllegalArgumentException{
+    	if (colnames.length!=coltypes.length){throw new IllegalArgumentException("Table-addColumns: column names and column types don't match in length");}
+    	for(int i=0; i<colnames.length; i++){
+    		if(! (addColumn(colnames[i],coltypes[i]))){
+    			return false;
+    		} 
+    	}
+    	return true;
+    }
+     /** Adds a column to a table, of the given type, referencing another table
         * Expect errors (which will be logged) if the types/names/etc don't match: you have
         * been warned!
      *

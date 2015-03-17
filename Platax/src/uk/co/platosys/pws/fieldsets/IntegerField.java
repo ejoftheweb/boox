@@ -7,7 +7,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.inputfields.PIntegerBox;
 
-public class IntegerField extends AbstractFormField<Integer> {
+public final class IntegerField extends AbstractFormField<Integer> {
 PIntegerBox integerBox;
 	protected IntegerField(String[] labelText, int position, Form parent, boolean required)throws IllegalArgumentException {
 		super(labelText,   position, parent, required);

@@ -11,12 +11,12 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextBox;
 
 import uk.co.platosys.pws.fieldsets.AddressField;
-import uk.co.platosys.pws.values.GWTAddress;
+import uk.co.platosys.pws.values.PWSAddress;
 
 
-public class AddressBox extends AbstractValueField<GWTAddress> implements HasValue<GWTAddress>{
+public class AddressBox extends AbstractValueField<PWSAddress> implements HasValue<PWSAddress>{
     final TextBox textBox=new TextBox();
-	GWTAddress value=new GWTAddress();
+	PWSAddress value=new PWSAddress();
 	String headlabel;
 	AddressField parent;
 	//boolean addressChangedHandlerInitialised=false;
@@ -32,7 +32,7 @@ public class AddressBox extends AbstractValueField<GWTAddress> implements HasVal
     	});
     }
 	@Override
-	public GWTAddress getValue() {
+	public PWSAddress getValue() {
 		return value;
 	}
 
@@ -57,7 +57,7 @@ public class AddressBox extends AbstractValueField<GWTAddress> implements HasVal
 	}
 
 	@Override
-	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<GWTAddress> handler) {
+	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<PWSAddress> handler) {
 		  //if (!addressChangedHandlerInitialised) {
 				textBox.addValueChangeHandler(new ValueChangeHandler<String>() {
 					public void onValueChange(ValueChangeEvent<String> event) {
@@ -70,7 +70,7 @@ public class AddressBox extends AbstractValueField<GWTAddress> implements HasVal
 		return addHandler(handler, ValueChangeEvent.getType());
 	}
 	@Override
-	public void setValue(GWTAddress value, boolean fireEvents) {
+	public void setValue(PWSAddress value, boolean fireEvents) {
 		this.value=value;
 		textBox.setValue(value.getShortAddress(), fireEvents);
 		
@@ -80,7 +80,7 @@ public class AddressBox extends AbstractValueField<GWTAddress> implements HasVal
 		return textBox.addKeyDownHandler(handler);
 	}
 	@Override
-	public void setValue(GWTAddress value) {
+	public void setValue(PWSAddress value) {
 		setValue(value, false);
 		
 	}

@@ -8,7 +8,7 @@ import java.util.Date;
 
 import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.inputfields.PDateBox;
-import uk.co.platosys.pws.values.GWTAddress;
+import uk.co.platosys.pws.values.PWSAddress;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;

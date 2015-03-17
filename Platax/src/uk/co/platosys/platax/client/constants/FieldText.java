@@ -48,6 +48,8 @@ public class FieldText {
     public static final String[] PAYMENT_FROM={"From", "Source of payment", null, ERROR};
     public static final String[] PAYMENT_TO={"To", "Destination of payment", null, ERROR};
     public static final String[] PAYMENT_AMOUNT={"Amount", "Amount paid", null, ERROR};
+    public static final String[] PAYMENT_NOTE={"Note", "A note or memo", null, ERROR};
+    
     //Bank accounts
     public static final String[] NEW_BANKAC={"Add Account", "Click to add a new bank account", null, ERROR};
     //new bank account
@@ -57,5 +59,8 @@ public class FieldText {
     public static final String[] BANCAC_SORTCODE={"Sort Code", "Bank Branch Sort Code", "^(\\d){2}-(\\d){2}-(\\d){2}$", "3 sets of 2 digits separated by hyphens"};
     public static final String[] BANCAC_IBAN={"IBAN", "International Bank Account Number", "[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}", ERROR};
     public static final String[] BANKAC_ADDRESS={"Address", "Postal Address", null, ERROR};
-    		
+    public static final String[] BANKAC_LOWLIMIT={"Low Balance Limit", "Overdraft/credit limit", null, ERROR};
+    public static final String[] BANKAC_HIGHLIMIT={"Upper Limit", "Upper balance limit", null, ERROR};
+    //new cashier
+    public static final String[] NEWCASHIER_NAME={"Name", "Select the staff member", null, ERROR};
 }

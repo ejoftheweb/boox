@@ -16,15 +16,14 @@ public class ValueListBox extends ListBox implements HasValue<String> {
 	
     @Override
 	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
-	    if (!valueChangeHandlerInitialised) {
-				addChangeHandler(new ChangeHandler() {
+	   		addChangeHandler(new ChangeHandler() {
 					public void onChange(ChangeEvent event) {
 						//Window.alert("list value changed to "+getValue());
 						ValueChangeEvent.fire(ValueListBox.this, getValue());
 				}
 			});
 			valueChangeHandlerInitialised = true;
-		}
+		
 		return addHandler(handler, ValueChangeEvent.getType());
 	}
 

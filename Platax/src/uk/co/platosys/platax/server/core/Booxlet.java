@@ -6,6 +6,10 @@ import uk.co.platosys.platax.shared.exceptions.PlataxException;
 import uk.co.platosys.xservlets.Xservlet;
 
 public abstract class Booxlet extends Xservlet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static final String SESSION_ATTNAME="PlataxUser";
 	
 	public Enterprise getEnterprise(String enterpriseSysname) throws PlataxException{

@@ -2,20 +2,22 @@ package uk.co.platosys.platax.shared.boox;
 
 import java.io.Serializable;
 
-import uk.co.platosys.pws.values.GWTAddress;
+import uk.co.platosys.platax.shared.HasSysname;
+import uk.co.platosys.pws.values.PWSAddress;
 
 /**
  * Class to wrap personal information
  * @author edward
  *
  */
-public class GWTPerson implements Serializable {
+public class GWTPerson implements HasSysname,  Serializable {
 	private String phoneNo;
-	private GWTAddress address;
+	private PWSAddress address;
 	private String givenName;
 	private String familyName;
 	private String email;
 	private String nationality;
+	private String sysname;
 public GWTPerson (){}
 public String getPhoneNo() {
 	return phoneNo;
@@ -23,10 +25,10 @@ public String getPhoneNo() {
 public void setPhoneNo(String phoneNo) {
 	this.phoneNo = phoneNo;
 }
-public GWTAddress getAddress() {
+public PWSAddress getAddress() {
 	return address;
 }
-public void setAddress(GWTAddress address) {
+public void setAddress(PWSAddress address) {
 	this.address = address;
 }
 public String getGivenName() {
@@ -61,5 +63,14 @@ public void setNationality(String nationality) {
 }
 public String getName(){
 	return givenName+" "+familyName;
+}
+@Override
+public String getSysname() {
+	return sysname;
+}
+@Override
+public void setSysname(String sysname) {
+	this.sysname=sysname;
+	
 }
 }

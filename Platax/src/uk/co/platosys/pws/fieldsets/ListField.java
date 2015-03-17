@@ -2,10 +2,12 @@ package uk.co.platosys.pws.fieldsets;
 
 import java.util.List;
 import java.util.Map;
+
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 
 import uk.co.platosys.pws.Form;
 import uk.co.platosys.pws.inputfields.ListValueField;
@@ -25,7 +27,7 @@ import uk.co.platosys.pws.values.ValuePair;
  * @author edward
  *
  */
-public class ListField extends AbstractFormField<String> implements HasValueChangeHandlers<String> {
+public class ListField extends AbstractListField implements HasValueChangeHandlers<String> {
 ListValueField list;
 /**
  * 
@@ -37,45 +39,6 @@ ListValueField list;
  */
 	public ListField(String[] labelText, int position, Form parent,	boolean required)  throws IllegalArgumentException {
 		super(labelText, position, parent, required);
-		this.list=new ListValueField();
-		setWidget(list);
 		start();
 	}
-	/**
-	 * add items as a List of <ValuePair>s.
-	 * @param items
-	 */
-	public void addItems(List<? extends ValuePair> items){
-		list.addItems(items);
-	}
-	public void addItems(Map<String, String> items, boolean reverse){
-		list.addItems(items, reverse);
-	}
-
-	@Override
- 	public boolean validate() {
-		  if(required){
-			  if(list.getValue().equals("")){
-				  return false;
-			  }else{
-				  return true;
-			  }
-		  }else{
-			  return true;
-		  }
-	}
-	@Override
-	public void fireEvent(GwtEvent<?> event) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
-		return list.addValueChangeHandler(handler);
-	}
-	public void addItem(String name, String localisedName) {
-		list.addItem(name, localisedName);
-		
-	}
-
 }

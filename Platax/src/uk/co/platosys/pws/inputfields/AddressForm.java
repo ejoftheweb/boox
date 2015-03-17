@@ -6,10 +6,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import uk.co.platosys.pws.constants.FieldText;
 import uk.co.platosys.pws.fieldsets.SubmitField;
 import uk.co.platosys.pws.fieldsets.TextField;
-import uk.co.platosys.pws.values.GWTAddress;
+import uk.co.platosys.pws.values.PWSAddress;
 
 public class AddressForm extends AbstractPopupForm {
-   public AddressForm(String header, final AddressBox source, GWTAddress address){
+   public AddressForm(String header, final AddressBox source, PWSAddress address){
 	   super(header);
 	   final TextField building = new TextField(FieldText.BUILDING, 1000, this, false);
 	   building.setValue(address.getBuilding());
@@ -30,7 +30,7 @@ public class AddressForm extends AbstractPopupForm {
 	   sub.addClickHandler(new ClickHandler(){
 		   @Override
 			public void onClick(ClickEvent event) {
-				GWTAddress address=new GWTAddress();
+				PWSAddress address=new PWSAddress();
 				address.setBuilding(building.getValue());
 				address.setStreet(street.getValue());
 				address.setDistrict(district.getValue());

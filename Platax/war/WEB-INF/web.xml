@@ -19,7 +19,14 @@
     <servlet-name>AddressServiceImpl</servlet-name>
     <url-pattern>/platax/addressService</url-pattern>
   </servlet-mapping>
- 
+  <servlet>
+    <servlet-name>BankServiceImpl</servlet-name>
+    <servlet-class>uk.co.platosys.platax.server.services.BankServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BankServiceImpl</servlet-name>
+    <url-pattern>/platax/bankService</url-pattern>
+  </servlet-mapping>
   <servlet>
     <servlet-name>CashServiceImpl</servlet-name>
     <servlet-class>uk.co.platosys.platax.server.services.CashServiceImpl</servlet-class>
@@ -74,7 +81,7 @@
     <url-pattern>/platax/loginService</url-pattern>
   </servlet-mapping>
   
-  <!-- 
+ 
    <servlet>
     <servlet-name>StaffServiceImpl</servlet-name>
     <servlet-class>uk.co.platosys.platax.server.services.StaffServiceImpl</servlet-class>
@@ -83,9 +90,7 @@
     <servlet-name>StaffServiceImpl</servlet-name>
     <url-pattern>/platax/staffService</url-pattern>
   </servlet-mapping>
- -->
-
-   <servlet>
+ <servlet>
     <servlet-name>TaskServiceImpl</servlet-name>
     <servlet-class>uk.co.platosys.platax.server.services.TaskServiceImpl</servlet-class>
   </servlet>

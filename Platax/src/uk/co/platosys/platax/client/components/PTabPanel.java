@@ -95,7 +95,7 @@ public class PTabPanel extends TabLayoutPanel {
 	 */
 	public void addTab(PTab pTab, int index){
 		Widget page = pTab.getTabRootPanel();
-		Widget tabItem = pTab.getTabItem();
+		Widget tabItem = pTab.getTabItem();  
 		try{
 			insert(page,tabItem, index);
 		}catch(Exception x){

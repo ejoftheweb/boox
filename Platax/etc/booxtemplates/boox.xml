@@ -42,6 +42,7 @@ The segment attribute "selection" determines whether single or multiple selectio
 	 <module name="rent" description="Leasehold Premises?" segment="overhead" selection="multiple" file="lease.xml"/>
 	 <module name="home" description="Home Office?" segment="overhead" selection="multiple" file="homeoffice.xml"/>
 	 <module name="vehicles" description="Business vehicles?" segment="overhead" selection="multiple" file="vehicles.xml"/>
+	 <module name="staff" description="Staff" segment="overhead" selection="multiple" file="staff.xml"/>
 	 <!-- modules in the sector segment -->
 	  <module name="building" description="Building and allied trades" segment="sector" selection="multiple" file="building.xml"/>
 	   <module name="consult" description="Consultancy" segment="sector" selection="multiple" file="consult.xml"/>
